@@ -296,7 +296,10 @@ Built on `main` (pushed to `unfoldingWord/web`), Phases 0–3 except the items m
 - Interface strings drafted in all 15 other languages (marked draft; native review needed). Page translations: not started — waiting on decision 1 below.
 - Analytics: GTM `GTM-KS32FPTM` on the production host only; page type, locale and A/B variant pushed to the dataLayer.
 - A/B testing: Worker serves variants at the same URL with a sticky cookie; unit-tested; demo experiment in draft.
-- Cloudflare: Worker `unfoldingword-web` deployed (staging: https://unfoldingword-web.unfoldingword.workers.dev, noindex), connected to the GitHub repo with Workers Builds — `main` deploys, other branches get Preview URLs.
+- Cloudflare: Worker `unfoldingword-web` deployed (staging: https://unfoldingword-web.unfoldingword.workers.dev, noindex), connected to the GitHub repo with Workers Builds — `main` deploys, other branches get Preview URLs (`https://<branch>-unfoldingword-web.unfoldingword.workers.dev`, tested end to end); build cache on.
+- Site search (`/search/`, Pagefind) and all WordPress uploads (715 files: PDFs, images, video) copied to R2, so every `/wp-content/uploads/…` link keeps working.
+- Parity review: all 108 migrated pages compared with the live site by independent reviewers; 19 verified gaps fixed.
+- GEO audit: staging 87/100 with its deliberate noindex; 92/100 with only that header removed (the audit's own code, same pages). The remaining flag on staging — canonical pointing at unfoldingword.org — goes away on production. **Estimated production score 92–94; confirmed only at cutover.**
 - CI (GitHub Actions), `CLAUDE.md`, nine editor skills, docs for content, A/B testing, analytics, forms and the cutover runbook.
 
 **Waiting on information or access**
@@ -307,4 +310,4 @@ Built on `main` (pushed to `unfoldingWord/web`), Phases 0–3 except the items m
 5. Virtuous: register the preview domain(s) so giving forms render on previews (`*.unfoldingword.workers.dev`); confirm what a completed gift reports (A/B conversion).
 6. Contact form destination (Contact Form 7 settings) — `docs/forms.md`.
 7. Phone number: the site shows both 407-604-0883 and 407-900-3005.
-8. Content decisions the migration surfaced — listed in the hand-off notes.
+8. Content decisions the migration surfaced — `docs/open-questions.md`.
