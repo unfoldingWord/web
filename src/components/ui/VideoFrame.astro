@@ -3,7 +3,7 @@
 // player only loads when the visitor presses play (no third-party requests,
 // cookies or ~1 MB of player script on page load — this matters on phones
 // and slow connections). Without JavaScript the link opens the video.
-import { ui } from '../../i18n';
+import { byCode, fmt, splitLocale, ui } from '../../i18n';
 import Icon from './Icon.astro';
 
 interface Props {
@@ -14,6 +14,7 @@ interface Props {
   title: string;
 }
 const { provider, id, hash, title } = Astro.props;
+const { locale } = splitLocale(Astro.url.pathname);
 const watch = provider === 'youtube' ? `https://www.youtube.com/watch?v=${id}` : `https://vimeo.com/${id}${hash ? `/${hash}` : ''}`;
 const embed = provider === 'youtube' ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0` : `https://player.vimeo.com/video/${id}?${hash ? `h=${hash}&` : ''}autoplay=1&dnt=1`;
 // YouTube serves stills from its image host; Vimeo has no stable public one,
@@ -27,7 +28,7 @@ const poster = provider === 'youtube' ? `https://i.ytimg.com/vi/${id}/hqdefault.
     <span class="relative inline-flex size-18 items-center justify-center rounded-full bg-kindle text-tech shadow-raised transition group-hover:scale-105">
       <Icon name="play" class="size-10" />
     </span>
-    <span class="sr-only">Play video: {title}</span>
+    <span class="sr-only" lang={byCode(locale).tag}>{fmt(ui(locale).playVideo, { title })}</span>
   </a>
 </div>
 

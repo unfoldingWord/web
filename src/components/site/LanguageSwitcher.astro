@@ -42,7 +42,7 @@ const current = byCode(locale);
     </div>
   ) : (
     <div class="lang-switcher relative">
-      <button type="button" class="inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-sm font-bold text-ocean hover:bg-inspire-50" aria-expanded="false" aria-controls="lang-menu">
+      <button type="button" class="inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-sm font-bold text-ocean hover:bg-inspire-50" aria-expanded="false" aria-controls="lang-menu">
         <Icon name="globe" class="size-4.5" />
         <span class="sr-only">{t.language}:</span>
         <span lang={current.tag}>{current.name}</span>

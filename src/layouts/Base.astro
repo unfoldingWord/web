@@ -76,7 +76,7 @@ const graph = serializeGraph([organizationNode(), websiteNode(def.tag), ...jsonL
     <title>{fullTitle}</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={canonical} />
-    {(noindex || experiment) && <meta name="robots" content="noindex, follow" />}
+    {(noindex || experiment) && <meta name="robots" content="noindex, follow" data-variant-only={experiment && !noindex ? true : undefined} />}
     <meta name="theme-color" content="#014263" />
 
     <meta property="og:site_name" content={SITE.name} />

@@ -17,22 +17,38 @@ const exp = {
 
 test('experimentFor matches the path with or without trailing slash, inside the dates', () => {
   const d = new Date('2026-12-10T12:00:00Z');
-  assert.equal(experimentFor('/give/', [exp], d, false)?.id, 'give-hero');
-  assert.equal(experimentFor('/give', [exp], d, false)?.id, 'give-hero');
-  assert.equal(experimentFor('/give/monthly/', [exp], d, false), undefined);
+  assert.equal(experimentFor('/give/', [exp], d, null)?.id, 'give-hero');
+  assert.equal(experimentFor('/give', [exp], d, null)?.id, 'give-hero');
+  assert.equal(experimentFor('/give/monthly/', [exp], d, null), undefined);
 });
 
 test('experimentFor ignores tests before start or after end unless forced', () => {
-  assert.equal(experimentFor('/give/', [exp], new Date('2026-11-30T12:00:00Z'), false), undefined);
-  assert.equal(experimentFor('/give/', [exp], new Date('2027-01-01T00:00:01Z'), false), undefined);
-  assert.equal(experimentFor('/give/', [exp], new Date('2027-01-01T00:00:01Z'), true)?.id, 'give-hero');
+  assert.equal(experimentFor('/give/', [exp], new Date('2026-11-30T12:00:00Z'), null), undefined);
+  assert.equal(experimentFor('/give/', [exp], new Date('2027-01-01T00:00:01Z'), null), undefined);
+  assert.equal(experimentFor('/give/', [exp], new Date('2027-01-01T00:00:01Z'), 'b')?.id, 'give-hero');
 });
 
 test('draft tests run only when forced', () => {
   const draft = { ...exp, status: 'draft' };
   const d = new Date('2026-12-10T12:00:00Z');
-  assert.equal(experimentFor('/give/', [draft], d, false), undefined);
-  assert.equal(experimentFor('/give/', [draft], d, true)?.id, 'give-hero');
+  assert.equal(experimentFor('/give/', [draft], d, null), undefined);
+  assert.equal(experimentFor('/give/', [draft], d, 'b')?.id, 'give-hero');
+});
+
+test('stopped or expired tests keep serving the selected winner', () => {
+  const now = new Date('2027-01-01T12:00:00Z');
+  for (const status of ['stopped', 'running']) {
+    const ended = { ...exp, status, winner: 'b' };
+    const selected = experimentFor('/give/', [ended], now, null);
+    assert.equal(selected, ended);
+    assert.equal(assign(selected, { cookieHeader: 'uwab_give-hero=a', random: 0 }).variant.id, 'b');
+  }
+  assert.equal(experimentFor('/give/', [{ ...exp, status: 'stopped' }], now, null), undefined);
+  assert.equal(experimentFor('/give/', [{ ...exp, status: 'draft' }], now, 'unknown'), undefined);
+});
+
+test('an unreadable assignment cookie is replaced', () => {
+  assert.deepEqual(assign(exp, { cookieHeader: 'uwab_give-hero=%', random: 0 }), { variant: exp.variants[0], fresh: true });
 });
 
 test('pickVariant respects weights', () => {

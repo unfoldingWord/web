@@ -13,35 +13,41 @@ export async function getStaticPaths() {
   const routes = await allRoutes();
   const byKey = new Map(routes.map((r) => [`${r.locale}:${r.basePath}`, r]));
   return routes.map((route) => {
-    // Breadcrumbs: Home › each parent path that is a real page › this page.
-    const t = ui(route.locale);
-    const crumbs: { name: string; href?: string }[] = [{ name: t.home, href: localizePath('/', route.locale) }];
-    if (route.kind !== 'variant') {
-      const parts = route.basePath.split('/').filter(Boolean);
-      for (let i = 1; i < parts.length; i++) {
-        const p = `/${parts.slice(0, i).join('/')}/`;
-        const parent = byKey.get(`${route.locale}:${p}`);
-        if (parent) crumbs.push({ name: (parent.entry.data as { title: string }).title, href: parent.path });
-      }
+    const data = route.entry.data as { variantOf?: string; experiment?: string };
+    // Generate the variant at its hidden asset path, with the public page's
+    // canonical, breadcrumbs, language links and indexing policy.
+    let page = route;
+    let experiment;
+    if (route.kind === 'variant') {
+      const control = byKey.get(`${route.locale}:${data.variantOf}`);
+      const test = experiments.find((e) => e.id === data.experiment && e.path === control?.basePath);
+      const variant = test?.variants.find((v) => v.page === route.basePath);
+      if (!control || !test || !variant) throw new Error(`Unregistered A/B variant: ${route.path}`);
+      page = { ...control, entry: route.entry };
+      experiment = { id: test.id, variant: variant.id };
     }
-    crumbs.push({ name: (route.entry.data as { title: string }).title });
+    const crumbs: { name: string; href?: string }[] = [{ name: ui(page.locale).home, href: localizePath('/', page.locale) }];
+    const parts = page.basePath.split('/').filter(Boolean);
+    for (let i = 1; i < parts.length; i++) {
+      const p = `/${parts.slice(0, i).join('/')}/`;
+      const parent = byKey.get(`${page.locale}:${p}`);
+      if (parent) crumbs.push({ name: parent.entry.data.title, href: parent.path });
+    }
+    crumbs.push({ name: route.entry.data.title });
     const path = route.path === '/' ? undefined : route.path.replace(/^\/|\/$/g, '');
-    return { params: { path }, props: { route, crumbs } };
+    return { params: { path }, props: { route: page, crumbs, experiment } };
   });
 }
 
 interface Props {
   route: Route;
+  experiment?: { id: string; variant: string };
   crumbs: { name: string; href?: string }[];
 }
-const { route, crumbs } = Astro.props;
-const data = route.entry.data as { experiment?: string; variantOf?: string };
-const variantId = route.kind === 'variant' ? (experiments as { id: string; variants: { id: string; page?: string }[] }[]).find((e) => e.id === data.experiment)?.variants.find((v) => v.page === route.basePath)?.id : undefined;
-const experiment = route.kind === 'variant' && data.experiment ? { id: data.experiment, variant: variantId ?? 'b' } : undefined;
+const { route, crumbs, experiment } = Astro.props;
 ---
 
-{route.kind === 'pages' && <PageTemplate route={route} crumbs={crumbs} />}
-{route.kind === 'variant' && <PageTemplate route={route} crumbs={crumbs} experiment={experiment} />}
+{route.kind === 'pages' && <PageTemplate route={route} crumbs={crumbs} experiment={experiment} />}
 {route.kind === 'stories' && <StoryTemplate route={route} crumbs={crumbs} />}
 {route.kind === 'prayer' && <PrayerTemplate route={route} crumbs={crumbs} />}
 {route.kind === 'sweet' && <SweetTemplate route={route} crumbs={crumbs} />}

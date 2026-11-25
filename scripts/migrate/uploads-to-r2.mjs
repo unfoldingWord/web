@@ -59,4 +59,7 @@ await Promise.all(Array.from({ length: 12 }, async () => {
   }
 }));
 console.log(`done: ${n - failed.length} copied, ${failed.length} failed`);
-if (failed.length) console.log(failed.join('\n'));
+if (failed.length) {
+  console.error(failed.join('\n'));
+  process.exitCode = 1;
+}

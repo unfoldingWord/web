@@ -44,7 +44,7 @@ const dark = variant === 'ocean' || (variant === 'photo' && !!image);
       {variant === 'photo' && image && (
         <>
           <div class="absolute inset-0 -z-20">
-            <Picture path={image} alt={imageAlt ?? ''} eager sizes="100vw" class="h-full w-full object-cover" />
+            <Picture path={image} alt={imageAlt ?? ''} eager sizes="100vw" fill class="h-full w-full object-cover" />
           </div>
           <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ocean-900/90 via-ocean/75 to-ocean/55" />
         </>

@@ -2,8 +2,9 @@
 import { render, type CollectionEntry } from 'astro:content';
 import { SITE } from '../../lib/site';
 import { webPageNode, breadcrumbNode, articleNode } from '../../lib/jsonld';
-import { ui, formatMonth, fmt, localizePath } from '../../i18n';
+import { ui, formatMonth, localizePath } from '../../i18n';
 import type { Route } from '../../lib/routes';
+import LocalizedBody from '../ui/LocalizedBody.astro';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
 import Picture from '../ui/Picture.astro';
@@ -38,7 +39,7 @@ const jsonLd = [
     </header>
     <div class="container-prose py-[var(--spacing-section)]">
       {d.image && <div class="mb-8 overflow-hidden rounded-card"><Picture path={d.image} alt={d.imageAlt ?? ''} eager sizes="(min-width: 44rem) 704px, 100vw" /></div>}
-      <div class="prose prose-serif"><Content /></div>
+      <div class="prose prose-serif"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
       <p class="mt-12"><a href={localizePath('/pray/', route.locale)} class="font-heading font-extrabold">{t.allPrayerRequests}</a></p>
     </div>
   </article>

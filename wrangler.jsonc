@@ -4,7 +4,7 @@
   // The site is static: `npm run build` writes it to dist/ and Workers serves
   // those files directly (free, no Worker invocation). The Worker script in
   // worker/index.ts runs FIRST only for the paths in `run_worker_first` —
-  // pages with an A/B test registered in src/data/experiments.json. Every
+  // the homepage (WordPress ID redirects), the contact API and A/B test pages. Every
   // other request goes straight to the static file.
   //
   // KEEP IN SYNC: every active experiment's path must be listed in
@@ -27,6 +27,8 @@
     // Unknown paths get dist/404.html with a real 404 status.
     "not_found_handling": "404-page",
     "run_worker_first": [
+      "/",
+      "/api/contact",
       // A/B experiments (src/data/experiments.json). Remove an entry when its
       // experiment ends.
       "/give/experiment-demo/"

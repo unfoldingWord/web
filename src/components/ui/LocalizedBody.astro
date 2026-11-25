@@ -1,0 +1,9 @@
+---
+import { localizeLinks } from '../../lib/md';
+
+interface Props {
+  locale: string;
+}
+const html = await Astro.slots.render('default');
+---
+<Fragment set:html={localizeLinks(html, Astro.props.locale)} />

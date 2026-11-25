@@ -9,14 +9,17 @@ interface Props {
   locale: string;
 }
 const { block, locale } = Astro.props;
+// One column per stat up to four, so two or three stats fill the band
+// instead of sitting in the left half of a four-column grid.
+const lgCols = ({ 1: 'lg:grid-cols-1', 2: 'lg:grid-cols-2', 3: 'lg:grid-cols-3' } as Record<number, string>)[block.items.length] ?? 'lg:grid-cols-4';
 ---
 
 <Section background={block.background} tight>
   <SectionHeader eyebrow={block.eyebrow} title={block.title} align="center" locale={locale} />
-  <dl class="grid grid-cols-2 gap-x-6 gap-y-8 text-center lg:grid-cols-4">
+  <dl class:list={['grid grid-cols-2 gap-x-6 gap-y-8 text-center', lgCols, block.items.length <= 3 && 'mx-auto max-w-4xl']}>
     {
       block.items.map((s) => (
-        <div class="flex flex-col-reverse gap-1">
+        <div class="flex flex-col-reverse justify-end gap-1">
           <dt class:list={['text-sm font-semibold sm:text-base', block.background === 'ocean' ? 'text-white/85' : 'text-ink-muted']}>{s.label}</dt>
           <dd class:list={['font-heading text-[clamp(2.25rem,1.6rem+2.6vw,3.5rem)] font-black leading-none', block.background === 'ocean' ? 'text-inspire' : 'text-ocean']}>{s.value}</dd>
         </div>

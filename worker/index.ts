@@ -6,11 +6,13 @@
 //      test. The visitor is assigned a variant (cookie), and that variant's
 //      built page is served AT THE SAME URL: no redirect, no flicker, and
 //      search engines see one URL (variant pages are noindex).
-//   2. Requests that match no file: /api/contact, and everything else falls
-//      through to the static 404 page.
+//   2. The homepage, to resolve WordPress shortlinks (/?p=… and /?page_id=…).
+//   3. /api/contact, also listed explicitly so POST reaches its handler
+//      even with the assets binding configured to serve a static 404.
 import experiments from '../src/data/experiments.json';
 import { assign, experimentFor, COOKIE_PREFIX, type Experiment } from './ab';
 import { handleContact } from './contact';
+import { wordpressRedirect } from './wordpress';
 
 export interface Env {
   ASSETS: Fetcher;
@@ -29,8 +31,11 @@ export default {
     if (url.pathname === '/api/contact') return handleContact(request, env);
 
     if (request.method === 'GET' || request.method === 'HEAD') {
+      const redirect = wordpressRedirect(url);
+      if (redirect) return redirect;
+
       const forcedId = url.searchParams.get('ab');
-      const exp = experimentFor(url.pathname, LIST, new Date(), Boolean(forcedId));
+      const exp = experimentFor(url.pathname, LIST, new Date(), forcedId);
       if (exp) return serveVariant(request, env, url, exp, forcedId);
     }
 
@@ -71,5 +76,6 @@ async function serveVariant(request: Request, env: Env, url: URL, exp: Experimen
         el.setAttribute('href', new URL(exp.path, `https://${env.PRODUCTION_HOST}`).href);
       },
     })
+    .on('meta[data-variant-only]', { element(el) { el.remove(); } })
     .transform(res);
 }

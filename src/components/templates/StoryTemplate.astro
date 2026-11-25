@@ -6,6 +6,7 @@ import { img } from '../../lib/images';
 import { webPageNode, breadcrumbNode, articleNode } from '../../lib/jsonld';
 import { ui, formatDate, fmt, localizePath } from '../../i18n';
 import { splitId, type Route } from '../../lib/routes';
+import LocalizedBody from '../ui/LocalizedBody.astro';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
 import Picture from '../ui/Picture.astro';
@@ -56,7 +57,7 @@ const jsonLd = [
       </div>
     </header>
     <div class="container-prose py-[var(--spacing-section)]">
-      <div class="prose prose-serif"><Content /></div>
+      <div class="prose prose-serif"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
     </div>
   </article>
 

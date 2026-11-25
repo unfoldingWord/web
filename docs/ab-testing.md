@@ -19,7 +19,7 @@ visitor ──► unfoldingword.org/give/
 
 - **Same URL, no flicker.** The choice is made at the edge before any HTML is sent, so there is no flash of the other version and no redirect. Search engines see one URL; variant pages are `noindex` and canonical to the real page.
 - **Sticky.** A visitor keeps their version for 90 days (cookie `uwab_<test-id>`), so returning donors are not confused.
-- **Only test pages pay.** Every other page is served as a static file without running the Worker. That is why each test path must be listed in `run_worker_first` (`npm run check:experiments` enforces it).
+- **Worker routing.** Test pages, the homepage (for old WordPress shortlinks) and the contact API run through the Worker. Other pages are served as static files. That is why each test path must be listed in `run_worker_first` (`npm run check:experiments` enforces it).
 - **Preview any version** with `?ab=a` or `?ab=b` on the URL — this also works for tests still in `draft`.
 - **End instantly** by setting `"winner"` in `src/data/experiments.json`: everyone gets the winner from the next deploy.
 
@@ -39,7 +39,7 @@ dataLayer.push({ event: 'experiment_impression', experiment_id: '…', experimen
 1. In GTM (container GTM-KS32FPTM) create two Data Layer Variables: `experiment_id`, `experiment_variant` (also useful: `page_type`, `page_locale`).
 2. Add them as event parameters on the GA4 Configuration/Google tag (so every event carries them), and create a GA4 Event tag for `experiment_impression` sending both.
 3. In GA4 → Admin → Custom definitions, register `experiment_id` and `experiment_variant` as **event-scoped custom dimensions** (and `page_type`, `page_locale`).
-4. Define the conversion: a completed gift. The WordPress site has a `/donation-confirmation/` page (kept at the same URL on the new site). **To verify:** whether the Virtuous forms send donors there after giving. If they do, mark a `page_view` of `/donation-confirmation/` as the `donation_complete` key event. If they do not, the Giving block forwards any message the Virtuous form posts to the page as a `virtuous_message` dataLayer event — use GTM preview mode during a test gift to see whether a completion message arrives, and build the key event from it.
+4. Define the conversion: a completed gift. The WordPress site has a `/donation-confirmation/` page (kept at the same URL on the new site). **To verify:** whether the Virtuous forms send donors there after giving. If they do, mark a `page_view` of `/donation-confirmation/` as the `donation_complete` key event. If they do not, the Giving block records a generic `virtuous_message` when an embedded giving-form frame sends a message. It omits the payload. Use a test gift to identify a documented completion signal before configuring a conversion.
 
 ## Reading results
 

@@ -45,7 +45,8 @@ function add(from, to, status, source) {
   if (!from.startsWith('/')) return errors.push(`${source}: "${from}" must start with /`);
   // Uploads live in the media bucket: send straight there (one hop).
   if (to.startsWith('/wp-content/uploads/')) to = `${MEDIA}/uploads/${to.slice('/wp-content/uploads/'.length)}`;
-  const target = to.startsWith('/') && !/\.[a-z0-9]+$/i.test(to.split('#')[0]) ? withSlash(to.split('#')[0]) + (to.includes('#') ? '#' + to.split('#')[1] : '') : to;
+  const path = to.split(/[?#]/, 1)[0];
+  const target = to.startsWith('/') ? withSlash(path) + to.slice(path.length) : to;
   for (const f of new Set([noSlash(from), withSlash(from)])) {
     if (f === '/' || f === target.split('#')[0]) continue; // /x → /x/ is html_handling's job
     const prev = rules.get(f);
@@ -57,8 +58,8 @@ function add(from, to, status, source) {
 // 1. legacy.txt
 const legacy = readFileSync(join(ROOT, 'redirects/legacy.txt'), 'utf8').split('\n');
 legacy.forEach((line, i) => {
-  const s = line.replace(/#.*$/, '').trim();
-  if (!s || line.trim().startsWith('#')) return;
+  const s = line.trim();
+  if (!s || s.startsWith('#')) return;
   const [from, to, status = '301'] = s.split(/\s+/);
   add(from, to, Number(status), `legacy.txt:${i + 1}`);
 });
@@ -69,7 +70,7 @@ for (const r of manifest.redirects) add(r.from, r.to, 301, r.source);
 for (const [from, { to, source }] of rules) {
   if (built.has(withSlash(from)) && withSlash(from) === from) errors.push(`${from} (${source}) is a built page AND a redirect source — remove the redirect or the page`);
   if (to.startsWith('/')) {
-    const base = to.split('#')[0];
+    const base = to.split(/[?#]/, 1)[0];
     if (!isBuilt(base)) errors.push(`${from} → ${to} (${source}): target was not built`);
     if (rules.has(base)) errors.push(`${from} → ${to} → ${rules.get(base).to} (${source}): chain; point it straight at the final page`);
   }

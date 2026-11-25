@@ -6,7 +6,7 @@ The website of [unfoldingWord](https://unfoldingword.org). A static [Astro](http
 
 ## Run it
 
-Needs Node 22.12+.
+Needs Node 22.23.4+.
 
 ```bash
 npm install
@@ -31,7 +31,7 @@ npm run build && npm run check && npm test
 | Blocks and templates | `src/components/blocks/`, `src/components/templates/` |
 | Every URL the site builds | `src/lib/routes.ts` (one catch-all route: `src/pages/[...path].astro`) |
 | Languages | `src/i18n/locales.mjs` (16, same as openbiblestories.org); interface strings `src/i18n/ui/<code>.json` |
-| Redirects | `redirects/legacy.txt` + each file's `redirectFrom` → `dist/_redirects` (`scripts/postbuild.mjs`); `redirects/old-urls.txt` must all resolve |
+| Redirects | `redirects/legacy.txt` + each file's `redirectFrom` → `dist/_redirects` (`scripts/postbuild.mjs`); `redirects/old-urls.txt` must all resolve. WordPress numeric shortlinks use `redirects/wordpress-ids.json` in the Worker. |
 | SEO / AI discovery | JSON-LD (`src/lib/jsonld.ts`), sitemaps, `robots.txt`, `llms.txt`, `llms-full.txt`, `/ai/*.json`, `/.well-known/ai.txt`, `/stories/rss.xml` |
 | Analytics | GTM `GTM-KS32FPTM`, production host only — `docs/analytics.md` |
 | A/B tests | `src/data/experiments.json` + `worker/` — `docs/ab-testing.md` |
@@ -53,10 +53,10 @@ Launch steps (DNS, domains, Search Console): `docs/cutover.md`.
 ## Checking search and AI readiness
 
 ```bash
-uvx --from geo-optimizer-skill geo audit --url https://unfoldingword.org
+npm run geo -- --url https://unfoldingword.org
 ```
 
-The goal is 90+. Run it against production: previews send `X-Robots-Tag: noindex`, which costs points production does not lose.
+The audit uses `uvx` from uv. The goal is 90+. Run it against production: previews send `X-Robots-Tag: noindex`, which costs points production does not lose.
 
 ## Repository is public
 

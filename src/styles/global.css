@@ -22,6 +22,11 @@
  */
 @import 'tailwindcss';
 
+/* rtl:/ltr: follow each element's own direction, so icons inside an English
+   fallback <main dir="ltr"> on an RTL locale are not mirrored. */
+@custom-variant rtl (&:where(:dir(rtl)));
+@custom-variant ltr (&:where(:dir(ltr)));
+
 @theme {
   /* Brand palette */
   --color-inspire: #31ade3;
@@ -99,7 +104,7 @@
   html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
-    scroll-padding-top: 5rem;
+    scroll-padding-top: calc(var(--header-h, 5rem) + 0.5rem); /* --header-h: Header.astro */
   }
   body {
     @apply bg-paper font-sans text-body text-ink antialiased;
@@ -131,12 +136,24 @@
   html[data-script='arabic'] { --font-sans: 'Noto Sans Arabic', var(--font-sans-latin); --font-heading: 'Noto Sans Arabic', var(--font-sans-latin); }
   html[data-script='nastaliq'] { --font-sans: 'Noto Nastaliq Urdu', 'Noto Sans Arabic', var(--font-sans-latin); --font-heading: 'Noto Nastaliq Urdu', var(--font-sans-latin); }
   html[data-script='nastaliq'] body { line-height: 2.1; }
+  /* Tailwind's small-text line heights (about 1.4) make Nastaliq lines collide. */
+  html[data-script='nastaliq'] { --text-xs--line-height: 2; --text-sm--line-height: 2; }
   html[data-script='devanagari'] { --font-sans: 'Noto Sans Devanagari', var(--font-sans-latin); --font-heading: 'Noto Sans Devanagari', var(--font-sans-latin); }
   html[data-script='bengali'] { --font-sans: 'Noto Sans Bengali', var(--font-sans-latin); --font-heading: 'Noto Sans Bengali', var(--font-sans-latin); }
   html[data-script='myanmar'] { --font-sans: 'Noto Sans Myanmar', var(--font-sans-latin); --font-heading: 'Noto Sans Myanmar', var(--font-sans-latin); }
   html[data-script='myanmar'] body { line-height: 1.9; }
   html[data-script='han'] { --font-sans: 'Noto Sans SC', var(--font-sans-latin); --font-heading: 'Noto Sans SC', var(--font-sans-latin); }
   html[data-script='cyrillic'] { --font-sans: 'Nunito Sans Variable', 'Nunito Sans', ui-sans-serif, system-ui, sans-serif; --font-heading: var(--font-sans); }
+  /* Fallback pages put English inside <main lang="en">: use the Latin brand
+     stack there, not the script face's Latin glyphs or line height. */
+  html[data-script] main[lang='en'] {
+    --font-sans: var(--font-sans-latin);
+    --font-heading: var(--font-sans-latin);
+    --text-xs--line-height: calc(1 / 0.75);
+    --text-sm--line-height: calc(1.25 / 0.875);
+    font-family: var(--font-sans-latin);
+    line-height: var(--text-body--line-height);
+  }
   :root { --font-sans-latin: 'Avenir', 'Avenir Next', 'Nunito Sans Variable', 'Nunito Sans', ui-sans-serif, system-ui, sans-serif; }
 }
 

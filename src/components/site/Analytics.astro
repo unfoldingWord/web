@@ -34,7 +34,7 @@ const config = JSON.stringify({ id: SITE.gtmId, host: SITE.productionHost, local
     }
     window.dataLayer.push(ctx);
     var prod = location.hostname === cfg.host || location.hostname === 'www.' + cfg.host;
-    if (!prod && !/[?&]gtm_debug=1/.test(location.search)) return;
+    if (!prod && new URLSearchParams(location.search).get('gtm_debug') !== '1') return;
     window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
     var s = document.createElement('script');
     s.async = true;

@@ -4,6 +4,7 @@ import { SITE } from '../../lib/site';
 import { webPageNode, breadcrumbNode, faqNode, videoNode } from '../../lib/jsonld';
 import { plain } from '../../lib/md';
 import type { Route } from '../../lib/routes';
+import LocalizedBody from '../ui/LocalizedBody.astro';
 import Base from '../../layouts/Base.astro';
 import BlockRenderer from '../blocks/BlockRenderer.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
@@ -29,12 +30,16 @@ const heroImage = d.ogImage ?? (d.sections.find((s) => s.type === 'hero' && 'ima
 const og = heroImage ? new URL((await getImage({ src: img(heroImage), width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src, SITE.url).href : undefined;
 
 const faqs = d.sections.flatMap((s) => (s.type === 'faq' ? s.items : []));
-const videos = d.sections.flatMap((s) => (s.type === 'video' ? [s] : []));
+const videos = d.sections.flatMap((s) => {
+  if (s.type === 'video') return [videoNode({ ...s, url, description: s.caption, transcript: s.transcript ? plain(s.transcript) : undefined })];
+  if (s.type === 'split' && s.video) return [videoNode({ ...s.video, url })];
+  return [];
+});
 const jsonLd = [
   webPageNode({ url, title: d.title, description: d.description, lang: route.locale, type: d.schemaType === 'DonatePage' ? 'WebPage' : d.schemaType, image: og, dateModified: d.updated, breadcrumbId: isHome ? undefined : `${url}#breadcrumb` }),
   ...(isHome ? [] : [breadcrumbNode(url, crumbs.map((c) => ({ name: c.name, url: new URL(c.href ?? route.path, SITE.url).href })))]),
   ...(faqs.length ? [faqNode(url, faqs.map((f) => ({ q: plain(f.q), a: plain(f.a) })))] : []),
-  ...videos.map((v) => videoNode({ url, title: v.title, description: v.caption, provider: v.provider, id: v.id, transcript: v.transcript ? plain(v.transcript) : undefined })),
+  ...videos,
 ];
 const pageType = d.template === 'giving' ? 'giving' : isHome ? 'home' : 'page';
 ---
@@ -51,7 +56,6 @@ const pageType = d.template === 'giving' ? 'giving' : isHome ? 'home' : 'page';
   noindex={route.noindex}
   pageType={pageType}
   experiment={experiment}
-  switcherPath={route.kind === 'variant' ? (d.variantOf ?? '/') : undefined}
 >
   {
     !firstIsHero && (
@@ -67,7 +71,7 @@ const pageType = d.template === 'giving' ? 'giving' : isHome ? 'home' : 'page';
   {
     hasBody && d.bodyPosition === 'before' && (
       <div class="container-prose py-[var(--spacing-section)]">
-        <div class="prose"><Content /></div>
+        <div class="prose"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
       </div>
     )
   }
@@ -75,7 +79,7 @@ const pageType = d.template === 'giving' ? 'giving' : isHome ? 'home' : 'page';
   {
     hasBody && d.bodyPosition === 'after' && (
       <div class="container-prose py-[var(--spacing-section)]">
-        <div class="prose"><Content /></div>
+        <div class="prose"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
       </div>
     )
   }
