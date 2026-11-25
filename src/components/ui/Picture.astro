@@ -13,8 +13,10 @@ interface Props {
   class?: string;
   eager?: boolean;
   aspect?: string;
+  /** Fill the positioned parent (full-bleed backgrounds). */
+  fill?: boolean;
 }
-const { path, alt, sizes = '(min-width: 76rem) 1200px, 100vw', widths, class: cls, eager = false, aspect } = Astro.props;
+const { path, alt, sizes = '(min-width: 76rem) 1200px, 100vw', widths, class: cls, eager = false, aspect, fill = false } = Astro.props;
 const src = img(path);
 const ws = (widths ?? [400, 640, 900, 1200, 1600, 2000]).filter((w) => w <= src.width);
 if (!ws.length || ws[ws.length - 1] < src.width) ws.push(Math.min(src.width, 2400));
@@ -31,5 +33,5 @@ if (!ws.length || ws[ws.length - 1] < src.width) ws.push(Math.min(src.width, 240
   decoding="async"
   layout="none"
   class={cls}
-  style={aspect ? `aspect-ratio:${aspect};object-fit:cover;width:100%;height:auto` : 'width:100%;height:auto'}
+  style={fill ? 'width:100%;height:100%;object-fit:cover' : aspect ? `aspect-ratio:${aspect};object-fit:cover;width:100%;height:auto` : 'width:100%;height:auto'}
 />
