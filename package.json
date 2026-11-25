@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=22.12"
+    "node": ">=22.23.4"
   },
   "scripts": {
     "predev": "node scripts/build-font-css.mjs",
@@ -18,7 +18,7 @@
     "check:redirects": "node scripts/check-redirects.mjs",
     "check:links": "node scripts/check-links.mjs",
     "test": "node --test worker/*.test.mjs",
-    "geo": "node scripts/geo-audit.mjs",
+    "geo": "uvx --from geo-optimizer-skill geo audit",
     "check:experiments": "node scripts/check-experiments.mjs",
     "embeds:upload": "wrangler r2 object put unfoldingword-media/embeds/virtuous-signup.html --file embeds/virtuous-signup.html --remote --content-type 'text/html; charset=utf-8' --cache-control 'public, max-age=300'"
   },
@@ -26,6 +26,7 @@
     "@astrojs/mdx": "8.1.6",
     "@astrojs/sitemap": "3.7.6",
     "astro": "7.4.13",
+    "html-to-text": "10.0.1",
     "marked": "18.3.0"
   },
   "devDependencies": {
@@ -40,6 +41,7 @@
     "@fontsource/noto-sans-sc": "^5.3.1",
     "@fontsource/pt-serif": "5.3.0",
     "@tailwindcss/vite": "4.3.4",
+    "@types/html-to-text": "9.0.4",
     "pagefind": "1.6.0",
     "sharp": "0.35.5",
     "tailwindcss": "4.3.4",

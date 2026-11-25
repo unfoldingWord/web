@@ -78,9 +78,9 @@ const socials = [
       <p class="max-w-3xl">{t.footer.trust}</p>
       <div class="flex flex-wrap gap-x-5 gap-y-1">
         <span>{fmt(t.footer.copyright, { year })}</span>
-        <a href="/privacy/" class="!text-white/85">{t.footer.privacy}</a>
-        <a href="/terms-of-use/" class="!text-white/85">{t.footer.terms}</a>
-        <a href="/charitable-solicitation-disclosures/" class="!text-white/85">{t.footer.disclosures}</a>
+        <a href={localizePath('/privacy/', locale)} class="!text-white/85">{t.footer.privacy}</a>
+        <a href={localizePath('/terms-of-use/', locale)} class="!text-white/85">{t.footer.terms}</a>
+        <a href={localizePath('/charitable-solicitation-disclosures/', locale)} class="!text-white/85">{t.footer.disclosures}</a>
       </div>
     </div>
   </div>

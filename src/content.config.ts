@@ -29,6 +29,11 @@ const imagePath = z
   .string()
   .regex(/^[a-z0-9][a-z0-9/_\-.]*\.(jpe?g|png|webp|avif|gif|svg)$/i, 'Image paths are relative to src/assets/images/, e.g. "stories/my-photo.jpg"');
 
+function hasImageAlt(data: { image?: string; imageAlt?: string }) {
+  return !data.image || Boolean(data.imageAlt?.trim());
+}
+const missingAlt = { message: 'An image needs descriptive imageAlt text', path: ['imageAlt'] };
+
 const href = z.string().min(1);
 
 const action = z.object({
@@ -52,7 +57,7 @@ const hero = z.object({
   imageAlt: z.string().optional(),
   variant: z.enum(['photo', 'ocean', 'light', 'split']).default('ocean'),
   actions: z.array(action).default([]),
-});
+}).refine(hasImageAlt, missingAlt);
 
 const prose = z.object({
   type: z.literal('prose'),
@@ -80,7 +85,7 @@ const cards = z.object({
       icon: z.string().optional(),
       href: href.optional(),
       linkLabel: z.string().optional(),
-    }),
+    }).refine(hasImageAlt, missingAlt),
   ),
 });
 
@@ -95,7 +100,7 @@ const split = z.object({
   imagePosition: z.enum(['start', 'end']).default('end'),
   background: z.enum(['white', 'mist', 'ocean']).default('white'),
   actions: z.array(action).default([]),
-});
+}).refine(hasImageAlt, missingAlt);
 
 const stats = z.object({
   type: z.literal('stats'),
@@ -112,7 +117,7 @@ const quote = z.object({
   role: z.string().optional(),
   image: imagePath.optional(),
   imageAlt: z.string().optional(),
-});
+}).refine(hasImageAlt, missingAlt);
 
 const cta = z.object({
   type: z.literal('cta'),
@@ -147,7 +152,7 @@ const giving = z.object({
   formId: z.string().regex(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/, 'A Virtuous form id is the data-rd value from the embed code, like 16dec80a-ad5e-470e-ae62-4ed13821ccca'),
   image: imagePath.optional(),
   imageAlt: z.string().optional(),
-});
+}).refine(hasImageAlt, missingAlt);
 
 const faq = z.object({
   type: z.literal('faq'),
@@ -199,7 +204,7 @@ const resources = z.object({
       image: imagePath.optional(),
       imageAlt: z.string().optional(),
       meta: z.string().optional(),
-    }),
+    }).refine(hasImageAlt, missingAlt),
   ),
 });
 
@@ -214,7 +219,7 @@ const steps = z.object({
 const gallery = z.object({
   type: z.literal('gallery'),
   title: z.string().optional(),
-  images: z.array(z.object({ src: imagePath, alt: z.string(), caption: z.string().optional() })),
+  images: z.array(z.object({ src: imagePath, alt: z.string().trim().min(1), caption: z.string().optional() })),
 });
 
 const trust = z.object({ type: z.literal('trust'), title: z.string().optional() });
@@ -228,7 +233,7 @@ const contactForm = z.object({
 const embed = z.object({
   type: z.literal('embed'),
   title: z.string(),
-  src: z.string().url(),
+  src: z.url(),
   aspect: z.string().default('16 / 9'),
 });
 
@@ -315,7 +320,7 @@ const prayer = defineCollection({
     image: imagePath.optional(),
     imageAlt: z.string().optional(),
     redirectFrom,
-  }),
+  }).refine(hasImageAlt, missingAlt),
 });
 
 const people = defineCollection({
@@ -329,7 +334,7 @@ const people = defineCollection({
     photoAlt: z.string().optional(),
     bio: z.string().optional(),
     translationStatus,
-  }),
+  }).refine((p) => !p.photo || Boolean(p.photoAlt?.trim()), { message: 'A photo needs descriptive photoAlt text', path: ['photoAlt'] }),
 });
 
 const sweet = defineCollection({

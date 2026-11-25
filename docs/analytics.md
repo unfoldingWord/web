@@ -14,7 +14,7 @@ Before GTM loads, every page pushes to the dataLayer:
 | `page_locale` | `en`, `es`, … |
 | `experiment_id`, `experiment_variant` | only on pages in an A/B test |
 
-Other events the site pushes: `experiment_impression` (A/B), `virtuous_message` (anything the Virtuous form iframe posts to the page — see below), `contact_form_submit` (when the contact form is enabled).
+Other events the site pushes: `experiment_impression` (A/B), `virtuous_message` (a message arrived from a giving-form iframe, with its payload omitted), `contact_form_submit` (when the contact form is enabled).
 
 ## Pre-cutover checklist (needs GTM and GA4 access)
 

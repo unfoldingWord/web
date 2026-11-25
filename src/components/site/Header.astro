@@ -31,9 +31,9 @@ const isCurrent = (item: NavItem): boolean =>
     it the containing block for the fixed-position phone menu panel and clip
     the panel to the header's height. */}
 <header class="site-header sticky top-0 z-40 border-b border-line bg-white">
-  <div class="container-page flex h-16 items-center gap-3 lg:h-20">
-    <a href={localizePath('/', locale)} class="me-auto flex shrink-0 items-center" aria-label={`${t.siteName} — ${t.home}`}>
-      <Image src={logo} alt="unfoldingWord" width={200} height={35} loading="eager" fetchpriority="high" class="h-7 w-auto lg:h-8" />
+  <div class="container-page flex h-16 items-center gap-2 sm:gap-3 lg:h-auto lg:min-h-20">
+    <a href={localizePath('/', locale)} class="me-auto flex min-w-0 items-center lg:shrink-0" aria-label={`${t.siteName} — ${t.home}`}>
+      <Image src={logo} alt="unfoldingWord" width={200} height={35} loading="eager" fetchpriority="high" layout="none" class="h-auto w-40 lg:w-44" />
     </a>
 
     <nav id="site-nav" class="site-nav" aria-label={t.mainNav} data-open="false">
@@ -136,8 +136,8 @@ const isCurrent = (item: NavItem): boolean =>
 
   /* ---- Desktop: horizontal bar with dropdowns ---- */
   @media (min-width: 64rem) {
-    .site-nav { position: static; display: block; padding: 0; overflow: visible; background: none; }
-    .nav-list { flex-direction: row; align-items: center; gap: 0.125rem; }
+    .site-nav { position: static; display: block; min-width: 0; padding: 0; overflow: visible; background: none; }
+    .nav-list { flex-flow: row wrap; align-items: center; justify-content: center; gap: 0.125rem; }
     .nav-item { position: relative; border: 0; }
     .nav-top {
       width: auto; min-height: 2.75rem; padding: 0.5rem 0.65rem; border-radius: 999px;
@@ -173,7 +173,11 @@ const isCurrent = (item: NavItem): boolean =>
     toggle.querySelector('[data-label-close]')?.classList.toggle('hidden', !open);
     document.documentElement.classList.toggle('nav-open', open && !desktop.matches);
   }
-  toggle?.addEventListener('click', () => setMenu(nav?.dataset.open !== 'true'));
+  toggle?.addEventListener('click', () => {
+    const open = nav?.dataset.open !== 'true';
+    setMenu(open);
+    if (open) nav?.querySelector<HTMLElement>('.nav-top')?.focus();
+  });
 
   const tops = [...(nav?.querySelectorAll<HTMLButtonElement>('button.nav-top') ?? [])];
   function closeAll(except?: HTMLButtonElement) {

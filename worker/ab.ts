@@ -30,11 +30,14 @@ export const COOKIE_PREFIX = 'uwab_';
 
 /** The experiment that applies to this path right now, if any. Draft tests
  *  run only when forced with ?ab=<variant> (for previewing). */
-export function experimentFor(path: string, list: Experiment[], now: Date, forced: boolean): Experiment | undefined {
+export function experimentFor(path: string, list: Experiment[], now: Date, forcedId: string | null): Experiment | undefined {
   const norm = path.endsWith('/') ? path : `${path}/`;
   return list.find((e) => {
     if (e.path !== norm) return false;
+    const forced = e.variants.some((v) => v.id === forcedId);
+    if (e.status === 'stopped') return e.variants.some((v) => v.id === e.winner);
     if (e.status === 'running') {
+      if (e.winner) return true;
       if (e.start && now < new Date(`${e.start}T00:00:00Z`)) return forced;
       if (e.end && now > new Date(`${e.end}T23:59:59Z`)) return forced;
       return true;
@@ -59,7 +62,13 @@ export function readCookie(header: string | null, name: string): string | undefi
   if (!header) return undefined;
   for (const part of header.split(';')) {
     const [k, ...rest] = part.trim().split('=');
-    if (k === name) return decodeURIComponent(rest.join('='));
+    if (k === name) {
+      try {
+        return decodeURIComponent(rest.join('='));
+      } catch {
+        return undefined;
+      }
+    }
   }
   return undefined;
 }

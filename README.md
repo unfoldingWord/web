@@ -6,7 +6,7 @@ The website of [unfoldingWord](https://unfoldingword.org). A static [Astro](http
 
 ## Run it
 
-Needs Node 22.12+.
+Needs Node 22.23.4+.
 
 ```bash
 npm install
@@ -53,10 +53,10 @@ Launch steps (DNS, domains, Search Console): `docs/cutover.md`.
 ## Checking search and AI readiness
 
 ```bash
-uvx --from geo-optimizer-skill geo audit --url https://unfoldingword.org
+npm run geo -- --url https://unfoldingword.org
 ```
 
-The goal is 90+. Run it against production: previews send `X-Robots-Tag: noindex`, which costs points production does not lose.
+The audit uses `uvx` from uv. The goal is 90+. Run it against production: previews send `X-Robots-Tag: noindex`, which costs points production does not lose.
 
 ## Repository is public
 

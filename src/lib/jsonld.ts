@@ -107,8 +107,8 @@ export function faqNode(url: string, items: { q: string; a: string }[]): Node {
   };
 }
 
-export function videoNode(opts: { url: string; title: string; description?: string; provider: 'youtube' | 'vimeo'; id: string; transcript?: string }): Node {
-  const embed = opts.provider === 'youtube' ? `https://www.youtube-nocookie.com/embed/${opts.id}` : `https://player.vimeo.com/video/${opts.id}`;
+export function videoNode(opts: { url: string; title: string; description?: string; provider: 'youtube' | 'vimeo'; id: string; hash?: string; transcript?: string }): Node {
+  const embed = opts.provider === 'youtube' ? `https://www.youtube-nocookie.com/embed/${opts.id}` : `https://player.vimeo.com/video/${opts.id}${opts.hash ? `?h=${encodeURIComponent(opts.hash)}` : ''}`;
   return {
     '@type': 'VideoObject',
     '@id': `${opts.url}#video-${opts.id}`,

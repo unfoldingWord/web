@@ -22,17 +22,17 @@ export function mdInline(text: string | undefined, locale?: string): string {
 }
 
 // Paths that are files, not pages, keep their URL in every locale.
-const NOT_PAGES = /^\/(fonts|brand|_astro|wp-content|media|favicon|apple-touch|robots|sitemap|llms|ai\/|\.well-known)/;
+const SHARED_PATH = /^\/(?:fonts|brand|_astro|wp-content|media|ai|\.well-known|search|styleguide|404)(?:[/?#]|$)/;
 
 /** A site path in the given locale; external links and files unchanged. */
 export function localizeHref(href: string, locale?: string): string {
   if (href.startsWith('/wp-content/uploads/')) return `${media.base}/uploads/${href.slice('/wp-content/uploads/'.length)}`;
-  if (!locale || locale === 'en' || !href.startsWith('/') || href.startsWith('//') || NOT_PAGES.test(href)) return href;
-  if (/^\/[a-z]{2}\//.test(href)) return href;
+  if (!locale || locale === 'en' || !href.startsWith('/') || href.startsWith('//') || SHARED_PATH.test(href)) return href;
+  if (/^\/[a-z]{2}\//.test(href) || /\.[^/]+$/.test(href.split(/[?#]/, 1)[0])) return href;
   return `/${locale}${href}`;
 }
 
-function localizeLinks(html: string, locale?: string): string {
+export function localizeLinks(html: string, locale?: string): string {
   // Old WordPress upload links go straight to the media bucket.
   html = html.replace(/(href|src)="\/wp-content\/uploads\//g, `$1="${media.base}/uploads/`);
   if (!locale || locale === 'en') return html;

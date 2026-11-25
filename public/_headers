@@ -27,7 +27,3 @@
 # out of search engines; only unfoldingword.org is indexed.
 https://:sub.unfoldingword.workers.dev/*
   X-Robots-Tag: noindex
-
-# A/B variant pages are only ever served through the Worker at the real URL.
-/_variants/*
-  X-Robots-Tag: noindex

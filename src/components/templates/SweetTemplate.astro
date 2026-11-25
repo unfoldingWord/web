@@ -11,6 +11,7 @@ import { webPageNode, breadcrumbNode } from '../../lib/jsonld';
 import { ui, fmt, localizePath } from '../../i18n';
 import { sweetImageUrl, sweetParts } from '../../lib/sweet';
 import { basePathFor, splitId, type Route } from '../../lib/routes';
+import LocalizedBody from '../ui/LocalizedBody.astro';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
 import Icon from '../ui/Icon.astro';
@@ -47,7 +48,7 @@ const jsonLd = [
       <p class="eyebrow mb-3">Sweet Publishing</p>
       <h1>{d.book}</h1>
       <p class="mt-3 text-ink-muted">{fmt(t.imagesCount, { count: total })}</p>
-      {entry.body?.trim() && <div class="prose mt-6"><Content /></div>}
+      {entry.body?.trim() && <div class="prose mt-6"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>}
       <p class="mt-4 max-w-3xl text-sm text-ink-muted" set:html={t.sweetLicense} />
       {
         d.chapters.length > 1 && (

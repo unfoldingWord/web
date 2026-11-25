@@ -1,7 +1,7 @@
 ---
 // Served by Workers for any path with no asset (not_found_handling:
 // "404-page"), with a 404 status. One English page: the request's locale is
-// not known at build time. The search box hands off to a site: search.
+// not known at build time. The search box uses the site's Pagefind index.
 import Base from '../layouts/Base.astro';
 import { ui } from '../i18n';
 const t = ui('en');
@@ -18,8 +18,7 @@ const t = ui('en');
         <a href="/stories/" class="uw-btn uw-btn-secondary">{t.allStories}</a>
         <a href="/give/" class="uw-btn uw-btn-give">{t.donate}</a>
       </div>
-      <form action="https://www.google.com/search" method="get" class="mx-auto mt-10 flex max-w-md gap-2" role="search">
-        <input type="hidden" name="as_sitesearch" value="unfoldingword.org" />
+      <form action="/search/" method="get" class="mx-auto mt-10 flex max-w-md gap-2" role="search">
         <label for="q404" class="sr-only">Search unfoldingword.org</label>
         <input id="q404" name="q" type="search" placeholder="Search unfoldingword.org" class="min-h-12 flex-1 rounded-full border border-line bg-white px-5" />
         <button type="submit" class="uw-btn uw-btn-primary">Search</button>

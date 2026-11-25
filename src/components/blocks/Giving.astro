@@ -62,16 +62,20 @@ const fallbackLink = `<a href="${SITE.givingFallbackUrl}">give.unfoldingword.org
     if (window.__uwVirtuousListener) return;
     window.__uwVirtuousListener = true;
     window.addEventListener('message', function (e) {
-      if (!/virtuous/i.test(e.origin)) return;
-      var data = e.data;
-      var kind = typeof data === 'string' ? data.slice(0, 80) : data && (data.event || data.type || data.action);
+      // Only acknowledge a message from an iframe actually embedded in the
+      // giving form. Its payload can include donor or payment details.
+      var frames = document.querySelectorAll('.virtuous-form iframe[src]');
+      var fromForm = Array.from(frames).some(function (frame) {
+        return frame.contentWindow === e.source && new URL(frame.src).origin === e.origin && e.origin !== 'null';
+      });
+      if (!fromForm) return;
       window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'virtuous_message', virtuous_message_type: String(kind || 'unknown') });
+      window.dataLayer.push({ event: 'virtuous_message' });
     });
     // Hide the loading line once Virtuous has inserted its form.
     var obs = new MutationObserver(function () {
       document.querySelectorAll('.virtuous-form').forEach(function (el) {
-        if (el.querySelector('iframe, form')) el.querySelector('.virtuous-loading')?.remove();
+        if (el.querySelector('[data-rd-state], iframe, form')) el.querySelector('.virtuous-loading')?.remove();
       });
     });
     obs.observe(document.body, { childList: true, subtree: true });
