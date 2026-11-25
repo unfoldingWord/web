@@ -1,6 +1,6 @@
 ---
 title: 'Finishing the Open-License Old Testament Resources'
-description: 'Our Content team is working diligently to complete all the English Old Testament Book Packages this year.'
+description: 'Our Content team is working diligently to complete all the English Old Testament Book Packages this year. Please pray often on their behalf.'
 date: 2026-11-02
 region: worldwide
 ---

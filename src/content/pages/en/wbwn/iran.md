@@ -39,11 +39,13 @@ sections:
       - title: Hundreds of Iranians Introduced to Christ
         body: As rockets rain and bombs fall, dedicated Iranians continue working on a spiritual revolution, translating God’s Word into the heart languages of its ninety-two million people.
         href: /stories/hundreds-of-iranians-introduced-to-christ/
-        icon: book
+        image: stories/hundreds-of-iranians-introduced-to-christ.jpg
+        imageAlt: Two men in white shirts baptize a person in an outdoor pool while family and friends watch from the edge
       - title: Tara felt like Job
         body: Tara’s first experience with the Bible in her language was with the book of Job.
         href: /stories/tara-felt-like-job/
-        icon: book
+        image: stories/tara-felt-like-job.jpg
+        imageAlt: A smiling woman in a pink, white and navy headscarf hugs a smiling young girl outdoors
   - type: prose
     title: "More Whole Bible | Whole Nation projects"
     background: mist

@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import type { Block } from '../../content.config';
-import { ui, formatDate, localizePath } from '../../i18n';
+import { ui, formatMonth, localizePath } from '../../i18n';
 import { basePathFor, splitId } from '../../lib/routes';
 import { mdInline } from '../../lib/md';
 import Section from '../ui/Section.astro';
@@ -41,7 +41,7 @@ if (block.limit) items = items.slice(0, block.limit);
           <div class="flex flex-1 flex-col p-6">
             <p class="flex items-center gap-2 text-sm text-ink-muted">
               <Icon name="pray" class="size-4 text-inspire-ink" />
-              <time datetime={p.data.date.toISOString()}>{formatDate(p.data.date, locale)}</time>
+              <time datetime={p.data.date.toISOString()}>{formatMonth(p.data.date, locale)}</time>
             </p>
             <h3 class="mt-2 text-xl">
               <a href={localizePath(basePathFor('prayer', slug), locale)} class="text-ocean no-underline after:absolute after:inset-0 hover:underline" set:html={mdInline(p.data.title)} />

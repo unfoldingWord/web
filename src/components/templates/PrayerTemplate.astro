@@ -2,7 +2,7 @@
 import { render, type CollectionEntry } from 'astro:content';
 import { SITE } from '../../lib/site';
 import { webPageNode, breadcrumbNode, articleNode } from '../../lib/jsonld';
-import { ui, formatDate, fmt, localizePath } from '../../i18n';
+import { ui, formatMonth, fmt, localizePath } from '../../i18n';
 import type { Route } from '../../lib/routes';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
@@ -33,7 +33,7 @@ const jsonLd = [
         <div class="mb-5"><Breadcrumbs items={crumbs} locale={route.locale} /></div>
         <p class="eyebrow mb-3 flex items-center gap-2"><Icon name="pray" class="size-4" />{(t.nav as Record<string, string>).prayer}</p>
         <h1 class="text-h1">{d.title}</h1>
-        <p class="mt-4 text-sm text-ink-muted"><time datetime={d.date.toISOString()}>{fmt(t.publishedOn, { date: formatDate(d.date, route.locale) })}</time></p>
+        <p class="mt-4 text-sm text-ink-muted"><time datetime={d.date.toISOString()}>{formatMonth(d.date, route.locale)}</time></p>
       </div>
     </header>
     <div class="container-prose py-[var(--spacing-section)]">

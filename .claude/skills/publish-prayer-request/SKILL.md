@@ -15,7 +15,7 @@ A prayer request is one file, `src/content/prayer/en/<slug>.md`, shown at `/pray
 ---
 title: <title>
 description: 120–160 characters: what to pray for, for search results.
-date: 2026-12-01
+date: 2026-12-01             # shown as the month (December 2026)
 region: middle-east        # optional
 image: prayer/<slug>.jpg   # optional; save with scripts/migrate/fetch-image.mjs
 imageAlt: <what is in the photo>

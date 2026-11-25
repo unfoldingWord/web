@@ -1,6 +1,6 @@
 # unfoldingword.org migration plan: WordPress to Astro on Cloudflare
 
-Status: **draft for review, revision 2** · 24 November 2026 · build complete by end of December 2026 · cutover January 2027
+Status: **in progress — see section 10** (revision 3) · 24 November 2026 · build complete by end of December 2026 · cutover January 2027
 
 This is a plan, not a build. Nothing has been scaffolded, configured or changed anywhere. Section 2 is what I measured on the live site today; everything marked **(assumption)** or **(to verify)** has not been checked yet.
 
@@ -36,8 +36,8 @@ Measured 24 Nov 2026 by crawling all URLs in the site's sitemaps and checking ev
 | Theme: Hello Elementor + Elementor Pro + PowerPack | asset paths in page source |
 | 135 indexable URLs: 63 pages, 36 stories (posts), 31 "sweet-publishing" pages, 5 prayer requests | Rank Math sitemaps |
 | 959 media library items; images are served via Jetpack's CDN (`i0.wp.com`) | WP REST API `X-WP-Total`; crawl |
-| The 31 Sweet Publishing pages show **5,996 distinct images**, all JPEGs hosted on `filedn.com` (pCloud) and passed through Jetpack's CDN. Largest pages: Acts 782, Luke 764, Genesis 740. | crawl of all 31 pages |
-| Those images are about 1.5 MB each, so roughly **9 GB** in total | four files sampled; **estimate**, not a full count |
+| The 31 Sweet Publishing pages show **2,998 distinct images** (corrected 25 Nov: the first count included each image's thumbnail), all JPEGs hosted on `filedn.com` (pCloud) and passed through Jetpack's CDN. Largest pages: Acts 782, Luke 764, Genesis 740. | crawl of all 31 pages |
+| The originals total **4.01 GB** | every file downloaded and measured on 25 Nov |
 | Analytics load through **Google Tag Manager `GTM-KS32FPTM`**, not a direct GA tag. The GA4 ID is inside the container, not in the page. | page source |
 | The GTM container also appears to fire ad tags (Adform, The Trade Desk, Masterworks "epiphany") | hostnames referenced on story pages; **inference**, needs a look inside GTM |
 | Redirects live in the **Redirection** plugin (and possibly Rank Math's redirect module) | `redirection/v1` and `rankmath/v1` REST namespaces; the list itself needs a login (API returned 401) |
@@ -140,7 +140,7 @@ A script pulls every page, post, custom post type and media file from the WordPr
 Media: all 959 items are downloaded; `/wp-content/uploads/…` paths that are linked from outside (PDFs especially) keep working via redirects.
 
 ### 5.3a Sweet Publishing images on R2
-Today these 5,996 images are loaded from a pCloud public folder (`filedn.com`) through Jetpack's image CDN, which disappears with WordPress. Plan:
+Today these 2,998 images are loaded from a pCloud public folder (`filedn.com`) through Jetpack's image CDN, which disappears with WordPress. Plan:
 
 1. Create an R2 bucket and copy every image from `filedn.com`, keeping the same folder and file names (`sweet_images/jpg/01/01_Ge_01_01_RG.jpg`) so nothing needs renaming. A manifest records each file's size and checksum; the copy is verified against it.
 2. Generate smaller web versions at upload time (a thumbnail and a screen-size WebP for each). The originals are about 1.5 MB each and some pages show more than 700 of them; a phone must never download the originals just to browse. Originals stay available for download.
@@ -148,7 +148,7 @@ Today these 5,996 images are loaded from a pCloud public folder (`filedn.com`) t
 4. The gallery template pages by chapter and lazy-loads, so Acts does not put 782 images on one screen.
 5. The `filedn.com` folder is left untouched — other things may link to it **(to verify with you)**.
 
-Cost: about 9 GB sits just under R2's 10 GB free allowance before the web versions are added, so expect a small monthly storage charge (cents, not dollars, at current list prices — **to verify** on the pricing page). R2 does not charge for downloads.
+Cost: 4.0 GB of originals plus about 0.8 GB of web and thumbnail sizes, under R2's 10 GB free storage allowance. R2 does not charge for downloads.
 
 Licence: the image attribution and licence wording shown on the current pages is carried over unchanged.
 
@@ -233,7 +233,7 @@ This is a judgment about risk, not a legal opinion; condition 2 in particular is
 | --- | --- | --- |
 | **0. Access and inventory** | 24 Nov – 1 Dec | Redirect export, GTM container audit, forms inventory, DNS record inventory, Search Console baseline, Cloudflare Worker project and R2 bucket created, remaining items in section 9 settled |
 | **1. Framework** | 24 Nov – 8 Dec (starts now, alongside Phase 0) | Design system, all templates, 16-language localization, SEO/GEO plumbing, analytics, redirect engine, branch previews, CI checks. Home + one of each template built with real content as proof. |
-| **2a. Sweet Publishing images to R2** | 1 – 8 Dec (independent of the rest) | All 5,996 images copied and verified, web versions generated, gallery template reading from R2 |
+| **2a. Sweet Publishing images to R2** | 1 – 8 Dec (independent of the rest) | All 2,998 images copied and verified, web versions generated, gallery template reading from R2 |
 | **2b. Content migration** | 1 – 18 Dec | All 135 URLs built in English; cleaned-up URLs redirected; parity checklist complete |
 | **2c. Translation** | 8 – 22 Dec, review continuing after | Drafts of the standing pages in 15 languages; native review as reviewers are available |
 | **3. Editor workflow and A/B** | 15 – 22 Dec | Skills written and tried by a non-technical person; one A/B test run end to end on staging |
@@ -282,3 +282,29 @@ The December dates are tight for a site with 16 languages. What protects the 31 
 - Cloudflare: create the Worker project and the R2 bucket, connect GitHub (Workers Builds)
 - AWS Route 53: read-only view of the DNS records
 - Virtuous: how the embed reports a completed gift
+
+---
+
+## 10. Status — 25 November 2026
+
+Built on `main` (pushed to `unfoldingWord/web`), Phases 0–3 except the items marked as waiting.
+
+**Done**
+- Framework: Astro 7 static site, design tokens and ~21 blocks (`/styleguide/` shows them), templates for pages, stories, prayer requests and Sweet Publishing, 16 locales with English fallback, JSON-LD, sitemaps with hreflang, `robots.txt`, `llms.txt`, `llms-full.txt`, `/ai/*.json`, `/.well-known/ai.txt`, story RSS.
+- Content: all 64 pages, 36 stories, 8 prayer requests and 31 Sweet Publishing books migrated (2,259 pages built including language fallbacks). Cleaned-up URLs redirect from the old ones; all 214 old URLs found by the crawl resolve (`npm run check:redirects`), internal links and anchors are checked (`npm run check:links`).
+- Sweet Publishing: 2,998 originals plus web and thumbnail sizes in R2 bucket `unfoldingword-media`, served from its r2.dev address until cutover.
+- Interface strings drafted in all 15 other languages (marked draft; native review needed). Page translations: not started — waiting on decision 1 below.
+- Analytics: GTM `GTM-KS32FPTM` on the production host only; page type, locale and A/B variant pushed to the dataLayer.
+- A/B testing: Worker serves variants at the same URL with a sticky cookie; unit-tested; demo experiment in draft.
+- Cloudflare: Worker `unfoldingword-web` deployed (staging: https://unfoldingword-web.unfoldingword.workers.dev, noindex), connected to the GitHub repo with Workers Builds — `main` deploys, other branches get Preview URLs.
+- CI (GitHub Actions), `CLAUDE.md`, nine editor skills, docs for content, A/B testing, analytics, forms and the cutover runbook.
+
+**Waiting on information or access**
+1. Translation scope and reviewers (section 9, decision 1).
+2. `/obs/` vs `/open-bible-stories/` — both built at their current URLs.
+3. The Redirection plugin's rule list and 404 log (WordPress admin) — 37 rules recovered by probing and from the old pages' own links so far.
+4. GTM container audit and GA4 custom dimensions (GTM/GA4 access) — `docs/analytics.md`.
+5. Virtuous: register the preview domain(s) so giving forms render on previews (`*.unfoldingword.workers.dev`); confirm what a completed gift reports (A/B conversion).
+6. Contact form destination (Contact Form 7 settings) — `docs/forms.md`.
+7. Phone number: the site shows both 407-604-0883 and 407-900-3005.
+8. Content decisions the migration surfaced — listed in the hand-off notes.

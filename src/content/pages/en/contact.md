@@ -6,5 +6,5 @@ redirectFrom: [/contact-us/]
 sections:
   - type: contactForm
     title: Get in touch
-    intro: Reach us by mail or phone.
+    intro: Reach us by mail, by phone or by email at [info@unfoldingword.org](mailto:info@unfoldingword.org).
 ---

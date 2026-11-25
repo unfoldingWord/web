@@ -26,6 +26,11 @@ for (const s of all) {
   if (l === locale) bySlug.set(rest, s);
 }
 let stories = [...bySlug.values()].sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+if (block.slugs) {
+  const missing = block.slugs.filter((s) => !bySlug.has(s));
+  if (missing.length) throw new Error(`storyList: no story file for ${missing.join(', ')} (src/content/stories/en/<slug>.md)`);
+  stories = block.slugs.map((s) => bySlug.get(s)!);
+}
 if (block.region) stories = stories.filter((s) => s.data.region === block.region);
 if (block.limit) stories = stories.slice(0, block.limit);
 const regions = [...new Set(stories.map((s) => s.data.region))].sort();
@@ -36,7 +41,7 @@ const regionName = (r: string) => (t.regions as Record<string, string>)[r] ?? r;
   <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
     <SectionHeader eyebrow={block.eyebrow} title={block.title} locale={locale} />
     {
-      block.limit && (
+      (block.limit || block.slugs) && (
         <a href={localizePath('/stories/', locale)} class="mb-8 inline-flex items-center gap-1.5 font-heading font-extrabold lg:mb-12">
           {t.allStories}
           <Icon name="arrow-right" class="size-4 rtl:-scale-x-100" />

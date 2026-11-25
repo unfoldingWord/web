@@ -39,15 +39,18 @@ sections:
       - title: The Gospel in Five More Languages
         body: Pastor Charles Zinzindohoue was born into a world of voodoo.
         href: /stories/the-gospel-in-five-more-languages/
-        icon: book
+        image: stories/the-gospel-in-five-more-languages.jpg
+        imageAlt: Pastor Charles, a smiling man in glasses and a patterned red, black and white shirt, seated before tall windows
       - title: The Power of Strategic Language Resources
         body: One of the many rewards of partnership in the Church-Centric Bible Translation movement is having a front-row seat to remarkable advances in Bible translation.
         href: /stories/the-power-of-strategic-language-resources/
-        icon: book
+        image: stories/the-power-of-strategic-language-resources.jpg
+        imageAlt: Silhouetted hands of a large crowd raised toward a bright sunrise sky
       - title: Overcoming Obstacles to the Gospel in Benin
         body: Charles Z of Benin has been trying to share the gospel of Christ with his Muslim neighbors since 1999.
         href: /stories/overcoming-obstacles-to-the-gospel-in-benin/
-        icon: book
+        image: stories/overcoming-obstacles-to-the-gospel-in-benin.jpg
+        imageAlt: A man in glasses and a patterned blue shirt gestures as he speaks, seated outdoors on a garden lawn
   - type: prose
     title: "More Whole Bible | Whole Nation projects"
     background: mist

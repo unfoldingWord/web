@@ -19,7 +19,6 @@ sections:
       - { label: Church-Centric Bible Translation, href: /ccbt/, style: secondary }
 
   - type: stats
-    eyebrow: Did you know?
     items:
       - { value: '7,145', label: people groups remain unreached by the gospel }
       - { value: '1.45 billion', label: "people still do not have access to God's Word in their heart language" }
@@ -56,7 +55,13 @@ sections:
 
   - type: storyList
     title: See what God is doing!
-    limit: 3
+    slugs:
+      - hundreds-of-iranians-introduced-to-christ
+      - translationcore-a-massive-hit-in-myanmar
+      - from-street-beggar-to-bold-evangelist
+      - gods-initiative-in-sudan
+      - the-crisis-in-islands-asia-bible-translation
+      - the-angry-imam
 
   - type: cards
     title: What leaders in Bible translation are saying
@@ -99,27 +104,33 @@ sections:
     columns: 3
     items:
       - title: translationCore is amazing software!
-        icon: tools
+        image: home/field-boaz.jpg
+        imageAlt: A smiling young man in an orange shirt and white scarf standing with folded arms in a green rice field
         body: |-
           Boaz (pseudonym), from South Asia, wrote: "I just started using unfoldingWord's translationCore for my work. It's amazing software! It makes repetitive tasks faster and lets me focus more on the content. I really praise God for whoever is behind translationCore!"
       - title: Birhan from Islands-Asia
-        icon: users
+        image: home/field-birhan.jpg
+        imageAlt: An older man in a blue bucket hat, with a smiling woman in a headscarf behind him
         body: |-
           Birhan is from Islands-Asia. His 500,000-member people group waited 170 years for a Bible in their heart language. Then they partnered with unfoldingWord. Now, they are on the way to translating God's Word for themselves! Birhan says, "I really love partnering with unfoldingWord, because it puts the church at the forefront."
       - title: Amos from South Asia
-        icon: check
+        image: home/field-amos.jpg
+        imageAlt: A man in a red plaid shirt with a shoulder bag standing in a sunlit city square
         body: |-
           In minority language Bible translation, consultant access is limited. Time and resources are stretched. Quality cannot depend only on the next consultant visit. When used in a disciplined way, translationCore helps bridge that gap. It highlights key terms, exposes inconsistencies and strengthens internal checking before external review.
       - title: Siroos Torabi, Transform Iran
-        icon: book
+        image: home/field-siroos-torabi.jpg
+        imageAlt: A smiling older man in a blue checked shirt, outdoors under trees
         body: |-
           "To make a clear, accurate and natural translation, you need to know a lot of things. The unfoldingWord translation Book Packages act like a consultant. Wherever you have a question, you refer to it and find your answer. Each Book Package is more than 3,000 pages. We are translating the Book Packages into Farsi, so the other 30 languages that need a Bible in Iran can use it. You do it once and use it 30 times! Using the unfoldingWord Book Packages is almost six times faster than the old translation method."
       - title: Charles from Benin
-        icon: church
+        image: home/field-charles.jpg
+        imageAlt: A man in glasses and a patterned shirt speaking and gesturing on a lawn
         body: |-
           Charles and his team are working on five strategic languages in which Islam has recently made inroads. "Our people are story-crazy people. unfoldingWord® Open Bible Stories overcomes their hostility to the message of Christ. Also, churches working with unfoldingWord materials in local languages have experienced significant spiritual and numerical growth."
       - title: Faster translations in South Sudan
-        icon: language
+        image: home/field-ibrahim.jpg
+        imageAlt: A smiling young man in a colorful patterned shirt in front of green foliage
         body: |-
           Ibrahim from South Sudan says, "Checking translations by hand is very slow. translationCore is the fastest Bible translation checking software that we have ever seen. With this tool, we can check three chapters in a day. Plus, we can check the accuracy of our work because it aligns our translation with the original languages."
 

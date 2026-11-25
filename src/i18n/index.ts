@@ -88,3 +88,8 @@ export function fmt(template: string, args: Record<string, string | number> = {}
 export function formatDate(date: Date, locale: string): string {
   return new Intl.DateTimeFormat(byCode(locale).tag, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }).format(date);
 }
+
+/** Month and year only, e.g. "October 2026" — prayer requests are dated by month. */
+export function formatMonth(date: Date, locale: string): string {
+  return new Intl.DateTimeFormat(byCode(locale).tag, { year: 'numeric', month: 'long', timeZone: 'UTC' }).format(date);
+}

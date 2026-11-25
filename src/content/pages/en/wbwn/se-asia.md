@@ -40,7 +40,8 @@ sections:
       - title: Life Change in Southeast Asia
         body: Mr. H (pseudonym) lives in Southeast Asia and works with unfoldingWord’s Whole Bible Whole Nation partner in a country village.
         href: /stories/life-change-in-southeast-asia/
-        icon: book
+        image: stories/life-change-in-southeast-asia.jpg
+        imageAlt: A busy city street at night with motorbikes, a pedicab and vendors carrying bunches of colorful balloons
   - type: prose
     title: "More Whole Bible | Whole Nation projects"
     background: mist

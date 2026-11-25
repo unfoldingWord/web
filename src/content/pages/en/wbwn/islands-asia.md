@@ -39,11 +39,13 @@ sections:
       - title: The Lost Sheep of Islands-Asia
         body: One of Jesus’s most beloved parables is the story of the wandering sheep.
         href: /stories/the-lost-sheep-of-islands-asia/
-        icon: book
+        image: stories/the-lost-sheep-of-islands-asia.jpg
+        imageAlt: A small wooden boat crosses calm sea at dusk, with a cloud-capped volcanic island on the horizon
       - title: The Cry for the Gospel in Islands-Asia
         body: With tears in her eyes, the tribal woman stood up in the meeting, slapped her palms on the table, and said, “We could all be gone by the time you …”
         href: /stories/the-crisis-in-islands-asia-bible-translation/
-        icon: book
+        image: stories/the-crisis-in-islands-asia-bible-translation.jpg
+        imageAlt: A woman in a woven striped net top and head covering stands in front of bundled cane poles in a green village garden
   - type: prose
     title: "More Whole Bible | Whole Nation projects"
     background: mist

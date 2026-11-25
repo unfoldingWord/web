@@ -11,7 +11,7 @@ sections:
     body: |-
       We collaborate with other Bible ministries to provide unrestricted, open-source biblical content, technology tools, and training resources to equip the global church for Bible translation and discipleship.
 
-      It is our desire to demonstrate responsible stewardship through total financial transparency. We are members of the [ECFA (Evangelical Council for Financial Accountability)](https://www.ecfa.org/MemberProfile.aspx?ID=29979), have achieved the [GuideStar Platinum Seal of Transparency](https://www.guidestar.org/profile/14-1888977) and have also received the [100% Give With Confidence rating from MinistryWatch](https://db.ministrywatch.com/ministry.php?ein=141888977). Explore the links below to browse through our financial reports and additional financial statements.
+      It is our desire to demonstrate responsible stewardship through total financial transparency. We are members of the [ECFA (Evangelical Council for Financial Accountability)](https://www.ecfa.org/), have achieved the [GuideStar Platinum Seal of Transparency](https://www.guidestar.org/profile/14-1888977) and have also received the [100% Give With Confidence rating from MinistryWatch](https://db.ministrywatch.com/ministry.php?ein=141888977). Explore the links below to browse through our financial reports and additional financial statements.
   - type: resources
     id: financials-2025
     title: 2025 financials

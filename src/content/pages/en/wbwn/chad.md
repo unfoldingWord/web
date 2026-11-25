@@ -43,15 +43,18 @@ sections:
       - title: Breaching a 500-Year-Old Barrier
         body: For 500 years, the Cilasi (pseudonym) people have fished, farmed and hunted around Lake Chad.
         href: /stories/breaching-a-500-year-old-barrier/
-        icon: book
+        image: stories/breaching-a-500-year-old-barrier.jpg
+        imageAlt: A fisherman standing in a wooden canoe among green reeds and flowering shrubs raises his hand in a wave
       - title: Jeremiah and the Occult King
         body: When Jeremiah* first heard that his Chadian church-planting network needed his help translating unfoldingWord® Open Bible Stories (OBS), he was skeptical.
         href: /stories/when-jeremiah-first-heard-that-his-chadian-church-planting/
-        icon: book
+        image: stories/when-jeremiah-first-heard-that-his-chadian-church-planting.jpg
+        imageAlt: Two men in patterned headscarves and turbans stand outdoors in a crowd under a bright sky
       - title: The Market Evangelist
         body: Christian* slung his satchel over his shoulder, swung his leg over his bike, and pedaled off for another day of evangelism and outreach in the market.
         href: /stories/the-market-evangelist/
-        icon: book
+        image: stories/the-market-evangelist.jpg
+        imageAlt: A smiling woman wearing pink headphones and an orange shirt stands with arms crossed by the sea at sunset
   - type: prose
     title: "More Whole Bible | Whole Nation projects"
     background: mist

@@ -170,6 +170,9 @@ const storyList = z.object({
   title: z.string().optional(),
   limit: z.number().int().positive().optional(),
   region: z.string().optional(),
+  // Hand-picked stories, in this order (file names without .md). Overrides
+  // the default "newest first".
+  slugs: z.array(z.string()).optional(),
   showFilter: z.boolean().default(false),
   background: z.enum(['white', 'mist']).default('white'),
 });

@@ -39,15 +39,18 @@ sections:
       - title: God’s Initiative in Sudan
         body: Jesus said, “The Son of Man came to seek and to save that which was lost.” He takes the initiative to seek and save his dear ones in the darkness.
         href: /stories/gods-initiative-in-sudan/
-        icon: book
+        image: stories/gods-initiative-in-sudan.jpg
+        imageAlt: A young man in an orange shirt smiling, with green foliage blurred behind him
       - title: The Exponential Journey
         body: Suddenly, a man toward the back of the room began weeping audibly. I thought, uh oh, what have I done? His name is Faheem.
         href: /stories/the-exponential-journey/
-        icon: book
+        image: stories/the-exponential-journey.jpg
+        imageAlt: A smiling man with a yellow scarf wrapped around his head and over his mouth, standing in a dry, sandy landscape
       - title: Like the man from Macedonia
         body: Greater Reach Alliance reports that Church-Centric Bible Translation gives them the tools they need to reach Muslims in Sudan.
         href: /stories/like-the-man-from-macedonia/
-        icon: book
+        image: stories/like-the-man-from-macedonia.jpg
+        imageAlt: An older man in a white robe smiling softly on a sunlit, sandy village street
   - type: prose
     title: "More Whole Bible | Whole Nation projects"
     background: mist

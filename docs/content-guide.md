@@ -198,6 +198,7 @@ bio: |-
 - type: storyList
   title: Stories from the field
   limit: 3                   # omit for all
+  slugs: [the-angry-imam, gods-initiative-in-sudan]   # optional: hand-picked stories in this order
   region: africa             # optional filter
   showFilter: true           # region filter buttons (story index page)
 - type: prayerList

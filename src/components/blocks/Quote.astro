@@ -29,8 +29,7 @@ const { block } = Astro.props;
       {
         block.attribution && (
           <figcaption class="mt-5 text-ink-muted">
-            <span class="font-heading font-extrabold text-ink">{block.attribution}</span>
-            {block.role && <span>, {block.role}</span>}
+            <span class="font-heading font-extrabold text-ink">{block.attribution}</span>{block.role && <span>, {block.role}</span>}
           </figcaption>
         )
       }
