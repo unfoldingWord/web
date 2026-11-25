@@ -19,7 +19,7 @@ visitor ──► unfoldingword.org/give/
 
 - **Same URL, no flicker.** The choice is made at the edge before any HTML is sent, so there is no flash of the other version and no redirect. Search engines see one URL; variant pages are `noindex` and canonical to the real page.
 - **Sticky.** A visitor keeps their version for 90 days (cookie `uwab_<test-id>`), so returning donors are not confused.
-- **Only test pages pay.** Every other page is served as a static file without running the Worker. That is why each test path must be listed in `run_worker_first` (`npm run check:experiments` enforces it).
+- **Worker routing.** Test pages, the homepage (for old WordPress shortlinks) and the contact API run through the Worker. Other pages are served as static files. That is why each test path must be listed in `run_worker_first` (`npm run check:experiments` enforces it).
 - **Preview any version** with `?ab=a` or `?ab=b` on the URL — this also works for tests still in `draft`.
 - **End instantly** by setting `"winner"` in `src/data/experiments.json`: everyone gets the winner from the next deploy.
 

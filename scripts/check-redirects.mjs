@@ -37,6 +37,10 @@ function resolve(path) {
 
 const urls = readFileSync(join(ROOT, 'redirects/old-urls.txt'), 'utf8').split('\n').map((l) => l.trim()).filter((l) => l && !l.startsWith('#'));
 const bad = [];
+const ids = JSON.parse(readFileSync(join(ROOT, 'redirects/wordpress-ids.json'), 'utf8'));
+for (const [id, target] of Object.entries(ids)) {
+  if (!/^\d+$/.test(id) || !isPage(target)) bad.push(`/?p=${id} → ${target} is not a valid shortlink`);
+}
 for (const u of urls) {
   const r = resolve(u);
   if (!r.ok) bad.push(`${u}  ${r.how}`);
@@ -53,4 +57,4 @@ if (bad.length) {
   console.error(`check:redirects — ${bad.length} legacy URL problem(s):\n  ${bad.join('\n  ')}`);
   process.exit(1);
 }
-console.log(`check:redirects — all ${urls.length} old URLs resolve`);
+console.log(`check:redirects — all ${urls.length} legacy paths and ${Object.keys(ids).length} WordPress ID targets resolve`);

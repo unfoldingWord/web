@@ -31,7 +31,7 @@ npm run build && npm run check && npm test
 | Blocks and templates | `src/components/blocks/`, `src/components/templates/` |
 | Every URL the site builds | `src/lib/routes.ts` (one catch-all route: `src/pages/[...path].astro`) |
 | Languages | `src/i18n/locales.mjs` (16, same as openbiblestories.org); interface strings `src/i18n/ui/<code>.json` |
-| Redirects | `redirects/legacy.txt` + each file's `redirectFrom` → `dist/_redirects` (`scripts/postbuild.mjs`); `redirects/old-urls.txt` must all resolve |
+| Redirects | `redirects/legacy.txt` + each file's `redirectFrom` → `dist/_redirects` (`scripts/postbuild.mjs`); `redirects/old-urls.txt` must all resolve. WordPress numeric shortlinks use `redirects/wordpress-ids.json` in the Worker. |
 | SEO / AI discovery | JSON-LD (`src/lib/jsonld.ts`), sitemaps, `robots.txt`, `llms.txt`, `llms-full.txt`, `/ai/*.json`, `/.well-known/ai.txt`, `/stories/rss.xml` |
 | Analytics | GTM `GTM-KS32FPTM`, production host only — `docs/analytics.md` |
 | A/B tests | `src/data/experiments.json` + `worker/` — `docs/ab-testing.md` |
