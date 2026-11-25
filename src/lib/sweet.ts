@@ -17,6 +17,6 @@ export function sweetImageUrl(name: string, size: SweetSize = 'web'): string {
 
 /** "01_Ge_01_02_RG" → { chapter: "1", frame: "2" } for captions. */
 export function sweetParts(name: string): { chapter: string; frame: string } {
-  const m = name.match(/^\d+_[A-Za-z0-9]+_(\d+)_(\d+)/);
-  return { chapter: m ? String(Number(m[1])) : '', frame: m ? String(Number(m[2])) : '' };
+  const m = name.match(/^\d+_[A-Za-z0-9]+_(\d+)_([0-9a-z]+)/);
+  return { chapter: m ? String(Number(m[1])) : '', frame: m ? m[2].replace(/^0+(?=\d)/, '') : '' };
 }

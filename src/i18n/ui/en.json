@@ -118,5 +118,7 @@
   "hideBio": "Hide bio",
   "transcript": "Transcript",
   "playVideo": "Play video: {title}",
-  "sweetIllustration": "Sweet Publishing illustration: {label}"
+  "sweetIllustration": "Sweet Publishing illustration: {label}",
+  "sweetLicense": "Illustrations by Sweet Publishing, released under the <a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">Creative Commons Attribution-ShareAlike 3.0</a> license. Please credit “Sweet Publishing” when you use them.",
+  "sweetIndexTitle": "Sweet Publishing illustrations"
 }

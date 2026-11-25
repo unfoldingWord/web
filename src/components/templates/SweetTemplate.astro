@@ -32,6 +32,8 @@ const prev = books[idx - 1];
 const next = books[idx + 1];
 const bookHref = (b: (typeof books)[number]) => localizePath(basePathFor('sweet', splitId(b.id).rest), route.locale);
 const first = d.chapters[0]?.images[0];
+const slug = (c: string) => `ch-${c.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+const chapterTitle = (c: string) => (/[a-z]/i.test(c) ? c : `${d.book} ${c}`);
 const jsonLd = [
   webPageNode({ url, title: d.title, description: d.description, lang: route.locale, type: 'CollectionPage', image: first ? sweetImageUrl(first, 'web') : undefined, breadcrumbId: `${url}#breadcrumb` }),
   breadcrumbNode(url, crumbs.map((c) => ({ name: c.name, url: new URL(c.href ?? route.path, SITE.url).href }))),
@@ -46,6 +48,7 @@ const jsonLd = [
       <h1>{d.book}</h1>
       <p class="mt-3 text-ink-muted">{fmt(t.imagesCount, { count: total })}</p>
       {entry.body?.trim() && <div class="prose mt-6"><Content /></div>}
+      <p class="mt-4 max-w-3xl text-sm text-ink-muted" set:html={t.sweetLicense} />
       {
         d.chapters.length > 1 && (
           <nav class="mt-8" aria-label={t.jumpToChapter}>
@@ -53,7 +56,7 @@ const jsonLd = [
             <ul class="flex flex-wrap gap-2">
               {d.chapters.map((c) => (
                 <li>
-                  <a href={`#ch-${c.chapter}`} class="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-line bg-white px-3 text-sm font-bold text-ocean no-underline hover:border-ocean">
+                  <a href={`#${slug(c.chapter)}`} class="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-line bg-white px-3 text-sm font-bold text-ocean no-underline hover:border-ocean">
                     {c.chapter}
                   </a>
                 </li>
@@ -68,14 +71,12 @@ const jsonLd = [
   <div class="container-page py-10 lg:py-14">
     {
       d.chapters.map((c) => (
-        <section id={`ch-${c.chapter}`} class="mb-12 scroll-mt-24" aria-labelledby={`ch-${c.chapter}-h`}>
-          <h2 id={`ch-${c.chapter}-h`} class="mb-5 text-h3">
-            {d.book} {c.chapter}
-          </h2>
+        <section id={slug(c.chapter)} class="mb-12 scroll-mt-24" aria-labelledby={`${slug(c.chapter)}-h`}>
+          <h2 id={`${slug(c.chapter)}-h`} class="mb-5 text-h3">{chapterTitle(c.chapter)}</h2>
           <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
             {c.images.map((name) => {
               const p = sweetParts(name);
-              const label = `${d.book} ${p.chapter}, ${p.frame}`;
+              const label = `${chapterTitle(c.chapter)}, ${p.frame}`;
               return (
                 <li>
                   <figure class="group">

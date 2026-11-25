@@ -1,0 +1,85 @@
+---
+// /styleguide/ — every design token and every content block on one page, so a
+// design change in src/styles/global.css can be checked in one place (open it
+// on a phone too). Not linked from the site and not indexed.
+import Base from '../layouts/Base.astro';
+import BlockRenderer from '../components/blocks/BlockRenderer.astro';
+import type { Block } from '../content.config';
+
+const colors = [
+  ['inspire', '#31ADE3', 'Primary brand blue — shapes, large text on dark'],
+  ['inspire-ink', '#0B6E9E', 'Brand blue for text and links on light backgrounds'],
+  ['ocean', '#014263', 'Deep blue — headings, dark sections, primary button'],
+  ['tech', '#231F20', 'Body text'],
+  ['cultivate', '#70C9CC', 'Teal accent; eyebrow text on dark'],
+  ['kindle', '#E59D33', 'Warm accent — the Give button only'],
+  ['mist', '#F4F9FB', 'Light section background'],
+  ['line', '#DCE6EB', 'Borders and dividers'],
+];
+const img = 'styleguide/sample.jpg';
+const alt = 'unfoldingWord logo on a deep blue background';
+const blocks: Block[] = [
+  { type: 'hero', variant: 'ocean', eyebrow: 'Eyebrow', title: 'Hero · ocean variant', lead: 'A lead paragraph of one or two sentences that introduces the page.', actions: [{ label: 'Give', href: '/give/', style: 'give' }, { label: 'Secondary', href: '/about/', style: 'secondary' }] },
+  { type: 'hero', variant: 'split', eyebrow: 'Eyebrow', title: 'Hero · split variant', lead: 'Text beside a photo.', image: img, imageAlt: alt, actions: [{ label: 'Primary', href: '/about/', style: 'primary' }] },
+  { type: 'hero', variant: 'light', title: 'Hero · light variant', lead: 'For utility and long-form pages.', actions: [] },
+  { type: 'prose', title: 'Prose block', eyebrow: 'Prose', background: 'white', width: 'prose', serif: false, body: 'Body text with **bold**, a [link](/about/) and a list:\n\n- First item\n- Second item\n\n> A blockquote for emphasis.\n\n### A third-level heading\n\nMore text.' },
+  { type: 'cards', title: 'Cards · 3 columns', intro: 'Optional introduction.', columns: 3, background: 'mist', items: [
+    { title: 'With an image', body: 'Short description.', href: '/about/', image: img, imageAlt: alt },
+    { title: 'With an icon', body: 'Short description.', href: '/about/', icon: 'church' },
+    { title: 'Text only', body: 'No link, no image.' },
+  ] },
+  { type: 'split', eyebrow: 'Split', title: 'Text beside an image', body: 'Paragraph text.', image: img, imageAlt: alt, imagePosition: 'end', background: 'white', actions: [{ label: 'Learn more', href: '/about/', style: 'primary' }] },
+  { type: 'stats', title: 'Stats', background: 'ocean', items: [{ value: '1.45 billion', label: 'people without the whole Bible' }, { value: '16', label: 'site languages' }, { value: '100%', label: 'open-licensed' }, { value: '3,000', label: 'illustrations' }] },
+  { type: 'quote', quote: 'A quotation from someone in the story.', attribution: 'Name', role: 'Role, place' },
+  { type: 'steps', title: 'Steps', items: [{ title: 'First', body: 'What happens first.' }, { title: 'Second', body: 'Then this.' }, { title: 'Third', body: 'And finally this.' }] },
+  { type: 'faq', title: 'FAQ', items: [{ q: 'A question?', a: 'The answer, in **Markdown**.' }, { q: 'Another question?', a: 'Another answer.' }] },
+  { type: 'resources', title: 'Resources', items: [{ title: 'A PDF', description: 'Description.', href: '/about/', kind: 'pdf', meta: '24 pages' }, { title: 'An app', href: '/about/', kind: 'app' }] },
+  { type: 'trust', title: 'Trust' },
+  { type: 'cta', variant: 'ocean', title: 'Call to action · ocean', body: 'Supporting sentence.', actions: [{ label: 'Give', href: '/give/', style: 'give' }] },
+  { type: 'cta', variant: 'kindle', title: 'Call to action · kindle', actions: [{ label: 'Primary', href: '/give/', style: 'primary' }] },
+  { type: 'cta', variant: 'mist', title: 'Call to action · mist', actions: [{ label: 'Secondary', href: '/give/', style: 'secondary' }] },
+];
+---
+
+<Base locale="en" basePath="/styleguide/" title="Style guide" description="Every design token and content block of the unfoldingword.org design system, for reviewing design changes." noindex pageType="styleguide">
+  <section class="container-page py-12">
+    <p class="eyebrow">Design system</p>
+    <h1>Style guide</h1>
+    <p class="mt-4 max-w-2xl text-lead text-ink-muted">Tokens live in <code>src/styles/global.css</code>; blocks in <code>src/components/blocks/</code>; how to use them in <code>docs/content-guide.md</code>.</p>
+
+    <h2 class="mt-12">Colors</h2>
+    <ul class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {colors.map(([name, hex, use]) => (
+        <li class="card">
+          <div class="h-20" style={`background:${hex}`} />
+          <div class="p-4 text-sm"><strong class="block font-heading text-ocean">{name}</strong><code>{hex}</code><p class="mt-1 text-ink-muted">{use}</p></div>
+        </li>
+      ))}
+    </ul>
+
+    <h2 class="mt-12">Type</h2>
+    <div class="mt-6 space-y-4">
+      <p class="font-heading text-display font-extrabold text-ocean">Display</p>
+      <h1>Heading 1</h1>
+      <h2>Heading 2</h2>
+      <h3>Heading 3</h3>
+      <p class="text-lead">Lead paragraph text.</p>
+      <p>Body text — the quick brown fox jumps over the lazy dog.</p>
+      <p class="eyebrow">Eyebrow label</p>
+      <p class="prose-serif">Serif long-form text used in stories.</p>
+    </div>
+
+    <h2 class="mt-12">Buttons</h2>
+    <div class="mt-6 flex flex-wrap gap-3">
+      <a class="btn btn-give" href="#">Give</a>
+      <a class="btn btn-primary" href="#">Primary</a>
+      <a class="btn btn-secondary" href="#">Secondary</a>
+    </div>
+    <div class="on-dark mt-4 flex flex-wrap gap-3 rounded-card bg-ocean p-6">
+      <a class="btn btn-give" href="#">Give</a>
+      <a class="btn btn-primary" href="#">Primary on dark</a>
+      <a class="btn btn-secondary" href="#">Secondary on dark</a>
+    </div>
+  </section>
+  <BlockRenderer blocks={blocks} locale="en" />
+</Base>

@@ -2,7 +2,7 @@
 // Download an image from the old site into src/assets/images/, ready for
 // Astro to optimize.
 //
-//   node scripts/migrate/fetch-image.mjs <url> <dest-relative-to-src/assets/images>
+//   node scripts/migrate/fetch-image.mjs <url-or-local-file> <dest-relative-to-src/assets/images>
 //   node scripts/migrate/fetch-image.mjs https://unfoldingword.org/wp-content/uploads/2024/10/x.jpg stories/the-angry-imam.jpg
 //
 // - Unwraps Jetpack CDN URLs (i0.wp.com/…) and WordPress's resized copies
@@ -12,7 +12,8 @@
 //   generates the AVIF/WebP sizes visitors actually download at build time.
 // - The destination extension decides the format (.jpg/.png/.webp).
 // - Prints the path to use in content: "stories/the-angry-imam.jpg".
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile, readFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { dirname, join, extname } from 'node:path';
 import sharp from 'sharp';
 
@@ -42,7 +43,9 @@ const ROOT = new URL('../..', import.meta.url).pathname;
 const out = join(ROOT, 'src/assets/images', dest);
 let buf;
 const orig = original(rawUrl);
-try {
+if (existsSync(rawUrl)) {
+  buf = await readFile(rawUrl);
+} else try {
   buf = await get(orig);
 } catch (e) {
   if (orig === rawUrl) throw e;

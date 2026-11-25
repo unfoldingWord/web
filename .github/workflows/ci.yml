@@ -1,0 +1,40 @@
+# Checks every push and pull request. Cloudflare Workers Builds does the
+# actual deploy (production from main, a Preview for every other branch);
+# this workflow is the gate that says whether a change is safe to merge.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Unit tests (A/B assignment)
+        run: npm test
+      - name: Build (fails on any content schema error or broken redirect)
+        run: npm run build
+      - name: Interface strings
+        run: npm run check:locales
+      - name: Every old URL still resolves
+        run: npm run check:redirects
+      - name: No broken internal links
+        run: npm run check:links
+      - name: A/B experiments are wired up
+        run: npm run check:experiments

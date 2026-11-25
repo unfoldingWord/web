@@ -1,0 +1,15 @@
+# ai.txt — AI crawler permissions for unfoldingword.org
+# unfoldingWord's mission is for God's Word to be freely available in every
+# language. Public pages may be crawled, indexed, quoted and used to answer
+# questions, with attribution and a link to the page.
+User-Agent: *
+Allow: /
+Disallow: /_variants/
+Disallow: /api/
+
+# Machine-readable summaries
+# https://unfoldingword.org/llms.txt
+# https://unfoldingword.org/llms-full.txt
+# https://unfoldingword.org/ai/summary.json
+# https://unfoldingword.org/ai/faq.json
+# https://unfoldingword.org/ai/service.json

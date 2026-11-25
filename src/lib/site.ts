@@ -1,3 +1,5 @@
+import media from '../data/media.json';
+
 // Facts about the organization, used by the header, footer and JSON-LD.
 // Change them here, not in components.
 
@@ -25,10 +27,8 @@ export const SITE = {
   virtuousOrgId: '41649',
   virtuousEmbedSrc: 'https://cdn.virtuousraise.org/embed/embed.js',
   givingFallbackUrl: 'https://give.unfoldingword.org/',
-  // Sweet Publishing images (R2). Until unfoldingword.org's DNS moves to
-  // Cloudflare this is the bucket's r2.dev address; after cutover it becomes
-  // https://media.unfoldingword.org. Set PUBLIC_MEDIA_BASE to override.
-  mediaBase: (import.meta.env.PUBLIC_MEDIA_BASE as string | undefined) ?? 'https://media.unfoldingword.org',
+  // R2 bucket for Sweet Publishing images and uploads — see src/data/media.json.
+  mediaBase: media.base,
   social: {
     facebook: 'https://www.facebook.com/unfoldingWord/',
     instagram: 'https://www.instagram.com/unfoldingword/',

@@ -36,9 +36,10 @@
 /cbbt/gateway-languages             /ccbt/gateway-languages/
 /cbbt/glossary                      /ccbt/glossary/
 /cbbt/establishing-the-church       /ccbt/establishing-the-church/
+/ccbt/[equipping-servants           /ccbt/equipping-servants/
+/ccbt/[[glossary                    /ccbt/glossary/
 
 # --- Old site structure (www.unfoldingword.org before WordPress) ---
-/stories/escape-from-kharkiv1       /stories/escape-from-kharkiv1/
 /join-us                            /careers/
 
 # --- WordPress system URLs that disappear with WordPress ---

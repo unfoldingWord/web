@@ -1,0 +1,4 @@
+{
+  "_comment": "Public address of the R2 bucket unfoldingword-media (Sweet Publishing images, PDFs and other uploads). Until unfoldingword.org's DNS is on Cloudflare this is the bucket's r2.dev address, which Cloudflare rate-limits and labels non-production. AT CUTOVER: attach media.unfoldingword.org as the bucket's custom domain and change base to https://media.unfoldingword.org (docs/cutover.md).",
+  "base": "https://pub-f4467ef9d2354b2386f6cbc4421f268c.r2.dev"
+}

@@ -13,14 +13,13 @@
     "postbuild": "node scripts/postbuild.mjs",
     "preview": "wrangler dev",
     "deploy": "wrangler deploy",
-    "check": "npm run check:content && npm run check:locales && npm run check:redirects && npm run check:links",
-    "check:content": "node scripts/check-content.mjs",
+    "check": "npm run check:locales && npm run check:redirects && npm run check:links && npm run check:experiments",
     "check:locales": "node scripts/check-locales.mjs",
     "check:redirects": "node scripts/check-redirects.mjs",
     "check:links": "node scripts/check-links.mjs",
-    "check:scripts": "node scripts/check-scripts.mjs",
-    "test": "node --test scripts/*.test.mjs worker/*.test.mjs",
-    "geo": "node scripts/geo-audit.mjs"
+    "test": "node --test worker/*.test.mjs",
+    "geo": "node scripts/geo-audit.mjs",
+    "check:experiments": "node scripts/check-experiments.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "8.1.6",

@@ -17,6 +17,7 @@ import { readFileSync, writeFileSync, existsSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 
 const ROOT = new URL('..', import.meta.url).pathname;
+const MEDIA = JSON.parse(readFileSync(join(ROOT, 'src/data/media.json'), 'utf8')).base;
 const DIST = join(ROOT, 'dist');
 const manifestPath = join(DIST, 'redirects.json');
 if (!existsSync(manifestPath)) {
@@ -42,7 +43,7 @@ function add(from, to, status, source) {
   if (!from.startsWith('/')) return errors.push(`${source}: "${from}" must start with /`);
   const target = to.startsWith('/') ? withSlash(to.split('#')[0]) + (to.includes('#') ? '#' + to.split('#')[1] : '') : to;
   for (const f of new Set([noSlash(from), withSlash(from)])) {
-    if (f === '/' ) continue;
+    if (f === '/' || f === target.split('#')[0]) continue; // /x → /x/ is html_handling's job
     const prev = rules.get(f);
     if (prev && prev.to !== target) errors.push(`${f} is redirected twice: → ${prev.to} (${prev.source}) and → ${target} (${source})`);
     if (!prev || source.startsWith('legacy')) rules.set(f, { to: target, status, source });
@@ -79,7 +80,7 @@ const dynamic = [
   // feeds of any page
   ['/*/feed/', '/stories/rss.xml', 301],
   // uploads: PDFs and images are being moved to R2 (media.unfoldingword.org)
-  ['/wp-content/uploads/*', 'https://media.unfoldingword.org/uploads/:splat', 301],
+  ['/wp-content/uploads/*', `${MEDIA}/uploads/:splat`, 302], // 302 until the permanent media.unfoldingword.org address exists
 ];
 
 const staticLines = [...rules].map(([from, { to, status }]) => `${from} ${to} ${status}`);
