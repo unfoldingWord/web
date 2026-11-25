@@ -299,7 +299,7 @@ const stories = defineCollection({
     region: z.enum(['africa', 'asia', 'eurasia', 'latin-america', 'middle-east', 'pacific', 'south-asia', 'worldwide']),
     country: z.string().optional(),
     image: imagePath,
-    imageAlt: z.string().min(5),
+    imageAlt: z.string().trim().min(5, 'Story images need descriptive imageAlt text'),
     author: z.string().default('unfoldingWord'),
     excerpt: z.string().optional(),
     featured: z.boolean().default(false),

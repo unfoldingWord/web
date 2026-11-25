@@ -20,8 +20,8 @@ export async function getStaticPaths() {
     let experiment;
     if (route.kind === 'variant') {
       const control = byKey.get(`${route.locale}:${data.variantOf}`);
-      const test = experiments.find((e) => e.id === data.experiment && e.path === control?.path);
-      const variant = test?.variants.find((v) => v.page === route.path);
+      const test = experiments.find((e) => e.id === data.experiment && e.path === control?.basePath);
+      const variant = test?.variants.find((v) => v.page === route.basePath);
       if (!control || !test || !variant) throw new Error(`Unregistered A/B variant: ${route.path}`);
       page = { ...control, entry: route.entry };
       experiment = { id: test.id, variant: variant.id };

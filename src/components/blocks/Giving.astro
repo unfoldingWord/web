@@ -7,9 +7,10 @@
 // Analytics: GTM sees the page view and the form's own events. Whether the
 // Virtuous embed reports a COMPLETED gift back to this page is not yet
 // verified (docs/analytics.md, "Donation conversions"). Until it is, the
-// listener below forwards any message the Virtuous frame posts to the
-// dataLayer as `virtuous_message`, so the GTM container audit can see what is
-// available without another deploy.
+// listener below pushes a bare `virtuous_message` event to the dataLayer when
+// a frame embedded in the giving form posts a message. The payload is not
+// forwarded (it can hold donor or payment details), so the completion signal
+// still has to be found with a test gift (docs/ab-testing.md, step 4).
 import type { Block } from '../../content.config';
 import { SITE } from '../../lib/site';
 import { md, mdInline } from '../../lib/md';

@@ -6,6 +6,8 @@ test('WordPress post and page shortlinks go straight to their migrated URLs', ()
   for (const [query, target] of [
     ['p=13547', '/stories/life-change-in-southeast-asia/'],
     ['page_id=14801', '/give/givingtuesday/'],
+    ['p=&page_id=13547', '/stories/life-change-in-southeast-asia/'],
+    ['p=99999&page_id=14801', '/give/givingtuesday/'],
     ['post_type=prayer-request&p=14933&utm_source=bulletin', '/prayer-request/pray-for-new-believers/?utm_source=bulletin'],
   ]) {
     const origin = 'https://example.org';

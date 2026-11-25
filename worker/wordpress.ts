@@ -7,8 +7,11 @@ const byId = new Map(Object.entries(paths));
 
 export function wordpressRedirect(url: URL): Response | undefined {
   if (url.pathname !== '/') return;
-  const id = url.searchParams.get('p') ?? url.searchParams.get('page_id');
-  const path = id && byId.get(id);
+  // An empty or unknown `p` must not hide a valid `page_id`.
+  const path = ['p', 'page_id']
+    .map((key) => url.searchParams.get(key))
+    .map((id) => id && byId.get(id))
+    .find(Boolean);
   if (!path) return;
 
   const target = new URL(url);

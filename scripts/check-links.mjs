@@ -28,7 +28,8 @@ const bad = new Map();
 const idCache = new Map();
 // ids on a built page, for checking #fragment links
 function idsOf(path) {
-  const file = path.endsWith('/') ? join(DIST, path, 'index.html') : join(DIST, path);
+  // "/give" and "/give/" are the same page; only a path with an extension is a file.
+  const file = path.endsWith('/') || !/\.[^/]+$/.test(path) ? join(DIST, path, 'index.html') : join(DIST, path);
   if (!idCache.has(file)) idCache.set(file, existsSync(file) ? new Set([...readFileSync(file, 'utf8').matchAll(/\sid="([^"]+)"/g)].map((m) => m[1])) : null);
   return idCache.get(file);
 }

@@ -5,6 +5,7 @@
 // the same trust Astro gives Markdown files.
 import { Marked } from 'marked';
 import media from '../data/media.json';
+import { localeCodes } from '../i18n/locales.mjs';
 
 const marked = new Marked({ gfm: true, breaks: false });
 
@@ -21,6 +22,10 @@ export function mdInline(text: string | undefined, locale?: string): string {
   return localizeLinks(marked.parseInline(text, { async: false }) as string, locale);
 }
 
+// Already localized: the first segment is one of the site's locale codes
+// ("/es", "/fr/about/"). A two-letter short link such as "/tc" is not.
+const LOCALE_PREFIX = new RegExp(`^/(?:${localeCodes.join('|')})(?:[/?#]|$)`);
+
 // Paths that are files, not pages, keep their URL in every locale.
 const SHARED_PATH = /^\/(?:fonts|brand|_astro|wp-content|media|ai|\.well-known|search|styleguide|404)(?:[/?#]|$)/;
 
@@ -28,7 +33,7 @@ const SHARED_PATH = /^\/(?:fonts|brand|_astro|wp-content|media|ai|\.well-known|s
 export function localizeHref(href: string, locale?: string): string {
   if (href.startsWith('/wp-content/uploads/')) return `${media.base}/uploads/${href.slice('/wp-content/uploads/'.length)}`;
   if (!locale || locale === 'en' || !href.startsWith('/') || href.startsWith('//') || SHARED_PATH.test(href)) return href;
-  if (/^\/[a-z]{2}\//.test(href) || /\.[^/]+$/.test(href.split(/[?#]/, 1)[0])) return href;
+  if (LOCALE_PREFIX.test(href) || /\.[^/]+$/.test(href.split(/[?#]/, 1)[0])) return href;
   return `/${locale}${href}`;
 }
 
