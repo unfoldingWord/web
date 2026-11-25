@@ -41,8 +41,10 @@ npm run build && npm run check && npm test
 
 Cloudflare **Workers Builds** is connected to this repository (Worker `unfoldingword-web`, unfoldingWord account):
 
-- push to `main` → `npm run build`, then `npx wrangler deploy` → production
-- any other branch → a **Preview** with its own `*.workers.dev` URL, posted as a comment on the pull request (`noindex`; analytics off)
+- push to `main` → `npm run build`, then `npx wrangler deploy` → production (until cutover that is the staging address https://unfoldingword-web.unfoldingword.workers.dev, kept out of search engines by a `_headers` rule)
+- any other branch → `npx wrangler preview` → a **Preview** at `https://<branch>-unfoldingword-web.unfoldingword.workers.dev`, also posted as a comment on the pull request (`noindex`; analytics off). Preview variables come from the `previews` block in `wrangler.jsonc`.
+- Build cache is on (Settings → Build → Build cache), so optimized images in `node_modules/.astro` are reused; a build with no cache takes about 11 minutes, almost all of it image encoding.
+- Virtuous giving forms only render on domains registered in Virtuous (Page & Form Settings). Register `unfoldingword-web.unfoldingword.workers.dev` and the preview pattern if editors should see working forms on previews.
 
 GitHub Actions (`.github/workflows/ci.yml`) runs the build, unit tests and all checks on every push and pull request.
 

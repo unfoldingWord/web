@@ -26,6 +26,14 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # Astro keeps optimized images in node_modules/.astro; restoring it
+      # means only new or changed images are re-encoded (minutes saved).
+      - name: Restore image cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.astro
+          key: astro-${{ hashFiles('package-lock.json') }}-${{ github.sha }}
+          restore-keys: astro-${{ hashFiles('package-lock.json') }}-
       - name: Unit tests (A/B assignment)
         run: npm test
       - name: Build (fails on any content schema error or broken redirect)
