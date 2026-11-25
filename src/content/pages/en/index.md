@@ -3,6 +3,7 @@ title: Reach the unreached by equipping the local church
 description: >-
   Everyone deserves to know Jesus. Yet, billions of people have never heard the gospel in their heart language.
 template: landing
+updated: 2026-11-25
 breadcrumbs: false
 ogImage: home/hero-woman-desert.jpg
 sections:
@@ -159,6 +160,22 @@ sections:
       [Read stories from the field](/stories/) · [Pray with us](/pray/)
     formId: 48E8DDDB-DF9D-46F0-9715-9CDD48C535CA
     orgId: '7243'
+
+  - type: faq
+    title: Questions people ask
+    items:
+      - q: What is Church-Centric Bible Translation?
+        a: |-
+          Church-Centric Bible Translation (CCBT) is a paradigm of Bible translation focused on the establishing and strengthening of a lingual church using a translation process that is led by leaders of the church and done by believers translating into their own language, as an integral part of their theological and spiritual formation. The church-centric paradigm has as its focus the establishing of the church, with Bible translation as a means to that end. The full account is on [What is Church-Centric Bible Translation?](/ccbt/)
+      - q: Can a church translate the Bible into its own language?
+        a: |-
+          Yes: church leaders lead the work, and believers translate into their own language as an integral part of their theological and spiritual formation. Believers still check the draft for clear, natural, accurate wording, and the church affirms it. A church bilingual in a Gateway Language uses open resources there to translate into its own language. Practical steps are on [how churches translate](/ccbt/how-churches-translate/).
+      - q: How can a church-led translation be trustworthy?
+        a: |-
+          The church that speaks the language checks the translation for wording that is clear, natural, and accurate, then affirms it. A trustworthy translation is the objective reality of a translation that faithfully and clearly communicates the meaning of the original languages as it was communicated to the original hearers in their cultural, historical, and linguistic context. Checking is the church’s work. A tool such as translationCore can help; formation and review still belong to the church. See [trustworthy and trusted](/ccbt/trustworthy-and-trusted/).
+      - q: What is the ultimate objective of missions?
+        a: |-
+          The ultimate objective of missions is the establishing of the church in each people group in sound doctrine, with mature leadership and the ability to understand the Word of God and defend sound doctrine for the glory of God. To be church-centric is to evaluate everything from the viewpoint of the needs of establishing and equipping the church (Acts 14:21–23; 15:40–41; Eph. 4:11–16). Only the church and the Word of God remain at the end of the story. See the page on [establishing the church](/ccbt/establishing-the-church/).
 
   - type: trust
     title: Give with confidence

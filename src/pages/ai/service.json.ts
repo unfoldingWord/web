@@ -4,6 +4,17 @@ import { absolute } from '../../lib/seo-data';
 
 export const GET: APIRoute = () =>
   Response.json({
+    name: SITE.name,
+    description: 'Nonprofit equipping the global church to translate the Bible into every language.',
+    url: absolute('/'),
+    // What an AI agent can do on this site (geo-checklist.dev convention).
+    capabilities: [
+      'Explain Church-Centric Bible Translation and the Gateway Languages strategy',
+      'Find open-licensed biblical content, translation tools and training for Bible translators',
+      'Read stories from the field and current prayer requests',
+      'Give to support Bible translation (secure Virtuous giving forms)',
+      'Download Sweet Publishing Bible illustrations',
+    ],
     provider: SITE.name,
     services: [
       { name: 'Church-Centric Bible Translation strategy', url: absolute('/ccbt/'), audience: 'Church networks and Bible translation partners' },

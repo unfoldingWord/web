@@ -125,5 +125,6 @@
   "playVideo": "ভিডিও চালান: {title}",
   "sweetIllustration": "Sweet Publishing-এর চিত্র: {label}",
   "sweetLicense": "চিত্রগুলো Sweet Publishing-এর, <a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">Creative Commons Attribution-ShareAlike 3.0</a> লাইসেন্সের অধীনে প্রকাশিত। ব্যবহারের সময় অনুগ্রহ করে “Sweet Publishing”-এর নাম উল্লেখ করুন।",
-  "sweetIndexTitle": "Sweet Publishing-এর চিত্রসমূহ"
+  "sweetIndexTitle": "Sweet Publishing-এর চিত্রসমূহ",
+  "search": "অনুসন্ধান"
 }

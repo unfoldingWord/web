@@ -125,5 +125,6 @@
   "playVideo": "Reproducir video: {title}",
   "sweetIllustration": "Ilustración de Sweet Publishing: {label}",
   "sweetLicense": "Ilustraciones de Sweet Publishing, publicadas bajo la licencia <a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">Creative Commons Atribución-CompartirIgual 3.0</a>. Por favor, dé crédito a «Sweet Publishing» cuando las utilice.",
-  "sweetIndexTitle": "Ilustraciones de Sweet Publishing"
+  "sweetIndexTitle": "Ilustraciones de Sweet Publishing",
+  "search": "Buscar"
 }

@@ -83,6 +83,9 @@ const isCurrent = (item: NavItem): boolean =>
       </div>
     </nav>
 
+    <a href="/search/" class="inline-flex size-11 items-center justify-center rounded-full text-ocean hover:bg-inspire-50" aria-label={t.search}>
+      <Icon name="search" class="size-5.5" />
+    </a>
     <div class="hidden lg:block">
       <LanguageSwitcher locale={locale} basePath={switcherPath} translations={translations} />
     </div>

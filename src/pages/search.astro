@@ -1,0 +1,40 @@
+---
+// /search/ — full-text search of the site, powered by Pagefind: a static
+// index built from dist/ after `astro build` (scripts/postbuild.mjs), served
+// as plain files. No server, no third party. ?q=… runs a search on load
+// (the WebSite SearchAction in the JSON-LD points here).
+import Base from '../layouts/Base.astro';
+import { ui } from '../i18n';
+const t = ui('en');
+---
+
+<Base switcherPath="/" locale="en" basePath="/search/" title="Search" description="Search unfoldingword.org: stories, Bible translation strategy, resources for translators and ways to give." noindex pageType="search">
+  <link slot="head" rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+  <section class="bg-mist">
+    <div class="container-prose py-10 lg:py-14">
+      <h1>Search</h1>
+    </div>
+  </section>
+  <div class="container-prose py-10">
+    <div id="site-search"></div>
+    <noscript><p>Search needs JavaScript. <a href="/">Go to the home page</a> or browse the <a href="/stories/">{t.allStories}</a>.</p></noscript>
+  </div>
+  <script is:inline src="/pagefind/pagefind-ui.js"></script>
+  <script is:inline>
+    (function () {
+      var ui = new PagefindUI({ element: '#site-search', showSubResults: true, showImages: false, resetStyles: false, translations: { placeholder: 'Search unfoldingword.org' } });
+      var q = new URLSearchParams(location.search).get('q');
+      if (q) ui.triggerSearch(q);
+    })();
+  </script>
+  <style is:global>
+    #site-search {
+      --pagefind-ui-primary: var(--color-ocean);
+      --pagefind-ui-text: var(--color-ink);
+      --pagefind-ui-border: var(--color-line);
+      --pagefind-ui-tag: var(--color-mist);
+      --pagefind-ui-font: var(--font-sans);
+      --pagefind-ui-border-radius: 12px;
+    }
+  </style>
+</Base>

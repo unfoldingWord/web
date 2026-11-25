@@ -115,7 +115,7 @@ const graph = serializeGraph([organizationNode(), websiteNode(def.tag), ...jsonL
         </div>
       )
     }
-    <main id="main" tabindex="-1" class="flex-1 focus:outline-none" lang={fallback ? 'en' : undefined} dir={fallback && def.dir === 'rtl' ? 'ltr' : undefined}>
+    <main id="main" tabindex="-1" class="flex-1 focus:outline-none" data-pagefind-body={!fallback && !noindex && !experiment ? true : undefined} lang={fallback ? 'en' : undefined} dir={fallback && def.dir === 'rtl' ? 'ltr' : undefined}>
       <slot />
     </main>
     <Footer locale={locale} />

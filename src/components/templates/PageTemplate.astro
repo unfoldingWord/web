@@ -9,6 +9,7 @@ import BlockRenderer from '../blocks/BlockRenderer.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
 import { getImage } from 'astro:assets';
 import { img } from '../../lib/images';
+import { ui, fmt, formatDate } from '../../i18n';
 
 interface Props {
   route: Route;
@@ -76,6 +77,13 @@ const pageType = d.template === 'giving' ? 'giving' : isHome ? 'home' : 'page';
       <div class="container-prose py-[var(--spacing-section)]">
         <div class="prose"><Content /></div>
       </div>
+    )
+  }
+  {
+    d.updated && (
+      <p class="container-page pb-8 text-sm text-ink-muted">
+        <time datetime={d.updated.toISOString()}>{fmt(ui(route.locale).updatedOn, { date: formatDate(d.updated, route.locale) })}</time>
+      </p>
     )
   }
 </Base>

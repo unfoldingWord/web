@@ -125,5 +125,6 @@
   "playVideo": "تشغيل الفيديو: {title}",
   "sweetIllustration": "رسم توضيحي من Sweet Publishing: {label}",
   "sweetLicense": "الرسوم التوضيحية من Sweet Publishing، وهي منشورة بموجب ترخيص <a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">المشاع الإبداعي نَسب المُصنَّف - الترخيص بالمثل 3.0</a>. يُرجى ذكر «Sweet Publishing» عند استخدامها.",
-  "sweetIndexTitle": "رسوم Sweet Publishing التوضيحية"
+  "sweetIndexTitle": "رسوم Sweet Publishing التوضيحية",
+  "search": "بحث"
 }

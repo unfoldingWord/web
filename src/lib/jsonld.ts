@@ -47,10 +47,15 @@ export function websiteNode(lang: string): Node {
     name: SITE.name,
     publisher: { '@id': ORG_ID },
     inLanguage: lang,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: { '@type': 'EntryPoint', urlTemplate: `${SITE.url}/search/?q={search_term_string}` },
+      'query-input': 'required name=search_term_string',
+    },
   };
 }
 
-export function webPageNode(opts: { url: string; title: string; description?: string; lang: string; type?: string; image?: string; dateModified?: Date; breadcrumbId?: string }): Node {
+export function webPageNode(opts: { url: string; title: string; description?: string; lang: string; type?: string; image?: string; dateModified?: Date; datePublished?: Date; breadcrumbId?: string }): Node {
   return {
     '@type': opts.type ?? 'WebPage',
     '@id': `${opts.url}#webpage`,
@@ -61,7 +66,9 @@ export function webPageNode(opts: { url: string; title: string; description?: st
     isPartOf: { '@id': SITE_ID },
     about: { '@id': ORG_ID },
     publisher: { '@id': ORG_ID },
+    author: { '@id': ORG_ID },
     primaryImageOfPage: opts.image ? { '@type': 'ImageObject', url: opts.image } : undefined,
+    datePublished: opts.datePublished?.toISOString(),
     dateModified: opts.dateModified?.toISOString(),
     breadcrumb: opts.breadcrumbId ? { '@id': opts.breadcrumbId } : undefined,
   };
