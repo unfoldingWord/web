@@ -45,7 +45,7 @@ const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
     </div>
     {
       enabled && (
-        <form class="contact-form card space-y-5 p-6 sm:p-8 lg:col-span-7" method="post" action="/api/contact" novalidate>
+        <form class="contact-form uw-card space-y-5 p-6 sm:p-8 lg:col-span-7" method="post" action="/api/contact" novalidate>
           <div>
             <label for="cf-name" class="mb-1.5 block font-bold">{t.contactFormName}</label>
             <input id="cf-name" name="name" type="text" autocomplete="name" required class="block min-h-12 w-full rounded-lg border border-line px-4 focus:border-inspire" />
@@ -60,7 +60,7 @@ const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
           </div>
           <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
           {siteKey && <div class="cf-turnstile" data-sitekey={siteKey} />}
-          <button type="submit" class="btn btn-primary w-full sm:w-auto">{t.contactFormSend}</button>
+          <button type="submit" class="uw-btn uw-btn-primary w-full sm:w-auto">{t.contactFormSend}</button>
           <p class="form-status text-sm" role="status" aria-live="polite" data-sent={t.contactFormSent} data-error={t.contactFormError} />
         </form>
       )

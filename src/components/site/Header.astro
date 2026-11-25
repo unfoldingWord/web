@@ -15,10 +15,11 @@ import Icon from '../ui/Icon.astro';
 interface Props {
   locale: string;
   basePath: string;
+  switcherPath?: string;
   /** Locales with a real translation of this page; others link to fallbacks. */
   translations?: string[];
 }
-const { locale, basePath, translations } = Astro.props;
+const { locale, basePath, switcherPath = basePath, translations } = Astro.props;
 const t = ui(locale);
 const label = (key: string) => (t.nav as Record<string, string>)[key] ?? key;
 const href = (item: NavItem) => (item.external ? item.href! : localizePath(item.href!, locale));
@@ -78,14 +79,14 @@ const isCurrent = (item: NavItem): boolean =>
         }
       </ul>
       <div class="mt-6 border-t border-line pt-6 lg:hidden">
-        <LanguageSwitcher locale={locale} basePath={basePath} translations={translations} variant="list" />
+        <LanguageSwitcher locale={locale} basePath={switcherPath} translations={translations} variant="list" />
       </div>
     </nav>
 
     <div class="hidden lg:block">
-      <LanguageSwitcher locale={locale} basePath={basePath} translations={translations} />
+      <LanguageSwitcher locale={locale} basePath={switcherPath} translations={translations} />
     </div>
-    <a href={localizePath('/give/', locale)} class="btn btn-give !min-h-10 !px-4 !py-2 text-sm lg:!min-h-11 lg:!px-5">{t.donate}</a>
+    <a href={localizePath('/give/', locale)} class="uw-btn uw-btn-give !min-h-10 !px-4 !py-2 text-sm lg:!min-h-11 lg:!px-5">{t.donate}</a>
     <button type="button" class="menu-toggle -me-2 inline-flex size-11 items-center justify-center rounded-full text-ocean lg:hidden" aria-controls="site-nav" aria-expanded="false">
       <span class="sr-only" data-label-open>{t.menu}</span>
       <span class="sr-only hidden" data-label-close>{t.closeMenu}</span>

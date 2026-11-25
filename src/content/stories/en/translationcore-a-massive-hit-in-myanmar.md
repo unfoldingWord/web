@@ -2,7 +2,7 @@
 title: 'translationCore: A Massive Hit in Myanmar'
 description: When we demonstrated how they could align their translations with Burmese, we got gasps!
 date: 2026-01-09
-region: south-asia
+region: asia
 country: Myanmar
 image: stories/translationcore-a-massive-hit-in-myanmar.jpg
 imageAlt: Five Burmese translators lean in together around a laptop at a training workshop while others work in the background

@@ -9,11 +9,13 @@ import Icon from './Icon.astro';
 interface Props {
   provider: 'youtube' | 'vimeo';
   id: string;
+  /** Privacy hash of an unlisted Vimeo video. */
+  hash?: string;
   title: string;
 }
-const { provider, id, title } = Astro.props;
-const watch = provider === 'youtube' ? `https://www.youtube.com/watch?v=${id}` : `https://vimeo.com/${id}`;
-const embed = provider === 'youtube' ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0` : `https://player.vimeo.com/video/${id}?autoplay=1&dnt=1`;
+const { provider, id, hash, title } = Astro.props;
+const watch = provider === 'youtube' ? `https://www.youtube.com/watch?v=${id}` : `https://vimeo.com/${id}${hash ? `/${hash}` : ''}`;
+const embed = provider === 'youtube' ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0` : `https://player.vimeo.com/video/${id}?${hash ? `h=${hash}&` : ''}autoplay=1&dnt=1`;
 // YouTube serves stills from its image host; Vimeo has no stable public one,
 // so Vimeo videos show the plain Ocean poster.
 const poster = provider === 'youtube' ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : undefined;

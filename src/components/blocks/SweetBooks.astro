@@ -32,7 +32,7 @@ const groups = [
             const first = b.data.chapters[0]?.images[0];
             const count = b.data.chapters.reduce((n, c) => n + c.images.length, 0);
             return (
-              <li class="card group relative">
+              <li class="uw-card group relative">
                 {first && <img src={sweetImageUrl(first, 'thumb')} alt="" loading="lazy" decoding="async" width="480" height="320" class="aspect-[3/2] w-full object-cover" />}
                 <div class="p-4">
                   <a href={localizePath(basePathFor('sweet', splitId(b.id).rest), locale)} class="font-heading text-lg font-extrabold text-ocean no-underline after:absolute after:inset-0 hover:underline">

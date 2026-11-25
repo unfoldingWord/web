@@ -20,7 +20,7 @@ sections:
       A Book Package includes everything needed to translate one book of the Bible with excellence. Each one includes a literal translation, a simplified translation, verse-by-verse notes, key term definitions, and short articles on translation issues, all linked to each other and the original languages through our translation software, [translationCore](/translationcore/). We completed all 27 New Testament Book Packages in 2023, and our team is on track to finish all Old Testament Book Packages in 2026.
 
       **Impact:** Translate a book package into a national language once, and use it to translate that book of the Bible into every minority language in a country.
-    video: { provider: vimeo, id: '1232161297?h=b9a8b8aab2&', title: Book Packages }
+    video: { provider: vimeo, id: '1232161297', hash: b9a8b8aab2, title: Book Packages }
     background: mist
   - type: split
     title: Foundations BT
@@ -28,12 +28,12 @@ sections:
       Foundations BT (Foundations of Bible Translation) is a suite of resources. The suite is tailored to the needs of primarily oral language groups. It includes six videos, a simple Bible translation framework, and AI-powered access to unfoldingWord's basic translation guides.
 
       **Impact:** Equipping evangelists and church planters for real-time Bible translation in oral only languages.
-    video: { provider: vimeo, id: '1232148740?h=b3a46ac81c&', title: Foundations of Bible Translation Intro }
+    video: { provider: vimeo, id: '1232148740', hash: b3a46ac81c, title: Foundations of Bible Translation Intro }
     imagePosition: start
   - type: split
     title: Open Bible Stories
     background: mist
-    video: { provider: vimeo, id: '1232213477?h=10bf4c03bf&', title: Open Bible Stories }
+    video: { provider: vimeo, id: '1232213477', hash: 10bf4c03bf, title: Open Bible Stories }
     body: |-
       Our first open-licensed resource was [Open Bible Stories](/obs/) (OBS). OBS is fifty carefully crafted, illustrated stories covering Genesis to Revelation. Designed as a disciple-making tool and translation primer, it is one of the world's most translated books and touches lives every day.
   - type: quote

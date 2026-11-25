@@ -33,7 +33,8 @@ sections:
   - type: video
     title: 'Catalyzation: Global Forums'
     provider: vimeo
-    id: '1232153016?h=da588139f7&'
+    id: '1232153016'
+    hash: da588139f7
   - type: split
     title: Open Greek New Testament
     body: |-

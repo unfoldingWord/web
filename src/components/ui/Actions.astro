@@ -15,7 +15,7 @@ const isExternal = (h: string) => /^https?:\/\//.test(h);
   actions.length > 0 && (
     <div class:list={['flex flex-col gap-3 sm:flex-row sm:flex-wrap', cls]}>
       {actions.map((a) => (
-        <a href={localizeHref(a.href, locale)} class:list={['btn', `btn-${a.style ?? 'primary'}`]} {...(isExternal(a.href) ? { rel: 'noopener' } : {})}>
+        <a href={localizeHref(a.href, locale)} class:list={['uw-btn', `uw-btn-${a.style ?? 'primary'}`]} {...(isExternal(a.href) ? { rel: 'noopener' } : {})}>
           {a.label}
           {a.style !== 'give' && <Icon name="arrow-right" class="size-4.5 rtl:-scale-x-100" />}
         </a>

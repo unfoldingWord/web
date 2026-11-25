@@ -23,7 +23,7 @@ const sizes = { 2: '(min-width: 48rem) 50vw, 100vw', 3: '(min-width: 64rem) 33vw
   <ul class:list={['grid gap-5 lg:gap-7', cols]}>
     {
       block.items.map((item) => (
-        <li class="card group relative flex flex-col text-ink">
+        <li class="uw-card group relative flex flex-col text-ink">
           {item.image && (
             <div class="overflow-hidden">
               <Picture path={item.image} alt={item.imageAlt ?? ''} sizes={sizes} aspect="3 / 2" class="transition duration-500 group-hover:scale-[1.03]" />

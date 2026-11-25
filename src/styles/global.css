@@ -161,8 +161,8 @@
   .on-dark .eyebrow { @apply text-cultivate; }
   .on-dark { @apply text-white; }
   .on-dark :where(h1, h2, h3, h4) { @apply text-white; }
-  .on-dark :where(a:not(.btn)) { @apply text-cultivate; }
-  .on-dark :where(a:not(.btn)):hover { @apply text-white; }
+  .on-dark :where(a:not(.uw-btn)) { @apply text-cultivate; }
+  .on-dark :where(a:not(.uw-btn)):hover { @apply text-white; }
 
   /* Angled section edge (brand pattern). Logical so it mirrors in RTL. */
   .angle-bottom { clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--angle-cut)), 0 100%); padding-bottom: calc(var(--spacing-section) + var(--angle-cut)); }
@@ -200,7 +200,7 @@
   .on-dark .prose, .prose.on-dark { @apply text-white; }
 
   /* Buttons */
-  .btn {
+  .uw-btn {
     @apply inline-flex items-center justify-center gap-2 rounded-button font-heading no-underline transition;
     min-height: 2.875rem; /* ≥44px tap target */
     padding: 0.7rem 1.4rem;
@@ -209,18 +209,18 @@
     line-height: 1.2;
     text-align: center;
   }
-  .btn-primary { @apply bg-ocean text-white; }
-  .btn-primary:hover { @apply bg-ocean-700 text-white; }
-  .btn-give { @apply bg-kindle text-tech; }
-  .btn-give:hover { @apply bg-kindle-600 text-tech; }
-  .btn-secondary { @apply border-2 border-ocean bg-transparent text-ocean; }
-  .btn-secondary:hover { @apply bg-ocean text-white; }
-  .on-dark .btn-secondary { @apply border-white text-white; }
-  .on-dark .btn-secondary:hover { @apply bg-white text-ocean; }
-  .on-dark .btn-primary { @apply bg-white text-ocean; }
-  .on-dark .btn-primary:hover { @apply bg-cultivate text-ocean; }
+  .uw-btn-primary { @apply bg-ocean text-white; }
+  .uw-btn-primary:hover { @apply bg-ocean-700 text-white; }
+  .uw-btn-give { @apply bg-kindle text-tech; }
+  .uw-btn-give:hover { @apply bg-kindle-600 text-tech; }
+  .uw-btn-secondary { @apply border-2 border-ocean bg-transparent text-ocean; }
+  .uw-btn-secondary:hover { @apply bg-ocean text-white; }
+  .on-dark .uw-btn-secondary { @apply border-white text-white; }
+  .on-dark .uw-btn-secondary:hover { @apply bg-white text-ocean; }
+  .on-dark .uw-btn-primary { @apply bg-white text-ocean; }
+  .on-dark .uw-btn-primary:hover { @apply bg-cultivate text-ocean; }
 
-  .card {
+  .uw-card {
     @apply rounded-card bg-white shadow-card;
     overflow: hidden;
   }

@@ -29,6 +29,9 @@ interface Props {
   experiment?: { id: string; variant: string };
   /** Language of the main content when it differs from the interface. */
   contentLang?: string;
+  /** Path the language switcher links to in each language, when it differs
+   *  from basePath (English-only pages → '/', A/B variants → the real page). */
+  switcherPath?: string;
 }
 
 const {
@@ -44,6 +47,7 @@ const {
   noindex = false,
   pageType = 'page',
   experiment,
+  switcherPath,
 } = Astro.props;
 
 const def = byCode(locale);
@@ -103,7 +107,7 @@ const graph = serializeGraph([organizationNode(), websiteNode(def.tag), ...jsonL
   </head>
   <body class="flex min-h-dvh flex-col">
     <a class="skip-link" href="#main">{t.skipToContent}</a>
-    <Header locale={locale} basePath={basePath} translations={translations} />
+    <Header locale={locale} basePath={basePath} switcherPath={switcherPath ?? basePath} translations={translations} />
     {
       fallback && (
         <div class="border-b border-kindle/40 bg-kindle-50">

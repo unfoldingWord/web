@@ -50,6 +50,7 @@ const pageType = d.template === 'giving' ? 'giving' : isHome ? 'home' : 'page';
   noindex={route.noindex}
   pageType={pageType}
   experiment={experiment}
+  switcherPath={route.kind === 'variant' ? (d.variantOf ?? '/') : undefined}
 >
   {
     !firstIsHero && (

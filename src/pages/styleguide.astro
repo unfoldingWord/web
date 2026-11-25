@@ -41,7 +41,7 @@ const blocks: Block[] = [
 ];
 ---
 
-<Base locale="en" basePath="/styleguide/" title="Style guide" description="Every design token and content block of the unfoldingword.org design system, for reviewing design changes." noindex pageType="styleguide">
+<Base switcherPath="/" locale="en" basePath="/styleguide/" title="Style guide" description="Every design token and content block of the unfoldingword.org design system, for reviewing design changes." noindex pageType="styleguide">
   <section class="container-page py-12">
     <p class="eyebrow">Design system</p>
     <h1>Style guide</h1>
@@ -50,7 +50,7 @@ const blocks: Block[] = [
     <h2 class="mt-12">Colors</h2>
     <ul class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {colors.map(([name, hex, use]) => (
-        <li class="card">
+        <li class="uw-card">
           <div class="h-20" style={`background:${hex}`} />
           <div class="p-4 text-sm"><strong class="block font-heading text-ocean">{name}</strong><code>{hex}</code><p class="mt-1 text-ink-muted">{use}</p></div>
         </li>
@@ -71,14 +71,14 @@ const blocks: Block[] = [
 
     <h2 class="mt-12">Buttons</h2>
     <div class="mt-6 flex flex-wrap gap-3">
-      <a class="btn btn-give" href="#">Give</a>
-      <a class="btn btn-primary" href="#">Primary</a>
-      <a class="btn btn-secondary" href="#">Secondary</a>
+      <a class="uw-btn uw-btn-give" href="#">Give</a>
+      <a class="uw-btn uw-btn-primary" href="#">Primary</a>
+      <a class="uw-btn uw-btn-secondary" href="#">Secondary</a>
     </div>
     <div class="on-dark mt-4 flex flex-wrap gap-3 rounded-card bg-ocean p-6">
-      <a class="btn btn-give" href="#">Give</a>
-      <a class="btn btn-primary" href="#">Primary on dark</a>
-      <a class="btn btn-secondary" href="#">Secondary on dark</a>
+      <a class="uw-btn uw-btn-give" href="#">Give</a>
+      <a class="uw-btn uw-btn-primary" href="#">Primary on dark</a>
+      <a class="uw-btn uw-btn-secondary" href="#">Secondary on dark</a>
     </div>
   </section>
   <BlockRenderer blocks={blocks} locale="en" />

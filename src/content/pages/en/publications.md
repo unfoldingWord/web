@@ -202,7 +202,7 @@ sections:
       - The [IETF Wikipedia article](https://en.wikipedia.org/wiki/IETF_language_tag).
       - The [registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry) of existing language tags.
       - A utility to [look up tags](https://r12a.github.io/apps/subtags/).
-      - [Searchable language table](https://td.unfoldingword.org/) in [translationDatabase](/for-translators/tools/#translationDatabase).
+      - [Searchable language table](https://td.unfoldingword.org/) in translationDatabase.
       - [Additional information](http://www.langtag.net/).
 
       ### Software libraries

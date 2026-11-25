@@ -22,6 +22,7 @@ import Trust from './Trust.astro';
 import ContactForm from './ContactForm.astro';
 import Embed from './Embed.astro';
 import SweetBooks from './SweetBooks.astro';
+import Signup from './Signup.astro';
 
 interface Props {
   blocks: Block[];
@@ -32,7 +33,7 @@ const { blocks, locale, crumbs } = Astro.props;
 const C = {
   hero: Hero, prose: Prose, cards: Cards, split: Split, stats: Stats, quote: Quote, cta: Cta, video: Video,
   giving: Giving, faq: Faq, people: People, storyList: StoryList, prayerList: PrayerList, resources: Resources,
-  steps: Steps, gallery: Gallery, trust: Trust, contactForm: ContactForm, embed: Embed, sweetBooks: SweetBooks,
+  steps: Steps, gallery: Gallery, trust: Trust, contactForm: ContactForm, embed: Embed, sweetBooks: SweetBooks, signup: Signup,
 } as const;
 ---
 

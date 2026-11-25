@@ -1,0 +1,54 @@
+<!doctype html>
+<!--
+  Isolation frame for Virtuous CRM sign-up forms (Signup block).
+
+  Virtuous's virtuous.embed.min.js injects a full, unlayered normalize.css
+  (a { background: transparent }, h1 { font-size: 2em }, figure margins …)
+  into the TOP page — it reaches out of a same-origin iframe to do it. So this
+  page is served from a DIFFERENT origin, the media bucket (R2,
+  unfoldingword-media → src/data/media.json), where it cannot touch the
+  site's pages, and over HTTPS, which Virtuous forms require. The parent page
+  passes the form in the query string and sizes the frame from the height
+  posted back.
+
+  <media base>/embeds/virtuous-signup.html?form=<data-vform>&org=<data-orgId>
+
+  This file is not part of the site build. After changing it, upload it:
+  npm run embeds:upload
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Sign up</title>
+<style>
+  html, body { margin: 0; padding: 0; background: transparent; }
+  body { font-family: 'Avenir', 'Avenir Next', 'Nunito Sans', ui-sans-serif, system-ui, sans-serif; color: #231f20; }
+  form[id*='vcrm'] { max-width: 100% !important; }
+</style>
+</head>
+<body>
+<div id="host"></div>
+<script>
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var form = q.get('form') || '';
+    var org = q.get('org') || '7243';
+    if (!/^[0-9A-Fa-f-]{36}$/.test(form) || !/^\d+$/.test(org)) return;
+    var s = document.createElement('script');
+    s.src = 'https://cdn.virtuoussoftware.com/virtuous.embed.min.js';
+    s.setAttribute('data-vform', form);
+    s.setAttribute('data-orgId', org);
+    s.setAttribute('data-isGiving', 'false');
+    s.setAttribute('data-dependencies', '[]');
+    document.getElementById('host').appendChild(s);
+    function post() {
+      parent.postMessage({ type: 'uw-embed-height', form: form, height: document.documentElement.scrollHeight }, '*'); // height only; nothing private
+    }
+    new ResizeObserver(post).observe(document.body);
+    window.addEventListener('load', post);
+  })();
+</script>
+</body>
+</html>

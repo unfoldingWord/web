@@ -25,6 +25,13 @@ const exists = (p) => {
   return redirects.has(clean) || splats.some((s) => s.test(clean));
 };
 const bad = new Map();
+const idCache = new Map();
+// ids on a built page, for checking #fragment links
+function idsOf(path) {
+  const file = path.endsWith('/') ? join(DIST, path, 'index.html') : join(DIST, path);
+  if (!idCache.has(file)) idCache.set(file, existsSync(file) ? new Set([...readFileSync(file, 'utf8').matchAll(/\sid="([^"]+)"/g)].map((m) => m[1])) : null);
+  return idCache.get(file);
+}
 let pages = 0;
 for (const file of html(DIST)) {
   const rel = '/' + relative(DIST, file).replace(/index\.html$/, '');
@@ -33,8 +40,25 @@ for (const file of html(DIST)) {
   if (m && m[1] !== 'en' && !rel.match(/^\/[a-z]{2}\/$/)) continue;
   pages++;
   const h = readFileSync(file, 'utf8');
+  const ownIds = new Set([...h.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+  for (const [, frag] of h.matchAll(/\shref="#([^"]+)"/g)) {
+    if (!ownIds.has(decodeURIComponent(frag))) {
+      const k = `${rel}#${frag}`;
+      if (!bad.has(k)) bad.set(k, new Set());
+      bad.get(k).add(rel);
+    }
+  }
   for (const [, attr, url] of h.matchAll(/\s(href|src)="(\/[^"/][^"]*|\/)"/g)) {
     if (url.startsWith('//')) continue;
+    const [p, frag] = url.split('#');
+    if (frag && exists(p)) {
+      const ids = idsOf(decodeURI(p.split('?')[0]));
+      if (ids && !ids.has(decodeURIComponent(frag))) {
+        if (!bad.has(url)) bad.set(url, new Set());
+        bad.get(url).add(rel);
+      }
+      continue;
+    }
     if (!exists(url)) {
       if (!bad.has(url)) bad.set(url, new Set());
       bad.get(url).add(rel);

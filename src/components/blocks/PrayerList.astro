@@ -32,7 +32,7 @@ if (block.limit) items = items.slice(0, block.limit);
   <ul class="grid gap-5 md:grid-cols-2">
     {
       items.map(([slug, p]) => (
-        <li class="card group relative flex gap-0 sm:flex-row">
+        <li class="uw-card group relative flex gap-0 sm:flex-row">
           {p.data.image && (
             <div class="hidden w-40 shrink-0 sm:block">
               <Picture path={p.data.image} alt={p.data.imageAlt ?? ''} sizes="160px" widths={[160, 320]} class="h-full object-cover" />

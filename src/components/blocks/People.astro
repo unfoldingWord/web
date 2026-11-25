@@ -35,7 +35,7 @@ const people = [...bySlug.values()]
   <ul class:list={['grid gap-6', block.layout === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'mx-auto max-w-4xl']}>
     {
       people.map((p) => (
-        <li class:list={['card flex', block.layout === 'grid' ? 'flex-col' : 'flex-col sm:flex-row']}>
+        <li class:list={['uw-card flex', block.layout === 'grid' ? 'flex-col' : 'flex-col sm:flex-row']}>
           {p.data.photo ? (
             <div class:list={['shrink-0 bg-mist', block.layout === 'list' && 'sm:w-56']}>
               <Picture path={p.data.photo} alt={p.data.photoAlt ?? p.data.name} sizes="(min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw" widths={[320, 480, 720]} aspect="1 / 1" />

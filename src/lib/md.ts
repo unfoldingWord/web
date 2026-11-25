@@ -4,6 +4,7 @@
 // Content is authored in this repository, so raw HTML in it is trusted —
 // the same trust Astro gives Markdown files.
 import { Marked } from 'marked';
+import media from '../data/media.json';
 
 const marked = new Marked({ gfm: true, breaks: false });
 
@@ -25,12 +26,15 @@ const NOT_PAGES = /^\/(fonts|brand|_astro|wp-content|media|favicon|apple-touch|r
 
 /** A site path in the given locale; external links and files unchanged. */
 export function localizeHref(href: string, locale?: string): string {
+  if (href.startsWith('/wp-content/uploads/')) return `${media.base}/uploads/${href.slice('/wp-content/uploads/'.length)}`;
   if (!locale || locale === 'en' || !href.startsWith('/') || href.startsWith('//') || NOT_PAGES.test(href)) return href;
   if (/^\/[a-z]{2}\//.test(href)) return href;
   return `/${locale}${href}`;
 }
 
 function localizeLinks(html: string, locale?: string): string {
+  // Old WordPress upload links go straight to the media bucket.
+  html = html.replace(/(href|src)="\/wp-content\/uploads\//g, `$1="${media.base}/uploads/`);
   if (!locale || locale === 'en') return html;
   return html.replace(/href="(\/[^"]*)"/g, (_, h) => `href="${localizeHref(h, locale)}"`);
 }

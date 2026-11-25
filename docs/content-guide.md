@@ -144,7 +144,8 @@ Markdown after the frontmatter is rendered as a prose section after the blocks
 - type: video
   title: What is Church-Centric Bible Translation?
   provider: youtube          # youtube | vimeo
-  id: VIDEO_ID
+  id: VIDEO_ID               # just the id: dQw4w9WgXcQ or 1232161297
+  hash: b9a8b8aab2           # unlisted Vimeo videos only: from the share link vimeo.com/1232161297/b9a8b8aab2
   caption: optional
   transcript: |-             # strongly encouraged: search and AI engines read transcripts, not video
     …
@@ -232,6 +233,16 @@ bio: |-
     - { src: wbwn/chad-1.jpg, alt: …, caption: optional }
 ```
 
+### signup — newsletter or prayer-calendar sign-up (Virtuous)
+```yaml
+- type: signup
+  id: prayer-signup          # optional anchor
+  title: Receive the monthly prayer calendar
+  body: Short explanation.
+  formId: 48E8DDDB-DF9D-46F0-9715-9CDD48C535CA   # the data-vform value from Virtuous's embed code
+  orgId: '7243'              # data-orgId (sign-up forms use 7243; giving forms use 41649)
+```
+
 ### trust — ECFA, Candid, MinistryWatch
 ```yaml
 - type: trust
@@ -270,6 +281,16 @@ sensitive: false        # true if it names people or places in a security-sensit
 redirectFrom: [/open-bible-stories/the-angry-imam/]
 ---
 Story text in Markdown.
+```
+
+A story with a video is an `.mdx` file (same frontmatter) that places the player in the text:
+
+```mdx
+import VideoFrame from '../../../components/ui/VideoFrame.astro';
+
+Paragraph…
+
+<VideoFrame provider="youtube" id="FrTFf2he2ww" title="Ibrahim's story" />
 ```
 
 ## Prayer requests

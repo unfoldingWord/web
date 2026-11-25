@@ -16,7 +16,7 @@ sections:
     title: Innovative Tools for Indigenous Disciple-Makers
     body: |-
       translationCore, developed by unfoldingWord, represents a powerful response to one of the greatest challenges in global missions: making Bible translation accessible to the local church, especially in places where traditional approaches have fallen short.
-    video: { provider: vimeo, id: '1232207539?h=8ae22581d9&', title: Tools and Technology - translationCore }
+    video: { provider: vimeo, id: '1232207539', hash: 8ae22581d9, title: Tools and Technology - translationCore }
   - type: quote
     quote: We used to check translations manually, word by word and verse by verse. Checking manually, it takes a whole day to review a few verses. With translationCore, we can check 100 verses per day.
     attribution: Amos

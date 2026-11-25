@@ -2,7 +2,7 @@
 title: Life Change in Southeast Asia
 description: For a church-centric Bible translator in Southeast Asia, translating passages on forgiveness meant obeying them first. Translation is about life change.
 date: 2026-09-29
-region: south-asia
+region: asia
 image: stories/life-change-in-southeast-asia.jpg
 imageAlt: A busy city street at night with motorbikes, a pedicab and vendors carrying bunches of colorful balloons
 redirectFrom: [/southasia/life-change-in-southeast-asia/]

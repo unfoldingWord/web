@@ -33,10 +33,11 @@ sections:
 
       **We come alongside leaders in the global church** with tools, training and technologies to help them overcome barriers, reach the least reached and multiply the family of God.
 
-  - type: embed
+  - type: video
     title: 3 Things Church-Centric Bible Translation Gets Right
-    src: https://player.vimeo.com/video/1233404640?h=92b6193486&dnt=1&title=0&byline=0&portrait=0
-    aspect: 16 / 9
+    provider: vimeo
+    id: '1233404640'
+    hash: 92b6193486
 
   - type: giving
     title: Give the gospel. Change lives forever.
@@ -139,13 +140,14 @@ sections:
       - Biblica
       - American Bible Society
 
-  - type: cta
-    variant: mist
+  - type: signup
     title: Find out more
-    body: Inspiring stories, latest news and prayer requests from the global church.
-    actions:
-      - { label: Stories from the field, href: /stories/ }
-      - { label: Pray with us, href: /pray/, style: secondary }
+    body: |-
+      Sign up for inspiring stories, the latest news, our eNewsletter and the ePrayer calendar from the global church.
+
+      [Read stories from the field](/stories/) · [Pray with us](/pray/)
+    formId: 48E8DDDB-DF9D-46F0-9715-9CDD48C535CA
+    orgId: '7243'
 
   - type: trust
     title: Give with confidence

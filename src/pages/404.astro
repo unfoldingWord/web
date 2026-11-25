@@ -7,22 +7,22 @@ import { ui } from '../i18n';
 const t = ui('en');
 ---
 
-<Base locale="en" basePath="/404/" title={t.notFoundTitle} description="The page you were looking for could not be found on unfoldingword.org." noindex pageType="404">
+<Base switcherPath="/" locale="en" basePath="/404/" title={t.notFoundTitle} description="The page you were looking for could not be found on unfoldingword.org." noindex pageType="404">
   <section class="bg-mist">
     <div class="container-prose py-16 text-center lg:py-24">
       <p class="eyebrow mb-3">404</p>
       <h1>{t.notFoundTitle}</h1>
       <p class="mt-5 text-lead text-ink-muted">{t.notFoundBody}</p>
       <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-        <a href="/" class="btn btn-primary">{t.notFoundHome}</a>
-        <a href="/stories/" class="btn btn-secondary">{t.allStories}</a>
-        <a href="/give/" class="btn btn-give">{t.donate}</a>
+        <a href="/" class="uw-btn uw-btn-primary">{t.notFoundHome}</a>
+        <a href="/stories/" class="uw-btn uw-btn-secondary">{t.allStories}</a>
+        <a href="/give/" class="uw-btn uw-btn-give">{t.donate}</a>
       </div>
       <form action="https://www.google.com/search" method="get" class="mx-auto mt-10 flex max-w-md gap-2" role="search">
         <input type="hidden" name="as_sitesearch" value="unfoldingword.org" />
         <label for="q404" class="sr-only">Search unfoldingword.org</label>
         <input id="q404" name="q" type="search" placeholder="Search unfoldingword.org" class="min-h-12 flex-1 rounded-full border border-line bg-white px-5" />
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="submit" class="uw-btn uw-btn-primary">Search</button>
       </form>
     </div>
   </section>

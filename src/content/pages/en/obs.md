@@ -26,6 +26,7 @@ sections:
     title: Open Bible Stories
     provider: vimeo
     id: '1232213477'
+    hash: 10bf4c03bf
   - type: prose
     title: Terms of use for these illustrations
     background: mist

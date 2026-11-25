@@ -91,7 +91,7 @@ const split = z.object({
   body: z.string(),
   image: imagePath.optional(),
   imageAlt: z.string().optional(),
-  video: z.object({ provider: z.enum(['youtube', 'vimeo']), id: z.string(), title: z.string() }).optional(),
+  video: z.object({ provider: z.enum(['youtube', 'vimeo']), id: z.string().regex(/^[\w-]+$/, 'Just the video id, e.g. 1232161297 — put an unlisted Vimeo video\'s h= value in `hash`'), hash: z.string().optional(), title: z.string() }).optional(),
   imagePosition: z.enum(['start', 'end']).default('end'),
   background: z.enum(['white', 'mist', 'ocean']).default('white'),
   actions: z.array(action).default([]),
@@ -126,7 +126,10 @@ const video = z.object({
   type: z.literal('video'),
   title: z.string(),
   provider: z.enum(['youtube', 'vimeo']),
-  id: z.string(),
+  id: z.string().regex(/^[\w-]+$/, 'Just the video id, e.g. dQw4w9WgXcQ or 1232161297'),
+  // Unlisted Vimeo videos only play with their privacy hash: the h= value in
+  // the share link (https://vimeo.com/1232161297/b9a8b8aab2 → b9a8b8aab2).
+  hash: z.string().optional(),
   caption: z.string().optional(),
   // A text transcript is what search and AI engines index; add one.
   transcript: z.string().optional(),
@@ -228,9 +231,22 @@ const embed = z.object({
 
 const sweetBooks = z.object({ type: z.literal('sweetBooks'), title: z.string().optional() });
 
+// A Virtuous CRM sign-up form (newsletter, prayer calendar) — the
+// virtuous.embed.min.js kind with data-vform, not a giving form.
+const signup = z.object({
+  type: z.literal('signup'),
+  id: z.string().optional(),
+  eyebrow: z.string().optional(),
+  title: z.string().optional(),
+  body: z.string().optional(),
+  formId: z.string().regex(/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/, 'The data-vform value from the Virtuous embed code'),
+  orgId: z.string().default('7243'),
+  background: z.enum(['white', 'mist', 'ocean']).default('mist'),
+});
+
 export const block = z.discriminatedUnion('type', [
   hero, prose, cards, split, stats, quote, cta, video, giving, faq, peopleBlock,
-  storyList, prayerList, resources, steps, gallery, trust, contactForm, embed, sweetBooks,
+  storyList, prayerList, resources, steps, gallery, trust, contactForm, embed, sweetBooks, signup,
 ]);
 export type Block = z.infer<typeof block>;
 

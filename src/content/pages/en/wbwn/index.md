@@ -18,9 +18,11 @@ sections:
       - Raising up local church leaders who can faithfully teach and multiply God’s Word
 
       This is how Whole Bible | Whole Nation is changing the world—one language, one church and one transformed nation at a time.
-  - type: embed
-    title: "Whole Bible | Whole Nation video"
-    src: https://player.vimeo.com/video/1232163754?h=c459324393&dnt=1
+  - type: video
+    title: "Whole Bible | Whole Nation"
+    provider: vimeo
+    id: '1232163754'
+    hash: c459324393
   - type: prose
     title: Language is the key to the heart
     background: mist

@@ -25,7 +25,7 @@ const mediaFirst = block.imagePosition === 'start';
     </div>
     <div class:list={[mediaFirst && 'md:order-1']}>
       {block.video ? (
-        <VideoFrame provider={block.video.provider} id={block.video.id} title={block.video.title} />
+        <VideoFrame provider={block.video.provider} id={block.video.id} hash={block.video.hash} title={block.video.title} />
       ) : block.image ? (
         <div class="overflow-hidden rounded-card shadow-card">
           <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="(min-width: 48rem) 50vw, 100vw" />

@@ -27,7 +27,8 @@
 /trustworthy                /publications/#TRTR
 /gateway                    /publications/#TGLS
 /join-us/pray               /pray/
-/d/iran                     https://donorbox.org/open-the-gates-persian-3   302
+# Was a Donorbox campaign that now 404s; Iran giving is by check (see /wbwn/iran/).
+/d/iran                     /wbwn/iran/
 /wbwn/southeast-asia        /wbwn/se-asia/
 
 # --- Typo'd links that the old site's own pages contained ---
@@ -40,6 +41,12 @@
 /ccbt/[[glossary                    /ccbt/glossary/
 
 # --- Old site structure (www.unfoldingword.org before WordPress) ---
+/projects/eurasia/russian           /wbwn/
+/publications/audio-engineering     /publications/
+/publications/ccbt-getting-started  /wp-content/uploads/2024/10/ccbt-getting-started-rev1.pdf
+/publications/free-translate        /publications/
+/publications/the-christian-commons /publications/
+/publications/the-gateway-languages-strategy /publications/#TGLS
 /join-us                            /careers/
 
 # --- WordPress system URLs that disappear with WordPress ---

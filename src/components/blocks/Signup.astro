@@ -1,0 +1,52 @@
+---
+// Virtuous CRM sign-up form (newsletter, prayer calendar). Not a giving form
+// — giving uses the Giving block (data-rd).
+//
+// Rendered in an iframe served from the media bucket's origin
+// (embeds/virtuous-signup.html): Virtuous's virtuous.embed.min.js injects an
+// unlayered normalize.css into the top page — even from a same-origin frame —
+// which overrides this site's styles (button backgrounds, h1 sizes, figure
+// margins). From another origin it can only style itself. The frame reports
+// its height so it never scrolls.
+import type { Block } from '../../content.config';
+import { md, mdInline } from '../../lib/md';
+import Section from '../ui/Section.astro';
+import { SITE } from '../../lib/site';
+
+const frameOrigin = new URL(SITE.mediaBase).origin;
+
+type Signup = Extract<Block, { type: 'signup' }>;
+interface Props {
+  block: Signup;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+---
+
+<Section background={block.background} id={block.id}>
+  <div class="grid gap-8 lg:grid-cols-12 lg:gap-14">
+    <div class="lg:col-span-5">
+      {block.eyebrow && <p class="eyebrow mb-3">{block.eyebrow}</p>}
+      {block.title && <h2 set:html={mdInline(block.title)} />}
+      {block.body && <div class="prose mt-4" set:html={md(block.body, locale)} />}
+    </div>
+    <div class="rounded-card bg-white p-4 shadow-card sm:p-6 lg:col-span-7">
+      <iframe
+        class="signup-frame block min-h-[20rem] w-full border-0"
+        src={`${SITE.mediaBase}/embeds/virtuous-signup.html?form=${encodeURIComponent(block.formId)}&org=${encodeURIComponent(block.orgId)}`}
+        title={block.title ?? 'Sign up'}
+        loading="lazy"
+        data-form={block.formId}
+        data-origin={frameOrigin}></iframe>
+    </div>
+  </div>
+</Section>
+
+<script>
+  window.addEventListener('message', (e) => {
+    if (e.data?.type !== 'uw-embed-height') return;
+    document.querySelectorAll<HTMLIFrameElement>('iframe.signup-frame').forEach((f) => {
+      if (f.contentWindow === e.source && e.origin === f.dataset.origin) f.style.height = `${Math.min(4000, Math.ceil(Number(e.data.height)) + 4)}px`;
+    });
+  });
+</script>

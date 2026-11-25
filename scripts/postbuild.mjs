@@ -30,6 +30,7 @@ rmSync(manifestPath);
 const built = new Set(manifest.pages);
 const isBuilt = (p) => {
   const path = p.split('#')[0].split('?')[0];
+  if (path.startsWith('/wp-content/uploads/')) return true; // redirected to the media bucket by the pattern rule below
   if (built.has(path)) return true;
   // files (rss, sitemaps, pdfs in public/)
   return existsSync(join(DIST, path)) && !path.endsWith('/');
@@ -41,7 +42,9 @@ const rules = new Map(); // from -> { to, status, source }
 const errors = [];
 function add(from, to, status, source) {
   if (!from.startsWith('/')) return errors.push(`${source}: "${from}" must start with /`);
-  const target = to.startsWith('/') ? withSlash(to.split('#')[0]) + (to.includes('#') ? '#' + to.split('#')[1] : '') : to;
+  // Uploads live in the media bucket: send straight there (one hop).
+  if (to.startsWith('/wp-content/uploads/')) to = `${MEDIA}/uploads/${to.slice('/wp-content/uploads/'.length)}`;
+  const target = to.startsWith('/') && !/\.[a-z0-9]+$/i.test(to.split('#')[0]) ? withSlash(to.split('#')[0]) + (to.includes('#') ? '#' + to.split('#')[1] : '') : to;
   for (const f of new Set([noSlash(from), withSlash(from)])) {
     if (f === '/' || f === target.split('#')[0]) continue; // /x → /x/ is html_handling's job
     const prev = rules.get(f);
@@ -75,6 +78,8 @@ for (const [from, { to, source }] of rules) {
 const dynamic = [
   // category archives: /category/africa/ → stories index
   ['/category/*', '/stories/', 301],
+  // the old story index's pagination
+  ['/stories-from-the-field/page/*', '/stories/', 301],
   ['/tag/*', '/stories/', 301],
   ['/author/*', '/about/', 301],
   // feeds of any page

@@ -19,7 +19,8 @@
     "check:links": "node scripts/check-links.mjs",
     "test": "node --test worker/*.test.mjs",
     "geo": "node scripts/geo-audit.mjs",
-    "check:experiments": "node scripts/check-experiments.mjs"
+    "check:experiments": "node scripts/check-experiments.mjs",
+    "embeds:upload": "wrangler r2 object put unfoldingword-media/embeds/virtuous-signup.html --file embeds/virtuous-signup.html --remote --content-type 'text/html; charset=utf-8' --cache-control 'public, max-age=300'"
   },
   "dependencies": {
     "@astrojs/mdx": "8.1.6",
