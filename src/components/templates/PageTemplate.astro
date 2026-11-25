@@ -1,0 +1,80 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import { SITE } from '../../lib/site';
+import { webPageNode, breadcrumbNode, faqNode, videoNode } from '../../lib/jsonld';
+import { plain } from '../../lib/md';
+import type { Route } from '../../lib/routes';
+import Base from '../../layouts/Base.astro';
+import BlockRenderer from '../blocks/BlockRenderer.astro';
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import { getImage } from 'astro:assets';
+import { img } from '../../lib/images';
+
+interface Props {
+  route: Route;
+  crumbs: { name: string; href?: string }[];
+  experiment?: { id: string; variant: string };
+}
+const { route, crumbs, experiment } = Astro.props;
+const entry = route.entry as CollectionEntry<'pages'>;
+const d = entry.data;
+const { Content } = await render(entry);
+const hasBody = Boolean(entry.body?.trim());
+const firstIsHero = d.sections[0]?.type === 'hero';
+const url = new URL(route.path, SITE.url).href;
+const isHome = route.basePath === '/';
+
+const heroImage = d.ogImage ?? (d.sections.find((s) => s.type === 'hero' && 'image' in s && s.image) as { image?: string } | undefined)?.image;
+const og = heroImage ? new URL((await getImage({ src: img(heroImage), width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src, SITE.url).href : undefined;
+
+const faqs = d.sections.flatMap((s) => (s.type === 'faq' ? s.items : []));
+const videos = d.sections.flatMap((s) => (s.type === 'video' ? [s] : []));
+const jsonLd = [
+  webPageNode({ url, title: d.title, description: d.description, lang: route.locale, type: d.schemaType === 'DonatePage' ? 'WebPage' : d.schemaType, image: og, dateModified: d.updated, breadcrumbId: isHome ? undefined : `${url}#breadcrumb` }),
+  ...(isHome ? [] : [breadcrumbNode(url, crumbs.map((c) => ({ name: c.name, url: new URL(c.href ?? route.path, SITE.url).href })))]),
+  ...(faqs.length ? [faqNode(url, faqs.map((f) => ({ q: plain(f.q), a: plain(f.a) })))] : []),
+  ...videos.map((v) => videoNode({ url, title: v.title, description: v.caption, provider: v.provider, id: v.id, transcript: v.transcript ? plain(v.transcript) : undefined })),
+];
+const pageType = d.template === 'giving' ? 'giving' : isHome ? 'home' : 'page';
+---
+
+<Base
+  locale={route.locale}
+  basePath={route.basePath}
+  title={d.title}
+  description={d.description}
+  ogImage={og}
+  jsonLd={jsonLd}
+  translations={route.translations}
+  fallback={route.fallback}
+  noindex={route.noindex}
+  pageType={pageType}
+  experiment={experiment}
+>
+  {
+    !firstIsHero && (
+      <section class="bg-mist">
+        <div class="container-page py-10 lg:py-14">
+          {!isHome && d.breadcrumbs && <div class="mb-5"><Breadcrumbs items={crumbs} locale={route.locale} /></div>}
+          <h1 class="max-w-4xl">{d.heading ?? d.title}</h1>
+        </div>
+      </section>
+    )
+  }
+  {firstIsHero && <BlockRenderer blocks={d.sections.slice(0, 1)} locale={route.locale} crumbs={!isHome && d.breadcrumbs ? crumbs : undefined} />}
+  {
+    hasBody && d.bodyPosition === 'before' && (
+      <div class="container-prose py-[var(--spacing-section)]">
+        <div class="prose"><Content /></div>
+      </div>
+    )
+  }
+  <BlockRenderer blocks={firstIsHero ? d.sections.slice(1) : d.sections} locale={route.locale} />
+  {
+    hasBody && d.bodyPosition === 'after' && (
+      <div class="container-prose py-[var(--spacing-section)]">
+        <div class="prose"><Content /></div>
+      </div>
+    )
+  }
+</Base>

@@ -1,0 +1,26 @@
+---
+import type { Block } from '../../content.config';
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+
+type Stats = Extract<Block, { type: 'stats' }>;
+interface Props {
+  block: Stats;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+---
+
+<Section background={block.background} tight>
+  <SectionHeader eyebrow={block.eyebrow} title={block.title} align="center" locale={locale} />
+  <dl class="grid grid-cols-2 gap-x-6 gap-y-8 text-center lg:grid-cols-4">
+    {
+      block.items.map((s) => (
+        <div class="flex flex-col-reverse gap-1">
+          <dt class:list={['text-sm font-semibold sm:text-base', block.background === 'ocean' ? 'text-white/85' : 'text-ink-muted']}>{s.label}</dt>
+          <dd class:list={['font-heading text-[clamp(2.25rem,1.6rem+2.6vw,3.5rem)] font-black leading-none', block.background === 'ocean' ? 'text-inspire' : 'text-ocean']}>{s.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</Section>

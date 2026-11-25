@@ -1,0 +1,49 @@
+---
+// A list of downloads and links (publications, PDFs, apps, training).
+import type { Block } from '../../content.config';
+import { md, mdInline, localizeHref } from '../../lib/md';
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+import Picture from '../ui/Picture.astro';
+import Icon from '../ui/Icon.astro';
+
+type Resources = Extract<Block, { type: 'resources' }>;
+interface Props {
+  block: Resources;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+const icon = { pdf: 'pdf', link: 'link', video: 'play', audio: 'audio', book: 'book', app: 'app' } as const;
+const isExternal = (h: string) => /^https?:\/\//.test(h);
+---
+
+<Section id={block.id}>
+  <SectionHeader eyebrow={block.eyebrow} title={block.title} intro={block.intro} locale={locale} />
+  <ul class="grid gap-4 md:grid-cols-2">
+    {
+      block.items.map((it) => (
+        <li class="group relative flex gap-4 rounded-card border border-line bg-white p-5 transition hover:border-inspire hover:shadow-card">
+          {it.image ? (
+            <div class="w-20 shrink-0 overflow-hidden rounded-lg">
+              <Picture path={it.image} alt={it.imageAlt ?? ''} sizes="80px" widths={[80, 160]} />
+            </div>
+          ) : (
+            <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-inspire-50 text-inspire-ink">
+              <Icon name={icon[it.kind]} class="size-5.5" />
+            </span>
+          )}
+          <div class="min-w-0">
+            <h3 class="text-lg leading-snug">
+              <a href={localizeHref(it.href, locale)} class="text-ocean no-underline after:absolute after:inset-0 hover:underline" {...(isExternal(it.href) ? { rel: 'noopener' } : {})}>
+                <span set:html={mdInline(it.title)} />
+                {it.kind === 'pdf' && <span class="sr-only"> (PDF)</span>}
+              </a>
+            </h3>
+            {it.description && <div class="prose mt-1 text-[0.9375rem] text-ink-muted" set:html={md(it.description, locale)} />}
+            {it.meta && <p class="mt-1 text-sm text-ink-muted">{it.meta}</p>}
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</Section>

@@ -1,0 +1,52 @@
+{
+  "name": "unfoldingword-web",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "predev": "node scripts/build-font-css.mjs",
+    "dev": "astro dev",
+    "prebuild": "node scripts/build-font-css.mjs",
+    "build": "astro build",
+    "postbuild": "node scripts/postbuild.mjs",
+    "preview": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "check": "npm run check:content && npm run check:locales && npm run check:redirects && npm run check:links",
+    "check:content": "node scripts/check-content.mjs",
+    "check:locales": "node scripts/check-locales.mjs",
+    "check:redirects": "node scripts/check-redirects.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "check:scripts": "node scripts/check-scripts.mjs",
+    "test": "node --test scripts/*.test.mjs worker/*.test.mjs",
+    "geo": "node scripts/geo-audit.mjs"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "8.1.6",
+    "@astrojs/sitemap": "3.7.6",
+    "astro": "7.4.13",
+    "marked": "18.3.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "@cloudflare/workers-types": "5.20261125.1",
+    "@fontsource-variable/nunito-sans": "5.3.0",
+    "@fontsource/noto-nastaliq-urdu": "^5.3.0",
+    "@fontsource/noto-sans-arabic": "^5.3.0",
+    "@fontsource/noto-sans-bengali": "^5.3.0",
+    "@fontsource/noto-sans-devanagari": "^5.3.0",
+    "@fontsource/noto-sans-myanmar": "^5.3.0",
+    "@fontsource/noto-sans-sc": "^5.3.1",
+    "@fontsource/pt-serif": "5.3.0",
+    "@tailwindcss/vite": "4.3.4",
+    "sharp": "0.35.5",
+    "tailwindcss": "4.3.4",
+    "typescript": "5.9.3",
+    "wrangler": "4.168.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "workerd@1.20261123.1": true
+  }
+}

@@ -1,0 +1,239 @@
+/*
+ * unfoldingWord design system — tokens and base styles.
+ *
+ * THIS FILE IS THE ONE PLACE TO CHANGE THE LOOK OF THE SITE.
+ * Components use only these tokens (as Tailwind utilities like
+ * `bg-ocean`, `text-ink`, `font-heading`, `rounded-card`), never raw hex
+ * values, so a change here restyles every page. Preview every component
+ * at /styleguide/ (not linked or indexed) after changing anything here.
+ *
+ * Colors are the brand palette from the unfoldingWord brand guide, which
+ * is also what the current WordPress site's Elementor kit defines:
+ *   Inspire #31ADE3 · Ocean #014263 · Tech #231F20 · Cultivate #70C9CC ·
+ *   Kindle #E59D33
+ *
+ * Contrast (WCAG 2.2 AA needs 4.5:1 for body text, 3:1 for large text):
+ *   Inspire on white is 2.56:1 — fine for shapes and large display text on
+ *   dark, NOT for text on white. Text that should read as "brand blue" on a
+ *   light background uses `inspire-ink` (#0B6E9E, 5.62:1).
+ *   Kindle with white text is 2.28:1 — the giving button uses Tech text on
+ *   Kindle (7.14:1) instead.
+ *   Ocean with white text is 10.71:1; Cultivate on Ocean 5.57:1.
+ */
+@import 'tailwindcss';
+
+@theme {
+  /* Brand palette */
+  --color-inspire: #31ade3;
+  --color-inspire-ink: #0b6e9e;
+  --color-inspire-50: #eaf7fc;
+  --color-inspire-100: #cdebf8;
+  --color-ocean: #014263;
+  --color-ocean-900: #012c42;
+  --color-ocean-700: #0a5a82;
+  --color-tech: #231f20;
+  --color-cultivate: #70c9cc;
+  --color-cultivate-50: #eef8f8;
+  --color-kindle: #e59d33;
+  --color-kindle-600: #cf8519;
+  --color-kindle-50: #fdf4e7;
+  --color-kindle-ink: #9a5d0c;
+
+  /* Neutrals and roles */
+  --color-ink: var(--color-tech);
+  --color-ink-muted: #5b5557;
+  --color-paper: #ffffff;
+  --color-mist: #f4f9fb;
+  --color-line: #dce6eb;
+  --color-focus: #e59d33;
+
+  /*
+   * Type. Headings and body are Avenir — the brand face, and what the
+   * current site names — wherever the visitor's device already has it
+   * (every Mac, iPhone and iPad). Avenir is a licensed commercial font, so
+   * it is NOT shipped in this public repository; everyone else gets the
+   * brand guide's named fallback, Nunito Sans, self-hosted from
+   * public/fonts/. PT Serif is the brand's long-form face (stories).
+   * Non-Latin scripts add a Noto face per locale (see html[data-script]).
+   */
+  --font-sans: 'Avenir', 'Avenir Next', 'Nunito Sans Variable', 'Nunito Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Avenir', 'Avenir Next', 'Nunito Sans Variable', 'Nunito Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'PT Serif', Georgia, 'Times New Roman', serif;
+
+  /* Fluid type scale: phone size → desktop size */
+  --text-display: clamp(2.25rem, 1.6rem + 3.2vw, 4rem);
+  --text-display--line-height: 1.05;
+  --text-h1: clamp(2rem, 1.5rem + 2.4vw, 3.25rem);
+  --text-h1--line-height: 1.1;
+  --text-h2: clamp(1.625rem, 1.3rem + 1.5vw, 2.5rem);
+  --text-h2--line-height: 1.15;
+  --text-h3: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  --text-h3--line-height: 1.25;
+  --text-lead: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+  --text-lead--line-height: 1.55;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.65;
+  --text-eyebrow: 0.8125rem;
+  --text-eyebrow--line-height: 1.4;
+  --text-eyebrow--letter-spacing: 0.12em;
+
+  /* Shape and depth */
+  --radius-card: 1rem;
+  --radius-button: 999px;
+  --radius-media: 0.75rem;
+  --shadow-card: 0 1px 2px rgb(1 66 99 / 0.06), 0 8px 24px -12px rgb(1 66 99 / 0.18);
+  --shadow-raised: 0 2px 4px rgb(1 66 99 / 0.08), 0 18px 40px -16px rgb(1 66 99 / 0.28);
+
+  /* Layout */
+  --container-page: 76rem;
+  --container-prose: 44rem;
+  --spacing-section: clamp(3rem, 2rem + 4vw, 6rem);
+  --spacing-gutter: clamp(1rem, 0.6rem + 1.8vw, 2rem);
+
+  /* The angled color block from the brand guide's design patterns */
+  --angle-cut: 4vw;
+}
+
+/* ---------- Base ---------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    @apply bg-paper font-sans text-body text-ink antialiased;
+    font-weight: 400;
+    overflow-x: clip;
+  }
+  h1, h2, h3, h4 {
+    @apply font-heading text-ocean;
+    font-weight: 800;
+    text-wrap: balance;
+  }
+  h1 { @apply text-h1; }
+  h2 { @apply text-h2; }
+  h3 { @apply text-h3; }
+  p { text-wrap: pretty; }
+  a { @apply text-inspire-ink underline-offset-3; }
+  a:hover { @apply text-ocean; }
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  img, video, iframe { max-width: 100%; }
+  ::selection { background: var(--color-cultivate); color: var(--color-tech); }
+
+  /* Non-Latin locales: put the script's Noto face ahead of the Latin stack.
+     The stylesheet that defines each face is linked only on its locale's
+     pages (Base.astro → fontHrefFor()). */
+  html[data-script='arabic'] { --font-sans: 'Noto Sans Arabic', var(--font-sans-latin); --font-heading: 'Noto Sans Arabic', var(--font-sans-latin); }
+  html[data-script='nastaliq'] { --font-sans: 'Noto Nastaliq Urdu', 'Noto Sans Arabic', var(--font-sans-latin); --font-heading: 'Noto Nastaliq Urdu', var(--font-sans-latin); }
+  html[data-script='nastaliq'] body { line-height: 2.1; }
+  html[data-script='devanagari'] { --font-sans: 'Noto Sans Devanagari', var(--font-sans-latin); --font-heading: 'Noto Sans Devanagari', var(--font-sans-latin); }
+  html[data-script='bengali'] { --font-sans: 'Noto Sans Bengali', var(--font-sans-latin); --font-heading: 'Noto Sans Bengali', var(--font-sans-latin); }
+  html[data-script='myanmar'] { --font-sans: 'Noto Sans Myanmar', var(--font-sans-latin); --font-heading: 'Noto Sans Myanmar', var(--font-sans-latin); }
+  html[data-script='myanmar'] body { line-height: 1.9; }
+  html[data-script='han'] { --font-sans: 'Noto Sans SC', var(--font-sans-latin); --font-heading: 'Noto Sans SC', var(--font-sans-latin); }
+  html[data-script='cyrillic'] { --font-sans: 'Nunito Sans Variable', 'Nunito Sans', ui-sans-serif, system-ui, sans-serif; --font-heading: var(--font-sans); }
+  :root { --font-sans-latin: 'Avenir', 'Avenir Next', 'Nunito Sans Variable', 'Nunito Sans', ui-sans-serif, system-ui, sans-serif; }
+}
+
+/* ---------- Reusable patterns ---------- */
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: var(--container-page);
+    margin-inline: auto;
+    padding-inline: var(--spacing-gutter);
+  }
+  .container-prose {
+    width: 100%;
+    max-width: var(--container-prose);
+    margin-inline: auto;
+    padding-inline: var(--spacing-gutter);
+  }
+  .eyebrow {
+    @apply font-heading text-eyebrow uppercase text-inspire-ink;
+    font-weight: 800;
+  }
+  .on-dark .eyebrow { @apply text-cultivate; }
+  .on-dark { @apply text-white; }
+  .on-dark :where(h1, h2, h3, h4) { @apply text-white; }
+  .on-dark :where(a:not(.btn)) { @apply text-cultivate; }
+  .on-dark :where(a:not(.btn)):hover { @apply text-white; }
+
+  /* Angled section edge (brand pattern). Logical so it mirrors in RTL. */
+  .angle-bottom { clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--angle-cut)), 0 100%); padding-bottom: calc(var(--spacing-section) + var(--angle-cut)); }
+  [dir='rtl'] .angle-bottom { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - var(--angle-cut))); }
+
+  /* Long-form text from Markdown. */
+  .prose {
+    @apply text-body text-ink;
+    max-width: var(--container-prose);
+  }
+  .prose > * + * { margin-top: 1.1em; }
+  .prose :where(h2) { @apply text-h2; margin-top: 1.8em; }
+  .prose :where(h3) { @apply text-h3; margin-top: 1.5em; }
+  .prose :where(h2 + *, h3 + *) { margin-top: 0.6em; }
+  .prose :where(ul, ol) { padding-inline-start: 1.4em; }
+  .prose :where(ul) { list-style: disc; }
+  .prose :where(ol) { list-style: decimal; }
+  .prose :where(li + li) { margin-top: 0.4em; }
+  .prose :where(li)::marker { color: var(--color-inspire); }
+  .prose :where(a) { @apply underline decoration-inspire decoration-2; }
+  .prose :where(strong) { font-weight: 800; }
+  .prose :where(blockquote) {
+    @apply border-inspire text-lead text-ocean;
+    border-inline-start-width: 4px;
+    padding-inline-start: 1.25em;
+    font-style: italic;
+  }
+  .prose :where(img) { @apply rounded-media; }
+  .prose :where(figure figcaption) { @apply text-ink-muted; font-size: 0.9375rem; margin-top: 0.5em; }
+  .prose :where(hr) { @apply border-line; margin-block: 2.5em; }
+  .prose :where(table) { width: 100%; border-collapse: collapse; font-size: 0.9375rem; }
+  .prose :where(th, td) { @apply border-line; border-bottom-width: 1px; padding: 0.6em 0.5em; text-align: start; vertical-align: top; }
+  .prose :where(iframe) { width: 100%; aspect-ratio: 16 / 9; height: auto; border-radius: var(--radius-media); }
+  .prose-serif { font-family: var(--font-serif); font-size: 1.125rem; line-height: 1.75; }
+  .on-dark .prose, .prose.on-dark { @apply text-white; }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-button font-heading no-underline transition;
+    min-height: 2.875rem; /* ≥44px tap target */
+    padding: 0.7rem 1.4rem;
+    font-weight: 800;
+    font-size: 1rem;
+    line-height: 1.2;
+    text-align: center;
+  }
+  .btn-primary { @apply bg-ocean text-white; }
+  .btn-primary:hover { @apply bg-ocean-700 text-white; }
+  .btn-give { @apply bg-kindle text-tech; }
+  .btn-give:hover { @apply bg-kindle-600 text-tech; }
+  .btn-secondary { @apply border-2 border-ocean bg-transparent text-ocean; }
+  .btn-secondary:hover { @apply bg-ocean text-white; }
+  .on-dark .btn-secondary { @apply border-white text-white; }
+  .on-dark .btn-secondary:hover { @apply bg-white text-ocean; }
+  .on-dark .btn-primary { @apply bg-white text-ocean; }
+  .on-dark .btn-primary:hover { @apply bg-cultivate text-ocean; }
+
+  .card {
+    @apply rounded-card bg-white shadow-card;
+    overflow: hidden;
+  }
+
+  .skip-link {
+    @apply absolute z-50 rounded-button bg-kindle px-4 py-2 font-heading text-tech no-underline;
+    inset-inline-start: 1rem;
+    top: -4rem;
+    font-weight: 800;
+  }
+  .skip-link:focus { top: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

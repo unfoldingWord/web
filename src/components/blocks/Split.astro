@@ -1,0 +1,36 @@
+---
+import type { Block } from '../../content.config';
+import { md, mdInline } from '../../lib/md';
+import Section from '../ui/Section.astro';
+import Picture from '../ui/Picture.astro';
+import Actions from '../ui/Actions.astro';
+import VideoFrame from '../ui/VideoFrame.astro';
+
+type Split = Extract<Block, { type: 'split' }>;
+interface Props {
+  block: Split;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+const mediaFirst = block.imagePosition === 'start';
+---
+
+<Section background={block.background}>
+  <div class="grid items-center gap-8 md:grid-cols-2 lg:gap-16">
+    <div class:list={[mediaFirst && 'md:order-2']}>
+      {block.eyebrow && <p class="eyebrow mb-3">{block.eyebrow}</p>}
+      {block.title && <h2 class="mb-5" set:html={mdInline(block.title)} />}
+      <div class="prose" set:html={md(block.body, locale)} />
+      <Actions actions={block.actions} locale={locale} class="mt-8" />
+    </div>
+    <div class:list={[mediaFirst && 'md:order-1']}>
+      {block.video ? (
+        <VideoFrame provider={block.video.provider} id={block.video.id} title={block.video.title} />
+      ) : block.image ? (
+        <div class="overflow-hidden rounded-card shadow-card">
+          <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="(min-width: 48rem) 50vw, 100vw" />
+        </div>
+      ) : null}
+    </div>
+  </div>
+</Section>

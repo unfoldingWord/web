@@ -1,0 +1,18 @@
+---
+import type { Block } from '../../content.config';
+import { md } from '../../lib/md';
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+
+type Prose = Extract<Block, { type: 'prose' }>;
+interface Props {
+  block: Prose;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+---
+
+<Section background={block.background} width={block.width === 'wide' ? 'page' : 'prose'}>
+  <SectionHeader eyebrow={block.eyebrow} title={block.title} locale={locale} />
+  <div class:list={['prose', block.width === 'wide' && '!max-w-none', block.serif && 'prose-serif']} set:html={md(block.body, locale)} />
+</Section>

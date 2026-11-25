@@ -1,0 +1,28 @@
+# Response headers for Cloudflare Workers static assets.
+#
+# HTML: browsers keep a copy for 5 minutes then revalidate (cheap 304); the
+# edge cache is purged on every deploy anyway.
+/*
+  Cache-Control: public, max-age=300, must-revalidate
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  X-Frame-Options: SAMEORIGIN
+
+# Astro's hashed build assets never change under the same name.
+/_astro/*
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+/brand/*
+  ! Cache-Control
+  Cache-Control: public, max-age=86400
+
+# A/B variant pages are only ever served through the Worker at the real URL.
+/_variants/*
+  X-Robots-Tag: noindex

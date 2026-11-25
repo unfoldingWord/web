@@ -1,0 +1,45 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import { SITE } from '../../lib/site';
+import { webPageNode, breadcrumbNode, articleNode } from '../../lib/jsonld';
+import { ui, formatDate, fmt, localizePath } from '../../i18n';
+import type { Route } from '../../lib/routes';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Picture from '../ui/Picture.astro';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  route: Route;
+  crumbs: { name: string; href?: string }[];
+}
+const { route, crumbs } = Astro.props;
+const entry = route.entry as CollectionEntry<'prayer'>;
+const d = entry.data;
+const t = ui(route.locale);
+const { Content } = await render(entry);
+const url = new URL(route.path, SITE.url).href;
+const jsonLd = [
+  webPageNode({ url, title: d.title, description: d.description, lang: route.locale, breadcrumbId: `${url}#breadcrumb` }),
+  breadcrumbNode(url, crumbs.map((c) => ({ name: c.name, url: new URL(c.href ?? route.path, SITE.url).href }))),
+  articleNode({ url, title: d.title, description: d.description, date: d.date, modified: d.updated, author: SITE.name, lang: route.locale, section: 'Prayer' }),
+];
+---
+
+<Base locale={route.locale} basePath={route.basePath} title={d.title} description={d.description} ogType="article" jsonLd={jsonLd} translations={route.translations} fallback={route.fallback} noindex={route.noindex} pageType="prayer">
+  <article>
+    <header class="bg-mist">
+      <div class="container-prose py-10 lg:py-14">
+        <div class="mb-5"><Breadcrumbs items={crumbs} locale={route.locale} /></div>
+        <p class="eyebrow mb-3 flex items-center gap-2"><Icon name="pray" class="size-4" />{(t.nav as Record<string, string>).prayer}</p>
+        <h1 class="text-h1">{d.title}</h1>
+        <p class="mt-4 text-sm text-ink-muted"><time datetime={d.date.toISOString()}>{fmt(t.publishedOn, { date: formatDate(d.date, route.locale) })}</time></p>
+      </div>
+    </header>
+    <div class="container-prose py-[var(--spacing-section)]">
+      {d.image && <div class="mb-8 overflow-hidden rounded-card"><Picture path={d.image} alt={d.imageAlt ?? ''} eager sizes="(min-width: 44rem) 704px, 100vw" /></div>}
+      <div class="prose prose-serif"><Content /></div>
+      <p class="mt-12"><a href={localizePath('/pray/', route.locale)} class="font-heading font-extrabold">{t.allPrayerRequests}</a></p>
+    </div>
+  </article>
+</Base>

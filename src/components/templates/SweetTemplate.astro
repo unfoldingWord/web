@@ -1,0 +1,107 @@
+---
+// One Sweet Publishing book: every illustration, grouped by chapter.
+//
+// Phones must never download the ~1.5 MB originals just to browse: the grid
+// shows 480 px thumbnails (lazy-loaded), each opens the 1280 px web version,
+// and the original JPEG is a separate download link. Images come from R2
+// (src/lib/sweet.ts), not from this repository.
+import { render, getCollection, type CollectionEntry } from 'astro:content';
+import { SITE } from '../../lib/site';
+import { webPageNode, breadcrumbNode } from '../../lib/jsonld';
+import { ui, fmt, localizePath } from '../../i18n';
+import { sweetImageUrl, sweetParts } from '../../lib/sweet';
+import { basePathFor, splitId, type Route } from '../../lib/routes';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  route: Route;
+  crumbs: { name: string; href?: string }[];
+}
+const { route, crumbs } = Astro.props;
+const entry = route.entry as CollectionEntry<'sweet'>;
+const d = entry.data;
+const t = ui(route.locale);
+const { Content } = await render(entry);
+const url = new URL(route.path, SITE.url).href;
+const total = d.chapters.reduce((n, c) => n + c.images.length, 0);
+const books = (await getCollection('sweet')).filter((b) => splitId(b.id).locale === 'en').sort((a, b) => a.data.order - b.data.order);
+const idx = books.findIndex((b) => splitId(b.id).rest === splitId(entry.id).rest);
+const prev = books[idx - 1];
+const next = books[idx + 1];
+const bookHref = (b: (typeof books)[number]) => localizePath(basePathFor('sweet', splitId(b.id).rest), route.locale);
+const first = d.chapters[0]?.images[0];
+const jsonLd = [
+  webPageNode({ url, title: d.title, description: d.description, lang: route.locale, type: 'CollectionPage', image: first ? sweetImageUrl(first, 'web') : undefined, breadcrumbId: `${url}#breadcrumb` }),
+  breadcrumbNode(url, crumbs.map((c) => ({ name: c.name, url: new URL(c.href ?? route.path, SITE.url).href }))),
+];
+---
+
+<Base locale={route.locale} basePath={route.basePath} title={d.title} description={d.description} ogImage={first ? sweetImageUrl(first, 'web') : undefined} jsonLd={jsonLd} translations={route.translations} fallback={route.fallback} noindex={route.noindex} pageType="sweet-publishing">
+  <section class="bg-mist">
+    <div class="container-page py-10 lg:py-14">
+      <div class="mb-5"><Breadcrumbs items={crumbs} locale={route.locale} /></div>
+      <p class="eyebrow mb-3">Sweet Publishing</p>
+      <h1>{d.book}</h1>
+      <p class="mt-3 text-ink-muted">{fmt(t.imagesCount, { count: total })}</p>
+      {entry.body?.trim() && <div class="prose mt-6"><Content /></div>}
+      {
+        d.chapters.length > 1 && (
+          <nav class="mt-8" aria-label={t.jumpToChapter}>
+            <p class="mb-2 text-sm font-bold">{t.jumpToChapter}</p>
+            <ul class="flex flex-wrap gap-2">
+              {d.chapters.map((c) => (
+                <li>
+                  <a href={`#ch-${c.chapter}`} class="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-line bg-white px-3 text-sm font-bold text-ocean no-underline hover:border-ocean">
+                    {c.chapter}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+    </div>
+  </section>
+
+  <div class="container-page py-10 lg:py-14">
+    {
+      d.chapters.map((c) => (
+        <section id={`ch-${c.chapter}`} class="mb-12 scroll-mt-24" aria-labelledby={`ch-${c.chapter}-h`}>
+          <h2 id={`ch-${c.chapter}-h`} class="mb-5 text-h3">
+            {d.book} {c.chapter}
+          </h2>
+          <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
+            {c.images.map((name) => {
+              const p = sweetParts(name);
+              const label = `${d.book} ${p.chapter}, ${p.frame}`;
+              return (
+                <li>
+                  <figure class="group">
+                    <a href={sweetImageUrl(name, 'web')} class="block overflow-hidden rounded-media bg-mist">
+                      <img src={sweetImageUrl(name, 'thumb')} alt={`Sweet Publishing illustration: ${label}`} width="480" height="320" loading="lazy" decoding="async" class="aspect-[3/2] w-full object-cover transition group-hover:scale-[1.03]" />
+                    </a>
+                    <figcaption class="mt-1.5 flex items-center justify-between gap-2 text-xs text-ink-muted">
+                      <span>{name}</span>
+                      <a href={sweetImageUrl(name, 'jpg')} download class="inline-flex min-h-8 items-center gap-1 font-bold" title={t.downloadOriginal}>
+                        <Icon name="download" class="size-3.5" />
+                        <span class="sr-only">{t.downloadOriginal}: {label}</span>
+                      </a>
+                    </figcaption>
+                  </figure>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))
+    }
+
+    <nav class="mt-6 flex flex-wrap justify-between gap-4 border-t border-line pt-8">
+      {prev ? <a href={bookHref(prev)} class="btn btn-secondary"><Icon name="arrow-right" class="size-4 rotate-180 rtl:rotate-0" />{prev.data.book}</a> : <span />}
+      <a href={localizePath('/sweet-publishing/', route.locale)} class="btn btn-secondary">Sweet Publishing</a>
+      {next ? <a href={bookHref(next)} class="btn btn-secondary">{next.data.book}<Icon name="arrow-right" class="size-4 rtl:-scale-x-100" /></a> : <span />}
+    </nav>
+  </div>
+</Base>

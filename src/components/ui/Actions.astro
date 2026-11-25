@@ -1,0 +1,25 @@
+---
+import { localizeHref } from '../../lib/md';
+import Icon from './Icon.astro';
+
+interface Props {
+  actions: { label: string; href: string; style?: 'primary' | 'secondary' | 'give' }[];
+  locale: string;
+  class?: string;
+}
+const { actions, locale, class: cls } = Astro.props;
+const isExternal = (h: string) => /^https?:\/\//.test(h);
+---
+
+{
+  actions.length > 0 && (
+    <div class:list={['flex flex-col gap-3 sm:flex-row sm:flex-wrap', cls]}>
+      {actions.map((a) => (
+        <a href={localizeHref(a.href, locale)} class:list={['btn', `btn-${a.style ?? 'primary'}`]} {...(isExternal(a.href) ? { rel: 'noopener' } : {})}>
+          {a.label}
+          {a.style !== 'give' && <Icon name="arrow-right" class="size-4.5 rtl:-scale-x-100" />}
+        </a>
+      ))}
+    </div>
+  )
+}

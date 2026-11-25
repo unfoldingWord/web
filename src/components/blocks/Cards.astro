@@ -1,0 +1,57 @@
+---
+import type { Block } from '../../content.config';
+import { md, mdInline, localizeHref } from '../../lib/md';
+import { ui } from '../../i18n';
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+import Picture from '../ui/Picture.astro';
+import Icon from '../ui/Icon.astro';
+
+type Cards = Extract<Block, { type: 'cards' }>;
+interface Props {
+  block: Cards;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+const t = ui(locale);
+const cols = { 2: 'md:grid-cols-2', 3: 'md:grid-cols-2 lg:grid-cols-3', 4: 'sm:grid-cols-2 lg:grid-cols-4' }[block.columns];
+const sizes = { 2: '(min-width: 48rem) 50vw, 100vw', 3: '(min-width: 64rem) 33vw, (min-width: 48rem) 50vw, 100vw', 4: '(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw' }[block.columns];
+---
+
+<Section background={block.background}>
+  <SectionHeader eyebrow={block.eyebrow} title={block.title} intro={block.intro} locale={locale} />
+  <ul class:list={['grid gap-5 lg:gap-7', cols]}>
+    {
+      block.items.map((item) => (
+        <li class="card group relative flex flex-col text-ink">
+          {item.image && (
+            <div class="overflow-hidden">
+              <Picture path={item.image} alt={item.imageAlt ?? ''} sizes={sizes} aspect="3 / 2" class="transition duration-500 group-hover:scale-[1.03]" />
+            </div>
+          )}
+          <div class="flex flex-1 flex-col p-6">
+            {item.icon && !item.image && (
+              <span class="mb-4 inline-flex size-12 items-center justify-center rounded-full bg-inspire-50 text-inspire-ink">
+                <Icon name={item.icon} class="size-6" />
+              </span>
+            )}
+            <h3 class="text-h3">
+              {item.href ? (
+                <a href={localizeHref(item.href, locale)} class="text-ocean no-underline after:absolute after:inset-0 hover:underline" set:html={mdInline(item.title)} />
+              ) : (
+                <span set:html={mdInline(item.title)} />
+              )}
+            </h3>
+            {item.body && <div class="prose mt-3 text-ink-muted" set:html={md(item.body, locale)} />}
+            {item.href && (
+              <span class="mt-auto inline-flex items-center gap-1.5 pt-5 font-heading font-extrabold text-inspire-ink" aria-hidden="true">
+                {item.linkLabel ?? t.readMore}
+                <Icon name="arrow-right" class="size-4 transition group-hover:translate-x-1 rtl:-scale-x-100" />
+              </span>
+            )}
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</Section>

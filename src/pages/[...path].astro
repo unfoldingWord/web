@@ -1,0 +1,47 @@
+---
+// Every content page on the site, in every locale. The list of URLs comes
+// from src/lib/routes.ts; this file only picks the template.
+import { allRoutes, type Route } from '../lib/routes';
+import { ui, localizePath } from '../i18n';
+import PageTemplate from '../components/templates/PageTemplate.astro';
+import StoryTemplate from '../components/templates/StoryTemplate.astro';
+import PrayerTemplate from '../components/templates/PrayerTemplate.astro';
+import SweetTemplate from '../components/templates/SweetTemplate.astro';
+import experiments from '../data/experiments.json';
+
+export async function getStaticPaths() {
+  const routes = await allRoutes();
+  const byKey = new Map(routes.map((r) => [`${r.locale}:${r.basePath}`, r]));
+  return routes.map((route) => {
+    // Breadcrumbs: Home › each parent path that is a real page › this page.
+    const t = ui(route.locale);
+    const crumbs: { name: string; href?: string }[] = [{ name: t.home, href: localizePath('/', route.locale) }];
+    if (route.kind !== 'variant') {
+      const parts = route.basePath.split('/').filter(Boolean);
+      for (let i = 1; i < parts.length; i++) {
+        const p = `/${parts.slice(0, i).join('/')}/`;
+        const parent = byKey.get(`${route.locale}:${p}`);
+        if (parent) crumbs.push({ name: (parent.entry.data as { title: string }).title, href: parent.path });
+      }
+    }
+    crumbs.push({ name: (route.entry.data as { title: string }).title });
+    const path = route.path === '/' ? undefined : route.path.replace(/^\/|\/$/g, '');
+    return { params: { path }, props: { route, crumbs } };
+  });
+}
+
+interface Props {
+  route: Route;
+  crumbs: { name: string; href?: string }[];
+}
+const { route, crumbs } = Astro.props;
+const data = route.entry.data as { experiment?: string; variantOf?: string };
+const variantId = route.kind === 'variant' ? (experiments as { id: string; variants: { id: string; page?: string }[] }[]).find((e) => e.id === data.experiment)?.variants.find((v) => v.page === route.basePath)?.id : undefined;
+const experiment = route.kind === 'variant' && data.experiment ? { id: data.experiment, variant: variantId ?? 'b' } : undefined;
+---
+
+{route.kind === 'pages' && <PageTemplate route={route} crumbs={crumbs} />}
+{route.kind === 'variant' && <PageTemplate route={route} crumbs={crumbs} experiment={experiment} />}
+{route.kind === 'stories' && <StoryTemplate route={route} crumbs={crumbs} />}
+{route.kind === 'prayer' && <PrayerTemplate route={route} crumbs={crumbs} />}
+{route.kind === 'sweet' && <SweetTemplate route={route} crumbs={crumbs} />}

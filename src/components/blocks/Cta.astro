@@ -1,0 +1,24 @@
+---
+import type { Block } from '../../content.config';
+import { md, mdInline } from '../../lib/md';
+import Actions from '../ui/Actions.astro';
+
+type Cta = Extract<Block, { type: 'cta' }>;
+interface Props {
+  block: Cta;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+const surface = { ocean: 'bg-ocean on-dark', kindle: 'bg-kindle text-tech', mist: 'bg-mist' }[block.variant];
+---
+
+<section class="py-[var(--spacing-section)]">
+  <div class="container-page">
+    <div class:list={['relative overflow-hidden rounded-card px-6 py-10 text-center sm:px-10 lg:px-16 lg:py-16', surface]}>
+      {block.variant === 'ocean' && <div class="pointer-events-none absolute -start-20 -bottom-24 size-80 rounded-full bg-inspire/25 blur-3xl" aria-hidden="true" />}
+      <h2 class:list={['mx-auto max-w-2xl', block.variant === 'kindle' && '!text-tech']} set:html={mdInline(block.title)} />
+      {block.body && <div class="prose mx-auto mt-4 text-lead [&>p]:mx-auto" set:html={md(block.body, locale)} />}
+      <Actions actions={block.actions} locale={locale} class="mt-8 justify-center sm:justify-center" />
+    </div>
+  </div>
+</section>

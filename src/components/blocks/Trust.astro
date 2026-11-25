@@ -1,0 +1,35 @@
+---
+// Accountability marks (ECFA, Candid, MinistryWatch). Text links rather than
+// hot-linked badge images: the third-party badge scripts on the old site
+// slowed every page and two of them 404ed.
+import type { Block } from '../../content.config';
+import { SITE } from '../../lib/site';
+import Section from '../ui/Section.astro';
+import Icon from '../ui/Icon.astro';
+
+type Trust = Extract<Block, { type: 'trust' }>;
+interface Props {
+  block: Trust;
+  locale: string;
+}
+const { block } = Astro.props;
+---
+
+<Section tight>
+  {block.title && <h2 class="mb-6 text-center text-h3">{block.title}</h2>}
+  <ul class="grid gap-4 md:grid-cols-3">
+    {
+      SITE.trust.map((b) => (
+        <li>
+          <a href={b.href} rel="noopener" class="flex h-full items-start gap-3 rounded-card border border-line p-5 text-ink no-underline hover:border-inspire hover:shadow-card">
+            <Icon name="check" class="mt-0.5 size-6 text-inspire-ink" />
+            <span>
+              <span class="block font-heading font-extrabold text-ocean">{b.name}</span>
+              <span class="text-sm text-ink-muted">{b.label}</span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Section>

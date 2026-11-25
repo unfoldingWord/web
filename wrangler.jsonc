@@ -1,0 +1,40 @@
+{
+  // Cloudflare Worker for unfoldingword.org.
+  //
+  // The site is static: `npm run build` writes it to dist/ and Workers serves
+  // those files directly (free, no Worker invocation). The Worker script in
+  // worker/index.ts runs FIRST only for the paths in `run_worker_first` —
+  // pages with an A/B test registered in src/data/experiments.json. Every
+  // other request goes straight to the static file.
+  //
+  // KEEP IN SYNC: every active experiment's path must be listed in
+  // run_worker_first. `npm run check:experiments` fails the build if not.
+  //
+  // Branch previews: Workers Builds runs `npx wrangler preview` for
+  // non-production branches, which posts a Preview URL on the pull request.
+  // workers.dev Preview URLs send `X-Robots-Tag: noindex` (Cloudflare docs).
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "unfoldingword-web",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-20",
+  "observability": { "enabled": true },
+
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // /about -> /about/ and /about/index.html -> /about/
+    "html_handling": "auto-trailing-slash",
+    // Unknown paths get dist/404.html with a real 404 status.
+    "not_found_handling": "404-page",
+    "run_worker_first": [
+      // A/B experiments (src/data/experiments.json). Remove an entry when its
+      // experiment ends.
+      "/give/experiment-demo/"
+    ]
+  },
+
+  "vars": {
+    // Only this hostname loads Google Tag Manager and counts as production.
+    "PRODUCTION_HOST": "unfoldingword.org"
+  }
+}

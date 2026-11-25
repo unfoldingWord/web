@@ -1,0 +1,79 @@
+---
+// The Virtuous giving form, embedded exactly as Virtuous's own snippet does
+// it (<script src=".../embed.js" data-rd=… data-organizationId=…>), so the
+// form, its payment processing and its receipts are unchanged from the
+// WordPress site. Only `formId` differs between giving pages.
+//
+// Analytics: GTM sees the page view and the form's own events. Whether the
+// Virtuous embed reports a COMPLETED gift back to this page is not yet
+// verified (docs/analytics.md, "Donation conversions"). Until it is, the
+// listener below forwards any message the Virtuous frame posts to the
+// dataLayer as `virtuous_message`, so the GTM container audit can see what is
+// available without another deploy.
+import type { Block } from '../../content.config';
+import { SITE } from '../../lib/site';
+import { md, mdInline } from '../../lib/md';
+import { ui, fmt } from '../../i18n';
+import Section from '../ui/Section.astro';
+import Picture from '../ui/Picture.astro';
+import Icon from '../ui/Icon.astro';
+
+type Giving = Extract<Block, { type: 'giving' }>;
+interface Props {
+  block: Giving;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+const t = ui(locale);
+const fallbackLink = `<a href="${SITE.givingFallbackUrl}">give.unfoldingword.org</a>`;
+---
+
+<Section background="mist" id="give-form">
+  <div class="grid gap-10 lg:grid-cols-12 lg:gap-14">
+    <div class="lg:col-span-5">
+      {block.eyebrow && <p class="eyebrow mb-3">{block.eyebrow}</p>}
+      {block.title && <h2 set:html={mdInline(block.title)} />}
+      {block.body && <div class="prose mt-5" set:html={md(block.body, locale)} />}
+      {
+        block.image && (
+          <div class="mt-8 hidden overflow-hidden rounded-card shadow-card lg:block">
+            <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="(min-width: 64rem) 40vw, 100vw" />
+          </div>
+        )
+      }
+      <ul class="mt-8 space-y-3 text-sm text-ink-muted">
+        <li class="flex gap-2"><Icon name="lock" class="mt-0.5 size-4.5 text-inspire-ink" />{t.secureGiving}</li>
+        <li class="flex gap-2"><Icon name="check" class="mt-0.5 size-4.5 text-inspire-ink" />{t.taxDeductible}</li>
+      </ul>
+    </div>
+    <div class="lg:col-span-7">
+      <div class="virtuous-form min-h-[32rem] rounded-card bg-white p-4 shadow-raised sm:p-6" data-form-id={block.formId}>
+        <p class="virtuous-loading py-10 text-center text-ink-muted">{t.givingFormLoading}</p>
+        <script is:inline src={SITE.virtuousEmbedSrc} data-rd={block.formId} data-organizationId={SITE.virtuousOrgId} data-type="form" defer></script>
+        <noscript><p class="prose" set:html={fmt(t.givingFormFallback, { link: fallbackLink })} /></noscript>
+      </div>
+      <p class="mt-4 text-center text-sm text-ink-muted" set:html={fmt(t.givingFormFallback, { link: fallbackLink })} />
+    </div>
+  </div>
+</Section>
+
+<script is:inline>
+  (function () {
+    if (window.__uwVirtuousListener) return;
+    window.__uwVirtuousListener = true;
+    window.addEventListener('message', function (e) {
+      if (!/virtuous/i.test(e.origin)) return;
+      var data = e.data;
+      var kind = typeof data === 'string' ? data.slice(0, 80) : data && (data.event || data.type || data.action);
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'virtuous_message', virtuous_message_type: String(kind || 'unknown') });
+    });
+    // Hide the loading line once Virtuous has inserted its form.
+    var obs = new MutationObserver(function () {
+      document.querySelectorAll('.virtuous-form').forEach(function (el) {
+        if (el.querySelector('iframe, form')) el.querySelector('.virtuous-loading')?.remove();
+      });
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+  })();
+</script>

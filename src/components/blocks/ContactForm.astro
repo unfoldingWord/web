@@ -1,0 +1,97 @@
+---
+// Contact details and (when enabled) the contact form.
+//
+// The form posts to /api/contact, handled by the Worker (worker/contact.ts):
+// Turnstile spam check, then email to the address in the CONTACT_TO secret.
+// Where the old Contact Form 7 form sent its mail is NOT yet confirmed, so the
+// form stays off until it is: set PUBLIC_CONTACT_FORM=1 at build time once
+// CONTACT_TO and the Turnstile keys are configured (docs/forms.md). Until
+// then the block shows the postal address and phone number only.
+import type { Block } from '../../content.config';
+import { SITE } from '../../lib/site';
+import { ui } from '../../i18n';
+import { mdInline } from '../../lib/md';
+import Section from '../ui/Section.astro';
+import Icon from '../ui/Icon.astro';
+
+type ContactForm = Extract<Block, { type: 'contactForm' }>;
+interface Props {
+  block: ContactForm;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+const t = ui(locale);
+const enabled = import.meta.env.PUBLIC_CONTACT_FORM === '1';
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
+---
+
+<Section>
+  <div class="grid gap-10 lg:grid-cols-12">
+    <div class="lg:col-span-5">
+      {block.title && <h2 set:html={mdInline(block.title)} />}
+      {block.intro && <p class="mt-4 text-lead text-ink-muted" set:html={mdInline(block.intro, locale)} />}
+      <ul class="mt-8 space-y-5">
+        <li class="flex gap-4">
+          <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-inspire-50 text-inspire-ink"><Icon name="map" /></span>
+          <address class="not-italic">
+            {SITE.address.streetAddress}<br />{SITE.address.addressLocality}, {SITE.address.addressRegion} {SITE.address.postalCode}
+          </address>
+        </li>
+        <li class="flex items-center gap-4">
+          <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-inspire-50 text-inspire-ink"><Icon name="phone" /></span>
+          <a href={`tel:${SITE.telephone}`} class="text-lg font-bold">{SITE.telephoneDisplay}</a>
+        </li>
+      </ul>
+    </div>
+    {
+      enabled && (
+        <form class="contact-form card space-y-5 p-6 sm:p-8 lg:col-span-7" method="post" action="/api/contact" novalidate>
+          <div>
+            <label for="cf-name" class="mb-1.5 block font-bold">{t.contactFormName}</label>
+            <input id="cf-name" name="name" type="text" autocomplete="name" required class="block min-h-12 w-full rounded-lg border border-line px-4 focus:border-inspire" />
+          </div>
+          <div>
+            <label for="cf-email" class="mb-1.5 block font-bold">{t.contactFormEmail}</label>
+            <input id="cf-email" name="email" type="email" autocomplete="email" required class="block min-h-12 w-full rounded-lg border border-line px-4 focus:border-inspire" />
+          </div>
+          <div>
+            <label for="cf-message" class="mb-1.5 block font-bold">{t.contactFormMessage}</label>
+            <textarea id="cf-message" name="message" rows="6" required class="block w-full rounded-lg border border-line px-4 py-3 focus:border-inspire" />
+          </div>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+          {siteKey && <div class="cf-turnstile" data-sitekey={siteKey} />}
+          <button type="submit" class="btn btn-primary w-full sm:w-auto">{t.contactFormSend}</button>
+          <p class="form-status text-sm" role="status" aria-live="polite" data-sent={t.contactFormSent} data-error={t.contactFormError} />
+        </form>
+      )
+    }
+  </div>
+</Section>
+
+{enabled && siteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+{
+  enabled && (
+    <script>
+      document.querySelectorAll<HTMLFormElement>('.contact-form').forEach((form) => {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          if (!form.reportValidity()) return;
+          const status = form.querySelector<HTMLElement>('.form-status')!;
+          const btn = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+          btn.disabled = true;
+          try {
+            const res = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+            if (!res.ok) throw new Error(String(res.status));
+            status.textContent = status.dataset.sent!;
+            form.reset();
+            (window as unknown as { dataLayer?: unknown[] }).dataLayer?.push({ event: 'contact_form_submit' });
+          } catch {
+            status.textContent = status.dataset.error!;
+          } finally {
+            btn.disabled = false;
+          }
+        });
+      });
+    </script>
+  )
+}

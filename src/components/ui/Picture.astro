@@ -1,0 +1,35 @@
+---
+// Responsive, optimized image from src/assets/images/ (AVIF/WebP with a
+// srcset sized to the layout). `path` is relative to src/assets/images/.
+import { Picture as AstroPicture } from 'astro:assets';
+import { img } from '../../lib/images';
+
+interface Props {
+  path: string;
+  alt: string;
+  /** CSS sizes attribute — how wide the image is shown. */
+  sizes?: string;
+  widths?: number[];
+  class?: string;
+  eager?: boolean;
+  aspect?: string;
+}
+const { path, alt, sizes = '(min-width: 76rem) 1200px, 100vw', widths, class: cls, eager = false, aspect } = Astro.props;
+const src = img(path);
+const ws = (widths ?? [400, 640, 900, 1200, 1600, 2000]).filter((w) => w <= src.width);
+if (!ws.length || ws[ws.length - 1] < src.width) ws.push(Math.min(src.width, 2400));
+---
+
+<AstroPicture
+  src={src}
+  alt={alt}
+  formats={src.format === 'svg' ? ['svg'] : ['avif', 'webp']}
+  widths={ws}
+  sizes={sizes}
+  loading={eager ? 'eager' : 'lazy'}
+  fetchpriority={eager ? 'high' : undefined}
+  decoding="async"
+  layout="none"
+  class={cls}
+  style={aspect ? `aspect-ratio:${aspect};object-fit:cover;width:100%;height:auto` : 'width:100%;height:auto'}
+/>

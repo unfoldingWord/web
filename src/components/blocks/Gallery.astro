@@ -1,0 +1,31 @@
+---
+import type { Block } from '../../content.config';
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+import Picture from '../ui/Picture.astro';
+
+type Gallery = Extract<Block, { type: 'gallery' }>;
+interface Props {
+  block: Gallery;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+---
+
+<Section>
+  <SectionHeader title={block.title} locale={locale} />
+  <ul class="grid grid-cols-2 gap-3 md:grid-cols-3 lg:gap-5">
+    {
+      block.images.map((im) => (
+        <li>
+          <figure>
+            <div class="overflow-hidden rounded-media">
+              <Picture path={im.src} alt={im.alt} sizes="(min-width: 48rem) 33vw, 50vw" widths={[320, 640, 960]} aspect="4 / 3" />
+            </div>
+            {im.caption && <figcaption class="mt-2 text-sm text-ink-muted">{im.caption}</figcaption>}
+          </figure>
+        </li>
+      ))
+    }
+  </ul>
+</Section>

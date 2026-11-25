@@ -1,0 +1,25 @@
+---
+// A full-width band with consistent vertical rhythm. `background` picks one
+// of the three surfaces every block can sit on.
+interface Props {
+  background?: 'white' | 'mist' | 'ocean' | 'kindle';
+  width?: 'page' | 'prose';
+  id?: string;
+  class?: string;
+  tight?: boolean;
+  labelledby?: string;
+}
+const { background = 'white', width = 'page', id, class: cls, tight = false, labelledby } = Astro.props;
+const bg = {
+  white: 'bg-white',
+  mist: 'bg-mist',
+  ocean: 'bg-ocean on-dark',
+  kindle: 'bg-kindle-50',
+}[background];
+---
+
+<section id={id} aria-labelledby={labelledby} class:list={[bg, tight ? 'py-10 lg:py-14' : 'py-[var(--spacing-section)]', cls]}>
+  <div class={width === 'prose' ? 'container-prose' : 'container-page'}>
+    <slot />
+  </div>
+</section>

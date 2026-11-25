@@ -1,0 +1,31 @@
+---
+import { ui } from '../../i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+  items: { name: string; href?: string }[];
+  locale: string;
+  onDark?: boolean;
+}
+const { items, locale, onDark = false } = Astro.props;
+const t = ui(locale);
+---
+
+<nav aria-label={t.breadcrumb} class:list={['text-sm', onDark ? 'text-white/80' : 'text-ink-muted']}>
+  <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+    {
+      items.map((it, i) => (
+        <li class="flex items-center gap-1.5">
+          {i > 0 && <Icon name="chevron-right" class="size-3.5 opacity-60 rtl:-scale-x-100" />}
+          {it.href && i < items.length - 1 ? (
+            <a href={it.href} class:list={['no-underline hover:underline', onDark && '!text-white/90']}>
+              {it.name}
+            </a>
+          ) : (
+            <span aria-current="page">{it.name}</span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>

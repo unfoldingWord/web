@@ -1,0 +1,15 @@
+[
+  {
+    "id": "demo-give-hero",
+    "status": "draft",
+    "path": "/give/experiment-demo/",
+    "description": "Demonstration test kept so the A/B machinery has an end-to-end check. Not linked anywhere. Delete when the first real test starts.",
+    "goal": "donation_complete",
+    "start": "2026-12-01",
+    "end": null,
+    "variants": [
+      { "id": "a", "weight": 50, "page": "/give/experiment-demo/" },
+      { "id": "b", "weight": 50, "page": "/_variants/demo-give-hero-b/" }
+    ]
+  }
+]

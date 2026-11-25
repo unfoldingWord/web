@@ -1,0 +1,31 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { ui, formatDate, localizePath } from '../../i18n';
+import { basePathFor, splitId } from '../../lib/routes';
+import Picture from './Picture.astro';
+
+interface Props {
+  story: CollectionEntry<'stories'>;
+  locale: string;
+  headingLevel?: 'h2' | 'h3';
+}
+const { story, locale, headingLevel = 'h3' } = Astro.props;
+const t = ui(locale);
+const href = localizePath(basePathFor('stories', splitId(story.id).rest), locale);
+const H = headingLevel;
+const region = (t.regions as Record<string, string>)[story.data.region] ?? story.data.region;
+---
+
+<article class="card group relative flex flex-col" data-region={story.data.region}>
+  <div class="overflow-hidden">
+    <Picture path={story.data.image} alt={story.data.imageAlt} sizes="(min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw" widths={[400, 640, 900]} aspect="3 / 2" class="transition duration-500 group-hover:scale-[1.03]" />
+  </div>
+  <div class="flex flex-1 flex-col p-6">
+    <p class="eyebrow">{region}</p>
+    <H class="mt-2 text-xl leading-snug">
+      <a href={href} class="text-ocean no-underline after:absolute after:inset-0 hover:underline">{story.data.title}</a>
+    </H>
+    {(story.data.excerpt ?? story.data.description) && <p class="mt-3 line-clamp-3 text-[0.9375rem] text-ink-muted">{story.data.excerpt ?? story.data.description}</p>}
+    <p class="mt-auto pt-4 text-sm text-ink-muted"><time datetime={story.data.date.toISOString()}>{formatDate(story.data.date, locale)}</time></p>
+  </div>
+</article>

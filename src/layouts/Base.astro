@@ -1,0 +1,119 @@
+---
+// The shell every page renders in: <head> (SEO, social, hreflang, fonts,
+// JSON-LD, analytics), skip link, header, main, footer.
+import '../styles/global.css';
+import { locales, byCode, defaultLocale, localizePath, fontHrefFor, ui, fmt } from '../i18n';
+import { SITE } from '../lib/site';
+import { organizationNode, websiteNode, serializeGraph } from '../lib/jsonld';
+import Header from '../components/site/Header.astro';
+import Footer from '../components/site/Footer.astro';
+import Analytics from '../components/site/Analytics.astro';
+
+interface Props {
+  locale: string;
+  /** Path without locale prefix, e.g. /give/monthly/ */
+  basePath: string;
+  title: string;
+  description?: string;
+  /** Absolute URL of the social sharing image. */
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  jsonLd?: Record<string, unknown>[];
+  /** Locales with a real translation; only these get hreflang links. */
+  translations?: string[];
+  /** This locale has no translation: body is English, canonical → English. */
+  fallback?: boolean;
+  noindex?: boolean;
+  pageType?: string;
+  /** Set on A/B variant pages so analytics can report the variant. */
+  experiment?: { id: string; variant: string };
+  /** Language of the main content when it differs from the interface. */
+  contentLang?: string;
+}
+
+const {
+  locale,
+  basePath,
+  title,
+  description,
+  ogImage,
+  ogType = 'website',
+  jsonLd = [],
+  translations = [defaultLocale],
+  fallback = false,
+  noindex = false,
+  pageType = 'page',
+  experiment,
+} = Astro.props;
+
+const def = byCode(locale);
+const t = ui(locale);
+const site = Astro.site!;
+// Fallback pages point search engines at the English original.
+const canonical = new URL(localizePath(basePath, fallback ? defaultLocale : locale), site).href;
+const fullTitle = basePath === '/' ? `${SITE.name} — ${title}` : `${title} | ${SITE.name}`;
+const social = ogImage ?? new URL('/brand/og-default.jpg', site).href;
+const fontHref = fontHrefFor(locale);
+const alternates = fallback ? [] : locales.filter((l) => translations.includes(l.code));
+const graph = serializeGraph([organizationNode(), websiteNode(def.tag), ...jsonLd]);
+---
+
+<!doctype html>
+<html
+  lang={def.tag}
+  dir={def.dir}
+  data-script={def.script}
+  data-experiment={experiment?.id}
+  data-variant={experiment?.variant}
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonical} />
+    {(noindex || experiment) && <meta name="robots" content="noindex, follow" />}
+    <meta name="theme-color" content="#014263" />
+
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={social} />
+    <meta property="og:locale" content={def.tag.replace('-', '_')} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@unfoldingWord" />
+
+    {alternates.length > 1 && alternates.map((l) => <link rel="alternate" hreflang={l.tag} href={new URL(localizePath(basePath, l.code), site).href} />)}
+    {alternates.length > 1 && <link rel="alternate" hreflang="x-default" href={new URL(basePath, site).href} />}
+
+    <link rel="preload" href="/fonts/files/nunito-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/fonts/base.css" />
+    {fontHref && <link rel="stylesheet" href={fontHref} />}
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/brand/mark-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="alternate" type="application/rss+xml" title="unfoldingWord — Stories from the field" href="/stories/rss.xml" />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+
+    <script type="application/ld+json" set:html={graph} />
+    <Analytics locale={locale} pageType={pageType} />
+    <slot name="head" />
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    <a class="skip-link" href="#main">{t.skipToContent}</a>
+    <Header locale={locale} basePath={basePath} translations={translations} />
+    {
+      fallback && (
+        <div class="border-b border-kindle/40 bg-kindle-50">
+          <p class="container-page py-3 text-sm text-ink">{fmt(t.notTranslated, { language: def.name })}</p>
+        </div>
+      )
+    }
+    <main id="main" tabindex="-1" class="flex-1 focus:outline-none" lang={fallback ? 'en' : undefined} dir={fallback && def.dir === 'rtl' ? 'ltr' : undefined}>
+      <slot />
+    </main>
+    <Footer locale={locale} />
+  </body>
+</html>

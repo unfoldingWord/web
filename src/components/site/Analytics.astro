@@ -1,0 +1,47 @@
+---
+// Google Tag Manager — the same container the WordPress site uses
+// (GTM-KS32FPTM). GA4 is configured inside the container, so keeping the
+// container keeps the GA4 property collecting without a break.
+//
+// It loads ONLY on the production hostname, decided in the browser: the same
+// built HTML is served on previews (*.workers.dev) and on unfoldingword.org,
+// and previews must not send visits to the real property. To test the tag on
+// a preview, add ?gtm_debug=1 to the URL.
+//
+// Pages push context to the dataLayer before GTM loads:
+//   page_locale, page_type, and — on pages in an A/B test —
+//   experiment_id / experiment_variant (set by the Worker, see worker/).
+// docs/analytics.md lists the GA4 custom dimensions these map to.
+import { SITE } from '../../lib/site';
+
+interface Props {
+  locale: string;
+  pageType: string;
+}
+const { locale, pageType } = Astro.props;
+const config = JSON.stringify({ id: SITE.gtmId, host: SITE.productionHost, locale, pageType });
+---
+
+<script is:inline define:vars={{ config }}>
+  (function (c) {
+    var cfg = JSON.parse(c);
+    window.dataLayer = window.dataLayer || [];
+    var exp = document.documentElement.dataset;
+    var ctx = { page_locale: cfg.locale, page_type: cfg.pageType };
+    if (exp.experiment) {
+      ctx.experiment_id = exp.experiment;
+      ctx.experiment_variant = exp.variant;
+    }
+    window.dataLayer.push(ctx);
+    var prod = location.hostname === cfg.host || location.hostname === 'www.' + cfg.host;
+    if (!prod && !/[?&]gtm_debug=1/.test(location.search)) return;
+    window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtm.js?id=' + cfg.id;
+    document.head.appendChild(s);
+    if (exp.experiment) {
+      window.dataLayer.push({ event: 'experiment_impression', experiment_id: exp.experiment, experiment_variant: exp.variant });
+    }
+  })(config);
+</script>

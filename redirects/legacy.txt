@@ -1,0 +1,55 @@
+# Redirects that do not belong to one content file: short links, retired
+# sections, and the rules from the WordPress Redirection plugin.
+#
+# Format: one rule per line, "<from> <to> [status]" (status defaults to 301).
+# <from> is a path on unfoldingword.org; <to> is a path or a full URL.
+# Trailing slashes do not matter: every rule is written for both /x and /x/.
+# Lines starting with # are comments.
+#
+# scripts/postbuild.mjs merges this file with every content file's
+# `redirectFrom` into dist/_redirects, and FAILS THE BUILD if a rule points at
+# a page that was not built, chains through another redirect, or is listed
+# twice. Fix the rule; do not remove the check.
+#
+# STATUS: the WordPress Redirection plugin's full rule list has not been
+# exported yet (it needs an admin login). The rules below were found by
+# probing the live site on 2026-11-24 and from links in the site's own
+# pages. When the export arrives, add every rule here.
+
+# --- Found by probing the live site (Redirection plugin) ---
+/home                       /
+/blog                       /
+/news                       /
+/donate                     /give/
+/tc                         /for-translators/tools/#translationcore
+/resources                  /for-translators/
+/established                /publications/#U2E
+/trustworthy                /publications/#TRTR
+/gateway                    /publications/#TGLS
+/join-us/pray               /pray/
+/d/iran                     https://donorbox.org/open-the-gates-persian-3   302
+/wbwn/southeast-asia        /wbwn/se-asia/
+
+# --- Typo'd links that the old site's own pages contained ---
+/cbbt/trustworthy-and-trusted       /ccbt/trustworthy-and-trusted/
+/cbbt/how-churches-translate        /ccbt/how-churches-translate/
+/cbbt/gateway-languages             /ccbt/gateway-languages/
+/cbbt/glossary                      /ccbt/glossary/
+/cbbt/establishing-the-church       /ccbt/establishing-the-church/
+
+# --- Old site structure (www.unfoldingword.org before WordPress) ---
+/stories/escape-from-kharkiv1       /stories/escape-from-kharkiv1/
+/join-us                            /careers/
+
+# --- WordPress system URLs that disappear with WordPress ---
+/feed                       /stories/rss.xml
+/wp-admin                   /
+/wp-login.php               /
+/sitemap_index.xml          /sitemap-index.xml
+/page-sitemap.xml           /sitemap-index.xml
+/post-sitemap.xml           /sitemap-index.xml
+/prayer-request-sitemap.xml /sitemap-index.xml
+/sweet-publishing-sitemap.xml /sitemap-index.xml
+/local-sitemap.xml          /sitemap-index.xml
+/news-sitemap.xml           /sitemap-index.xml
+/wp-sitemap.xml             /sitemap-index.xml

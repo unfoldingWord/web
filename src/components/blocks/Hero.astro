@@ -1,0 +1,66 @@
+---
+// Page-opening block. Variants:
+//   ocean — deep-blue band with an angled bottom edge (brand pattern)
+//   photo — full-bleed photo with an Ocean overlay at ~70% (brand pattern)
+//   split — text beside a photo
+//   light — quiet mist band, for long-form and utility pages
+import type { Block } from '../../content.config';
+import { mdInline } from '../../lib/md';
+import Picture from '../ui/Picture.astro';
+import Actions from '../ui/Actions.astro';
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+
+type Hero = Extract<Block, { type: 'hero' }>;
+interface Props {
+  block: Hero;
+  locale: string;
+  crumbs?: { name: string; href?: string }[];
+}
+const { block, locale, crumbs } = Astro.props;
+const { variant, eyebrow, title, lead, image, imageAlt, actions } = block;
+const dark = variant === 'ocean' || (variant === 'photo' && !!image);
+---
+
+{
+  variant === 'split' ? (
+    <section class="bg-mist">
+      <div class="container-page grid items-center gap-8 py-10 md:grid-cols-2 lg:gap-14 lg:py-16">
+        <div>
+          {crumbs && <div class="mb-5"><Breadcrumbs items={crumbs} locale={locale} /></div>}
+          {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
+          <h1 class="text-display" set:html={mdInline(title)} />
+          {lead && <p class="mt-5 text-lead text-ink-muted" set:html={mdInline(lead, locale)} />}
+          <Actions actions={actions} locale={locale} class="mt-8" />
+        </div>
+        {image && (
+          <div class="overflow-hidden rounded-card shadow-raised">
+            <Picture path={image} alt={imageAlt ?? ''} eager sizes="(min-width: 48rem) 50vw, 100vw" aspect="4 / 3" />
+          </div>
+        )}
+      </div>
+    </section>
+  ) : (
+    <section class:list={['relative isolate overflow-hidden', dark ? 'on-dark bg-ocean angle-bottom' : 'bg-mist']}>
+      {variant === 'photo' && image && (
+        <>
+          <div class="absolute inset-0 -z-20">
+            <Picture path={image} alt={imageAlt ?? ''} eager sizes="100vw" class="h-full w-full object-cover" />
+          </div>
+          <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ocean-900/90 via-ocean/75 to-ocean/55" />
+        </>
+      )}
+      {variant === 'ocean' && (
+        <div class="pointer-events-none absolute -end-24 -top-24 -z-10 size-[28rem] rounded-full bg-inspire/20 blur-3xl" aria-hidden="true" />
+      )}
+      <div class:list={['container-page', variant === 'light' ? 'py-10 lg:py-14' : variant === 'photo' ? 'pt-28 pb-12 lg:pt-44 lg:pb-16' : 'pt-12 pb-6 lg:pt-20 lg:pb-10']}>
+        {crumbs && <div class="mb-6"><Breadcrumbs items={crumbs} locale={locale} onDark={dark} /></div>}
+        <div class="max-w-3xl">
+          {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
+          <h1 class:list={[variant === 'light' ? 'text-h1' : 'text-display']} set:html={mdInline(title)} />
+          {lead && <p class:list={['mt-5 text-lead', dark ? 'text-white/90' : 'text-ink-muted']} set:html={mdInline(lead, locale)} />}
+          <Actions actions={actions} locale={locale} class="mt-8" />
+        </div>
+      </div>
+    </section>
+  )
+}

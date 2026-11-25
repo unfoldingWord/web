@@ -1,0 +1,65 @@
+---
+import { getCollection } from 'astro:content';
+import type { Block } from '../../content.config';
+import { ui, formatDate, localizePath } from '../../i18n';
+import { basePathFor, splitId } from '../../lib/routes';
+import { mdInline } from '../../lib/md';
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+import Picture from '../ui/Picture.astro';
+import Icon from '../ui/Icon.astro';
+
+type PrayerList = Extract<Block, { type: 'prayerList' }>;
+interface Props {
+  block: PrayerList;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+const t = ui(locale);
+const all = await getCollection('prayer');
+const bySlug = new Map<string, (typeof all)[number]>();
+for (const p of all) {
+  const { locale: l, rest } = splitId(p.id);
+  if (l === 'en' && !bySlug.has(rest)) bySlug.set(rest, p);
+  if (l === locale) bySlug.set(rest, p);
+}
+let items = [...bySlug.entries()].sort(([, a], [, b]) => b.data.date.getTime() - a.data.date.getTime());
+if (block.limit) items = items.slice(0, block.limit);
+---
+
+<Section background="mist">
+  <SectionHeader title={block.title} intro={block.intro} locale={locale} />
+  <ul class="grid gap-5 md:grid-cols-2">
+    {
+      items.map(([slug, p]) => (
+        <li class="card group relative flex gap-0 sm:flex-row">
+          {p.data.image && (
+            <div class="hidden w-40 shrink-0 sm:block">
+              <Picture path={p.data.image} alt={p.data.imageAlt ?? ''} sizes="160px" widths={[160, 320]} class="h-full object-cover" />
+            </div>
+          )}
+          <div class="flex flex-1 flex-col p-6">
+            <p class="flex items-center gap-2 text-sm text-ink-muted">
+              <Icon name="pray" class="size-4 text-inspire-ink" />
+              <time datetime={p.data.date.toISOString()}>{formatDate(p.data.date, locale)}</time>
+            </p>
+            <h3 class="mt-2 text-xl">
+              <a href={localizePath(basePathFor('prayer', slug), locale)} class="text-ocean no-underline after:absolute after:inset-0 hover:underline" set:html={mdInline(p.data.title)} />
+            </h3>
+            <p class="mt-2 line-clamp-3 text-[0.9375rem] text-ink-muted">{p.data.description}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+  {
+    block.limit && (
+      <p class="mt-8">
+        <a href={localizePath('/pray/', locale)} class="inline-flex items-center gap-1.5 font-heading font-extrabold">
+          {t.allPrayerRequests}
+          <Icon name="arrow-right" class="size-4 rtl:-scale-x-100" />
+        </a>
+      </p>
+    )
+  }
+</Section>

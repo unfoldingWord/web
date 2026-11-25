@@ -1,0 +1,64 @@
+---
+// People from src/content/people/{locale}/ whose `groups` include this
+// block's group, ordered by `order` then name. Bios expand in place.
+import { getCollection } from 'astro:content';
+import type { Block } from '../../content.config';
+import { md } from '../../lib/md';
+import { splitId } from '../../lib/routes';
+import { ui } from '../../i18n';
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+import Picture from '../ui/Picture.astro';
+
+type People = Extract<Block, { type: 'people' }>;
+interface Props {
+  block: People;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+const t = ui(locale);
+const all = await getCollection('people');
+// Prefer this locale's version of each person, else English.
+const bySlug = new Map<string, (typeof all)[number]>();
+for (const p of all) {
+  const { locale: l, rest } = splitId(p.id);
+  if (l === 'en' && !bySlug.has(rest)) bySlug.set(rest, p);
+  if (l === locale) bySlug.set(rest, p);
+}
+const people = [...bySlug.values()]
+  .filter((p) => p.data.groups.includes(block.group))
+  .sort((a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name));
+---
+
+<Section>
+  <SectionHeader title={block.title} intro={block.intro} locale={locale} />
+  <ul class:list={['grid gap-6', block.layout === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'mx-auto max-w-4xl']}>
+    {
+      people.map((p) => (
+        <li class:list={['card flex', block.layout === 'grid' ? 'flex-col' : 'flex-col sm:flex-row']}>
+          {p.data.photo ? (
+            <div class:list={['shrink-0 bg-mist', block.layout === 'list' && 'sm:w-56']}>
+              <Picture path={p.data.photo} alt={p.data.photoAlt ?? p.data.name} sizes="(min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw" widths={[320, 480, 720]} aspect="1 / 1" />
+            </div>
+          ) : null}
+          <div class="flex flex-1 flex-col p-6">
+            <h3 class="text-xl">{p.data.name}</h3>
+            {p.data.role && <p class="mt-1 font-semibold text-inspire-ink">{p.data.role}</p>}
+            {p.data.bio &&
+              (p.data.bio.length > 420 ? (
+                <details class="group mt-3">
+                  <summary class="cursor-pointer list-none text-sm font-bold text-inspire-ink [&::-webkit-details-marker]:hidden">
+                    <span class="group-open:hidden">{t.readBio}</span>
+                    <span class="hidden group-open:inline">{t.hideBio}</span>
+                  </summary>
+                  <div class="prose mt-3 text-[0.9375rem]" set:html={md(p.data.bio, locale)} />
+                </details>
+              ) : (
+                <div class="prose mt-3 text-[0.9375rem] text-ink-muted" set:html={md(p.data.bio, locale)} />
+              ))}
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</Section>

@@ -1,0 +1,30 @@
+---
+import type { Block } from '../../content.config';
+import { md, mdInline } from '../../lib/md';
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+
+type Steps = Extract<Block, { type: 'steps' }>;
+interface Props {
+  block: Steps;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+---
+
+<Section>
+  <SectionHeader eyebrow={block.eyebrow} title={block.title} intro={block.intro} locale={locale} />
+  <ol class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {
+      block.items.map((s, i) => (
+        <li class="relative rounded-card border border-line bg-white p-6 pt-8">
+          <span class="absolute -top-5 start-6 inline-flex size-10 items-center justify-center rounded-full bg-inspire font-heading text-lg font-black text-tech" aria-hidden="true">
+            {i + 1}
+          </span>
+          <h3 class="text-xl" set:html={mdInline(s.title)} />
+          <div class="prose mt-3 text-ink-muted" set:html={md(s.body, locale)} />
+        </li>
+      ))
+    }
+  </ol>
+</Section>

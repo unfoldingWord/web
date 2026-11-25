@@ -1,0 +1,33 @@
+---
+// Questions and answers as native <details> (keyboard and screen-reader
+// friendly with no script). The page adds FAQPage JSON-LD from this block.
+import type { Block } from '../../content.config';
+import { md, mdInline } from '../../lib/md';
+import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+import Icon from '../ui/Icon.astro';
+
+type Faq = Extract<Block, { type: 'faq' }>;
+interface Props {
+  block: Faq;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+---
+
+<Section width="prose">
+  <SectionHeader title={block.title} intro={block.intro} locale={locale} />
+  <div class="divide-y divide-line border-y border-line">
+    {
+      block.items.map((it) => (
+        <details class="group py-2">
+          <summary class="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 py-3 font-heading text-lg font-extrabold text-ocean [&::-webkit-details-marker]:hidden">
+            <span set:html={mdInline(it.q)} />
+            <Icon name="plus" class="size-5 text-inspire-ink transition group-open:rotate-45" />
+          </summary>
+          <div class="prose pb-5" set:html={md(it.a, locale)} />
+        </details>
+      ))
+    }
+  </div>
+</Section>
