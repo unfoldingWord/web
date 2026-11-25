@@ -8,7 +8,7 @@
 import { render, getCollection, type CollectionEntry } from 'astro:content';
 import { SITE } from '../../lib/site';
 import { webPageNode, breadcrumbNode } from '../../lib/jsonld';
-import { ui, fmt, localizePath } from '../../i18n';
+import { byCode, ui, fmt, localizePath } from '../../i18n';
 import { sweetImageUrl, sweetParts } from '../../lib/sweet';
 import { basePathFor, splitId, type Route } from '../../lib/routes';
 import LocalizedBody from '../ui/LocalizedBody.astro';
@@ -82,7 +82,7 @@ const jsonLd = [
                 <li>
                   <figure class="group">
                     <a href={sweetImageUrl(name, 'web')} class="block overflow-hidden rounded-media bg-mist">
-                      <img src={sweetImageUrl(name, 'thumb')} alt={`Sweet Publishing illustration: ${label}`} width="480" height="320" loading="lazy" decoding="async" class="aspect-[3/2] w-full object-cover transition group-hover:scale-[1.03]" />
+                      <img src={sweetImageUrl(name, 'thumb')} lang={byCode(route.locale).tag} alt={fmt(t.sweetIllustration, { label })} width="480" height="320" loading="lazy" decoding="async" class="aspect-[3/2] w-full object-cover transition group-hover:scale-[1.03]" />
                     </a>
                     <figcaption class="mt-1.5 flex items-center justify-between gap-2 text-xs text-ink-muted">
                       <span>{name}</span>
@@ -102,7 +102,7 @@ const jsonLd = [
 
     <nav class="mt-6 flex flex-wrap justify-between gap-4 border-t border-line pt-8">
       {prev ? <a href={bookHref(prev)} class="uw-btn uw-btn-secondary"><Icon name="arrow-right" class="size-4 rotate-180 rtl:rotate-0" />{prev.data.book}</a> : <span />}
-      <a href={localizePath('/sweet-publishing/', route.locale)} class="uw-btn uw-btn-secondary">Sweet Publishing</a>
+      <a href={localizePath('/sweet-publishing/', route.locale)} class="uw-btn uw-btn-secondary" lang={byCode(route.locale).tag}>{t.sweetIndexTitle}</a>
       {next ? <a href={bookHref(next)} class="uw-btn uw-btn-secondary">{next.data.book}<Icon name="arrow-right" class="size-4 rtl:-scale-x-100" /></a> : <span />}
     </nav>
   </div>

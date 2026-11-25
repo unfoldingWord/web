@@ -40,7 +40,7 @@
   "givingFormLoading": "လုံခြုံသော လှူဒါန်းမှုပုံစံကို ဖွင့်နေသည်…",
   "givingFormFallback": "လှူဒါန်းမှုပုံစံ မပွင့်ပါက {link} တွင် လှူဒါန်းနိုင်ပါသည်။",
   "secureGiving": "Virtuous မှ ပံ့ပိုးထားသော လုံခြုံသည့် လှူဒါန်းမှုစနစ်",
-  "taxDeductible": "unfoldingWord သည် အမေရိကန်ပြည်ထောင်စုရှိ 501(c)(3) အကျိုးအမြတ်မယူသော အဖွဲ့အစည်း ဖြစ်ပါသည်။ လှူဒါန်းငွေများကို ဥပဒေခွင့်ပြုသည့်အတိုင်း အခွန်နှုတ်ယူနိုင်ပါသည်။",
+  "taxDeductible": "unfoldingWord သည် အမေရိကန်ပြည်ထောင်စုရှိ 501(c)(3) အကျိုးအမြတ်မယူသော အဖွဲ့အစည်း ဖြစ်ပါသည်။ ဥပဒေက ခွင့်ပြုသည့်အတိုင်း လှူဒါန်းငွေကို အခွန်စည်းကြပ်ခံရမည့် ဝင်ငွေမှ နုတ်ယူနိုင်ပါသည်။",
   "contactFormName": "အမည်",
   "contactFormEmail": "အီးမေးလ်",
   "contactFormMessage": "စာ",
@@ -54,7 +54,7 @@
     "thanks": "သင်၏ ဆုတောင်းခြင်းနှင့် ရက်ရောသော ထောက်ပံ့မှုအတွက် ကျေးဇူးတင်ပါသည်။ ဤလုပ်ငန်းတွင် သင်ပါဝင်ထမ်းဆောင်သော အရေးပါသည့် အခန်းကဏ္ဍကို ကျွန်ုပ်တို့ အလွန်တန်ဖိုးထားပါသည်။",
     "trust": "unfoldingWord® သည် အမေရိကန်ပြည်ထောင်စုရှိ 501(c)(3) အကျိုးအမြတ်မယူသော အဖွဲ့အစည်းဖြစ်ပြီး Evangelical Council for Financial Accountability (ECFA) ၏ အဖွဲ့ဝင်ဖြစ်ကာ GuideStar Platinum Seal of Transparency ကို ရရှိထားပြီး MinistryWatch ထံမှ 100% Give With Confidence အဆင့်သတ်မှတ်ချက်ကို ရရှိထားပါသည်။",
     "copyright": "© {year} unfoldingWord။ မူပိုင်ခွင့်အားလုံး ရယူထားသည်။",
-    "privacy": "ကိုယ်ရေးအချက်အလက် လုံခြုံမှု",
+    "privacy": "ကိုယ်ရေးအချက်အလက် မူဝါဒ",
     "terms": "အသုံးပြုမှု စည်းကမ်းချက်များ",
     "disclosures": "ပရဟိတ ရန်ပုံငွေရှာဖွေမှုဆိုင်ရာ ထုတ်ဖော်ချက်များ"
   },
@@ -76,7 +76,7 @@
     "slr": "မဟာဗျူဟာမြောက် ဘာသာစကား အရင်းအမြစ်များ",
     "obs": "ပွင့်လင်း သမ္မာကျမ်းစာ ဇာတ်လမ်းများ (OBS)",
     "catalyzation": "အရှိန်မြှင့် တွန်းအားပေးခြင်း",
-    "stories": "လယ်ကွင်းမှ ဇာတ်လမ်းများ",
+    "stories": "သာသနာလုပ်ငန်းခွင်မှ ဇာတ်လမ်းများ",
     "forTranslators": "ဘာသာပြန်သူများအတွက်",
     "content": "အကြောင်းအရာ",
     "translatorTools": "ကိရိယာများ",
@@ -123,8 +123,8 @@
   "hideBio": "ကိုယ်ရေးအကျဉ်း ဖျောက်ရန်",
   "transcript": "စာသားမှတ်တမ်း",
   "playVideo": "ဗီဒီယို ဖွင့်ရန်- {title}",
-  "sweetIllustration": "Sweet Publishing ပုံဆွဲ- {label}",
-  "sweetLicense": "Sweet Publishing ၏ ပုံဆွဲများကို <a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">Creative Commons Attribution-ShareAlike 3.0</a> လိုင်စင်အောက်တွင် ထုတ်ပြန်ထားပါသည်။ အသုံးပြုသည့်အခါ “Sweet Publishing” ဟု ကျေးဇူးပြု၍ ဖော်ပြပေးပါ။",
-  "sweetIndexTitle": "Sweet Publishing ပုံဆွဲများ",
+  "sweetIllustration": "Sweet Publishing ၏ သရုပ်ဖော်ပုံ — {label}",
+  "sweetLicense": "Sweet Publishing ၏ သရုပ်ဖော်ပုံများကို <a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">Creative Commons Attribution-ShareAlike 3.0</a> လိုင်စင်အောက်တွင် ထုတ်ပြန်ထားပါသည်။ အသုံးပြုသည့်အခါ “Sweet Publishing” ဟု ကျေးဇူးပြု၍ ဖော်ပြပေးပါ။",
+  "sweetIndexTitle": "Sweet Publishing ၏ သရုပ်ဖော်ပုံများ",
   "search": "ရှာဖွေရန်"
 }
