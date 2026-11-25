@@ -36,5 +36,15 @@
   "vars": {
     // Only this hostname loads Google Tag Manager and counts as production.
     "PRODUCTION_HOST": "unfoldingword.org"
+  },
+
+  // Branch previews (`wrangler preview`, run by Workers Builds for every
+  // non-main branch) take their variables from here. PRODUCTION_HOST is only
+  // used to point an A/B variant's canonical link at the real site, so the
+  // production value is the right one for previews too.
+  "previews": {
+    "vars": {
+      "PRODUCTION_HOST": "unfoldingword.org"
+    }
   }
 }
