@@ -1,0 +1,20 @@
+---
+title: Hundreds of Iranians Introduced to Christ
+description: Even in a war zone, Transform Iran's teams share newly translated Scripture with shepherds, vendors and patients, and hundreds have given their lives to Christ.
+date: 2026-04-16
+region: middle-east
+country: Iran
+image: stories/hundreds-of-iranians-introduced-to-christ.jpg
+imageAlt: Two men in white shirts baptize a person in an outdoor pool while family and friends watch from the edge
+sensitive: true
+redirectFrom: [/persian/hundreds-of-iranians-introduced-to-christ/]
+---
+As rockets rain and bombs fall, dedicated Iranians continue working on a spiritual revolution, translating God’s Word into the heart languages of its ninety-two million people.
+
+Our Whole Bible, Whole Nation partner, Transform Iran, has identified 20 strategic languages in which translated scripture would have the greatest impact on church formation. As of January 2026, they have completed unfoldingWord’s Open Bible Stories in all 20, plus two Afghan languages. They are working on the New Testament in five of those languages, even in a war zone. By the time you read this, two of the five languages will have the whole New Testament.
+
+Transform Iran’s Bible Translation Tools and Training Director, Siroos Torabi, says, “Some people are as cautious as they can be and only talk about their faith with trusted people. But I know a few who are reckless and preach the gospel to everyone.”
+
+Often, they do that with newly translated texts. That’s one of the benefits of Church-Centric Bible Translation: they don’t have to wait for the completion of the whole New Testament or even a whole book. They share what they’ve translated, even a verse or two, right away. Transform Iran reports their teams have shared fragments with shepherds in rural areas, vendors in city markets, and even patients in hospitals. As a result, hundreds of people have given their lives to Christ.
+
+[Watch the video on YouTube](https://www.youtube.com/watch?v=wpBzLVm95gk)
