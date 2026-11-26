@@ -303,6 +303,9 @@ const stories = defineCollection({
     author: z.string().default('unfoldingWord'),
     excerpt: z.string().optional(),
     featured: z.boolean().default(false),
+    // Production built a few posts in Elementor: larger text (19.36px) on a
+    // 980px column. Set true to keep that look.
+    largeText: z.boolean().default(false),
     // Set true when a story names people or places in a security-sensitive
     // region. Such stories need the security review in
     // .claude/skills/publish-story/ before they are committed.

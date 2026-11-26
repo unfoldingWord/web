@@ -1,17 +1,20 @@
 ---
+// A story from the field, laid out like production's single-post template:
+// the page-title banner (the story photo under a 50% Ocean overlay, the
+// title in white capitals), the text in the 1000px column, then "Share this"
+// and three related stories. Our breadcrumbs sit quietly in the banner.
 import { render, getCollection, type CollectionEntry } from 'astro:content';
 import { getImage } from 'astro:assets';
 import { SITE } from '../../lib/site';
 import { img } from '../../lib/images';
 import { webPageNode, breadcrumbNode, articleNode } from '../../lib/jsonld';
-import { ui, formatDate, fmt, localizePath } from '../../i18n';
-import { splitId, type Route } from '../../lib/routes';
+import { ui, formatDate, localizePath } from '../../i18n';
+import { basePathFor, splitId, type Route } from '../../lib/routes';
 import LocalizedBody from '../ui/LocalizedBody.astro';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
 import Picture from '../ui/Picture.astro';
-import StoryCard from '../ui/StoryCard.astro';
-import Cta from '../blocks/Cta.astro';
+import PostFooter from '../ui/PostFooter.astro';
 
 interface Props {
   route: Route;
@@ -24,12 +27,22 @@ const t = ui(route.locale);
 const { Content } = await render(entry);
 const url = new URL(route.path, SITE.url).href;
 const og = new URL((await getImage({ src: img(d.image), width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src, SITE.url).href;
-const region = (t.regions as Record<string, string>)[d.region] ?? d.region;
+const regions = t.regions as Record<string, string>;
+const region = regions[d.region] ?? d.region;
 
+// Related: production's Jetpack picks three posts; ours takes the newest
+// stories from the same region first, then the newest of the rest.
 const all = (await getCollection('stories')).filter((s) => splitId(s.id).locale === 'en' && s.id !== entry.id);
 const related = all
   .sort((a, b) => Number(b.data.region === d.region) - Number(a.data.region === d.region) || b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 3);
+  .slice(0, 3)
+  .map((s) => ({
+    title: s.data.title,
+    href: localizePath(basePathFor('stories', splitId(s.id).rest), route.locale),
+    date: formatDate(s.data.date, route.locale),
+    datetime: s.data.date.toISOString(),
+    category: regions[s.data.region] ?? s.data.region,
+  }));
 
 const jsonLd = [
   webPageNode({ url, title: d.title, description: d.description, lang: route.locale, image: og, breadcrumbId: `${url}#breadcrumb` }),
@@ -40,45 +53,67 @@ const jsonLd = [
 
 <Base locale={route.locale} basePath={route.basePath} title={d.title} description={d.description} ogImage={og} ogType="article" jsonLd={jsonLd} translations={route.translations} fallback={route.fallback} noindex={route.noindex} pageType="story">
   <article>
-    <header class="bg-mist">
-      <div class="container-page grid gap-8 py-10 lg:grid-cols-12 lg:items-center lg:gap-14 lg:py-16">
-        <div class="lg:col-span-6">
-          <div class="mb-5"><Breadcrumbs items={crumbs} locale={route.locale} /></div>
-          <p class="eyebrow mb-3">{region}{d.country ? ` · ${d.country}` : ''}</p>
-          <h1 class="text-h1">{d.title}</h1>
-          {d.excerpt && <p class="mt-5 text-lead text-ink-muted">{d.excerpt}</p>}
-          <p class="mt-5 text-sm text-ink-muted">
-            <time datetime={d.date.toISOString()}>{fmt(t.publishedOn, { date: formatDate(d.date, route.locale) })}</time>
-          </p>
-        </div>
-        <div class="overflow-hidden rounded-card shadow-raised lg:col-span-6">
-          <Picture path={d.image} alt={d.imageAlt} eager sizes="(min-width: 64rem) 50vw, 100vw" aspect="3 / 2" />
-        </div>
+    <header class="uw-banner on-dark post-banner">
+      <div class="absolute inset-0 -z-20">
+        <Picture path={d.image} alt={d.imageAlt} eager sizes="100vw" fill class="post-banner-img" />
       </div>
+      <div class="absolute inset-0 -z-10 bg-ocean/50" aria-hidden="true"></div>
+      <div class="post-crumbs">
+        <div class="container-page text-start"><Breadcrumbs items={crumbs} locale={route.locale} onDark /></div>
+      </div>
+      <h1 class="post-title">{d.title}</h1>
     </header>
-    <div class="container-prose py-[var(--spacing-section)]">
-      <div class="prose prose-serif"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
+    <div class="container-page py-[var(--spacing-section)]">
+      <div class:list={['prose post-body', d.largeText && 'post-body-large']}>
+        <LocalizedBody locale={route.locale}><Content /></LocalizedBody>
+      </div>
+      <PostFooter locale={route.locale} share={{ url, title: d.title }} related={related} />
     </div>
   </article>
-
-  <Cta
-    block={{ type: 'cta', variant: 'ocean', title: t.storyCtaTitle, body: t.storyCtaBody, actions: [{ label: t.donate, href: '/give/', style: 'give' }, { label: t.allStories, href: '/stories/', style: 'secondary' }] }}
-    locale={route.locale}
-  />
-
-  {
-    related.length > 0 && (
-      <section class="bg-mist py-[var(--spacing-section)]">
-        <div class="container-page">
-          <h2 class="mb-8">{t.allStories}</h2>
-          <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {related.map((s) => (
-              <li class="flex"><StoryCard story={s} locale={route.locale} /></li>
-            ))}
-          </ul>
-          <p class="mt-8"><a href={localizePath('/stories/', route.locale)} class="font-heading font-extrabold">{t.allStories}</a></p>
-        </div>
-      </section>
-    )
-  }
 </Base>
+
+<style>
+  /* Production's page-title banner: 200px, photo under a flat 50% Ocean
+     overlay, centered white 32px/700 capitals. */
+  .post-banner {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    min-height: 200px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 40px;
+    text-align: center;
+  }
+  /* Production paints the photo from its top edge. */
+  .post-banner :global(.post-banner-img) { object-position: top; }
+  .post-title {
+    max-width: 1000px;
+    margin: 0;
+    font-size: var(--text-h2);
+    line-height: 1;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+  }
+  /* Our breadcrumbs, kept small in the banner's top padding so the title
+     stays centered; on phones there is no room (the JSON-LD trail remains). */
+  .post-crumbs { position: absolute; inset-inline: 0; top: 10px; }
+  @media (max-width: 767px) { .post-crumbs { display: none; } }
+
+  /* Body: the site sans on the full 1000px column (production's
+     theme-post-content widget). */
+  .post-body { max-width: none; }
+  /* Production wraps text plainly (no balance or pretty). */
+  .post-title, .post-body :global(:is(p, h2, h3, li)) { text-wrap: wrap; }
+  .post-body :global(iframe), .post-body :global(.video-frame) { border-radius: 0; }
+  .post-body :global(.video-frame), .post-body :global(figure) { margin-block: 0 20px; }
+  /* Posts built in Elementor on production (largeText): 19.36/29.04 text in
+     a 980px column, 10px in from the edges, plain Tech h2s, 20px between
+     widgets. */
+  .post-body-large { padding: 10px; font-size: var(--text-story); line-height: var(--text-story--line-height); }
+  .post-body-large :global(p) { margin-bottom: 14.4px; }
+  .post-body-large :global(h2) { font-size: 32px; line-height: 1.2; font-weight: 500; color: var(--color-tech); margin-block: 20px; }
+  .post-body-large :global(p + h2) { margin-top: 5.6px; }
+</style>
