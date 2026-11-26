@@ -4,6 +4,7 @@ description: 9 Sweet Publishing illustrations of Psalms, free to download and us
 book: Psalms
 order: 19
 testament: ot
+cover: 19_Ps_23_01_RG
 chapters:
   - chapter: '119'
     images:

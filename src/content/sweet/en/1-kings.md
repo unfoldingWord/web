@@ -4,6 +4,7 @@ description: 103 Sweet Publishing illustrations of 1 Kings, free to download and
 book: 1 Kings
 order: 11
 testament: ot
+cover: 11_1Ki_08_04_RG
 chapters:
   - chapter: '1'
     images:

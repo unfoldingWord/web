@@ -1,11 +1,23 @@
 ---
 // A list of downloads and links (publications, PDFs, apps, training).
+//   cards     — bordered link boxes, two columns
+//   list      — production's financial-report rows: the item with an image
+//               is the cover beside the title and an icon list (34px solid
+//               Inspire icons, 19.2px Ocean links); two years without a cover
+//               share the last row (financial information)
+//   accordion — production's nested accordion: one 1px #D5D8DC box per item,
+//               "+" before a 16px title, first item open; inside, "Download
+//               <title> by …" and the description (publications,
+//               for-translators). `inset` adds production's 10px column
+//               padding (publications); `licenseBadge` ends each item with
+//               the CC BY-SA badge (for-translators content and training).
 import type { Block } from '../../content.config';
 import { md, mdInline, localizeHref } from '../../lib/md';
 import Section from '../ui/Section.astro';
 import SectionHeader from '../ui/SectionHeader.astro';
 import Picture from '../ui/Picture.astro';
 import Icon from '../ui/Icon.astro';
+import { img } from '../../lib/images';
 
 type Resources = Extract<Block, { type: 'resources' }>;
 interface Props {
@@ -15,35 +27,188 @@ interface Props {
 const { block, locale } = Astro.props;
 const icon = { pdf: 'pdf', link: 'link', video: 'play', audio: 'audio', book: 'book', app: 'app' } as const;
 const isExternal = (h: string) => /^https?:\/\//.test(h);
+const ext = (h: string) => (isExternal(h) ? { rel: 'noopener' } : {});
+// list: an item's image is the report cover beside the list (financial information)
+const cover = block.variant === 'list' ? block.items.find((it) => it.image) : undefined;
+const plainTitle = (t: string) => t.replace(/<[^>]+>/g, '');
+// list: production's Font Awesome 5 solid icons (Font Awesome Free 5.15.4 by
+// @fontawesome, https://fontawesome.com, icons CC BY 4.0).
+const LIST_ICONS = {
+  download: { viewBox: '0 0 640 512', d: 'M537.6 226.6c4.1-10.7 6.4-22.4 6.4-34.6 0-53-43-96-96-96-19.7 0-38.1 6-53.3 16.2C367 64.2 315.3 32 256 32c-88.4 0-160 71.6-160 160 0 2.7.1 5.4.2 8.1C40.2 219.8 0 273.2 0 336c0 79.5 64.5 144 144 144h368c70.7 0 128-57.3 128-128 0-61.9-44-113.6-102.4-125.4zm-132.9 88.7L299.3 420.7c-6.2 6.2-16.4 6.2-22.6 0L171.3 315.3c-10.1-10.1-2.9-27.3 11.3-27.3H248V176c0-8.8 7.2-16 16-16h48c8.8 0 16 7.2 16 16v112h65.4c14.2 0 21.4 17.2 11.3 27.3z' },
+  magazine: { viewBox: '0 0 576 512', d: 'M542.22 32.05c-54.8 3.11-163.72 14.43-230.96 55.59-4.64 2.84-7.27 7.89-7.27 13.17v363.87c0 11.55 12.63 18.85 23.28 13.49 69.18-34.82 169.23-44.32 218.7-46.92 16.89-.89 30.02-14.43 30.02-30.66V62.75c.01-17.71-15.35-31.74-33.77-30.7zM264.73 87.64C197.5 46.48 88.58 35.17 33.78 32.05 15.36 31.01 0 45.04 0 62.75V400.6c0 16.24 13.13 29.78 30.02 30.66 49.49 2.6 149.59 12.11 218.77 46.95 10.62 5.35 23.21-1.94 23.21-13.46V100.63c0-5.29-2.62-10.14-7.27-12.99z' },
+  statement: { viewBox: '0 0 512 512', d: 'M256 32C114.62 32 0 125.12 0 240c0 49.56 21.41 95.01 57.02 130.74C44.46 421.05 2.7 465.97 2.2 466.5A7.995 7.995 0 0 0 8 480c66.26 0 115.99-31.75 140.6-51.38C181.29 440.93 217.59 448 256 448c141.38 0 256-93.12 256-208S397.38 32 256 32zm24 302.44V352c0 8.84-7.16 16-16 16h-16c-8.84 0-16-7.16-16-16v-17.73c-11.42-1.35-22.28-5.19-31.78-11.46-6.22-4.11-6.82-13.11-1.55-18.38l17.52-17.52c3.74-3.74 9.31-4.24 14.11-2.03 3.18 1.46 6.66 2.22 10.26 2.22h32.78c4.66 0 8.44-3.78 8.44-8.42 0-3.75-2.52-7.08-6.12-8.11l-50.07-14.3c-22.25-6.35-40.01-24.71-42.91-47.67-4.05-32.07 19.03-59.43 49.32-63.05V128c0-8.84 7.16-16 16-16h16c8.84 0 16 7.16 16 16v17.73c11.42 1.35 22.28 5.19 31.78 11.46 6.22 4.11 6.82 13.11 1.55 18.38l-17.52 17.52c-3.74 3.74-9.31 4.24-14.11 2.03a24.516 24.516 0 0 0-10.26-2.22h-32.78c-4.66 0-8.44 3.78-8.44 8.42 0 3.75 2.52 7.08 6.12 8.11l50.07 14.3c22.25 6.36 40.01 24.71 42.91 47.67 4.05 32.06-19.03 59.42-49.32 63.04z' },
+  form: { viewBox: '0 0 384 512', d: 'M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm160-14.1v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z' },
+} as const;
+const listIcon = (it: Resources['items'][number]) => LIST_ICONS[it.icon ?? (it.kind === 'book' ? 'magazine' : it.kind === 'pdf' ? 'form' : 'download')];
+// "By A, B" reads as "… by A, B" after the link; anything else follows a dash.
+const byline = (m?: string) => (!m ? '' : /^by\s/i.test(m) ? ` by ${m.slice(3)}` : ` (${m})`);
 ---
 
-<Section id={block.id}>
-  <SectionHeader eyebrow={block.eyebrow} title={block.title} intro={block.intro} locale={locale} />
-  <ul class="grid gap-4 md:grid-cols-2">
-    {
-      block.items.map((it) => (
-        <li class="group relative flex gap-4 rounded-card border border-line bg-white p-5 transition hover:border-inspire hover:shadow-card">
-          {it.image ? (
-            <div class="w-20 shrink-0 overflow-hidden rounded-lg">
-              <Picture path={it.image} alt={it.imageAlt ?? ''} sizes="80px" widths={[80, 160]} />
+<Section id={block.id} background={block.background} class={block.variant === 'list' ? (cover ? 'uw-list-cover' : 'uw-list-plain') : block.variant === 'accordion' ? ['uw-acc-section', block.inset && 'uw-acc-inset'].filter(Boolean).join(' ') : undefined}>
+  <div class:list={[block.inset && 'px-2.5']}>
+  {block.variant !== 'list' && <SectionHeader title={block.title} intro={block.intro} locale={locale} />}
+  {
+    block.variant === 'accordion' ? (
+      <div class:list={['uw-acc', block.textSize === 'large' && 'uw-acc-large']}>
+        {block.items.map((it, i) => (
+          <details class="uw-acc-item" open={i === 0}>
+            <summary class="uw-acc-summary">
+              <span class="uw-acc-icon" aria-hidden="true" />
+              <span set:html={mdInline(it.title)} />
+            </summary>
+            <div class="uw-acc-body prose">
+              {it.image && <Picture path={it.image} alt={it.imageAlt ?? ''} sizes="200px" widths={[200, 400]} class="mb-3.5 !w-[200px]" />}
+              {it.href && (
+                <p>
+                  {it.kind === 'pdf' || it.kind === 'book' ? 'Download ' : ''}
+                  <a href={localizeHref(it.href, locale)} {...ext(it.href)}>
+                    {plainTitle(it.title)}
+                    {it.kind === 'pdf' && <span class="sr-only"> (PDF)</span>}
+                  </a>
+                  {byline(it.meta)}
+                </p>
+              )}
+              {it.description && <Fragment set:html={md(it.description, locale)} />}
+              {block.licenseBadge && (
+                <div class="uw-acc-badge">
+                  <Picture path="for-translators/cc-by-sa-badge.png" alt="CC BY-SA license badge" sizes="88px" widths={[88]} class="!w-[88px]" />
+                </div>
+              )}
             </div>
-          ) : (
-            <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-inspire-50 text-inspire-ink">
-              <Icon name={icon[it.kind]} class="size-5.5" />
-            </span>
-          )}
-          <div class="min-w-0">
-            <h3 class="text-lg leading-snug">
-              <a href={localizeHref(it.href, locale)} class="text-ocean no-underline after:absolute after:inset-0 hover:underline" {...(isExternal(it.href) ? { rel: 'noopener' } : {})}>
-                <span set:html={mdInline(it.title)} />
-                {it.kind === 'pdf' && <span class="sr-only"> (PDF)</span>}
-              </a>
-            </h3>
-            {it.description && <div class="prose mt-1 text-[0.9375rem] text-ink-muted" set:html={md(it.description, locale)} />}
-            {it.meta && <p class="mt-1 text-sm text-ink-muted">{it.meta}</p>}
+          </details>
+        ))}
+      </div>
+    ) : block.variant === 'list' ? (
+      <div class:list={['uw-list', cover ? 'uw-list-row' : 'uw-list-col']}>
+        {cover && (
+          <div class="uw-list-img">
+            <Picture path={cover.image!} alt={cover.imageAlt ?? ''} sizes="292px" widths={[292, 584]} aspect={`${img(cover.image!).width} / ${img(cover.image!).height}`} class="rounded-media-split" />
           </div>
-        </li>
-      ))
-    }
-  </ul>
+        )}
+        <div class="uw-list-text flex flex-col gap-5">
+          {block.title && <h2 set:html={mdInline(block.title, locale)} />}
+          {block.intro && <p class="text-body" set:html={mdInline(block.intro, locale)} />}
+          <ul class="flex flex-col">
+            {block.items.map((it) => (
+              <li class="uw-list-item">
+                <span class="uw-list-icon" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox={listIcon(it).viewBox} fill="currentColor"><path d={listIcon(it).d} /></svg>
+                </span>
+                <span class="min-w-0 ps-[5px]">
+                  {it.href ? (
+                    <a href={localizeHref(it.href, locale)} class="uw-list-link" {...ext(it.href)}>
+                      <span set:html={mdInline(it.title)} />
+                      {it.kind === 'pdf' && <span class="sr-only"> (PDF)</span>}
+                    </a>
+                  ) : (
+                    <span class="uw-list-link" set:html={mdInline(it.title)} />
+                  )}
+                  {it.description && <span class="block text-body" set:html={mdInline(it.description, locale)} />}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    ) : (
+      <ul class="grid gap-5 md:grid-cols-2">
+        {block.items.map((it) => (
+          <li class="relative flex gap-4 rounded-card border border-rule bg-white p-5">
+            {it.image ? (
+              <div class="w-20 shrink-0">
+                <Picture path={it.image} alt={it.imageAlt ?? ''} sizes="80px" widths={[80, 160]} />
+              </div>
+            ) : (
+              <Icon name={icon[it.kind]} class="mt-0.5 size-6 shrink-0 text-inspire" />
+            )}
+            <div class="min-w-0">
+              <h3 class="text-h5 font-bold">
+                {it.href ? (
+                  <a href={localizeHref(it.href, locale)} class="uw-card-link after:absolute after:inset-0" {...ext(it.href)}>
+                    <span set:html={mdInline(it.title)} />
+                    {it.kind === 'pdf' && <span class="sr-only"> (PDF)</span>}
+                  </a>
+                ) : (
+                  <span set:html={mdInline(it.title)} />
+                )}
+              </h3>
+              {it.description && <div class="prose mt-2 [&>:last-child]:mb-0" set:html={md(it.description, locale)} />}
+              {it.meta && <p class="mt-1 text-sm">{it.meta}</p>}
+            </div>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  </div>
 </Section>
+
+<style>
+  /* Consecutive accordion groups sit in one section on production: 20px apart.
+     So do a video file before them (Embed, `uw-flow`) and plain white text
+     after them (for-translators/training). */
+  :global(:is(.uw-acc-section, .uw-flow):has(+ .uw-acc-section)) { padding-bottom: 20px; }
+  :global(:is(.uw-acc-section, .uw-flow) + .uw-acc-section) { padding-top: 0; }
+  :global(.uw-acc-section:not(.uw-acc-inset):has(+ section.bg-white:not(.uw-acc-section))) { padding-bottom: 20px; }
+  :global(.uw-acc-section:not(.uw-acc-inset) + section.bg-white:not(.uw-acc-section)) { padding-top: 0; }
+  /* publications: one section with 10px column padding (50px from its edges) */
+  :global(.uw-acc-inset) { padding-top: 50px; padding-bottom: 50px; }
+  .uw-card-link { color: var(--color-kindle); font-weight: 900; }
+  .uw-card-link:hover { color: var(--color-inspire); }
+  /* Production's financial-report rows (Elementor grid of 800px boxes with
+     10px padding): a 292px cover beside the title and an icon list, centered
+     on each other; a year without a cover is a 390px half of the last row.
+     The section paddings stand in for the box paddings and the 20px grid gap. */
+  :global(.uw-list-cover) { padding-block: 30px 20px; }
+  :global(:not(.uw-list-cover) + .uw-list-cover) { padding-top: 60px; }
+  :global(.uw-list-plain) { padding-block: 20px 50px; }
+  :global(.uw-list-plain:has(+ .uw-list-plain)) { padding-bottom: 20px; }
+  .uw-list-row { display: flex; flex-direction: column; gap: 50px; max-width: 800px; margin-inline: auto; }
+  .uw-list-img { padding-inline: 20px; }
+  .uw-list-img :global(img) { max-width: 292px; }
+  .uw-list-text { padding-inline: 10px; }
+  @media (min-width: 48rem) {
+    :global(.uw-list-cover) { padding-bottom: 30px; }
+    .uw-list-row { flex-direction: row; align-items: center; gap: 30px; padding-inline: 29px 10px; }
+    .uw-list-img { flex: none; width: 312px; padding-inline: 10px; }
+    .uw-list-row .uw-list-text { flex: none; width: 410px; }
+    /* Two years without a cover share a row, each a 390px box beside the
+       page's center line. */
+    :global(.uw-list-plain) { display: inline-block; vertical-align: top; width: 50%; }
+    :global(.uw-list-plain > div) { padding-inline: 10px; }
+    .uw-list-col { width: 390px; margin-inline-start: auto; }
+    :global(.uw-list-plain + .uw-list-plain) .uw-list-col { margin-inline: 0 auto; }
+  }
+  /* Elementor icon list: 34px solid Inspire icon in a 42.5px box, 19.2px/400
+     Ocean text 5px after it, items 20px apart. */
+  .uw-list-item { display: flex; align-items: center; min-height: 34px; }
+  .uw-list-item:not(:last-child) { padding-bottom: 10px; }
+  .uw-list-item + .uw-list-item { margin-top: 10px; }
+  .uw-list-icon { flex: none; display: flex; justify-content: center; width: 42.5px; color: var(--color-inspire); }
+  .uw-list-icon svg { width: 34px; height: 34px; }
+  .uw-list-link { font-size: 1.2rem; line-height: 1.5; font-weight: 400; color: var(--color-ocean); }
+  .uw-list-link:hover { color: var(--color-inspire); }
+
+  /* Production's nested accordion (Elementor): full width, boxes 1px #D5D8DC,
+     10px padding, icon first, 16px/400 #1F2124 system font. */
+  /* Each box keeps its own 1px border, so lines between boxes are 2px. */
+  .uw-acc-summary {
+    display: flex; align-items: center; gap: 10px; padding: 10px;
+    border: 1px solid #d5d8dc; cursor: pointer; list-style: none;
+    font-family: var(--font-system); font-size: 1rem; line-height: 1.5; font-weight: 400; color: #1f2124;
+  }
+  .uw-acc-summary::-webkit-details-marker { display: none; }
+  /* Production's Font Awesome plus/minus: 13px bars, 3px thick. */
+  .uw-acc-icon { position: relative; flex: none; width: 13px; height: 13px; }
+  .uw-acc-icon::before, .uw-acc-icon::after { content: ''; position: absolute; background: currentColor; inset-inline-start: 0; top: 5px; width: 13px; height: 3px; }
+  .uw-acc-icon::after { transform: rotate(90deg); }
+  details[open] > .uw-acc-summary .uw-acc-icon::after { display: none; }
+  .uw-acc-body { border: 1px solid #d5d8dc; padding: 10px; }
+  /* Elementor's text widget: lists sit right on the next paragraph. */
+  .uw-acc-body :global(:where(ul, ol)) { margin-bottom: 0; }
+  /* The badge is an inline image in a paragraph: 31px plus the line's descender. */
+  .uw-acc-badge { height: 38px; }
+  /* publications: 19.36/29.04 text */
+  .uw-acc-large .uw-acc-body { font-size: var(--text-story); line-height: 1.5; }
+  /* (the last paragraph keeps its 14.4px margin, as in production) */
+</style>

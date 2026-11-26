@@ -7,10 +7,9 @@ import type { Route } from '../../lib/routes';
 import LocalizedBody from '../ui/LocalizedBody.astro';
 import Base from '../../layouts/Base.astro';
 import BlockRenderer from '../blocks/BlockRenderer.astro';
-import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import Hero from '../blocks/Hero.astro';
 import { getImage } from 'astro:assets';
 import { img } from '../../lib/images';
-import { ui, fmt, formatDate } from '../../i18n';
 
 interface Props {
   route: Route;
@@ -22,7 +21,12 @@ const entry = route.entry as CollectionEntry<'pages'>;
 const d = entry.data;
 const { Content } = await render(entry);
 const hasBody = Boolean(entry.body?.trim());
-const firstIsHero = d.sections[0]?.type === 'hero';
+// Giving landing pages open with their own h1 (the landing giving block), so
+// they get no title band either.
+const firstIsHero =
+  d.sections[0]?.type === 'hero' ||
+  d.sections[0]?.type === 'heroSlideshow' ||
+  d.sections.some((s) => s.type === 'giving' && s.variant === 'landing');
 const url = new URL(route.path, SITE.url).href;
 const isHome = route.basePath === '/';
 
@@ -42,6 +46,7 @@ const jsonLd = [
   ...videos,
 ];
 const pageType = d.template === 'giving' ? 'giving' : isHome ? 'home' : 'page';
+const legal = d.bodyStyle === 'legal';
 ---
 
 <Base
@@ -59,19 +64,19 @@ const pageType = d.template === 'giving' ? 'giving' : isHome ? 'home' : 'page';
 >
   {
     !firstIsHero && (
-      <section class="bg-mist">
-        <div class="container-page py-10 lg:py-14">
-          {!isHome && d.breadcrumbs && <div class="mb-5"><Breadcrumbs items={crumbs} locale={route.locale} /></div>}
-          <h1 class="max-w-4xl">{d.heading ?? d.title}</h1>
-        </div>
-      </section>
+      <Hero
+        block={{ type: 'hero', variant: 'banner', title: d.title, image: d.bannerImage, imageAlt: d.bannerImageAlt, uppercase: d.bannerUppercase, actions: [] }}
+        locale={route.locale}
+        crumbs={!isHome && d.breadcrumbs ? crumbs : undefined}
+      />
     )
   }
   {firstIsHero && <BlockRenderer blocks={d.sections.slice(0, 1)} locale={route.locale} crumbs={!isHome && d.breadcrumbs ? crumbs : undefined} />}
   {
     hasBody && d.bodyPosition === 'before' && (
       <div class="container-prose py-[var(--spacing-section)]">
-        <div class="prose"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
+        {legal && <p class="uw-legal-heading" role="heading" aria-level="2">{d.heading ?? d.title}</p>}
+        <div class:list={['prose', legal && 'prose-legal', d.bodyStyle === 'post' && 'prose-post']}><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
       </div>
     )
   }
@@ -79,15 +84,29 @@ const pageType = d.template === 'giving' ? 'giving' : isHome ? 'home' : 'page';
   {
     hasBody && d.bodyPosition === 'after' && (
       <div class="container-prose py-[var(--spacing-section)]">
-        <div class="prose"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
+        {legal && <p class="uw-legal-heading" role="heading" aria-level="2">{d.heading ?? d.title}</p>}
+        <div class:list={['prose', legal && 'prose-legal', d.bodyStyle === 'post' && 'prose-post']}><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
       </div>
     )
   }
-  {
-    d.updated && (
-      <p class="container-page pb-8 text-sm text-ink-muted">
-        <time datetime={d.updated.toISOString()}>{fmt(ui(route.locale).updatedOn, { date: formatDate(d.updated, route.locale) })}</time>
-      </p>
-    )
-  }
 </Base>
+
+<style>
+  /* Production's policy pages: a 40px/500 heading between 100px spacers, and
+     the section headings at 16px bold (Gutenberg h6 with <strong>). */
+  .uw-legal-heading { font-family: var(--font-heading); font-size: var(--text-h1); line-height: 1.2; font-weight: 500; color: var(--color-tech); margin: 108px 0 116px; }
+  /* The text is its own block (flow-root) so a first heading's 8px adds to the
+     116px above it, and it ends on production's 100px spacer. */
+  .prose-legal { display: flow-root; padding-bottom: 100px; }
+  .prose-legal :global(:where(h2, h3, h4)) { font-size: 1rem; line-height: 1.2; font-weight: 700; color: var(--color-tech); margin: 8px 0 16px; }
+  /* Gutenberg lists on these pages have no bottom margin. */
+  .prose-legal :global(:where(ul, ol)) { margin-bottom: 0; }
+  .prose-post :global(:where(h3, h4, h5, h6)) { color: var(--color-tech); font-weight: 500; line-height: 1.2; margin: 8px 0 16px; }
+  /* A heading widget's h2 then a text widget opening with an h3: 20px gap plus the h3's 8px. */
+  .prose-post :global(:where(h2 + h3)) { margin-top: 28px; }
+  /* Production's long-text quotes sit 20px from the text above and below. */
+  .prose :global(:where(blockquote)) { margin-block: 20px; }
+  /* After a paragraph the quote is its own widget: the paragraph's 14.4px
+     margin plus the 20px gap (ccbt). */
+  .prose :global(:where(p + blockquote)) { margin-top: calc(20px + 0.9rem); }
+</style>

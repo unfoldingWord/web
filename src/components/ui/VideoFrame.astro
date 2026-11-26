@@ -18,14 +18,14 @@ const { locale } = splitLocale(Astro.url.pathname);
 const watch = provider === 'youtube' ? `https://www.youtube.com/watch?v=${id}` : `https://vimeo.com/${id}${hash ? `/${hash}` : ''}`;
 const embed = provider === 'youtube' ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0` : `https://player.vimeo.com/video/${id}?${hash ? `h=${hash}&` : ''}autoplay=1&dnt=1`;
 // YouTube serves stills from its image host; Vimeo has no stable public one,
-// so Vimeo videos show the plain Ocean poster.
+// so Vimeo videos show a plain black poster, like the Vimeo player itself.
 const poster = provider === 'youtube' ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : undefined;
 ---
 
-<div class="video-frame relative aspect-video overflow-hidden rounded-card bg-ocean-900 shadow-card" data-embed={embed} data-title={title}>
+<div class="video-frame relative aspect-video overflow-hidden bg-black" data-embed={embed} data-title={title}>
   <a href={watch} class="group absolute inset-0 flex items-center justify-center" rel="noopener">
     {poster && <img src={poster} alt="" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-cover opacity-80 transition group-hover:opacity-95" />}
-    <span class="relative inline-flex size-18 items-center justify-center rounded-full bg-kindle text-tech shadow-raised transition group-hover:scale-105">
+    <span class="relative inline-flex size-18 items-center justify-center rounded-full bg-kindle text-white transition group-hover:bg-inspire">
       <Icon name="play" class="size-10" />
     </span>
     <span class="sr-only" lang={byCode(locale).tag}>{fmt(ui(locale).playVideo, { title })}</span>

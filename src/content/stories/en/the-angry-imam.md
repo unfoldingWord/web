@@ -9,6 +9,8 @@ image: stories/the-angry-imam.jpg
 imageAlt: Close-up of a man's weathered hands clasped together over an orange robe
 sensitive: true
 redirectFrom: [/open-bible-stories/the-angry-imam/]
+category: Open Bible Stories
+related: [ukrainian-great-commission-partners-are-translating, when-jeremiah-first-heard-that-his-chadian-church-planting, escape-from-kharkiv1]
 ---
 "It is dangerous for us to go," said Stephen, "We cannot avoid the dangers, but when we think about what Jesus has done for us, we know that God will help us, and we are not afraid."
 
@@ -20,4 +22,4 @@ News travels fast in a village. Soon, about 25 people, including their imam, ass
 
 "I bless the name of the Lord for unfoldingWord and Open Bible Stories," said Stephen. "This instrument is inspired. We are sowing seeds in the hearts of Muslims that are like bombs, and one day they will burst into life. It helps us reach Muslims like nothing ever has before."
 
-Want to help others reach their neighbors? Visit [unfoldingword.org/give](/give/).
+Want to help others reach their neighbors? Visit unfoldingword.org/give

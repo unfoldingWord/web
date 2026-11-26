@@ -1,6 +1,6 @@
 ---
 name: "Chris Klapp"
-role: "Research and Development"
+role: "Research & Development"
 groups: [staff]
 order: 160
 photo: people/chris-klapp.jpg

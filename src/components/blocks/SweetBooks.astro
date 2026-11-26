@@ -1,11 +1,18 @@
 ---
-// Index of the Sweet Publishing illustration books (Old and New Testament).
+// Index of the Sweet Publishing illustration books, in Bible order: the
+// production "Illustration Files" grid on /obs/ (PowerPack posts, card skin).
+// Three columns (two under 1057px, one under 768px), 25px gaps, 1px #E6E6E6
+// cards with the book's cover illustration, a centered 32px Inspire title
+// (Kindle on hover) and the number of illustrations. The cover darkens on
+// hover. Production's cover files carry a white frame (about 6px at card
+// width); ours are trimmed, so the frame is padding.
 import { getCollection } from 'astro:content';
 import type { Block } from '../../content.config';
 import { localizePath, ui, fmt } from '../../i18n';
 import { basePathFor, splitId } from '../../lib/routes';
 import { sweetImageUrl } from '../../lib/sweet';
 import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
 
 type SweetBooks = Extract<Block, { type: 'sweetBooks' }>;
 interface Props {
@@ -15,36 +22,40 @@ interface Props {
 const { block, locale } = Astro.props;
 const t = ui(locale);
 const books = (await getCollection('sweet')).filter((b) => splitId(b.id).locale === 'en').sort((a, b) => a.data.order - b.data.order);
-const groups = [
-  { key: 'ot', label: t.oldTestament, items: books.filter((b) => b.data.testament === 'ot') },
-  { key: 'nt', label: t.newTestament, items: books.filter((b) => b.data.testament === 'nt') },
-];
 ---
 
 <Section>
-  {block.title && <h2 class="mb-8">{block.title}</h2>}
-  {
-    groups.map((g) => (
-      <div class="mb-12">
-        <h3 class="mb-5">{g.label}</h3>
-        <ul class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {g.items.map((b) => {
-            const first = b.data.chapters[0]?.images[0];
-            const count = b.data.chapters.reduce((n, c) => n + c.images.length, 0);
-            return (
-              <li class="uw-card group relative">
-                {first && <img src={sweetImageUrl(first, 'thumb')} alt="" loading="lazy" decoding="async" width="480" height="320" class="aspect-[3/2] w-full object-cover" />}
-                <div class="p-4">
-                  <a href={localizePath(basePathFor('sweet', splitId(b.id).rest), locale)} class="font-heading text-lg font-extrabold text-ocean no-underline after:absolute after:inset-0 hover:underline">
-                    {b.data.book}
-                  </a>
-                  <p class="text-sm text-ink-muted">{fmt(t.imagesCount, { count })}</p>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    ))
-  }
+  <SectionHeader title={block.title} locale={locale} />
+  <ul class="grid gap-[25px] md:grid-cols-2 tablet:grid-cols-3">
+    {
+      books.map((b) => {
+        const cover = b.data.cover ?? b.data.chapters[0]?.images[0];
+        const count = b.data.chapters.reduce((n, c) => n + c.images.length, 0);
+        return (
+          <li class="uw-book group relative border border-rule bg-white">
+            {cover && (
+              <div class="overflow-hidden bg-white p-[6px] transition-[filter] duration-300 group-hover:brightness-[56%]">
+                <img src={sweetImageUrl(cover, 'thumb')} alt="" loading="lazy" decoding="async" width="480" height="349" class="block h-auto w-full" />
+              </div>
+            )}
+            <div class="p-5 text-center">
+              <h3 class="uw-book-title">
+                <a href={localizePath(basePathFor('sweet', splitId(b.id).rest), locale)} class="after:absolute after:inset-0">
+                  {b.data.book}
+                </a>
+              </h3>
+              <p class="text-body text-ink">{fmt(t.imagesCount, { count })}</p>
+            </div>
+          </li>
+        );
+      })
+    }
+  </ul>
 </Section>
+
+<style>
+  /* Production: h2 32/38.4/700 Inspire, margin 8px 0 10px; Kindle on hover. */
+  .uw-book-title { font-size: var(--text-h2); line-height: 1.2; font-weight: 700; margin: 8px 0 10px; text-wrap: wrap; }
+  .uw-book-title a { color: var(--color-inspire); font-weight: 700; transition: color 0.3s; }
+  .uw-book:hover .uw-book-title a, .uw-book-title a:focus-visible { color: var(--color-kindle); }
+</style>

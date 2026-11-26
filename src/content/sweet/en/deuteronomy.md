@@ -4,6 +4,7 @@ description: 26 Sweet Publishing illustrations of Deuteronomy, free to download 
 book: Deuteronomy
 order: 5
 testament: ot
+cover: 05_De_31_04_RG
 chapters:
   - chapter: '0'
     images:

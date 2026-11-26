@@ -2,7 +2,9 @@
 // /search/ — full-text search of the site, powered by Pagefind: a static
 // index built from dist/ after `astro build` (scripts/postbuild.mjs), served
 // as plain files. No server, no third party. ?q=… runs a search on load
-// (the WebSite SearchAction in the JSON-LD points here).
+// (the WebSite SearchAction in the JSON-LD points here). Production has no
+// styled search page: this one uses the site's banner title, the 1000px
+// column, the theme's input style and Kindle links and buttons.
 import Base from '../layouts/Base.astro';
 import { ui } from '../i18n';
 const t = ui('en');
@@ -10,12 +12,12 @@ const t = ui('en');
 
 <Base switcherPath="/" locale="en" basePath="/search/" title="Search" description="Search unfoldingword.org: stories, Bible translation strategy, resources for translators and ways to give." noindex pageType="search">
   <link slot="head" rel="stylesheet" href="/pagefind/pagefind-ui.css" />
-  <section class="bg-mist">
-    <div class="container-prose py-10 lg:py-14">
-      <h1>Search</h1>
+  <section class="uw-banner on-dark">
+    <div class="container-page flex min-h-[200px] items-center justify-center py-10 text-center">
+      <h1 class="text-h2 text-white uppercase">Search</h1>
     </div>
   </section>
-  <div class="container-prose py-10">
+  <div class="container-page py-10">
     <div id="site-search"></div>
     <noscript><p>Search needs JavaScript. <a href="/">Go to the home page</a> or browse the <a href="/stories/">{t.allStories}</a>.</p></noscript>
   </div>
@@ -29,12 +31,21 @@ const t = ui('en');
   </script>
   <style is:global>
     #site-search {
-      --pagefind-ui-primary: var(--color-ocean);
-      --pagefind-ui-text: var(--color-ink);
-      --pagefind-ui-border: var(--color-line);
-      --pagefind-ui-tag: var(--color-mist);
+      --pagefind-ui-scale: 0.8;
+      --pagefind-ui-primary: var(--color-kindle);
+      --pagefind-ui-text: var(--color-tech);
+      --pagefind-ui-background: #fff;
+      --pagefind-ui-border: var(--color-input-border);
+      --pagefind-ui-tag: var(--color-tint);
+      --pagefind-ui-border-width: 1px;
+      --pagefind-ui-border-radius: var(--radius-input);
       --pagefind-ui-font: var(--font-sans);
-      --pagefind-ui-border-radius: 12px;
     }
+    #site-search .pagefind-ui__search-input { font-weight: 400; }
+    #site-search .pagefind-ui__result-link { color: var(--color-link); font-weight: 900; text-decoration: none; }
+    #site-search .pagefind-ui__result-link:hover { color: var(--color-link-hover); }
+    #site-search .pagefind-ui__result-excerpt { font-weight: 300; }
+    #site-search .pagefind-ui__button { font-family: var(--font-heading); font-weight: 900; border-radius: var(--radius-button); background: var(--color-kindle); color: #fff; border: 0; }
+    #site-search .pagefind-ui__button:hover { background: var(--color-inspire); }
   </style>
 </Base>

@@ -1,6 +1,6 @@
 ---
 name: "Frances Pacione"
-role: "Human Resource and Executive Assistant"
+role: "Human Resource & Executive Assistant"
 groups: [staff]
 order: 230
 photo: people/frances-pacione.jpg

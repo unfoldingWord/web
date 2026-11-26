@@ -20,7 +20,7 @@ Always through a branch, a pull request and a preview the editor has looked at �
 ## Rules that are easy to get wrong
 
 - **The repository is public and git keeps history.** Names, photos and places in stories and prayer requests get a security review with the editor *before* they are written to any file (publish-story, step 1). When in doubt, leave it out.
-- Content follows `docs/content-guide.md` (blocks, fields, writing rules — **unfoldingWord** is camelCase; no ampersands in prose; local churches are the heroes). Read the part you need before writing content.
+- Content follows `docs/content-guide.md` (blocks, fields, writing rules — **unfoldingWord** is camelCase; copy the old site's wording, Title Case and "&" included; local churches are the heroes). Read the part you need before writing content.
 - Every image has alt text written from looking at the image.
 - A page that moves keeps its old URL working (`redirectFrom`); no old URL may 404 (`npm run check:redirects`).
 - The look of the site lives in `src/styles/global.css` (tokens) and `src/components/`; pages never carry one-off styling.

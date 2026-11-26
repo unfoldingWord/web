@@ -1,16 +1,18 @@
 ---
-// Site header: logo, main navigation, language switcher, Give button.
+// Site header, matching the production WordPress/Elementor header:
+// one 96px row, full width with 20px padding. Logo on the start side; on the
+// end side the main navigation, search, language, then Donate Now.
 //
-// Phone first. Below the `lg` breakpoint the navigation is a full-height
-// panel opened by the Menu button, with each section as an expandable group.
-// At `lg` and up the same list is a horizontal bar with dropdowns. One
-// markup, one small script (no framework).
+// Below 1057px (production's tablet breakpoint), or whenever the navigation
+// does not fit on one row (long translated menus), the navigation becomes a
+// panel opened by the menu toggle: centered rows, accordions for the
+// sections. The header stays sticky (an editor decision; production is not).
+// One markup, one small script (no framework).
 import { Image } from 'astro:assets';
 import logo from '../../assets/brand/logo-horizontal.png';
 import { NAV, type NavItem } from '../../lib/site';
 import { ui, localizePath } from '../../i18n';
 import LanguageSwitcher from './LanguageSwitcher.astro';
-import Icon from '../ui/Icon.astro';
 
 interface Props {
   locale: string;
@@ -23,150 +25,281 @@ const { locale, basePath, switcherPath = basePath, translations } = Astro.props;
 const t = ui(locale);
 const label = (key: string) => (t.nav as Record<string, string>)[key] ?? key;
 const href = (item: NavItem) => (item.external ? item.href! : localizePath(item.href!, locale));
-const isCurrent = (item: NavItem): boolean =>
-  (!!item.href && !item.external && item.href === basePath) || (item.children ?? []).some(isCurrent);
+const current = (item: NavItem) => (!!item.href && !item.external && item.href === basePath ? 'page' : undefined);
+const ext = (item: NavItem) => (item.external ? { target: '_blank', rel: 'noopener' } : {});
+
+// FontAwesome "angle-down", as production's Elementor menu uses.
+const ANGLE = 'M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z';
 ---
 
-{/* Solid background, no backdrop-filter: a filter on the header would make
-    it the containing block for the fixed-position phone menu panel and clip
-    the panel to the header's height. */}
-<header class="site-header sticky top-0 z-40 border-b border-line bg-white">
-  <div class="container-page flex h-16 items-center gap-1.5 min-[400px]:gap-2 sm:gap-3 lg:h-auto lg:flex-wrap lg:gap-y-1 lg:pt-3 lg:pb-1">
-    <a href={localizePath('/', locale)} class="me-auto flex min-w-28 items-center lg:shrink-0" aria-label={`${t.siteName} — ${t.home}`}>
-      <Image src={logo} alt="unfoldingWord" width={200} height={35} densities={[1, 2]} loading="eager" fetchpriority="high" class="h-auto w-40 lg:w-44" />
+<header class="site-header">
+  <div class="hdr-row">
+    <a href={localizePath('/', locale)} class="hdr-logo" aria-label={`${t.siteName} — ${t.home}`}>
+      <Image src={logo} alt="unfoldingWord" width={250} height={44} densities={[1, 2]} loading="eager" fetchpriority="high" />
     </a>
 
-    <nav id="site-nav" class="site-nav" aria-label={t.mainNav} data-open="false">
-      <ul class="nav-list">
-        {
-          NAV.map((item, i) => (
-            <li class="nav-item" data-current={isCurrent(item) ? 'true' : undefined}>
-              {item.children ? (
-                <>
-                  <button type="button" class="nav-top" aria-expanded="false" aria-controls={`nav-sub-${i}`}>
+    <div class="hdr-end">
+      <nav id="site-nav" class="site-nav" aria-label={t.mainNav} data-open="false">
+        <ul class="nav-list">
+          {
+            NAV.map((item, i) => (
+              <li class="nav-item">
+                {item.children ? (
+                  <>
+                    <button type="button" class="nav-top" aria-expanded="false" aria-controls={`nav-sub-${i}`}>
+                      {label(item.key)}
+                      <span class="sub-arrow" aria-hidden="true">
+                        <svg viewBox="0 0 320 512"><path d={ANGLE} /></svg>
+                      </span>
+                    </button>
+                    <ul id={`nav-sub-${i}`} class="nav-sub" hidden>
+                      {item.children.map((child, j) =>
+                        child.children ? (
+                          <li class="has-flyout">
+                            <a class="nav-sub-link" href={href(child)} aria-current={current(child)}>
+                              {label(child.key)}
+                            </a>
+                            <button type="button" class="flyout-toggle" aria-expanded="false" aria-controls={`nav-sub-${i}-${j}`} aria-label={label(child.key)}>
+                              <svg viewBox="0 0 320 512" aria-hidden="true"><path d={ANGLE} /></svg>
+                            </button>
+                            <ul id={`nav-sub-${i}-${j}`} class="nav-sub nav-flyout" hidden>
+                              {child.children.map((g) => (
+                                <li>
+                                  <a class="nav-sub-link" href={href(g)} aria-current={current(g)}>
+                                    {label(g.key)}
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          </li>
+                        ) : (
+                          <li>
+                            <a class="nav-sub-link" href={href(child)} aria-current={current(child)} {...ext(child)}>
+                              {label(child.key)}
+                            </a>
+                          </li>
+                        ),
+                      )}
+                    </ul>
+                  </>
+                ) : (
+                  <a class="nav-top" href={href(item)} aria-current={current(item)}>
                     {label(item.key)}
-                    <Icon name="chevron-down" class="size-4 transition-transform" />
-                  </button>
-                  <ul id={`nav-sub-${i}`} class="nav-sub" hidden>
-                    {item.children.map((child) => (
-                      <li>
-                        <a href={href(child)} aria-current={child.href === basePath ? 'page' : undefined} {...(child.external ? { rel: 'noopener' } : {})}>
-                          {label(child.key)}
-                          {child.external && <Icon name="external" class="size-3.5 opacity-60" />}
-                        </a>
-                        {child.children && (
-                          <ul class="nav-sub-nested">
-                            {child.children.map((g) => (
-                              <li>
-                                <a href={href(g)} aria-current={g.href === basePath ? 'page' : undefined}>
-                                  {label(g.key)}
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              ) : (
-                <a class="nav-top" href={href(item)} aria-current={item.href === basePath ? 'page' : undefined}>
-                  {label(item.key)}
-                </a>
-              )}
-            </li>
-          ))
-        }
-      </ul>
-      <div class="mt-6 border-t border-line pt-6 lg:hidden">
-        <a href="/search/" class="mb-4 flex min-h-11 items-center gap-2 font-bold text-ocean no-underline min-[360px]:hidden">
-          <Icon name="search" class="size-5" />{t.search}
-        </a>
-        <LanguageSwitcher locale={locale} basePath={switcherPath} translations={translations} variant="list" />
-      </div>
-    </nav>
+                  </a>
+                )}
+              </li>
+            ))
+          }
+          <li class="nav-item nav-search">
+            <a class="nav-top" href="/search/" aria-current={basePath === '/search/' ? 'page' : undefined}>
+              <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
+              <span class="nav-search-label">{t.search}</span>
+            </a>
+          </li>
+          <LanguageSwitcher locale={locale} basePath={switcherPath} translations={translations} />
+        </ul>
+      </nav>
 
-    <a href="/search/" class="inline-flex size-11 shrink-0 items-center max-[359px]:hidden lg:flex justify-center rounded-full text-ocean hover:bg-inspire-50" aria-label={t.search}>
-      <Icon name="search" class="size-5.5" />
-    </a>
-    <div class="hidden shrink-0 lg:block">
-      <LanguageSwitcher locale={locale} basePath={switcherPath} translations={translations} />
+      <a href={localizePath('/give/', locale)} class="hdr-donate">{t.donateNow}</a>
+
+      <button type="button" class="menu-toggle" aria-controls="site-nav" aria-expanded="false">
+        <span class="sr-only" data-label-open>{t.menu}</span>
+        <span class="sr-only hidden" data-label-close>{t.closeMenu}</span>
+        <svg class="icon-open" viewBox="0 0 29 29" aria-hidden="true"><path d="M3 7.5h23M3 14.5h23M3 21.5h23" /></svg>
+        <svg class="icon-close hidden" viewBox="0 0 29 29" aria-hidden="true"><path d="M1.5 1.5l26 26M27.5 1.5l-26 26" /></svg>
+      </button>
     </div>
-    <a href={localizePath('/give/', locale)} class="uw-btn uw-btn-give shrink-0 whitespace-nowrap !min-h-10 !px-2.5 !py-2 text-[0.8125rem] min-[400px]:!px-3 min-[400px]:text-sm sm:!px-4 lg:!min-h-11 lg:!px-5">{t.donate}</a>
-    <button type="button" class="menu-toggle -me-2 inline-flex size-11 shrink-0 items-center justify-center rounded-full text-ocean lg:hidden" aria-controls="site-nav" aria-expanded="false">
-      <span class="sr-only" data-label-open>{t.menu}</span>
-      <span class="sr-only hidden" data-label-close>{t.closeMenu}</span>
-      <Icon name="menu" class="icon-open size-7" />
-      <Icon name="close" class="icon-close hidden size-7" />
-    </button>
   </div>
 </header>
 
-<style>
-  @reference '../../styles/global.css';
-
-  /* ---- Phone / tablet: slide-down panel ---- */
-  .site-nav {
-    position: fixed;
-    inset: 4rem 0 0 0;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    background: var(--color-white, #fff);
-    padding: 1rem var(--spacing-gutter) 3rem;
-    display: none;
-  }
-  .site-nav[data-open='true'] { display: block; }
-  .nav-list { display: flex; flex-direction: column; }
-  .nav-item { border-bottom: 1px solid var(--color-line); }
-  .nav-top {
-    display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 0.5rem;
-    min-height: 3.25rem; padding-block: 0.75rem;
-    font-family: var(--font-heading); font-weight: 800; font-size: 1.125rem;
-    color: var(--color-ocean); text-decoration: none; text-align: start;
-  }
-  .nav-top[aria-expanded='true'] :global(svg) { transform: rotate(180deg); }
-  .nav-sub { padding-bottom: 0.75rem; }
-  .nav-sub a, .nav-sub-nested a {
-    display: flex; align-items: center; gap: 0.35rem;
-    min-height: 2.75rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem;
-    color: var(--color-ink); text-decoration: none; font-weight: 600;
-  }
-  .nav-sub a:hover, .nav-sub-nested a:hover { background: var(--color-mist); color: var(--color-ocean); }
-  .nav-sub a[aria-current='page'], .nav-sub-nested a[aria-current='page'] { color: var(--color-ocean); background: var(--color-inspire-50); }
-  .nav-sub-nested { padding-inline-start: 1rem; border-inline-start: 2px solid var(--color-inspire-100); margin-inline-start: 0.75rem; }
-  .nav-sub-nested a { font-weight: 500; min-height: 2.5rem; }
-  :global(html.nav-open) { overflow: hidden; }
-
-  /* ---- Desktop: horizontal bar with dropdowns ----
-     The bar gets its own full-width row under the logo, search, language and
-     Give controls, so long translated menus have the whole container width
-     instead of squeezing beside the logo. It wraps only as a last resort. */
-  @media (min-width: 64rem) {
-    .site-nav { position: static; display: block; order: 99; flex: 1 0 100%; min-width: 0; padding: 0; overflow: visible; background: none; }
-    .nav-list { flex-flow: row wrap; align-items: center; gap: 0.125rem; margin-inline-start: -0.65rem; }
-    .nav-item { position: relative; border: 0; }
-    .nav-top {
-      width: auto; min-height: 2.75rem; padding: 0.5rem 0.65rem; border-radius: 999px;
-      font-size: 0.9375rem; white-space: nowrap;
+{/* Decide desktop row vs. menu toggle before the first paint: production's
+    breakpoint is 1057px, but a translated menu (or ours with search and
+    language added) may not fit beside the logo. Then data-collapsed switches
+    the header to the toggle layout. Runs again on resize and font load. */}
+<script is:inline>
+  (function () {
+    var h = document.querySelector('.site-header');
+    if (!h) return;
+    var wide = window.matchMedia('(min-width: 1057px)');
+    var last = null;
+    function fit() {
+      var collapsed = false;
+      if (wide.matches) {
+        h.removeAttribute('data-collapsed');
+        var row = h.querySelector('.hdr-row');
+        var logo = h.querySelector('.hdr-logo');
+        var end = h.querySelector('.hdr-end');
+        var cs = getComputedStyle(row);
+        var avail = row.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+        var need = logo.getBoundingClientRect().width + 20 + end.scrollWidth;
+        collapsed = need > avail + 0.5;
+      }
+      if (collapsed) h.setAttribute('data-collapsed', '');
+      else h.removeAttribute('data-collapsed');
+      var mode = wide.matches && !collapsed ? 'bar' : 'panel';
+      if (mode !== last) {
+        last = mode;
+        h.dataset.mode = mode;
+        h.dispatchEvent(new CustomEvent('header:mode'));
+      }
     }
-    .nav-top:hover, .nav-item[data-current='true'] > .nav-top { background: var(--color-inspire-50); }
-    .nav-sub {
-      position: absolute; top: calc(100% + 0.25rem); inset-inline-start: 0; z-index: 10; min-width: 17rem; max-height: 75vh; overflow-y: auto;
-      padding: 0.5rem; background: #fff; border: 1px solid var(--color-line); border-radius: var(--radius-card);
-      box-shadow: var(--shadow-raised);
+    fit();
+    window.addEventListener('resize', fit);
+    if (document.fonts) {
+      document.fonts.ready.then(fit);
+      document.fonts.addEventListener && document.fonts.addEventListener('loadingdone', fit);
     }
-    .nav-item:last-child .nav-sub, .nav-item:nth-last-child(2) .nav-sub { inset-inline-start: auto; inset-inline-end: 0; }
-    .nav-sub a { font-size: 0.9375rem; }
+  })();
+</script>
+
+<style is:global>
+  /* Scoped by hand to .site-header so LanguageSwitcher's item shares it. */
+  .site-header {
+    --hdr-menu-ink: #33373d; /* production dropdown text */
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: #fff;
   }
-  /* Compact pills on narrower desktops, and always for Burmese, whose
-     labels are the longest. Burmese still wraps to two rows below ~1100px. */
-  @media (min-width: 64rem) and (max-width: 80rem) {
-    .nav-top { padding-inline: 0.45rem; font-size: 0.875rem; }
-    .nav-list { margin-inline-start: -0.45rem; }
+  .site-header .hdr-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    min-height: 96px;
+    padding: 10px 20px;
+    gap: 20px;
   }
-  @media (min-width: 64rem) {
-    :global(html[data-script='myanmar']) .nav-top { padding-inline: 0.45rem; font-size: 0.875rem; }
-    :global(html[data-script='myanmar']) .nav-list { margin-inline-start: -0.45rem; }
+  .site-header .hdr-logo { display: flex; align-items: center; flex: 0 1 146px; min-width: 0; }
+  .site-header .hdr-logo img { display: block; width: 100%; height: auto; }
+  @media (min-width: 768px) { .site-header .hdr-logo { flex-basis: 199px; } }
+  @media (min-width: 1057px) { .site-header .hdr-logo { flex: none; width: 175px; } }
+
+  .site-header .hdr-end { display: flex; align-items: center; justify-content: flex-end; gap: 12px; flex: none; }
+  @media (min-width: 768px) { .site-header .hdr-end { gap: 20px; } }
+
+  /* Donate Now: production's Virtuous button. */
+  .site-header .hdr-donate {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 56px; padding: 12px 16px; border-radius: 4px;
+    font-family: Arial, 'Helvetica Neue', Helvetica, var(--font-sans); font-size: 14px; font-weight: 600; line-height: 16.8px;
+    color: #fff; background: var(--color-kindle); text-decoration: none; white-space: nowrap;
+    transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .site-header .hdr-donate:hover, .site-header .hdr-donate:focus-visible { background: var(--color-inspire); color: #fff; }
+  .site-header .hdr-donate:focus-visible { outline: 3px solid var(--color-tech); outline-offset: 2px; }
+
+  /* Menu toggle: three thin lines, a thin X when open. */
+  .site-header .menu-toggle {
+    display: inline-flex; align-items: center; justify-content: center; flex: none;
+    width: 44px; height: 44px; padding: 7.25px; border-radius: 3px;
+    color: var(--color-tech); background: transparent;
+  }
+  .site-header .menu-toggle svg { width: 29px; height: 29px; fill: none; stroke: currentColor; stroke-width: 1.25; }
+  .site-header .menu-toggle:hover, .site-header .menu-toggle:focus-visible { color: var(--color-kindle); }
+
+  .site-header .sub-arrow { display: inline-flex; padding: 4px; margin-block: -10px; }
+  .site-header .sub-arrow svg, .site-header .flyout-toggle svg { width: 14px; height: 14px; fill: currentColor; }
+
+  /* ---- Panel (below 1057px, or when the row does not fit) ---- */
+  .site-header .site-nav {
+    position: absolute; top: 80px; inset-inline: 0; z-index: 50;
+    max-height: calc(100vh - 80px); overflow-y: auto; overscroll-behavior: contain;
+    background: #fff;
+    transform: scaleY(0); transform-origin: top; visibility: hidden;
+    transition: transform 0.3s, visibility 0s linear 0.3s;
+  }
+  @supports (height: 100dvh) { .site-header .site-nav { max-height: calc(100dvh - 80px); } }
+  .site-header .site-nav[data-open='true'] { transform: scaleY(1); visibility: visible; transition: transform 0.3s, visibility 0s; }
+  .site-header .nav-list, .site-header .nav-sub { list-style: none; margin: 0; padding: 0; }
+  .site-header .nav-top, .site-header .nav-sub-link {
+    display: flex; width: 100%; align-items: center; justify-content: center;
+    padding: 10px 20px; margin: 0;
+    font-family: var(--font-heading); font-size: 14px; font-weight: 900; line-height: 20px;
+    color: var(--hdr-menu-ink); background: transparent; text-decoration: none; text-align: center;
+  }
+  .site-header .nav-sub-link, .site-header .has-flyout { font-size: 11.05px; border-inline-start: 8px solid transparent; }
+  .site-header .nav-lang .nav-sub-link { font-size: 13px; }
+  .site-header .nav-top:hover, .site-header .nav-top:focus-visible, .site-header .nav-top[aria-expanded='true'], .site-header .nav-top[aria-current],
+  .site-header .nav-sub-link:hover, .site-header .nav-sub-link:focus-visible, .site-header .nav-sub-link[aria-current],
+  .site-header .has-flyout:hover, .site-header .has-flyout:has(> .flyout-toggle[aria-expanded='true']) {
+    color: #fff; background: var(--color-kindle);
+  }
+  .site-header .has-flyout { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; }
+  .site-header .has-flyout > .nav-sub-link { width: auto; padding-inline-end: 0; border-inline-start: 0; background: transparent; color: inherit; font-size: 11.05px; }
+  .site-header .has-flyout > .nav-sub-link:hover, .site-header .has-flyout > .nav-sub-link:focus-visible { background: transparent; color: inherit; }
+  .site-header .has-flyout:hover > .nav-sub-link, .site-header .has-flyout:hover > .flyout-toggle { color: #fff; }
+  .site-header .has-flyout { color: var(--hdr-menu-ink); }
+  .site-header .flyout-toggle { display: inline-flex; align-items: center; padding: 10px 20px 10px 4px; color: inherit; background: transparent; }
+  .site-header .flyout-toggle svg { width: 13px; height: 13px; }
+  .site-header .has-flyout > .nav-flyout { flex: 0 0 100%; background: #fff; }
+  .site-header .search-icon { width: 14px; height: 14px; margin-inline-end: 6px; fill: none; stroke: currentColor; stroke-width: 2.5; }
+  .site-header .lang-short, .site-header .lang-globe { display: none; }
+  .site-header .nav-top:focus-visible, .site-header .nav-sub-link:focus-visible, .site-header .flyout-toggle:focus-visible {
+    outline: 2px solid var(--color-tech); outline-offset: -2px;
+  }
+  html.nav-open { overflow: hidden; }
+
+  /* ---- Bar (1057px and up, when it fits) ---- */
+  @media (min-width: 1057px) {
+    .site-header:not([data-collapsed]) .menu-toggle { display: none; }
+    .site-header:not([data-collapsed]) .site-nav {
+      position: static; max-height: none; overflow: visible; transform: none; visibility: visible; transition: none; background: none;
+    }
+    .site-header:not([data-collapsed]) .nav-list { display: flex; align-items: center; flex-wrap: nowrap; }
+    .site-header:not([data-collapsed]) .nav-item { position: relative; margin-inline: 5px; }
+    .site-header:not([data-collapsed]) .nav-item:first-child { margin-inline-start: 0; }
+    .site-header:not([data-collapsed]) .nav-item:last-child { margin-inline-end: 0; }
+    .site-header:not([data-collapsed]) .nav-top {
+      position: relative; width: auto; padding: 4px 0; white-space: nowrap;
+      color: var(--color-tech); background: transparent; transition: color 0.4s;
+    }
+    .site-header:not([data-collapsed]) .nav-top::after {
+      content: ''; position: absolute; inset-inline-start: 0; bottom: 0; width: 100%; height: 3px;
+      background: var(--color-kindle); opacity: 0; transition: opacity 0.4s;
+    }
+    .site-header:not([data-collapsed]) .nav-top:hover, .site-header:not([data-collapsed]) .nav-top:focus-visible,
+    .site-header:not([data-collapsed]) .nav-top[aria-expanded='true'], .site-header:not([data-collapsed]) .nav-top[aria-current] {
+      color: var(--color-kindle); background: transparent;
+    }
+    .site-header:not([data-collapsed]) .nav-top:hover::after, .site-header:not([data-collapsed]) .nav-top:focus-visible::after,
+    .site-header:not([data-collapsed]) .nav-top[aria-expanded='true']::after, .site-header:not([data-collapsed]) .nav-top[aria-current]::after { opacity: 1; }
+    .site-header:not([data-collapsed]) .nav-top:focus-visible { outline-offset: 2px; }
+    .site-header:not([data-collapsed]) .nav-search .nav-top { padding-inline: 4px; }
+    .site-header:not([data-collapsed]) .search-icon { width: 16px; height: 16px; margin: 2px 0; stroke-width: 2.25; }
+    .site-header:not([data-collapsed]) .nav-search-label, .site-header:not([data-collapsed]) .lang-long {
+      position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+    }
+    .site-header:not([data-collapsed]) .lang-short { display: inline; }
+    .site-header:not([data-collapsed]) .lang-globe { display: inline-block; width: 14px; height: 14px; margin-inline-end: 4px; fill: none; stroke: currentColor; stroke-width: 2.25; }
+
+    /* Dropdown panels: square, unshadowed, shrink to content. */
+    .site-header:not([data-collapsed]) .nav-sub {
+      position: absolute; top: calc(100% + 10px); inset-inline-start: 0; z-index: 3;
+      width: max-content; min-width: 130px; max-width: 1000px; background: #fff;
+    }
+    .site-header:not([data-collapsed]) .nav-item > .nav-sub::before {
+      /* Bridge the 10px gap so the pointer can travel to the panel. */
+      content: ''; position: absolute; inset-inline: 0; bottom: 100%; height: 10px;
+    }
+    .site-header:not([data-collapsed]) .nav-sub.align-end, .site-header:not([data-collapsed]) .nav-lang > .nav-sub { inset-inline-start: auto; inset-inline-end: 0; }
+    .site-header:not([data-collapsed]) .nav-lang > .nav-sub { max-height: calc(100vh - 80px); overflow-y: auto; }
+    .site-header:not([data-collapsed]) .nav-sub-link {
+      justify-content: flex-start; text-align: start; padding: 13px 20px; font-size: 13px; white-space: nowrap;
+    }
+    .site-header:not([data-collapsed]) .has-flyout { position: relative; justify-content: flex-start; flex-wrap: nowrap; }
+    .site-header:not([data-collapsed]) .has-flyout { border-inline-start: 8px solid transparent; }
+    .site-header:not([data-collapsed]) .has-flyout > .nav-sub-link { padding: 13px 0 13px 20px; padding-inline: 20px 0; font-size: 13px; }
+    .site-header:not([data-collapsed]) .flyout-toggle { padding-block: 13px; padding-inline: 4px 20px; align-self: stretch; }
+    .site-header:not([data-collapsed]) .flyout-toggle svg { transform: rotate(-90deg); }
+    [dir='rtl'] .site-header:not([data-collapsed]) .flyout-toggle svg { transform: rotate(90deg); }
+    .site-header:not([data-collapsed]) .nav-flyout { top: 0; inset-inline-start: 100%; }
+  }
+
+  /* Myanmar glyphs need more line height than 20px. */
+  html[data-script='myanmar'] .site-header .nav-top, html[data-script='myanmar'] .site-header .nav-sub-link { line-height: 28px; }
+  @media (min-width: 1057px) {
+    html[data-script='myanmar'] .site-header:not([data-collapsed]) .nav-top { padding-block: 0; }
   }
 </style>
 
@@ -174,11 +307,10 @@ const isCurrent = (item: NavItem): boolean =>
   const header = document.querySelector<HTMLElement>('.site-header');
   const nav = header?.querySelector<HTMLElement>('#site-nav');
   const toggle = header?.querySelector<HTMLButtonElement>('.menu-toggle');
-  const desktop = window.matchMedia('(min-width: 64rem)');
+  const isBar = () => header?.dataset.mode === 'bar';
 
-  // Anchor links scroll their target below the sticky header. Its height
-  // changes with the breakpoint and with how long the translated menu is,
-  // so global.css reads it from --header-h (5rem until this runs).
+  // Anchor links scroll their target below the sticky header. global.css
+  // reads its height from --header-h (5rem until this runs).
   if (header && 'ResizeObserver' in window) {
     new ResizeObserver(([entry]) => {
       document.documentElement.style.setProperty('--header-h', `${Math.ceil(entry.borderBoxSize[0].blockSize)}px`);
@@ -193,7 +325,7 @@ const isCurrent = (item: NavItem): boolean =>
     toggle.querySelector('.icon-close')?.classList.toggle('hidden', !open);
     toggle.querySelector('[data-label-open]')?.classList.toggle('hidden', open);
     toggle.querySelector('[data-label-close]')?.classList.toggle('hidden', !open);
-    document.documentElement.classList.toggle('nav-open', open && !desktop.matches);
+    document.documentElement.classList.toggle('nav-open', open && !isBar());
   }
   toggle?.addEventListener('click', () => {
     const open = nav?.dataset.open !== 'true';
@@ -201,31 +333,93 @@ const isCurrent = (item: NavItem): boolean =>
     if (open) nav?.querySelector<HTMLElement>('.nav-top')?.focus();
   });
 
+  // Every disclosure button in the menu: top-level sections, the language
+  // item, and the "For translators" flyout.
   const tops = [...(nav?.querySelectorAll<HTMLButtonElement>('button.nav-top') ?? [])];
-  function closeAll(except?: HTMLButtonElement) {
-    for (const b of tops) {
-      if (b === except) continue;
-      b.setAttribute('aria-expanded', 'false');
-      const sub = document.getElementById(b.getAttribute('aria-controls')!);
-      if (sub) sub.hidden = true;
+  const flyouts = [...(nav?.querySelectorAll<HTMLButtonElement>('button.flyout-toggle') ?? [])];
+  const panelOf = (b: HTMLButtonElement) => document.getElementById(b.getAttribute('aria-controls')!);
+  const hoverOpened = new WeakSet<HTMLButtonElement>();
+
+  function set(b: HTMLButtonElement, open: boolean) {
+    b.setAttribute('aria-expanded', String(open));
+    const panel = panelOf(b);
+    if (!panel) return;
+    panel.hidden = !open;
+    if (!open) {
+      hoverOpened.delete(b);
+      panel.querySelectorAll<HTMLButtonElement>('button.flyout-toggle').forEach((f) => set(f, false));
+      return;
+    }
+    // Keep a dropdown on screen: align it to the item's end if it would overflow.
+    if (isBar() && panel.classList.contains('nav-sub') && !panel.classList.contains('nav-flyout')) {
+      panel.classList.remove('align-end');
+      const r = panel.getBoundingClientRect();
+      if (r.right > document.documentElement.clientWidth || r.left < 0) panel.classList.add('align-end');
     }
   }
+  function closeAll(except?: HTMLButtonElement) {
+    for (const b of tops) if (b !== except) set(b, false);
+  }
+
   for (const b of tops) {
     b.addEventListener('click', () => {
       const open = b.getAttribute('aria-expanded') === 'true';
-      if (desktop.matches) closeAll(b);
-      b.setAttribute('aria-expanded', String(!open));
-      const sub = document.getElementById(b.getAttribute('aria-controls')!);
-      if (sub) sub.hidden = open;
+      if (isBar()) {
+        closeAll(b);
+        // A click on a panel the pointer just opened keeps it open.
+        if (open && hoverOpened.has(b)) {
+          hoverOpened.delete(b);
+          return;
+        }
+      }
+      set(b, !open);
     });
   }
+  for (const f of flyouts) f.addEventListener('click', () => set(f, f.getAttribute('aria-expanded') !== 'true'));
+
+  // Bar layout: open on hover, close 250ms after the pointer leaves.
+  function hover(li: HTMLElement, b: HTMLButtonElement, single: boolean) {
+    let timer: number | undefined;
+    li.addEventListener('pointerenter', (e) => {
+      if (!isBar() || e.pointerType !== 'mouse') return;
+      clearTimeout(timer);
+      if (b.getAttribute('aria-expanded') !== 'true') {
+        if (single) closeAll(b);
+        set(b, true);
+        hoverOpened.add(b);
+      }
+    });
+    li.addEventListener('pointerleave', (e) => {
+      if (!isBar() || e.pointerType !== 'mouse') return;
+      timer = window.setTimeout(() => {
+        if (!li.contains(document.activeElement) || hoverOpened.has(b)) set(b, false);
+      }, 250);
+    });
+  }
+  for (const b of tops) hover(b.parentElement!, b, true);
+  for (const f of flyouts) hover(f.parentElement!, f, false);
+
+  // Bar layout: close a dropdown when keyboard focus leaves it.
+  nav?.addEventListener('focusout', (e) => {
+    if (!isBar()) return;
+    const to = e.relatedTarget as Node | null;
+    for (const b of tops) {
+      if (b.getAttribute('aria-expanded') === 'true' && to && !b.parentElement!.contains(to)) set(b, false);
+    }
+  });
   document.addEventListener('click', (e) => {
-    if (desktop.matches && nav && !nav.contains(e.target as Node)) closeAll();
+    if (isBar() && nav && !nav.contains(e.target as Node)) closeAll();
   });
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
+    const openFly = flyouts.find((f) => f.getAttribute('aria-expanded') === 'true' && f.parentElement!.contains(document.activeElement));
+    if (openFly) {
+      set(openFly, false);
+      openFly.focus();
+      return;
+    }
     const openTop = tops.find((b) => b.getAttribute('aria-expanded') === 'true');
-    if (desktop.matches && openTop) {
+    if (isBar() && openTop) {
       closeAll();
       openTop.focus();
     } else if (nav?.dataset.open === 'true') {
@@ -233,7 +427,7 @@ const isCurrent = (item: NavItem): boolean =>
       toggle?.focus();
     }
   });
-  desktop.addEventListener('change', () => {
+  header?.addEventListener('header:mode', () => {
     setMenu(false);
     closeAll();
   });

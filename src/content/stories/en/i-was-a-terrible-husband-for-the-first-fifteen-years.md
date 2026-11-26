@@ -8,6 +8,8 @@ image: stories/i-was-a-terrible-husband-for-the-first-fifteen-years.jpg
 imageAlt: A man gestures angrily at a distressed woman in a headscarf who holds her hand to her forehead on a couch
 sensitive: true
 redirectFrom: [/eurasia/i-was-a-terrible-husband-for-the-first-fifteen-years/]
+category: Eurasia
+related: [hundreds-of-iranians-introduced-to-christ, in-the-republic-of-iran-for-the-church-to-be-planted, hope-in-harrowing-times]
 ---
 “I was a terrible husband for the first fifteen years of our marriage. Every weekend, I would get drunk, abuse my wife, and ridicule her. We mistreated each other terribly,” said Siroos. “But God amazingly changed all that.”
 

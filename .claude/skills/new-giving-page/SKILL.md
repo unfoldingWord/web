@@ -47,7 +47,7 @@ sections:
 ---
 ```
 
-3. Check every line against the writing rules in `docs/content-guide.md` (unfoldingWord camelCase, no ampersands, local churches as the heroes).
+3. Check every line against the writing rules in `docs/content-guide.md` (unfoldingWord camelCase, the old site's Title Case and "&" where it uses them, local churches as the heroes).
 4. Should the page be in the main menu? Usually not — campaign pages are linked from emails. Only add it to `NAV` in `src/lib/site.ts` if the editor asks.
 
 Done when `npm run build` passes and the page renders the form in the local or preview build.

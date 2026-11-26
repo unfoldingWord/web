@@ -7,6 +7,9 @@ import { SITE } from '../lib/site';
 import { organizationNode, websiteNode, serializeGraph } from '../lib/jsonld';
 import Header from '../components/site/Header.astro';
 import Footer from '../components/site/Footer.astro';
+import LandingHeader from '../components/site/LandingHeader.astro';
+import LandingFooter from '../components/site/LandingFooter.astro';
+import ScrollTop from '../components/site/ScrollTop.astro';
 import Analytics from '../components/site/Analytics.astro';
 
 interface Props {
@@ -59,6 +62,8 @@ const fullTitle = basePath === '/' ? `${SITE.name} — ${title}` : `${title} | $
 const social = ogImage ?? new URL('/brand/og-default.jpg', site).href;
 const fontHref = fontHrefFor(locale);
 const alternates = fallback ? [] : locales.filter((l) => translations.includes(l.code));
+// Giving pages (template: giving) use production's reduced landing chrome.
+const landing = pageType === 'giving';
 const graph = serializeGraph([organizationNode(), websiteNode(def.tag), ...jsonLd]);
 ---
 
@@ -107,7 +112,7 @@ const graph = serializeGraph([organizationNode(), websiteNode(def.tag), ...jsonL
   </head>
   <body class="flex min-h-dvh flex-col">
     <a class="skip-link" href="#main">{t.skipToContent}</a>
-    <Header locale={locale} basePath={basePath} switcherPath={switcherPath ?? basePath} translations={translations} />
+    {landing ? <LandingHeader locale={locale} basePath={basePath} /> : <Header locale={locale} basePath={basePath} switcherPath={switcherPath ?? basePath} translations={translations} />}
     {
       fallback && (
         <div class="border-b border-kindle/40 bg-kindle-50">
@@ -118,6 +123,7 @@ const graph = serializeGraph([organizationNode(), websiteNode(def.tag), ...jsonL
     <main id="main" tabindex="-1" class="flex-1 focus:outline-none" data-pagefind-body={!fallback && !noindex && !experiment ? true : undefined} lang={fallback ? 'en' : undefined} dir={fallback && def.dir === 'rtl' ? 'ltr' : undefined}>
       <slot />
     </main>
-    <Footer locale={locale} />
+    {landing ? <LandingFooter locale={locale} /> : <Footer locale={locale} />}
+    <ScrollTop locale={locale} />
   </body>
 </html>

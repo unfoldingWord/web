@@ -2,6 +2,8 @@
 title: Privacy Policy
 description: How unfoldingWord collects, uses, protects and discloses information from visitors to its website, and the choices you have about your information.
 schemaType: WebPage
+heading: Privacy Policy
+bodyStyle: legal
 updated: 2025-08-15
 ---
 
@@ -47,7 +49,7 @@ We collect this information:
 - Directly from you when you provide it to us.
 - Automatically as you navigate through the site. Information collected automatically may include usage details, IP addresses, and information collected through cookies or other legal tracking technologies.
 
-### Information You Provide to Us
+*Information You Provide to Us*
 
 The information we collect on or through our Website may include:
 

@@ -283,7 +283,7 @@
 /pub                                        https://forum.door43.org/t/how-to-manually-publish-your-resource/2295
 /team43                                     https://door43.org/en/contact/
 /tn                                         https://door43.org/u/unfoldingWord/en_tn/v27
-/tools/tr                                   http://translationrecorder.com/
+/tools/tr                                   https://bibletranslationtools.org/recorder/
 /www.facebook.com/unfoldingWord             https://www.facebook.com/unfoldingWord/
 /contact/www.linkedin.com/company/unfoldingword https://www.linkedin.com/company/unfoldingword
 /blog/unfoldingword-releases-translationcore-20 https://forum.door43.org/t/translationcore-2-0-release-notes/394

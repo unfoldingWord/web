@@ -9,6 +9,8 @@ imageAlt: A woman with raised hands and a man stand facing a screen showing a cr
 excerpt: Translated Open Bible Stories lead twenty people to Christ and a new house church.
 sensitive: true
 redirectFrom: [/eurasia/new-believers-in-iran/]
+category: Eurasia
+related: [hundreds-of-iranians-introduced-to-christ, in-the-republic-of-iran-for-the-church-to-be-planted, i-was-a-terrible-husband-for-the-first-fifteen-years]
 ---
 Thanks to the first-ever translation of unfoldingWord® Open Bible Stories into another Iranian language, twenty people have come to Christ, and a new house church has been launched in Iran.
 

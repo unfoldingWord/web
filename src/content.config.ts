@@ -40,6 +40,12 @@ const action = z.object({
   label: z.string(),
   href,
   style: z.enum(['primary', 'secondary', 'give']).default('primary'),
+  // A Donate button for one campaign: the Virtuous form id (the `data-rd`
+  // value from the editor or Virtuous, never from memory). The button is
+  // then Virtuous's own "Donate Now" button, which opens that form in a
+  // modal, as production does; `href` stays as the fallback link until it
+  // loads (and wherever it cannot: previews, no script).
+  formId: z.string().regex(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/, 'A Virtuous form id is the data-rd value from the embed code, like 16dec80a-ad5e-470e-ae62-4ed13821ccca').optional(),
 });
 
 const translationStatus = z.enum(['source', 'draft', 'reviewed']).default('source');
@@ -55,8 +61,31 @@ const hero = z.object({
   lead: z.string().optional(),
   image: imagePath.optional(),
   imageAlt: z.string().optional(),
-  variant: z.enum(['photo', 'ocean', 'light', 'split']).default('ocean'),
+  // banner — production's page-title band: photo under a 50% Ocean overlay,
+  //   centered 32px title (the default opener for standard pages)
+  // project — photo band with a text column (wbwn country pages)
+  // heading — no band: a centered 40px title and line (donation confirmation)
+  // feature — the old post layout (forms): a black band with a 42px title and
+  //   the photo in a 920px column, then `lead` as Markdown text between
+  //   100px spacers
+  variant: z.enum(['photo', 'ocean', 'light', 'split', 'banner', 'project', 'heading', 'feature']).default('ocean'),
   actions: z.array(action).default([]),
+  // banner: uppercase title (production does this on most pages, not ccbt/*)
+  uppercase: z.boolean().optional(),
+  // banner: more title lines in the same style (about, overview)
+  lines: z.array(z.string()).optional(),
+  // banner: a short Kindle rule between the title lines
+  divider: z.boolean().optional(),
+  // banner: a smaller line under the title
+  subtitle: z.string().optional(),
+  // project: which half of the band holds the text
+  contentPosition: z.enum(['start', 'end']).optional(),
+  // banner: which part of the photo the band shows (default: the middle)
+  imagePosition: z.enum(['top', 'center', 'bottom']).optional(),
+  // project: a Virtuous form id (from the editor or Virtuous) shown as
+  // Virtuous's own "Donate Now" button, which opens the form in a modal, as
+  // production does. The `actions` stay as the fallback until it loads.
+  donateFormId: z.string().optional(),
 }).refine(hasImageAlt, missingAlt);
 
 const prose = z.object({
@@ -64,9 +93,32 @@ const prose = z.object({
   eyebrow: z.string().optional(),
   title: z.string().optional(),
   body: z.string(),
-  width: z.enum(['prose', 'wide']).default('prose'),
+  // narrow — production's 800px text column (vision and mission)
+  width: z.enum(['prose', 'wide', 'narrow']).default('prose'),
   background: z.enum(['white', 'mist', 'ocean']).default('white'),
   serif: z.boolean().default(false),
+  // title — only the title (and divider) centered, the text start-aligned
+  //   (vision and mission "Our Mission")
+  align: z.enum(['start', 'center', 'title']).optional(),
+  // A centered 19.2px light line under the title, 20px above the next
+  // section's heading (vision and mission "THE CHURCH IN EVERY PEOPLE GROUP")
+  lead: z.string().optional(),
+  // A short Kindle rule under the title (about "Our Strategy")
+  divider: z.boolean().optional(),
+  // Buttons centered under the text (production's "Donate Now")
+  actions: z.array(action).optional(),
+  // A white icon above the title (wbwn "Prayers" box), from ui/Icon.astro
+  icon: z.string().optional(),
+  // inset — production's 10px column padding around heading and text
+  // (tools-technology, global-regional-forums)
+  inset: z.boolean().optional(),
+  // large — 19.36/29.04 text (global-regional-forums)
+  textSize: z.enum(['normal', 'large']).optional(),
+  // Production's Inspire accents (careers): **bold** text shows in Inspire,
+  // and a `####` line is a 20px bold Inspire statement
+  accent: z.boolean().optional(),
+  // Lists indented 20px with no space under them (statement of faith)
+  compactLists: z.boolean().optional(),
 });
 
 const cards = z.object({
@@ -74,8 +126,20 @@ const cards = z.object({
   eyebrow: z.string().optional(),
   title: z.string().optional(),
   intro: z.string().optional(),
-  columns: z.union([z.literal(2), z.literal(3), z.literal(4)]).default(3),
-  background: z.enum(['white', 'mist', 'ocean']).default('white'),
+  columns: z.union([z.literal(2), z.literal(3), z.literal(4), z.literal(5)]).default(3),
+  // kindle — the Kindle 25% tint band (wbwn region cards)
+  background: z.enum(['white', 'mist', 'ocean', 'kindle']).default('white'),
+  // plain — production's columns: no card, Inspire title, a Learn More button
+  // centered — plain and centered (for-translators)
+  // outlined — 1px Kindle border, centered title, outline + filled buttons (wbwn)
+  // plain-centered — people cards: photo, 32px/400 Tech name, text and a
+  //   button, centered, every row as tall as the tallest (give/staff)
+  // legacy — production's old block-editor columns with dark pill buttons:
+  //   with images, three centered tiles in a 1200px row (for-translators);
+  //   without, start-aligned columns (open-bible-stories)
+  variant: z.enum(['card', 'plain', 'centered', 'outlined', 'plain-centered', 'legacy']).optional(),
+  // heading — only the section heading centered (for-translators/content principles)
+  align: z.enum(['start', 'center', 'heading']).optional(),
   items: z.array(
     z.object({
       title: z.string(),
@@ -85,8 +149,21 @@ const cards = z.object({
       icon: z.string().optional(),
       href: href.optional(),
       linkLabel: z.string().optional(),
-    }).refine(hasImageAlt, missingAlt),
+      // Kindle "Impact:" line (tools-technology)
+      impact: z.string().optional(),
+      // outlined: a second, filled button
+      donateHref: href.optional(),
+      donateLabel: z.string().optional(),
+      // a small logo beside the title (tools-technology)
+      logo: imagePath.optional(),
+      logoAlt: z.string().optional(),
+    }).refine(hasImageAlt, missingAlt).refine((i) => !i.logo || Boolean(i.logoAlt?.trim()), { message: 'A logo needs logoAlt text', path: ['logoAlt'] }),
   ),
+  // wide — production's 20px column padding with no gap between columns; the
+  // text keeps its last paragraph's margin (catalyzation, for-translators/content)
+  padding: z.enum(['normal', 'wide']).optional(),
+  // A 600px video centered under the columns, in the same band (catalyzation)
+  video: z.object({ provider: z.enum(['youtube', 'vimeo']), id: z.string().regex(/^[\w-]+$/, 'Just the video id, e.g. 1232161297 — put an unlisted Vimeo video\'s h= value in `hash`'), hash: z.string().optional(), title: z.string() }).optional(),
 });
 
 const split = z.object({
@@ -100,6 +177,15 @@ const split = z.object({
   imagePosition: z.enum(['start', 'end']).default('end'),
   background: z.enum(['white', 'mist', 'ocean']).default('white'),
   actions: z.array(action).default([]),
+  // Kindle "Impact:" line under the text (overview programs)
+  impact: z.string().optional(),
+  uppercase: z.boolean().optional(),
+  // The buttons centered under the image instead of under the text (bt-servant)
+  actionsBelowMedia: z.boolean().optional(),
+  // callout — production's old block-editor rows: image 55% and text 45% in
+  //   a 1200px box with 48px padding, 42px light Tech title, 16px text
+  //   (open-bible-stories)
+  variant: z.enum(['default', 'callout']).optional(),
 }).refine(hasImageAlt, missingAlt);
 
 const stats = z.object({
@@ -107,7 +193,9 @@ const stats = z.object({
   eyebrow: z.string().optional(),
   title: z.string().optional(),
   background: z.enum(['white', 'mist', 'ocean']).default('ocean'),
-  items: z.array(z.object({ value: z.string(), label: z.string() })),
+  // bars — label above a full-width colored bar holding the number (wbwn)
+  variant: z.enum(['grid', 'bars']).optional(),
+  items: z.array(z.object({ value: z.string(), label: z.string(), color: z.enum(['ocean', 'kindle']).optional() })),
 });
 
 const quote = z.object({
@@ -123,9 +211,17 @@ const cta = z.object({
   type: z.literal('cta'),
   title: z.string(),
   body: z.string().optional(),
-  variant: z.enum(['ocean', 'kindle', 'mist']).default('ocean'),
-  actions: z.array(action).min(1),
-});
+  // split — Ocean band, heading and button beside a photo (about)
+  // legacy — production's old block-editor page hero: a full-width band with
+  //   a 920px column of a 42px white title, an optional subtitle and the
+  //   photo (for-translators, open-bible-stories); no buttons
+  variant: z.enum(['ocean', 'kindle', 'mist', 'split', 'legacy']).default('ocean'),
+  actions: z.array(action).default([]),
+  image: imagePath.optional(),
+  imageAlt: z.string().optional(),
+  // legacy: the band's color
+  background: z.enum(['ocean', 'black']).optional(),
+}).refine(hasImageAlt, missingAlt).refine((c) => c.variant === 'legacy' || c.actions.length > 0, { message: 'A call to action needs at least one button in actions', path: ['actions'] });
 
 const video = z.object({
   type: z.literal('video'),
@@ -138,6 +234,13 @@ const video = z.object({
   caption: z.string().optional(),
   // A text transcript is what search and AI engines index; add one.
   transcript: z.string().optional(),
+  background: z.enum(['white', 'tint', 'ocean']).default('white'),
+  // The heading shown above the video, when it should differ from `title`
+  // (which names the video for screen readers and search).
+  heading: z.string().optional(),
+  // landing — production's give/* video band: an Inspire 6% band, an 800px
+  // video and no visible heading (it stays for screen readers)
+  variant: z.enum(['landing']).optional(),
 });
 
 const giving = z.object({
@@ -152,13 +255,29 @@ const giving = z.object({
   formId: z.string().regex(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/, 'A Virtuous form id is the data-rd value from the embed code, like 16dec80a-ad5e-470e-ae62-4ed13821ccca'),
   image: imagePath.optional(),
   imageAlt: z.string().optional(),
-}).refine(hasImageAlt, missingAlt);
+  // landing — the give/* landing pages: the title is the page's h1, and the
+  // page gets the reduced landing header and footer (template: giving).
+  variant: z.enum(['section', 'landing']).optional(),
+  // compact — the 16px system-font paragraph some landing pages use.
+  textStyle: z.enum(['default', 'compact']).optional(),
+  // landing: a line under the logo in the landing header ("Thank you! …"),
+  // and a partner logo beside ours (GivingTuesday).
+  tagline: z.string().optional(),
+  partnerLogo: imagePath.optional(),
+  partnerLogoAlt: z.string().optional(),
+  // landing: the Ocean "Contact Us With Questions" band under the form.
+  contact: z.object({ title: z.string(), body: z.string() }).optional(),
+}).refine(hasImageAlt, missingAlt).refine((g) => !g.partnerLogo || Boolean(g.partnerLogoAlt?.trim()), { message: 'A partner logo needs partnerLogoAlt text', path: ['partnerLogoAlt'] });
 
 const faq = z.object({
   type: z.literal('faq'),
   title: z.string().optional(),
   intro: z.string().optional(),
   items: z.array(z.object({ q: z.string(), a: z.string() })),
+  // Markdown after the questions, in the same section (ccbt/faq "Related pages").
+  body: z.string().optional(),
+  // Production opens the first question on load.
+  openFirst: z.boolean().optional(),
 });
 
 const peopleBlock = z.object({
@@ -166,20 +285,28 @@ const peopleBlock = z.object({
   title: z.string().optional(),
   intro: z.string().optional(),
   group: z.string(),
-  layout: z.enum(['grid', 'list']).default('grid'),
+  // board: two columns of photo-beside-text cards with a "Read More" bio
+  // dialog (leadership); team: four columns of photo, name and role (our-team).
+  layout: z.enum(['grid', 'list', 'board', 'team']).default('grid'),
 });
 
 const storyList = z.object({
   type: z.literal('storyList'),
   eyebrow: z.string().optional(),
   title: z.string().optional(),
+  // A line under the title (wbwn/se-asia)
+  intro: z.string().optional(),
   limit: z.number().int().positive().optional(),
   region: z.string().optional(),
   // Hand-picked stories, in this order (file names without .md). Overrides
   // the default "newest first".
   slugs: z.array(z.string()).optional(),
   showFilter: z.boolean().default(false),
-  background: z.enum(['white', 'mist']).default('white'),
+  background: z.enum(['white', 'mist', 'ocean']).default('white'),
+  // grid: cards in columns. carousel: production's home card slider (3/2/1
+  // per view). rows: production's story index (diagonal photo beside text,
+  // nine per page).
+  layout: z.enum(['grid', 'carousel', 'rows']).default('grid'),
 });
 
 const prayerList = z.object({
@@ -195,15 +322,28 @@ const resources = z.object({
   eyebrow: z.string().optional(),
   title: z.string().optional(),
   intro: z.string().optional(),
+  // cards — bordered link cards; list — production's icon list; accordion —
+  // one collapsible box per item (for-translators, publications)
+  variant: z.enum(['cards', 'list', 'accordion']).optional(),
+  // accordion: larger text and padding inside the boxes (publications)
+  textSize: z.enum(['normal', 'large']).optional(),
+  // accordion: production's 10px column padding around the groups (publications)
+  inset: z.boolean().optional(),
+  // accordion: end each item with the CC BY-SA badge (for-translators)
+  licenseBadge: z.boolean().optional(),
+  background: z.enum(['white', 'mist', 'ocean']).optional(),
   items: z.array(
     z.object({
       title: z.string(),
       description: z.string().optional(),
-      href,
+      // Optional only for accordion items that are all text
+      href: href.optional(),
       kind: z.enum(['pdf', 'link', 'video', 'audio', 'book', 'app']).default('link'),
       image: imagePath.optional(),
       imageAlt: z.string().optional(),
       meta: z.string().optional(),
+      // list: production's solid icon (default: form for pdf, magazine for book)
+      icon: z.enum(['download', 'magazine', 'statement', 'form']).optional(),
     }).refine(hasImageAlt, missingAlt),
   ),
 });
@@ -219,6 +359,7 @@ const steps = z.object({
 const gallery = z.object({
   type: z.literal('gallery'),
   title: z.string().optional(),
+  intro: z.string().optional(),
   images: z.array(z.object({ src: imagePath, alt: z.string().trim().min(1), caption: z.string().optional() })),
 });
 
@@ -228,6 +369,8 @@ const contactForm = z.object({
   type: z.literal('contactForm'),
   title: z.string().optional(),
   intro: z.string().optional(),
+  // Shown instead of `intro` while the form is switched on (PUBLIC_CONTACT_FORM)
+  formIntro: z.string().optional(),
 });
 
 const embed = z.object({
@@ -250,11 +393,60 @@ const signup = z.object({
   formId: z.string().regex(/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/, 'The data-vform value from the Virtuous embed code'),
   orgId: z.string().default('7243'),
   background: z.enum(['white', 'mist', 'ocean']).default('mist'),
+  // band: production's home sign-up (Cultivate band, text and form in the
+  // start half, `image` in the end half).
+  variant: z.enum(['card', 'band']).default('card'),
+  image: imagePath.optional(),
+  imageAlt: z.string().optional(),
+}).refine(hasImageAlt, missingAlt);
+
+// ---------- home page blocks ----------
+// Home hero: crossfading background photos under a 50% Tech overlay.
+const heroSlideshow = z.object({
+  type: z.literal('heroSlideshow'),
+  title: z.string(),
+  subtitle: z.string().optional(),
+  body: z.string().optional(),
+  slides: z.array(z.object({ image: imagePath, imageAlt: z.string().trim().min(5, 'Describe each slide photo in imageAlt') })).min(1),
+  actions: z.array(action).default([]),
+});
+
+// Two columns of centered, bold statements. In each item `lead` is set
+// larger; `tone` picks Ocean (16px) or Inspire (20px) text.
+const statement = z.object({
+  type: z.literal('statement'),
+  columns: z.array(z.object({
+    tone: z.enum(['ocean', 'inspire']).default('ocean'),
+    items: z.array(z.object({ lead: z.string(), text: z.string() })).min(1),
+  })).min(1).max(2),
+});
+
+// Testimonial slider: photo beside a title and quote, one at a time.
+const testimonials = z.object({
+  type: z.literal('testimonials'),
+  title: z.string().optional(),
+  items: z.array(z.object({
+    title: z.string(),
+    body: z.string(),
+    image: imagePath.optional(),
+    imageAlt: z.string().optional(),
+  }).refine(hasImageAlt, missingAlt)).min(1),
+});
+
+// A row of partner logos that scrolls sideways (static when the visitor
+// prefers reduced motion).
+const logoMarquee = z.object({
+  type: z.literal('logoMarquee'),
+  title: z.string(),
+  titleImage: imagePath.optional(),
+  titleImageAlt: z.string().optional(),
+  logos: z.array(z.object({ image: imagePath, alt: z.string().trim().min(2), href: href.optional() })).min(1),
 });
 
 export const block = z.discriminatedUnion('type', [
   hero, prose, cards, split, stats, quote, cta, video, giving, faq, peopleBlock,
   storyList, prayerList, resources, steps, gallery, trust, contactForm, embed, sweetBooks, signup,
+  heroSlideshow, statement, testimonials, logoMarquee,
 ]);
 export type Block = z.infer<typeof block>;
 
@@ -279,6 +471,16 @@ const pages = defineCollection({
     sections: z.array(block).default([]),
     // Where the Markdown body goes relative to the sections.
     bodyPosition: z.enum(['before', 'after']).default('after'),
+    // legal — production's policy pages: a large `heading` above the text and
+    // small bold section headings (privacy, terms of use)
+    // post — WordPress block-editor headings: h3 and smaller in Tech at
+    // weight 500 (charitable solicitation disclosures)
+    bodyStyle: z.enum(['default', 'legal', 'post']).optional(),
+    // The page-title banner when there is no hero: its photo, and whether the
+    // title is uppercase (production: yes on most pages).
+    bannerImage: imagePath.optional(),
+    bannerImageAlt: z.string().optional(),
+    bannerUppercase: z.boolean().optional(),
     breadcrumbs: z.boolean().default(true),
     redirectFrom,
     // FAQPage / other extra schema.org types are derived from blocks; this
@@ -303,10 +505,25 @@ const stories = defineCollection({
     author: z.string().default('unfoldingWord'),
     excerpt: z.string().optional(),
     featured: z.boolean().default(false),
+    // Production built a few posts in Elementor: larger text (19.36px) on a
+    // 980px column. Set true to keep that look.
+    largeText: z.boolean().default(false),
     // Set true when a story names people or places in a security-sensitive
     // region. Such stories need the security review in
     // .claude/skills/publish-story/ before they are committed.
     sensitive: z.boolean().default(false),
+    // The "Related" list at the end of the story: up to three other stories,
+    // by file name (without .md), in order. Leave out to pick automatically
+    // (newest from the same region first).
+    related: z.array(z.string()).max(3).optional(),
+    // The category shown as In "…" when this story appears in another
+    // story's Related list (production's WordPress category). Defaults to
+    // the region name.
+    category: z.string().optional(),
+    // The width in pixels at which the banner photo is drawn (production
+    // drew the original upload at its full size). Defaults to the image
+    // file's own width.
+    bannerWidth: z.number().int().positive().optional(),
     redirectFrom,
   }),
 });
@@ -319,6 +536,9 @@ const prayer = defineCollection({
     region: z.string().optional(),
     image: imagePath.optional(),
     imageAlt: z.string().optional(),
+    // Up to three other requests (their slugs) listed under "Related", as
+    // production's Jetpack list. Most production requests show none.
+    related: z.array(z.string()).max(3).optional(),
     redirectFrom,
   }).refine(hasImageAlt, missingAlt),
 });
@@ -333,8 +553,14 @@ const people = defineCollection({
     photo: imagePath.optional(),
     photoAlt: z.string().optional(),
     bio: z.string().optional(),
+    // Short teaser shown on the board card before "Read More" (leadership).
+    summary: z.string().optional(),
+    // A different portrait for the board card, when the leadership page uses one.
+    boardPhoto: imagePath.optional(),
+    boardPhotoAlt: z.string().optional(),
     translationStatus,
-  }).refine((p) => !p.photo || Boolean(p.photoAlt?.trim()), { message: 'A photo needs descriptive photoAlt text', path: ['photoAlt'] }),
+  }).refine((p) => !p.photo || Boolean(p.photoAlt?.trim()), { message: 'A photo needs descriptive photoAlt text', path: ['photoAlt'] })
+    .refine((p) => !p.boardPhoto || Boolean(p.boardPhotoAlt?.trim()), { message: 'A boardPhoto needs descriptive boardPhotoAlt text', path: ['boardPhotoAlt'] }),
 });
 
 const sweet = defineCollection({
@@ -348,6 +574,9 @@ const sweet = defineCollection({
     // are their file names without extension, in display order, grouped by
     // chapter.
     chapters: z.array(z.object({ chapter: z.string(), images: z.array(z.string()) })),
+    // The illustration behind the page-title banner and on the book's card
+    // (a file name from `chapters`). Defaults to the first image.
+    cover: z.string().optional(),
     redirectFrom,
   }),
 });

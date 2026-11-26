@@ -8,6 +8,9 @@ country: Benin
 image: stories/overcoming-obstacles-to-the-gospel-in-benin.jpg
 imageAlt: A man in glasses and a patterned blue shirt gestures as he speaks, seated outdoors on a garden lawn
 redirectFrom: [/africa/overcoming-obstacles-to-the-gospel-in-benin/]
+category: Benin
+bannerWidth: 4000
+related: [the-gospel-in-five-more-languages, the-power-of-strategic-language-resources, hope-in-harrowing-times]
 ---
 Charles Z of Benin has been trying to share the gospel of Christ with his Muslim neighbors since 1999. unfoldingWord equips him and his colleagues with the Strategic Language Resources they need to translate God's Word faster than ever before.
 

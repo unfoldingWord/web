@@ -1,28 +1,32 @@
 ---
 // Served by Workers for any path with no asset (not_found_handling:
 // "404-page"), with a 404 status. One English page: the request's locale is
-// not known at build time. The search box uses the site's Pagefind index.
+// not known at build time. Laid out like production's 404 (an Inspire-tint
+// band, a large Ocean "404", two lines and "Back to Home"), plus our search
+// box, which uses the site's Pagefind index. The two lines and the button
+// label copy production's wording.
 import Base from '../layouts/Base.astro';
 import { ui } from '../i18n';
 const t = ui('en');
 ---
 
 <Base switcherPath="/" locale="en" basePath="/404/" title={t.notFoundTitle} description="The page you were looking for could not be found on unfoldingword.org." noindex pageType="404">
-  <section class="bg-mist">
-    <div class="container-prose py-16 text-center lg:py-24">
-      <p class="eyebrow mb-3">404</p>
-      <h1>{t.notFoundTitle}</h1>
-      <p class="mt-5 text-lead text-ink-muted">{t.notFoundBody}</p>
-      <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-        <a href="/" class="uw-btn uw-btn-primary">{t.notFoundHome}</a>
-        <a href="/stories/" class="uw-btn uw-btn-secondary">{t.allStories}</a>
-        <a href="/give/" class="uw-btn uw-btn-give">{t.donate}</a>
+  <section class="bg-tint">
+    <div class="container-page flex min-h-[88vh] flex-col items-center justify-center py-10 text-center">
+      <h1 class="text-[150px] leading-none md:text-[200px] font-black text-ocean"><span aria-hidden="true">404</span><span class="sr-only">{t.notFoundTitle}</span></h1>
+      <div class="text-body text-ocean-muted">
+        <p class="mb-[0.9rem]">Sorry, the page you were looking for does not exist.</p>
+        <p class="mb-[0.9rem]">We recently updated our website. Feel free to <a href="/contact/">contact us</a> and let us know what page you were trying to find.</p>
       </div>
-      <form action="/search/" method="get" class="mx-auto mt-10 flex max-w-md gap-2" role="search">
-        <label for="q404" class="sr-only">Search unfoldingword.org</label>
-        <input id="q404" name="q" type="search" placeholder="Search unfoldingword.org" class="min-h-12 min-w-0 flex-1 rounded-full border border-line bg-white px-5" />
-        <button type="submit" class="uw-btn uw-btn-primary">Search</button>
-      </form>
+      <!-- The search box (ours only) hangs below the button so the group stays centered like production's. -->
+      <div class="relative mt-10 flex w-full justify-center">
+        <a href="/" class="uw-btn uw-btn-primary">Back to Home</a>
+        <form action="/search/" method="get" class="absolute top-full mt-10 flex w-full max-w-md gap-2.5" role="search">
+          <label for="q404" class="sr-only">Search unfoldingword.org</label>
+          <input id="q404" name="q" type="search" placeholder="Search unfoldingword.org" class="uw-input min-w-0 flex-1" />
+          <button type="submit" class="uw-btn uw-btn-secondary">Search</button>
+        </form>
+      </div>
     </div>
   </section>
 </Base>

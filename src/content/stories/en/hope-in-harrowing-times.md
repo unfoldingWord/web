@@ -1,5 +1,5 @@
 ---
-title: Hope in Harrowing Times
+title: Hope in harrowing times
 description: The more Islamists promote jihad, the more ordinary Muslims open to the gospel. Partners in Iran, Sudan and the Middle East share what they are seeing.
 date: 2024-04-08
 region: middle-east
@@ -8,6 +8,8 @@ imageAlt: A crowd of worshipers with hands raised high
 excerpt: Partners in Iran, Sudan and the Middle East see hearts opening to the gospel in dark times.
 sensitive: true
 redirectFrom: [/menapak/hope-in-harrowing-times/]
+category: Arabic-Speaking World
+related: [overcoming-obstacles-to-the-gospel-in-benin, renounce-christ-or-die, hundreds-of-iranians-introduced-to-christ]
 ---
 As the world worries over the horrific events in Israel and mullahs call for global jihad, a hopeful fact remains. The more Islamists promote jihad, the more average Muslims are open to the gospel.
 

@@ -40,7 +40,13 @@ Markdown after the frontmatter is rendered as a prose section after the blocks
 ## Writing rules
 
 - **unfoldingWord** is always camelCase. Bible capitalized; biblical, church, gospel lowercase
-  unless a proper noun. No ampersands in prose — "and". No Oxford comma unless needed.
+  unless a proper noun. No Oxford comma unless needed.
+- **Copy the old site's wording as it appears there**, including its capitalization and
+  ampersands. Headings, banner titles, menu items and buttons are in Title Case where the old
+  site uses it ("Who We Are", "Vision & Mission", "Donate Now"), and "&" stays wherever the old
+  site has it ("Tools & Technology"). Do not convert them to sentence case or to "and". For new
+  text with no old-site wording to copy, follow the same pattern: Title Case for headings and
+  buttons, "&" only where the matching old-site label uses it.
 - Voice: humble, clear, faithful, relational, hopeful. Local churches are the heroes, not
   unfoldingWord.
 - **Every image needs real alt text** describing what is in it (`imageAlt`, `alt`). Decorative
@@ -49,7 +55,8 @@ Markdown after the frontmatter is rendered as a prose section after the blocks
 - One H1 per page — the hero `title` or the page `title`. Section titles are H2.
 - Open key pages with a sentence that says plainly what the thing is ("Church-Centric Bible
   Translation is …"). Search and AI answer engines quote opening definitions.
-- Keep the old page's wording. Fix obvious typos and broken links; do not rewrite the message.
+- Keep the old page's wording. Fix obvious typos (a repeated word, a misspelling) and broken
+  links; do not rewrite the message or change its capitalization.
 - Links between pages use English paths (`/give/`); they are localized automatically.
 
 ## Blocks
@@ -60,27 +67,42 @@ Markdown after the frontmatter is rendered as a prose section after the blocks
 ### hero — the top of a page
 ```yaml
 - type: hero
-  variant: ocean        # ocean (blue band) | photo (photo with blue overlay; needs image) | split (text beside photo) | light (quiet, utility pages)
-  eyebrow: Ways to give # small label above the title (optional)
-  title: Give the gospel. Change lives forever.
-  lead: One or two sentences under the title.
-  image: give/hero.jpg  # required for photo and split
+  variant: banner       # banner (the old site's page-title band: photo under a blue overlay, centered title; the usual opener)
+                        # | feature (the old post layout: black band with a 42px title and the photo, then `lead` as text; forms)
+                        # | project (wbwn country pages) | heading (no band) | ocean | photo | split | light
+  eyebrow: Ways to Give # small label above the title (optional; not used by banner)
+  title: Give the Gospel. Change Lives Forever.
+  lead: One or two sentences under the title. # feature: the page text, in Markdown
+  image: give/hero.jpg  # banner, feature, project and photo show it
   imageAlt: Church leaders studying a translated Bible together in Chad
   actions:
-    - { label: Give now, href: '#give-form', style: give }   # style: primary | secondary | give
+    - { label: Give Now, href: '#give-form', style: give }   # style: primary | secondary | give
 ```
+banner only: `uppercase: false` (keep the title's case; the old site uppercases most banners),
+`lines: [...]` (more title lines), `divider: true` (a short orange rule between the lines),
+`subtitle`. The banner photo shows at its own size from the top-left corner, as on the old
+site, so use the same image file (and size) the old page used.
+
+A page with no hero gets a banner with its `title`; `bannerImage`/`bannerImageAlt` set its photo.
 
 ### prose — Markdown text
 ```yaml
 - type: prose
-  title: Our vision          # optional H2
+  title: Our Vision          # optional H2
   eyebrow: optional
   background: white          # white | mist | ocean
-  width: prose               # prose (readable column) | wide
+  width: prose               # prose (the 1000px column) | wide | narrow (800px)
+  align: center              # start | center (title and text) | title (only the title centered)
+  divider: true              # a short orange rule under the title
+  lead: THE CHURCH IN EVERY PEOPLE GROUP   # optional centered line under the title (vision and mission)
+  accent: true               # **bold** text in blue, and a `####` line as a 20px bold blue statement (careers)
+  compactLists: true         # lists indented 20px with no space under them (statement of faith)
   serif: false
   body: |-
     Paragraphs, **bold**, [links](/ccbt/), lists…
 ```
+In prose text, a `###` heading written all in italics (`### *…*`) takes the old site's plain
+text-heading look (28px, dark, not blue), as on the statement of faith.
 
 ### cards — a grid of items (programs, links, values)
 ```yaml
@@ -138,6 +160,17 @@ Markdown after the frontmatter is rendered as a prose section after the blocks
   body: optional
   actions: [{ label: Give, href: /give/, style: give }]
 ```
+
+**A campaign's Donate button.** Any button (`actions` in hero, prose, split, cta) can open a
+campaign's own Virtuous form, as production's "Donate Now" buttons do:
+```yaml
+actions:
+  - { label: Donate Now, href: /give/tech/, style: give, formId: a94d830d-a3c3-42e7-9156-d91ae8b7cfc0 }
+```
+`formId` is the `data-rd` value from Virtuous's embed code — from the editor or Virtuous, never
+copied from memory or another page. The button becomes Virtuous's own button, which opens that
+form in a modal; `href` is the fallback link while it loads and wherever it cannot (previews).
+When a page's design changes, keep the form id its old giving block or button used.
 
 ### video
 ```yaml
@@ -211,13 +244,17 @@ bio: |-
 - type: resources
   id: publications           # optional anchor (#publications)
   title: Publications
+  variant: cards             # cards | list (financial report rows) | accordion
   items:
     - title: The Gateway Languages Strategy
       description: optional
       href: https://…pdf
       kind: pdf              # pdf | link | video | audio | book | app
       meta: 24 pages         # optional
+      icon: download         # list only: download | magazine | statement | form
 ```
+`list`: the item with an `image` is the report cover beside the list; two `list` blocks in a row
+without a cover share one row.
 
 ### steps — numbered process
 ```yaml
@@ -253,7 +290,9 @@ bio: |-
 ### contactForm — address, phone (and the form when enabled)
 ```yaml
 - type: contactForm
-  title: Get in touch
+  title: optional H2
+  intro: Reach us by mail, by phone or by email at …       # shown while the form is off
+  formIntro: Use the contact form below to send us a message, or reach us by mail at:   # shown when it is on
 ```
 
 ### embed — a third-party iframe (use sparingly)
@@ -304,6 +343,7 @@ date: 2026-10-02
 region: middle-east     # optional
 image: prayer/checkpoints.jpg   # optional
 imageAlt: …
+related: [travel-in-south-sudan]   # optional: up to 3 slugs listed under "Related"
 redirectFrom: []
 ---
 Prayer request text.

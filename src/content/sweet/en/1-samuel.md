@@ -4,6 +4,7 @@ description: 114 Sweet Publishing illustrations of 1 Samuel, free to download an
 book: 1 Samuel
 order: 9
 testament: ot
+cover: 09_1Sa_01_04_RG
 chapters:
   - chapter: '1'
     images:

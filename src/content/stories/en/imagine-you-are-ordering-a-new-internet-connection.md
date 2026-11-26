@@ -7,6 +7,8 @@ image: stories/ten-times-faster.jpg
 imageAlt: A man in a blue jacket standing in a stone corridor of arches inside an ancient amphitheater
 excerpt: How unfoldingWord's translationCore helps a South Asian checker review 100 verses a day.
 redirectFrom: [/southasia/imagine-you-are-ordering-a-new-internet-connection/]
+category: South Asia
+related: [the-power-of-strategic-language-resources, will-ai-eliminate-human-translators, translationcore-engine-of-a-bible-translation-revolution]
 ---
 Imagine you are ordering a new internet connection or cable TV or maybe something new from Amazon and you get the message saying, "Your town is too remote and we can't serve your area at this time. We might be able to do this someday, but it will take at least 20 years." Frustrating, right?
 

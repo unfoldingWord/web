@@ -4,6 +4,7 @@ description: 7 Sweet Publishing illustrations of Leviticus, free to download and
 book: Leviticus
 order: 3
 testament: ot
+cover: 03_Le_10_01_RG
 chapters:
   - chapter: '1'
     images:
