@@ -4,6 +4,7 @@ description: 44 Sweet Publishing illustrations of Daniel, free to download and u
 book: Daniel
 order: 27
 testament: ot
+cover: 27_Da_06_10_RG
 chapters:
   - chapter: '1'
     images:

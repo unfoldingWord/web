@@ -4,6 +4,7 @@ description: 14 Sweet Publishing illustrations of Jonah, free to download and us
 book: Jonah
 order: 32
 testament: ot
+cover: 32_Jon_01_06_RG
 chapters:
   - chapter: '1'
     images:

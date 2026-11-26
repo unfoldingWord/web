@@ -4,6 +4,7 @@ description: 100 Sweet Publishing illustrations of Joshua, free to download and 
 book: Joshua
 order: 6
 testament: ot
+cover: 06_Jo_06_03_RG
 chapters:
   - chapter: '1'
     images:

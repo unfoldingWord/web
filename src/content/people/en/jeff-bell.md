@@ -1,6 +1,6 @@
 ---
 name: "Jeff Bell"
-role: "Major Gifts and Church Engagement"
+role: "Major Gifts & Church Engagement"
 groups: [staff]
 order: 30
 photo: people/jeff-bell.jpg

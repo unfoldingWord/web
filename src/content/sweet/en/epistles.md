@@ -4,6 +4,7 @@ description: 22 Sweet Publishing illustrations of The Epistles, free to download
 book: The Epistles
 order: 54
 testament: nt
+cover: 55_2Ti_01_01_RG
 chapters:
   - chapter: '1 Timothy 1'
     images:

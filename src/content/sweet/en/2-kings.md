@@ -4,6 +4,7 @@ description: 90 Sweet Publishing illustrations of 2 Kings, free to download and 
 book: 2 Kings
 order: 12
 testament: ot
+cover: 12_2Ki_02_01_RG
 chapters:
   - chapter: '2'
     images:

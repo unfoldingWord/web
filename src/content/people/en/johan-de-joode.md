@@ -1,6 +1,6 @@
 ---
 name: "Johan de Joode"
-role: "Scripture Research and Development"
+role: "Scripture Research & Development"
 groups: [staff]
 order: 130
 photo: people/johan-de-joode.jpg

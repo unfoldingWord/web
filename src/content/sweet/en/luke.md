@@ -4,6 +4,7 @@ description: 382 Sweet Publishing illustrations of Luke, free to download and us
 book: Luke
 order: 42
 testament: nt
+cover: 42_Lk_06_03_RG
 chapters:
   - chapter: '1'
     images:

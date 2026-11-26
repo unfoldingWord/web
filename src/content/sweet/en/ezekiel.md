@@ -4,6 +4,7 @@ description: 12 Sweet Publishing illustrations of Ezekiel, free to download and 
 book: Ezekiel
 order: 26
 testament: ot
+cover: 26_Eze_01_03_RG
 chapters:
   - chapter: '1'
     images:

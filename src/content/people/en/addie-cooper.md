@@ -1,6 +1,6 @@
 ---
 name: "Addie Cooper"
-role: "Digital Content and Creative Specialist"
+role: "Digital Content & Creative Specialist"
 groups: [staff]
 order: 70
 photo: people/addie-cooper.jpg
