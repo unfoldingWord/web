@@ -1,0 +1,191 @@
+---
+// A slider for cards and testimonials, built on a horizontally scrolling
+// list with scroll snapping, so it works without JavaScript (swipe, scroll
+// or Tab through it). With JavaScript it gains previous/next buttons and a
+// row of dots, one per page. It never moves on its own.
+//
+// Put the slides in the default slot as <li> elements.
+//   perView 3: three slides per view from 1057px, two from 768px, one below
+//              (production's story carousel); 1: one slide at a time.
+//   dots: light (8px, Kindle when active; on Ocean) or dark (11px black).
+// In right-to-left languages the order, the buttons and the swipe mirror.
+import { ui, fmt } from '../../i18n';
+
+interface Props {
+  label: string;
+  locale: string;
+  perView?: 1 | 3;
+  arrows?: boolean;
+  dots?: 'light' | 'dark';
+  class?: string;
+}
+const { label, locale, perView = 3, arrows = true, dots = 'light', class: cls } = Astro.props;
+const t = ui(locale);
+---
+
+<div class:list={['uw-carousel', `per-view-${perView}`, `dots-${dots}`, cls]} data-carousel role="region" aria-roledescription="carousel" aria-label={label} data-dot-label={fmt(t.goToSlide, { n: '{n}' })}>
+  <div class="carousel-viewport">
+    <ul class="carousel-track" tabindex="0">
+      <slot />
+    </ul>
+    {
+      arrows && (
+        <>
+          <button type="button" class="carousel-arrow carousel-prev" data-prev hidden aria-label={t.previous}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </button>
+          <button type="button" class="carousel-arrow carousel-next" data-next hidden aria-label={t.next}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </button>
+        </>
+      )
+    }
+  </div>
+  <div class="carousel-dots" data-dots hidden></div>
+</div>
+
+<style>
+  .uw-carousel { --gap: 25px; --n: 1; }
+  .uw-carousel.per-view-1 { --gap: 0px; }
+  @media (min-width: 768px) { .per-view-3 { --n: 2; } }
+  @media (min-width: 1057px) { .per-view-3 { --n: 3; } }
+  .carousel-viewport { position: relative; }
+  .carousel-track {
+    display: flex;
+    gap: var(--gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+  }
+  .uw-carousel.is-ready .carousel-track { scrollbar-width: none; }
+  .uw-carousel.is-ready .carousel-track::-webkit-scrollbar { display: none; }
+  .carousel-track:focus-visible { outline-offset: 4px; }
+  .carousel-track > :global(li) {
+    flex: 0 0 calc((100% - (var(--n) - 1) * var(--gap)) / var(--n));
+    min-width: 0;
+    scroll-snap-align: start;
+    display: flex;
+  }
+  .carousel-track > :global(li > *) { flex: 1; min-width: 0; }
+  .carousel-arrow {
+    position: absolute;
+    top: calc(50% + 12px);
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-top: -20px;
+    border-radius: 999px;
+    background: var(--color-kindle);
+    color: #fff;
+    transition: background-color 0.3s;
+  }
+  .carousel-arrow[hidden] { display: none; }
+  .carousel-arrow:hover { background: var(--color-inspire); }
+  .carousel-arrow:focus-visible { outline-color: #fff; }
+  .carousel-arrow svg { width: 22px; height: 22px; }
+  .carousel-arrow:dir(rtl) svg { transform: scaleX(-1); }
+  .carousel-prev { inset-inline-start: -22px; }
+  .carousel-next { inset-inline-end: -22px; }
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .carousel-dots[hidden] { display: none; }
+  .carousel-dots :global(button) {
+    position: relative;
+    width: 20px;
+    height: 24px;
+  }
+  .carousel-dots :global(button)::before {
+    content: '';
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    border-radius: 50%;
+    background: #c0c4c6;
+    transition: background-color 0.3s, opacity 0.3s;
+  }
+  .carousel-dots :global(button[aria-current='true'])::before,
+  .carousel-dots :global(button:hover)::before { background: var(--color-kindle); }
+  .dots-dark .carousel-dots { margin-top: 0; height: 48px; padding-top: 20px; align-items: flex-start; }
+  .dots-dark .carousel-dots :global(button) { width: 23px; height: 24px; }
+  .dots-dark .carousel-dots :global(button)::before { width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; background: #000; opacity: 0.4; }
+  .dots-dark .carousel-dots :global(button[aria-current='true'])::before,
+  .dots-dark .carousel-dots :global(button:hover)::before { background: #000; opacity: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    .carousel-track { scroll-behavior: auto; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('.carousel-track')!;
+    const dotsBox = root.querySelector<HTMLElement>('[data-dots]')!;
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]');
+    const next = root.querySelector<HTMLButtonElement>('[data-next]');
+    const slides = () => [...track.children].filter((el) => !(el as HTMLElement).hidden) as HTMLElement[];
+    const rtl = () => getComputedStyle(root).direction === 'rtl';
+    let perPage = 1;
+    let pages = 1;
+    const step = () => {
+      const s = slides();
+      if (s.length < 2) return track.clientWidth;
+      return Math.abs(s[1].getBoundingClientRect().left - s[0].getBoundingClientRect().left);
+    };
+    const current = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      const x = Math.abs(track.scrollLeft);
+      if (x >= max - 2) return pages - 1;
+      return Math.min(pages - 1, Math.round(x / (step() * perPage)));
+    };
+    const goTo = (p: number) => {
+      const max = track.scrollWidth - track.clientWidth;
+      const x = Math.min(max, p * perPage * step());
+      track.scrollTo({ left: rtl() ? -x : x });
+    };
+    const mark = () => {
+      const c = current();
+      dotsBox.querySelectorAll('button').forEach((b, i) => b.setAttribute('aria-current', String(i === c)));
+    };
+    const build = () => {
+      const s = slides();
+      perPage = Math.max(1, Math.round((track.clientWidth + 1) / step()));
+      pages = Math.max(1, Math.ceil(s.length / perPage));
+      const many = pages > 1;
+      if (prev) prev.hidden = !many;
+      if (next) next.hidden = !many;
+      dotsBox.hidden = !many;
+      const label = root.dataset.dotLabel ?? '{n}';
+      dotsBox.replaceChildren(
+        ...Array.from({ length: pages }, (_, i) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('aria-label', label.replace('{n}', String(i + 1)));
+          b.addEventListener('click', () => goTo(i));
+          return b;
+        }),
+      );
+      mark();
+    };
+    prev?.addEventListener('click', () => { const c = current(); goTo(c === 0 ? pages - 1 : c - 1); });
+    next?.addEventListener('click', () => { const c = current(); goTo(c === pages - 1 ? 0 : c + 1); });
+    let raf = 0;
+    track.addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(mark); }, { passive: true });
+    new ResizeObserver(() => build()).observe(track);
+    // Lists that filter their slides (StoryList) ask for a rebuild.
+    root.addEventListener('carousel:refresh', () => { track.scrollTo({ left: 0 }); build(); });
+    root.classList.add('is-ready');
+    build();
+  });
+</script>

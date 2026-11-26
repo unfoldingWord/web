@@ -138,6 +138,10 @@ const video = z.object({
   caption: z.string().optional(),
   // A text transcript is what search and AI engines index; add one.
   transcript: z.string().optional(),
+  background: z.enum(['white', 'tint', 'ocean']).default('white'),
+  // The heading shown above the video, when it should differ from `title`
+  // (which names the video for screen readers and search).
+  heading: z.string().optional(),
 });
 
 const giving = z.object({
@@ -179,7 +183,11 @@ const storyList = z.object({
   // the default "newest first".
   slugs: z.array(z.string()).optional(),
   showFilter: z.boolean().default(false),
-  background: z.enum(['white', 'mist']).default('white'),
+  background: z.enum(['white', 'mist', 'ocean']).default('white'),
+  // grid: cards in columns. carousel: production's home card slider (3/2/1
+  // per view). rows: production's story index (diagonal photo beside text,
+  // nine per page).
+  layout: z.enum(['grid', 'carousel', 'rows']).default('grid'),
 });
 
 const prayerList = z.object({
@@ -250,11 +258,60 @@ const signup = z.object({
   formId: z.string().regex(/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/, 'The data-vform value from the Virtuous embed code'),
   orgId: z.string().default('7243'),
   background: z.enum(['white', 'mist', 'ocean']).default('mist'),
+  // band: production's home sign-up (Cultivate band, text and form in the
+  // start half, `image` in the end half).
+  variant: z.enum(['card', 'band']).default('card'),
+  image: imagePath.optional(),
+  imageAlt: z.string().optional(),
+}).refine(hasImageAlt, missingAlt);
+
+// ---------- home page blocks ----------
+// Home hero: crossfading background photos under a 50% Tech overlay.
+const heroSlideshow = z.object({
+  type: z.literal('heroSlideshow'),
+  title: z.string(),
+  subtitle: z.string().optional(),
+  body: z.string().optional(),
+  slides: z.array(z.object({ image: imagePath, imageAlt: z.string().trim().min(5, 'Describe each slide photo in imageAlt') })).min(1),
+  actions: z.array(action).default([]),
+});
+
+// Two columns of centered, bold statements. In each item `lead` is set
+// larger; `tone` picks Ocean (16px) or Inspire (20px) text.
+const statement = z.object({
+  type: z.literal('statement'),
+  columns: z.array(z.object({
+    tone: z.enum(['ocean', 'inspire']).default('ocean'),
+    items: z.array(z.object({ lead: z.string(), text: z.string() })).min(1),
+  })).min(1).max(2),
+});
+
+// Testimonial slider: photo beside a title and quote, one at a time.
+const testimonials = z.object({
+  type: z.literal('testimonials'),
+  title: z.string().optional(),
+  items: z.array(z.object({
+    title: z.string(),
+    body: z.string(),
+    image: imagePath.optional(),
+    imageAlt: z.string().optional(),
+  }).refine(hasImageAlt, missingAlt)).min(1),
+});
+
+// A row of partner logos that scrolls sideways (static when the visitor
+// prefers reduced motion).
+const logoMarquee = z.object({
+  type: z.literal('logoMarquee'),
+  title: z.string(),
+  titleImage: imagePath.optional(),
+  titleImageAlt: z.string().optional(),
+  logos: z.array(z.object({ image: imagePath, alt: z.string().trim().min(2), href: href.optional() })).min(1),
 });
 
 export const block = z.discriminatedUnion('type', [
   hero, prose, cards, split, stats, quote, cta, video, giving, faq, peopleBlock,
   storyList, prayerList, resources, steps, gallery, trust, contactForm, embed, sweetBooks, signup,
+  heroSlideshow, statement, testimonials, logoMarquee,
 ]);
 export type Block = z.infer<typeof block>;
 

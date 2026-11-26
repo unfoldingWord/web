@@ -9,7 +9,7 @@
   "language": "Language",
   "donate": "Give",
   "donateNow": "Donate Now",
-  "readMore": "Read more",
+  "readMore": "Read More",
   "readStory": "Read the story",
   "allStories": "All stories",
   "allPrayerRequests": "All prayer requests",
@@ -124,5 +124,9 @@
   "sweetIllustration": "Sweet Publishing illustration: {label}",
   "sweetLicense": "Illustrations by Sweet Publishing, released under the <a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">Creative Commons Attribution-ShareAlike 3.0</a> license. Please credit “Sweet Publishing” when you use them.",
   "sweetIndexTitle": "Sweet Publishing illustrations",
-  "search": "Search"
+  "search": "Search",
+  "goToSlide": "Go to slide {n}",
+  "pause": "Pause",
+  "play": "Play",
+  "storyPages": "Story pages"
 }

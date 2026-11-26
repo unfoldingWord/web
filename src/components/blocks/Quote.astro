@@ -1,4 +1,6 @@
 ---
+// A single testimonial, as on production's home page: a round portrait
+// beside a quote with a 7px Kindle rule, on a light Inspire band, 800px wide.
 import type { Block } from '../../content.config';
 import { mdInline } from '../../lib/md';
 import Section from '../ui/Section.astro';
@@ -9,30 +11,43 @@ interface Props {
   block: Quote;
   locale: string;
 }
-const { block } = Astro.props;
+const { block, locale } = Astro.props;
 ---
 
-<Section background="mist">
-  <figure class="mx-auto grid max-w-4xl items-center gap-8 md:grid-cols-[auto_1fr]">
+<Section background="tint-light">
+  <figure class="mx-auto flex max-w-[800px] flex-col gap-10 py-10 md:flex-row md:items-center">
     {
       block.image && (
-        <div class="mx-auto size-32 overflow-hidden rounded-full shadow-card md:size-40">
-          <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="160px" widths={[160, 320]} aspect="1 / 1" />
+        <div class="quote-photo w-full shrink-0 overflow-hidden rounded-full md:w-[183px]">
+          <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="(min-width: 48rem) 183px, 100vw" widths={[183, 366, 640]} aspect="1 / 1" />
         </div>
       )
     }
-    <div>
-      <svg viewBox="0 0 40 30" class="mb-4 h-8 w-10 text-inspire" aria-hidden="true"><path fill="currentColor" d="M0 30V17Q0 6 11 0l3 4q-6 4-6 11h7v15zm22 0V17q0-11 11-17l3 4q-6 4-6 11h7v15z" /></svg>
-      <blockquote class="font-serif text-[clamp(1.25rem,1.05rem+0.9vw,1.75rem)] leading-snug text-ocean">
-        <p set:html={mdInline(block.quote)} />
+    <div class="quote-body min-w-0 flex-1">
+      <blockquote>
+        <p set:html={mdInline(block.quote, locale)} />
       </blockquote>
       {
         block.attribution && (
-          <figcaption class="mt-5 text-ink-muted">
-            <span class="font-heading font-extrabold text-ink">{block.attribution}</span>{block.role && <span>, {block.role}</span>}
+          <figcaption class="quote-cite">
+            {block.attribution}{block.role && <>, {block.role}</>}
           </figcaption>
         )
       }
     </div>
   </figure>
 </Section>
+
+<style>
+  .quote-photo { box-shadow: 0 0 20px rgb(0 0 0 / 0.27); }
+  .quote-body {
+    border-inline-start: 7px solid var(--color-kindle);
+    padding-inline-start: 20px;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 300;
+    color: var(--color-tech);
+  }
+  .quote-body blockquote, .quote-body p { margin: 0; }
+  .quote-cite { margin-top: 12px; color: var(--color-ocean); }
+</style>

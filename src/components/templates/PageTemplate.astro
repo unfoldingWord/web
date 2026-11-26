@@ -22,7 +22,7 @@ const entry = route.entry as CollectionEntry<'pages'>;
 const d = entry.data;
 const { Content } = await render(entry);
 const hasBody = Boolean(entry.body?.trim());
-const firstIsHero = d.sections[0]?.type === 'hero';
+const firstIsHero = d.sections[0]?.type === 'hero' || d.sections[0]?.type === 'heroSlideshow';
 const url = new URL(route.path, SITE.url).href;
 const isHome = route.basePath === '/';
 

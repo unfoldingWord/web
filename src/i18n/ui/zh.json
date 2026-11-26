@@ -129,5 +129,9 @@
   "sweetIllustration": "Sweet Publishing 插图：{label}",
   "sweetLicense": "插图由 Sweet Publishing 提供，依据<a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">知识共享署名-相同方式共享 3.0</a>许可协议发布。使用时请注明“Sweet Publishing”。",
   "sweetIndexTitle": "Sweet Publishing 插图",
-  "search": "搜索"
+  "search": "搜索",
+  "goToSlide": "转到第 {n} 张",
+  "pause": "暂停",
+  "play": "播放",
+  "storyPages": "故事页"
 }
