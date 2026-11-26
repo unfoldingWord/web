@@ -71,6 +71,10 @@ const hero = z.object({
   subtitle: z.string().optional(),
   // project: which half of the band holds the text
   contentPosition: z.enum(['start', 'end']).optional(),
+  // project: a Virtuous form id (from the editor or Virtuous) shown as
+  // Virtuous's own "Donate Now" button, which opens the form in a modal, as
+  // production does. The `actions` stay as the fallback until it loads.
+  donateFormId: z.string().optional(),
 }).refine(hasImageAlt, missingAlt);
 
 const prose = z.object({
@@ -219,6 +223,8 @@ const faq = z.object({
   title: z.string().optional(),
   intro: z.string().optional(),
   items: z.array(z.object({ q: z.string(), a: z.string() })),
+  // Markdown after the questions, in the same section (ccbt/faq "Related pages").
+  body: z.string().optional(),
   // Production opens the first question on load.
   openFirst: z.boolean().optional(),
 });
@@ -237,6 +243,8 @@ const storyList = z.object({
   type: z.literal('storyList'),
   eyebrow: z.string().optional(),
   title: z.string().optional(),
+  // A line under the title (wbwn/se-asia)
+  intro: z.string().optional(),
   limit: z.number().int().positive().optional(),
   region: z.string().optional(),
   // Hand-picked stories, in this order (file names without .md). Overrides

@@ -13,12 +13,13 @@ sections:
   contentPosition: start
   actions:
   - label: Donate Now
-    href: '#give-form'
+    href: https://give.unfoldingword.org/
     style: give
+  donateFormId: 6ee34bdd-7424-4589-a529-0762da6e5320
 - type: prose
   title: Project Overview
   width: narrow
-  body: Benin has 63 people groups representing more than 14 million people. Twenty percent of those people groups still need to be reached. unfoldingWord’s CCBT partners in Benin are working on five new unfoldingWord® Open Bible Stories translations (OBS). The stories are immediately used in evangelism.
+  body: '**Benin** has 63 people groups representing more than 14 million people. Twenty percent of those people groups still need to be reached. unfoldingWord’s CCBT partners in Benin are working on five new unfoldingWord® Open Bible Stories translations (OBS). The stories are immediately used in evangelism.'
 - type: stats
   title: At a Glance
   variant: bars
@@ -38,33 +39,14 @@ sections:
   background: ocean
   align: center
   width: narrow
-  body: In Benin, many of our ministry partners must work multiple jobs just to make ends meet. Pray for higher-paying employment and full funding for the Benin Whole Bible | Whole Nation (WBWN) program.
-- type: cards
+  body: In Benin, many of our ministry partners must work multiple jobs just to make ends meet. Pray for higher-paying employment and full funding for the Benin WBWN\* program.
+- type: storyList
   title: Stories from the Field
-  columns: 3
-  items:
-  - title: The Gospel in Five More Languages
-    body: Pastor Charles Zinzindohoue was born into a world of voodoo.
-    href: /stories/the-gospel-in-five-more-languages/
-    image: stories/the-gospel-in-five-more-languages.jpg
-    imageAlt: Pastor Charles, a smiling man in glasses and a patterned red, black and white shirt, seated before tall windows
-    linkLabel: Read More
-  - title: The Power of Strategic Language Resources
-    body: One of the many rewards of partnership in the Church-Centric Bible Translation movement is having a front-row seat to remarkable advances in Bible translation.
-    href: /stories/the-power-of-strategic-language-resources/
-    image: stories/the-power-of-strategic-language-resources.jpg
-    imageAlt: Silhouetted hands of a large crowd raised toward a bright sunrise sky
-    linkLabel: Read More
-  - title: Overcoming Obstacles to the Gospel in Benin
-    body: Charles Z of Benin has been trying to share the gospel of Christ with his Muslim neighbors since 1999.
-    href: /stories/overcoming-obstacles-to-the-gospel-in-benin/
-    image: stories/overcoming-obstacles-to-the-gospel-in-benin.jpg
-    imageAlt: A man in glasses and a patterned blue shirt gestures as he speaks, seated outdoors on a garden lawn
-    linkLabel: Read More
-- type: giving
-  title: Reach 2.6 million people who need the gospel in Benin
-  body: Support our church network partner’s goal of providing Church-Centric Bible Translation tools to local church teams across the whole nation.
-  formId: 6ee34bdd-7424-4589-a529-0762da6e5320
+  layout: rows
+  slugs:
+  - the-gospel-in-five-more-languages
+  - the-power-of-strategic-language-resources
+  - overcoming-obstacles-to-the-gospel-in-benin
 - type: cards
   columns: 5
   variant: outlined

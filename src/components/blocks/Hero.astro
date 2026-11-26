@@ -16,6 +16,7 @@ import { mdInline } from '../../lib/md';
 import Picture from '../ui/Picture.astro';
 import Actions from '../ui/Actions.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import { SITE } from '../../lib/site';
 
 type Hero = Extract<Block, { type: 'hero' }>;
 interface Props {
@@ -65,7 +66,9 @@ const lines = [title, ...(block.lines ?? [])];
       </div>
     </section>
   ) : variant === 'project' ? (
-    <section class="uw-banner on-dark relative isolate overflow-hidden px-10 py-10">
+    <section class:list={['uw-banner on-dark relative isolate overflow-hidden px-10 md:py-10', block.contentPosition === 'end' ? 'pt-[70px] pb-10' : 'pt-10 pb-[70px]']}>
+      {/* On phones production stacks the empty photo half too, which adds
+          30px on its side: above the text when the text is the end half. */}
       {image && (
         <div class="absolute inset-0 -z-20">
           <Picture path={image} alt={imageAlt ?? ''} eager sizes="100vw" fill class="h-full w-full object-cover" />
@@ -78,11 +81,26 @@ const lines = [title, ...(block.lines ?? [])];
         </div>
       )}
       <div class="mx-auto flex min-h-[220px] w-full max-w-[1000px] flex-wrap items-center gap-5">
-        <div class:list={['flex w-full flex-col gap-5 p-2.5 md:w-[calc(50%-10px)]', block.contentPosition === 'end' && 'md:ms-auto']}>
-          {eyebrow && <p class="text-h2 font-bold uppercase text-white">{eyebrow}</p>}
-          <h1 class="text-h2 !text-kindle [text-wrap:wrap]" set:html={mdInline(title)} />
-          {lead && <p class="text-body text-white" set:html={mdInline(lead, locale)} />}
-          <Actions actions={actions} locale={locale} class="uw-donate" />
+        <div class:list={['flex w-full flex-col gap-2.5 p-2.5 md:w-[calc(50%-10px)]', block.contentPosition === 'end' && 'md:ms-auto', !actions.length && !block.donateFormId && 'pb-5']}>
+          {/* Production: the country name and the Kindle line are both 32px
+              headings, 10px apart; the name is the page's h1 here. */}
+          {eyebrow && <h1 class="text-h2 font-bold uppercase !text-white">{eyebrow}</h1>}
+          {eyebrow ? (
+            <h2 class="text-h2 !text-kindle [text-wrap:wrap]" set:html={mdInline(title)} />
+          ) : (
+            <h1 class="text-h2 !text-kindle [text-wrap:wrap]" set:html={mdInline(title)} />
+          )}
+          {lead && <div>{lead.split(/\n\s*\n/).map((para) => <p class="mb-[0.9rem] text-body text-white" set:html={mdInline(para, locale)} />)}</div>}
+          {(actions.length > 0 || block.donateFormId) && (
+            <div id="give-form" class="uw-project-donate">
+              <Actions actions={actions} locale={locale} class="uw-donate uw-donate-fallback" />
+              {block.donateFormId && (
+                <div class="uw-virtuous-donate" data-form-id={block.donateFormId}>
+                  <script is:inline src={SITE.virtuousEmbedSrc} data-rd={block.donateFormId} data-organizationId={SITE.virtuousOrgId} data-type="form" defer></script>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </section>
@@ -130,6 +148,13 @@ const lines = [title, ...(block.lines ?? [])];
 }
 
 <style>
+  /* Project band with `donateFormId`: Virtuous draws its own "Donate Now"
+     button (it opens the form in a modal). Until that button is there, and
+     wherever the form cannot load (unregistered preview domains, no
+     script), our look-alike link stays and Virtuous's output stays hidden. */
+  .uw-virtuous-donate { display: none; }
+  .uw-project-donate.is-ready .uw-virtuous-donate { display: block; }
+  .uw-project-donate.is-ready :global(.uw-donate-fallback) { display: none; }
   /* A Donate button in the project band is production's Virtuous button. */
   :global(.uw-donate .uw-btn-give) { height: 56px; padding: 12px 16px; font-family: Arial, 'Helvetica Neue', Helvetica, var(--font-sans); font-size: 14px; line-height: 16.8px; font-weight: 600; }
   /* Production: h2 32/32/700 white, centered. Ours stays an h1. */
@@ -140,3 +165,17 @@ const lines = [title, ...(block.lines ?? [])];
      on phones there is no room, so they hide (the JSON-LD trail remains). */
   @media (max-width: 767px) { .uw-banner-crumbs { display: none; } }
 </style>
+
+<script is:inline>
+  (function () {
+    var slots = document.querySelectorAll('.uw-virtuous-donate');
+    if (!slots.length) return;
+    var check = function () {
+      slots.forEach(function (el) {
+        if (el.querySelector('.rd-btn')) el.parentElement.classList.add('is-ready');
+      });
+    };
+    new MutationObserver(check).observe(document.body, { childList: true, subtree: true });
+    check();
+  })();
+</script>

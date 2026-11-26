@@ -6,7 +6,9 @@
 //   centered — the same, centered (for-translators, staff)
 //   outlined — white box with a 1px Kindle border and 4px corners, centered
 //              28px Inspire title, outline "Learn More" and optional filled
-//              Donate button (wbwn regions)
+//              Donate button (wbwn regions). Production spreads image,
+//              title and buttons over the box (space-between) and sets five
+//              columns 10px apart.
 //   card     — a white 4px card (kept for older content)
 import type { Block } from '../../content.config';
 import { md, mdInline, localizeHref } from '../../lib/md';
@@ -28,20 +30,20 @@ const cols = {
   2: 'md:grid-cols-2',
   3: 'md:grid-cols-2 tablet:grid-cols-3',
   4: 'sm:grid-cols-2 tablet:grid-cols-4',
-  5: 'grid-cols-2 md:grid-cols-3 tablet:grid-cols-5',
+  5: 'md:grid-cols-3 tablet:grid-cols-5',
 }[block.columns];
 const sizes = {
   2: '(min-width: 48rem) 490px, 100vw',
   3: '(min-width: 66rem) 320px, (min-width: 48rem) 50vw, 100vw',
   4: '(min-width: 66rem) 235px, (min-width: 40rem) 50vw, 100vw',
-  5: '(min-width: 66rem) 190px, 50vw',
+  5: '(min-width: 66rem) 150px, (min-width: 48rem) calc((100vw - 100px) / 3 - 42px), calc(100vw - 122px)',
 }[block.columns];
 const isExternal = (h: string) => /^https?:\/\//.test(h);
 ---
 
 <Section background={block.background}>
   <SectionHeader title={block.title} intro={block.intro} align={block.align === 'center' || v === 'centered' ? 'center' : 'start'} locale={locale} />
-  <ul class:list={['grid gap-5', cols]}>
+  <ul class:list={['grid', v === 'outlined' && block.columns === 5 ? 'gap-2.5' : 'gap-5', v === 'outlined' && block.intro && 'pt-[0.9rem]', cols]}>
     {
       block.items.map((item) => (
         <li
@@ -69,7 +71,7 @@ const isExternal = (h: string) => /^https?:\/\//.test(h);
           {item.body && <div class="prose w-full [&>:last-child]:mb-0" set:html={md(item.body, locale)} />}
           {item.impact && <p class="uw-impact w-full" set:html={mdInline(item.impact, locale)} />}
           {(item.href || item.donateHref) && (
-            <div class:list={['mt-auto flex flex-wrap gap-2.5', center && 'justify-center', v === 'outlined' && block.columns <= 3 && 'uw-tall-btns']}>
+            <div class:list={['flex flex-wrap gap-2.5', v !== 'outlined' && 'mt-auto', center && 'justify-center', v === 'outlined' && block.columns <= 3 && 'uw-tall-btns']}>
               {item.href && (
                 <a
                   href={localizeHref(item.href, locale)}

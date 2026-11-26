@@ -6,6 +6,8 @@
 //              tablets, one on phones) on an Ocean band
 //   rows     — production's stories index: a tall photo with a diagonal
 //              edge beside the title and excerpt, nine per page
+//              (a title and `intro`, as on the wbwn country pages, sit
+//              start-aligned over the 800px column)
 // With `showFilter`, a row of region buttons filters the list in the
 // browser. Every story stays in the HTML, so crawlers and visitors without
 // JavaScript see them all (the rows' page numbers only appear with JS).
@@ -62,6 +64,8 @@ const PER_PAGE = 9;
             </a>
           )}
         </div>
+      ) : layout === 'rows' ? (
+        <div class="mx-auto max-w-[800px]"><SectionHeader title={block.title} intro={block.intro} locale={locale} /></div>
       ) : (
         block.title && <h2 class="mb-5 text-center" set:html={mdInline(block.title, locale)} />
       )

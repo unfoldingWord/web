@@ -35,6 +35,7 @@ const { block, locale } = Astro.props;
       ))
     }
   </div>
+  {block.body && <div class="prose mt-5" set:html={md(block.body, locale)} />}
 </Section>
 
 <style>

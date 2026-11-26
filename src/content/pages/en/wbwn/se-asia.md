@@ -6,15 +6,16 @@ sections:
 - type: hero
   variant: project
   eyebrow: Southeast Asia
-  title: Impact 9 million people with the gospel
+  title: Impact 9 million people with the Gospel
   lead: '**Nine million people remain unreached in this country. Church planters need the Bible in all their heart languages to plant healthy churches and disciple believers.**'
   image: wbwn/se-asia.jpg
   imageAlt: Two laughing boys splash in a forest stream, one holding a large leaf overhead
   contentPosition: end
   actions:
   - label: Donate Now
-    href: '#give-form'
+    href: https://give.unfoldingword.org/
     style: give
+  donateFormId: a649a17c-3314-4bc8-9308-7d9bedf725f6
 - type: prose
   title: Project Overview
   width: narrow
@@ -39,21 +40,12 @@ sections:
   align: center
   width: narrow
   body: Pray for many to become followers of Jesus through this ministry and for the growth of a movement of disciples making disciples in this country.
-- type: cards
+- type: storyList
   title: Stories from the Field
-  intro: Our Southeast Asian partner has extremely strict security requirements so can only share this one story.
-  columns: 2
-  items:
-  - title: Life Change in Southeast Asia
-    body: Mr. H (pseudonym) lives in Southeast Asia and works with unfoldingWord’s Whole Bible Whole Nation partner in a country village.
-    href: /stories/life-change-in-southeast-asia/
-    image: stories/life-change-in-southeast-asia.jpg
-    imageAlt: A busy city street at night with motorbikes, a pedicab and vendors carrying bunches of colorful balloons
-    linkLabel: Read More
-- type: giving
-  title: Impact 9 million people with the gospel
-  body: Nine million people remain unreached in this country. Church planters need the Bible in all their heart languages to plant healthy churches and disciple believers.
-  formId: a649a17c-3314-4bc8-9308-7d9bedf725f6
+  intro: '**Our SE Asian partner has extremely strict security requirements so can only share this one story.**'
+  layout: rows
+  slugs:
+  - life-change-in-southeast-asia
 - type: cards
   columns: 5
   variant: outlined
