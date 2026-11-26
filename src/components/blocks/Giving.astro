@@ -4,6 +4,18 @@
 // form, its payment processing and its receipts are unchanged from the
 // WordPress site. Only `formId` differs between giving pages.
 //
+// Layout (production's Elementor giving row): two 490px columns with 10px
+// padding and a 20px gap inside the 1000px box. Start column: a 40px Tech
+// title whose *emphasis* is Kindle, the text, a photo with 4px corners.
+// End column: the Virtuous form, which draws its own white card and shadow,
+// so there is no wrapper card here. Under the photo (under the form on
+// phones) sits our quiet trust list and fallback link.
+//
+// `variant: landing` (give/* pages): the title is the page's h1, the copy is
+// centered on phones and the photo hidden there (as production), and an
+// Ocean "Contact Us With Questions" band follows. The landing header and
+// footer come from Base.astro (template: giving).
+//
 // Analytics: GTM sees the page view and the form's own events. Whether the
 // Virtuous embed reports a COMPLETED gift back to this page is not yet
 // verified (docs/analytics.md, "Donation conversions"). Until it is, the
@@ -15,7 +27,6 @@ import type { Block } from '../../content.config';
 import { SITE } from '../../lib/site';
 import { md, mdInline } from '../../lib/md';
 import { ui, fmt } from '../../i18n';
-import Section from '../ui/Section.astro';
 import Picture from '../ui/Picture.astro';
 import Icon from '../ui/Icon.astro';
 
@@ -26,37 +37,214 @@ interface Props {
 }
 const { block, locale } = Astro.props;
 const t = ui(locale);
+const landing = block.variant === 'landing';
+const compact = block.textStyle === 'compact';
+const Heading = landing ? 'h1' : 'h2';
 const fallbackLink = `<a href="${SITE.givingFallbackUrl}">give.unfoldingword.org</a>`;
 ---
 
-<Section background="mist" id="give-form">
-  <div class="grid gap-10 lg:grid-cols-12 lg:gap-14">
-    <div class="lg:col-span-5">
-      {block.eyebrow && <p class="eyebrow mb-3">{block.eyebrow}</p>}
-      {block.title && <h2 set:html={mdInline(block.title)} />}
-      {block.body && <div class="prose mt-5" set:html={md(block.body, locale)} />}
+<section id="give-form" class:list={['giving', landing && 'giving-landing']}>
+  <div class="giving-row">
+    <div class="giving-copy">
+      {block.eyebrow && !landing && <p class="eyebrow">{block.eyebrow}</p>}
+      {block.title && <Heading class="giving-title" set:html={mdInline(block.title)} />}
+      {block.body && <div class:list={['giving-body', compact ? 'giving-body-compact' : 'prose']} set:html={md(block.body, locale)} />}
       {
         block.image && (
-          <div class="mt-8 hidden overflow-hidden rounded-card shadow-card lg:block">
-            <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="(min-width: 64rem) 40vw, 100vw" />
+          <div class="giving-image">
+            <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="(min-width: 48rem) 470px, 100vw" widths={[470, 940, 1410]} />
           </div>
         )
       }
-      <ul class="mt-8 space-y-3 text-sm text-ink-muted">
-        <li class="flex gap-2"><Icon name="lock" class="mt-0.5 size-4.5 text-inspire-ink" />{t.secureGiving}</li>
-        <li class="flex gap-2"><Icon name="check" class="mt-0.5 size-4.5 text-inspire-ink" />{t.taxDeductible}</li>
-      </ul>
     </div>
-    <div class="lg:col-span-7">
-      <div class="virtuous-form min-h-[32rem] rounded-card bg-white p-4 shadow-raised sm:p-6" data-form-id={block.formId}>
-        <p class="virtuous-loading py-10 text-center text-ink-muted">{t.givingFormLoading}</p>
+
+    <div class="giving-form">
+      <div class="virtuous-form" data-form-id={block.formId}>
+        <p class="virtuous-loading">{t.givingFormLoading}</p>
         <script is:inline src={SITE.virtuousEmbedSrc} data-rd={block.formId} data-organizationId={SITE.virtuousOrgId} data-type="form" defer></script>
-        <noscript><p class="prose" set:html={fmt(t.givingFormFallback, { link: fallbackLink })} /></noscript>
+        <noscript><p set:html={fmt(t.givingFormFallback, { link: fallbackLink })} /></noscript>
       </div>
-      <p class="mt-4 text-center text-sm text-ink-muted" set:html={fmt(t.givingFormFallback, { link: fallbackLink })} />
     </div>
+
+    <ul class="giving-trust">
+      <li><Icon name="lock" class="giving-trust-icon" />{t.secureGiving}</li>
+      <li><Icon name="check" class="giving-trust-icon" />{t.taxDeductible}</li>
+      <li set:html={fmt(t.givingFormFallback, { link: fallbackLink })} />
+    </ul>
   </div>
-</Section>
+</section>
+
+{
+  landing && block.contact && (
+    <section class="giving-contact bg-ocean on-dark" aria-labelledby="giving-contact-title">
+      <h2 id="giving-contact-title">{block.contact.title}</h2>
+      <div class="giving-contact-body" set:html={md(block.contact.body, locale)} />
+    </section>
+  )
+}
+
+<style>
+  /* Production values (spec/components.md §14, give-1440.json). */
+  .giving {
+    background: var(--color-paper);
+    padding: 40px var(--spacing-gutter);
+  }
+  .giving-row {
+    max-width: 1000px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'copy' 'form' 'trust';
+    row-gap: 10px;
+  }
+  .giving-copy,
+  .giving-form,
+  .giving-trust {
+    min-width: 0;
+    padding: 10px;
+  }
+  /* A flex stack with 20px gaps, like Elementor's: a paragraph's 14.4px
+     bottom margin adds to the gap instead of collapsing into it. */
+  .giving-copy {
+    grid-area: copy;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .giving-form { grid-area: form; }
+  .giving-trust { grid-area: trust; }
+
+  .giving-title {
+    font-size: var(--text-h1);
+    line-height: 1;
+    font-weight: 700;
+    color: var(--color-tech);
+    margin: 0;
+    text-wrap: wrap;
+  }
+  .giving-title :global(em) {
+    font-style: normal;
+    color: var(--color-kindle);
+  }
+  /* Benin's second line: 26pt. */
+  .giving-title :global(small) {
+    font-size: 26pt;
+  }
+  /* Production's text-editor lists are weight 400 and end flush. */
+  .giving-body :global(li) { font-weight: 400; }
+  .giving-body :global(:is(ul, ol)) { margin-bottom: 0; }
+  /* The Elementor paragraph widget: theme system font, 16/24. */
+  .giving-body-compact {
+    font-family: var(--font-system);
+    font-size: 1rem;
+    line-height: 1.5;
+    font-weight: 400;
+    color: var(--color-tech);
+  }
+  .giving-body-compact :global(p) { margin: 0 0 1em; }
+  .giving-body-compact > :global(:last-child) { margin-bottom: 0; }
+  .giving-image :global(img) {
+    display: block;
+    border-radius: var(--radius-media-split);
+  }
+
+  /* No wrapper card: Virtuous draws its own. The min-height holds the
+     form's place while it loads. */
+  .virtuous-form {
+    min-height: 547px;
+  }
+  .virtuous-loading {
+    padding-block: 40px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--color-ink-muted);
+  }
+
+  /* Our extra (decision 2): a quiet trust list and fallback link. */
+  .giving-trust {
+    margin: 0;
+    list-style: none;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 300;
+    color: var(--color-ink-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .giving-trust :global(.giving-trust-icon) {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-inline-end: 6px;
+    vertical-align: -2px;
+    color: var(--color-inspire);
+  }
+  .giving-trust :global(a) { font-weight: 700; }
+
+  /* Landing on phones: centered copy, no photo (production hides it). */
+  @media (max-width: 767px) {
+    .giving-landing {
+      padding-block-end: 30px;
+    }
+    .giving-landing .giving-copy {
+      text-align: center;
+    }
+    .giving-landing .giving-image {
+      display: none;
+    }
+    .giving-landing .giving-trust {
+      text-align: center;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .giving-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: auto 1fr;
+      grid-template-areas: 'copy form' 'trust form';
+      column-gap: 20px;
+      row-gap: 0;
+    }
+    .giving-trust {
+      align-self: start;
+      padding-block: 0;
+    }
+    .virtuous-form {
+      min-height: 597px;
+    }
+  }
+
+  /* Ocean "Contact Us With Questions" band: 800px, 40px padding, 20px gap. */
+  .giving-contact {
+    padding: 40px;
+    text-align: center;
+  }
+  .giving-contact h2 {
+    max-width: 800px;
+    margin: 0 auto 20px;
+    font-size: var(--text-h2);
+    line-height: 1;
+    font-weight: 700;
+    color: #fff;
+    text-wrap: wrap;
+  }
+  .giving-contact-body {
+    max-width: 800px;
+    margin-inline: auto;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 300;
+    color: #fff;
+  }
+  .giving-contact-body :global(p) { margin: 0 0 14.4px; }
+  /* Production's band text has no links; ours (the e-mail address) keep
+     the text's look and underline on hover. */
+  .giving-contact-body :global(a) { color: inherit; font-weight: inherit; }
+  .giving-contact-body :global(a:hover) { color: inherit; text-decoration: underline; }
+  .giving-contact-body :global(strong) { font-weight: 300; }
+</style>
 
 <script is:inline>
   (function () {
@@ -76,7 +264,7 @@ const fallbackLink = `<a href="${SITE.givingFallbackUrl}">give.unfoldingword.org
     // Hide the loading line once Virtuous has inserted its form.
     var obs = new MutationObserver(function () {
       document.querySelectorAll('.virtuous-form').forEach(function (el) {
-        if (el.querySelector('[data-rd-state], iframe, form')) el.querySelector('.virtuous-loading')?.remove();
+        if (el.querySelector('[data-rd-state], iframe, form, .raise-donors')) el.querySelector('.virtuous-loading')?.remove();
       });
     });
     obs.observe(document.body, { childList: true, subtree: true });

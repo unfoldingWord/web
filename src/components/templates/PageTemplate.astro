@@ -22,7 +22,9 @@ const entry = route.entry as CollectionEntry<'pages'>;
 const d = entry.data;
 const { Content } = await render(entry);
 const hasBody = Boolean(entry.body?.trim());
-const firstIsHero = d.sections[0]?.type === 'hero';
+// Giving landing pages open with their own h1 (the landing giving block), so
+// they get no title band either.
+const firstIsHero = d.sections[0]?.type === 'hero' || d.sections.some((s) => s.type === 'giving' && s.variant === 'landing');
 const url = new URL(route.path, SITE.url).href;
 const isHome = route.basePath === '/';
 

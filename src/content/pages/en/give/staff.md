@@ -6,11 +6,6 @@ description: >-
 schemaType: DonatePage
 redirectFrom: [/staff/]
 sections:
-  - type: hero
-    variant: ocean
-    eyebrow: Ways to give
-    title: Support Staff
-    lead: Give to support the work of an unfoldingWord staff member.
   - type: cards
     columns: 3
     items:
@@ -62,14 +57,14 @@ sections:
         body: Jesse serves as the COO, helping our team work effectively together.
         href: https://give.unfoldingword.org/donate/staff?projectCodePreselect=Griffin
         linkLabel: Support Jesse Griffin
-      - title: Tim and Angie Jore
+      - title: Tim & Angie Jore
         image: staff/tim-angie-jore.jpg
         imageAlt: Tim and Angie Jore standing outdoors with five younger family members
         body: >-
           Tim Jore serves as Strategy Leader, focusing on the development of innovative
           approaches that expand global access to biblical content. Angie works in hospitality.
         href: https://give.unfoldingword.org/donate/staff?projectCodePreselect=Jore
-        linkLabel: Support Tim and Angie Jore
+        linkLabel: Support Tim & Angie Jore
       - title: Christopher Klapp
         image: staff/christopher-klapp.jpg
         imageAlt: Christopher Klapp in clear-framed glasses and a lavender shirt
@@ -95,14 +90,14 @@ sections:
           translation by the global church.
         href: https://give.unfoldingword.org/donate/staff?projectCodePreselect=Mahn
         linkLabel: Support Rich Mahn
-      - title: Perry and Beth Oakes
+      - title: Perry & Beth Oakes
         image: staff/perry-beth-oakes.jpg
         imageAlt: Perry and Beth Oakes standing together in front of a gray wall
         body: >-
           Perry oversees the creation of open-access Bible translation resources. Beth serves the
           team by proofreading the Bible translation resource materials.
         href: https://give.unfoldingword.org/donate/staff?projectCodePreselect=Oakes
-        linkLabel: Support Perry and Beth Oakes
+        linkLabel: Support Perry & Beth Oakes
       - title: Frances Pacione
         image: staff/frances-pacione.jpg
         imageAlt: Frances Pacione smiling, wearing glasses and a dark floral top
@@ -112,20 +107,20 @@ sections:
           development.
         href: https://give.unfoldingword.org/donate/staff?projectCodePreselect=Pacione
         linkLabel: Support Frances Pacione
-      - title: Russ and Jan Perry
+      - title: Russ & Jan Perry
         image: staff/russ-jan-perry.jpg
         imageAlt: Russ and Jan Perry standing together in front of a gray wall
         body: Russ focuses on global partnerships and projects. Jan is the Finance Manager for unfoldingWord.
         href: https://give.unfoldingword.org/donate/staff?projectCodePreselect=Perry
-        linkLabel: Support Russ and Jan Perry
-      - title: David and Jane Reeves
+        linkLabel: Support Russ & Jan Perry
+      - title: David & Jane Reeves
         image: staff/david-jane-reeves.jpg
         imageAlt: David and Jane Reeves smiling together, he in a blue tie and she in a pink jacket
         body: >-
           As president, David provides leadership to the team while Jane handles event and
           travel planning.
         href: https://give.unfoldingword.org/donate/staff?projectCodePreselect=Reeves
-        linkLabel: Support David and Jane Reeves
+        linkLabel: Support David & Jane Reeves
       - title: Dane Skelton
         image: staff/dane-skelton.jpg
         imageAlt: Dane Skelton in glasses and a navy shirt, with green trees behind him
@@ -153,7 +148,5 @@ sections:
         imageAlt: Close-up of a printed dictionary page
         body: Our computational linguist builds technology to help people interpret the Bible.
         href: https://give.unfoldingword.org/donate/staff?projectCodePreselect=Computational%20Linguist
-        linkLabel: Support our computational linguist
-  - type: trust
-    title: Give with confidence
+        linkLabel: Support Our Computational Linguist
 ---

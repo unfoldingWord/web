@@ -1,0 +1,86 @@
+---
+// The reduced header of production's give/* landing pages: no navigation,
+// the logo centered (with a partner logo beside it on GivingTuesday), an
+// optional thank-you line under it, and a soft shadow along the bottom.
+// The line and partner logo are fields of the page's giving block
+// (`tagline`, `partnerLogo`), looked up from the page being rendered.
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-horizontal.png';
+import { allRoutes } from '../../lib/routes';
+import { img } from '../../lib/images';
+import { mdInline } from '../../lib/md';
+import { ui, localizePath } from '../../i18n';
+
+interface Props {
+  locale: string;
+  basePath: string;
+}
+const { locale, basePath } = Astro.props;
+const t = ui(locale);
+const route = (await allRoutes()).find((r) => r.kind === 'pages' && r.locale === locale && r.basePath === basePath);
+const sections = ((route?.entry.data as { sections?: { type: string }[] } | undefined)?.sections ?? []) as {
+  type: string;
+  tagline?: string;
+  partnerLogo?: string;
+  partnerLogoAlt?: string;
+}[];
+const giving = sections.find((s) => s.type === 'giving');
+const partner = giving?.partnerLogo ? img(giving.partnerLogo) : undefined;
+---
+
+<header class="lh">
+  <div class="lh-logos">
+    <a href={localizePath('/', locale)} aria-label={`${t.siteName} — ${t.home}`}>
+      <Image src={logo} alt="unfoldingWord" widths={[250, 500]} sizes="250px" loading="eager" fetchpriority="high" class="lh-logo" />
+    </a>
+    {partner && <Image src={partner} alt={giving!.partnerLogoAlt ?? ''} widths={[250, 500]} sizes="250px" loading="eager" class="lh-logo" />}
+  </div>
+  {giving?.tagline && <p class="lh-tagline" set:html={mdInline(giving.tagline)} />}
+</header>
+
+<style>
+  /* No sticky header here: anchors need no offset. */
+  :global(html) {
+    --header-h: 0px;
+  }
+  .lh {
+    position: relative;
+    z-index: 10;
+    background: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 2px 20px rgb(0 0 0 / 0.2);
+  }
+  .lh-logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .lh-logos a {
+    display: block;
+  }
+  .lh-logo {
+    display: block;
+    width: 250px;
+    max-width: 100%;
+    height: auto;
+  }
+  .lh-tagline {
+    max-width: 800px;
+    margin: 0;
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: 400;
+    color: var(--color-tech);
+    text-align: center;
+  }
+  :global(html[data-script='nastaliq']) .lh-tagline,
+  :global(html[data-script='myanmar']) .lh-tagline {
+    line-height: 1.8;
+  }
+</style>
