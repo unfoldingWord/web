@@ -4,8 +4,10 @@ description: Nearly 3,000 Sweet Publishing Bible illustrations from Genesis to R
 schemaType: CollectionPage
 sections:
   - type: hero
-    variant: ocean
+    variant: banner
     title: Sweet Publishing Bible Illustrations
+    image: obs/man-reading-obs.jpg
+    imageAlt: A man in glasses and a floral shirt reads an illustrated printed copy of Open Bible Stories at a table beside a window
   - type: prose
     width: wide
     body: |-

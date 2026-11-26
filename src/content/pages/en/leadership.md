@@ -6,8 +6,10 @@ description: >-
 schemaType: AboutPage
 sections:
   - type: hero
-    variant: ocean
+    variant: banner
     title: Leadership
+    image: banners/pen-writing.jpg
+    imageAlt: A hand holding a black pen over a sheet of paper on a desk
   - type: people
     title: Board of Directors
     intro: >-

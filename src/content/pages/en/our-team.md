@@ -7,12 +7,12 @@ schemaType: AboutPage
 ogImage: people/our-team-hero.jpg
 sections:
   - type: hero
-    variant: ocean
+    variant: banner
     title: Our Team
-    image: people/our-team-hero.jpg
+    image: banners/our-team.jpg
     imageAlt: >-
-      Overhead view of a translation team at a wooden table with two laptops, pointing to lines on
-      printed pages of text
+      Overhead view of translation team members at a wooden table, one pointing to a line on a
+      printed page of text
   - type: people
     group: staff
     layout: team
