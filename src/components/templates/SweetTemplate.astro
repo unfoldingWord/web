@@ -61,7 +61,7 @@ const jsonLd = [
     {entry.body?.trim() && <div class="prose mb-5"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>}
     {
       d.chapters.length > 1 && (
-        <nav class="sweet-chapters mb-5 text-center" aria-label={t.jumpToChapter}>
+        <nav class="sweet-chapters mb-[15px] text-center" aria-label={t.jumpToChapter}>
           <span class="me-2">{t.jumpToChapter}:</span>
           <ul class="inline">
             {d.chapters.map((c) => (
@@ -74,7 +74,8 @@ const jsonLd = [
       )
     }
 
-    <ul class="flex flex-wrap justify-center gap-x-[5px] gap-y-[7px]">
+    {/* Production's inline images sit on 92.44px lines (85px image + line box). */}
+    <ul class="flex flex-wrap justify-center gap-x-[5px] gap-y-[7.44px]">
       {
         d.chapters.flatMap((c) =>
           c.images.map((name, i) => {
@@ -92,8 +93,8 @@ const jsonLd = [
     </ul>
 
     <div class="sweet-related">
-      <h2 class="sweet-related-title"><a href={localizePath('/sweet-publishing/', route.locale)} lang={lang}>{t.sweetIndexTitle}</a></h2>
-      <ul class="grid gap-x-0 gap-y-3.5 md:grid-cols-3">
+      <h2 class="sweet-related-title">{t.related}</h2>
+      <ul class="flex flex-wrap gap-y-3.5">
         {
           related.map((b) => (
             <li class="sweet-related-item">
@@ -118,20 +119,25 @@ const jsonLd = [
   /* Breadcrumbs sit in the banner's top padding; no room on phones. */
   @media (max-width: 767px) { .sweet-crumbs { display: none; } }
 
-  /* Chapter links: quiet, production's 900-weight Kindle links. */
-  .sweet-chapters { font-size: 0.9375rem; line-height: 1.7; color: var(--color-tech); }
+  /* Chapter links: quiet, production's 900-weight Kindle links. One 14/20
+     line; on phones it scrolls sideways instead of wrapping into a block
+     that pushes the illustrations down. */
+  .sweet-chapters { font-size: 14px; line-height: 20px; color: var(--color-tech); }
   .sweet-chapters a { font-weight: 900; }
+  @media (max-width: 767px) {
+    .sweet-chapters { white-space: nowrap; overflow-x: auto; text-align: start; scrollbar-width: none; }
+  }
 
   /* Thumbnail: production's 115×85 files carry a 3px white frame. */
   .sweet-thumb { padding: 3px; background: #fff; }
 
   /* Jetpack "Related": 12px bold headline under a short rule, then three
      14/20 columns (title link, then two quiet lines). */
-  .sweet-related { margin-top: 61px; margin-bottom: 18px; }
-  .sweet-related-title { display: inline-block; margin: 0 0 12px; padding-top: 12px; border-top: 1px solid var(--color-rule); font-size: 12px; line-height: 14.4px; font-weight: 700; font-style: italic; color: var(--color-tech); }
-  .sweet-related-title a { color: inherit; font-weight: 700; }
-  .sweet-related-title a:hover { color: var(--color-link-hover); }
-  .sweet-related-item { font-size: 14px; line-height: 20px; font-weight: 300; color: var(--color-ink-muted); padding-inline-end: 20px; }
+  .sweet-related { margin-top: 42px; margin-bottom: 18px; }
+  .sweet-related-title { display: inline-block; margin: 0 0 12px; padding-top: 12px; border-top: 1px solid var(--color-rule); font-size: 12px; line-height: 14.4px; font-weight: 700; color: var(--color-tech); }
+  .sweet-related-item { font-size: 14px; line-height: 20px; font-weight: 300; color: var(--color-ink-muted); padding-inline-end: 20px; width: 50%; }
+  /* Jetpack: three 33% columns from 768px, two on phones. */
+  @media (min-width: 768px) { .sweet-related-item { width: 33%; } }
   .sweet-related-item a { font-weight: 400; }
   .sweet-license { margin-top: 20px; font-size: 14px; line-height: 20px; font-weight: 300; color: var(--color-ink-muted); }
   .sweet-license :global(a) { font-weight: 400; }
