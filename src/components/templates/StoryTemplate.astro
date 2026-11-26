@@ -13,7 +13,6 @@ import { basePathFor, splitId, type Route } from '../../lib/routes';
 import LocalizedBody from '../ui/LocalizedBody.astro';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
-import Picture from '../ui/Picture.astro';
 import PostFooter from '../ui/PostFooter.astro';
 
 interface Props {
@@ -27,22 +26,34 @@ const t = ui(route.locale);
 const { Content } = await render(entry);
 const url = new URL(route.path, SITE.url).href;
 const og = new URL((await getImage({ src: img(d.image), width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src, SITE.url).href;
+// The banner photo at the width production drew it (bannerWidth, or the
+// file's own width).
+const bannerSrc = img(d.image);
+const bannerWidth = d.bannerWidth ?? bannerSrc.width;
+const banner = await getImage({ src: bannerSrc, width: Math.min(bannerWidth, bannerSrc.width), format: 'webp' });
 const regions = t.regions as Record<string, string>;
 const region = regions[d.region] ?? d.region;
 
-// Related: production's Jetpack picks three posts; ours takes the newest
-// stories from the same region first, then the newest of the rest.
+// Related: the three stories the editor listed in `related` (production's
+// Jetpack picks, copied); otherwise the newest stories from the same region
+// first, then the newest of the rest.
 const all = (await getCollection('stories')).filter((s) => splitId(s.id).locale === 'en' && s.id !== entry.id);
-const related = all
-  .sort((a, b) => Number(b.data.region === d.region) - Number(a.data.region === d.region) || b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 3)
-  .map((s) => ({
-    title: s.data.title,
-    href: localizePath(basePathFor('stories', splitId(s.id).rest), route.locale),
-    date: formatDate(s.data.date, route.locale),
-    datetime: s.data.date.toISOString(),
-    category: regions[s.data.region] ?? s.data.region,
-  }));
+const picked = d.related
+  ? d.related.map((slug) => {
+      const s = all.find((x) => splitId(x.id).rest === slug);
+      if (!s) throw new Error(`Story "${entry.id}": related story "${slug}" does not exist (use the file name without .md)`);
+      return s;
+    })
+  : all
+      .sort((a, b) => Number(b.data.region === d.region) - Number(a.data.region === d.region) || b.data.date.getTime() - a.data.date.getTime())
+      .slice(0, 3);
+const related = picked.map((s) => ({
+  title: s.data.title,
+  href: localizePath(basePathFor('stories', splitId(s.id).rest), route.locale),
+  date: formatDate(s.data.date, route.locale),
+  datetime: s.data.date.toISOString(),
+  category: s.data.category ?? regions[s.data.region] ?? s.data.region,
+}));
 
 const jsonLd = [
   webPageNode({ url, title: d.title, description: d.description, lang: route.locale, image: og, breadcrumbId: `${url}#breadcrumb` }),
@@ -54,9 +65,7 @@ const jsonLd = [
 <Base locale={route.locale} basePath={route.basePath} title={d.title} description={d.description} ogImage={og} ogType="article" jsonLd={jsonLd} translations={route.translations} fallback={route.fallback} noindex={route.noindex} pageType="story">
   <article>
     <header class="uw-banner on-dark post-banner">
-      <div class="absolute inset-0 -z-20">
-        <Picture path={d.image} alt={d.imageAlt} eager sizes="100vw" fill class="post-banner-img" />
-      </div>
+      <div class="post-banner-img absolute inset-0 -z-20" role="img" aria-label={d.imageAlt} style={`--banner-img: url(${banner.src}); --banner-w: ${bannerWidth}px`}></div>
       <div class="absolute inset-0 -z-10 bg-ocean/50" aria-hidden="true"></div>
       <div class="post-crumbs">
         <div class="container-page text-start"><Breadcrumbs items={crumbs} locale={route.locale} onDark /></div>
@@ -86,9 +95,15 @@ const jsonLd = [
     padding: 40px;
     text-align: center;
   }
-  /* Production paints the photo from its top edge. */
-  .post-banner :global(.post-banner-img) { object-position: top; }
+  /* Production paints the photo as a plain CSS background: drawn at the
+     uploaded file's own size from the top-left corner and repeated, so a
+     small photo tiles across the band and a large one shows its top-left
+     corner. */
+  .post-banner-img { background: var(--banner-img) 0 0 / var(--banner-w) auto repeat; }
   .post-title {
+    /* min-width 0: a word longer than the column overflows it, as on
+       production, instead of widening the title box. */
+    min-width: 0;
     max-width: 1000px;
     margin: 0;
     font-size: var(--text-h2);
@@ -115,5 +130,7 @@ const jsonLd = [
   .post-body-large { padding: 10px; font-size: var(--text-story); line-height: var(--text-story--line-height); }
   .post-body-large :global(p) { margin-bottom: 14.4px; }
   .post-body-large :global(h2) { font-size: 32px; line-height: 1.2; font-weight: 500; color: var(--color-tech); margin-block: 20px; }
-  .post-body-large :global(p + h2) { margin-top: 5.6px; }
+  /* A heading widget after a text widget: the paragraph's 14.4px plus
+     Elementor's 20px gap between widgets. */
+  .post-body-large :global(p + h2) { margin-top: 34.4px; }
 </style>

@@ -9,6 +9,9 @@ image: stories/the-exponential-journey.jpg
 imageAlt: A smiling man with a yellow scarf wrapped around his head and over his mouth, standing in a dry, sandy landscape
 sensitive: true
 redirectFrom: [/sudanese/the-exponential-journey/]
+category: Sudanese Arabic
+bannerWidth: 3888
+related: [like-the-man-from-macedonia, gods-initiative-in-sudan, asim-serves-on-the-bible-translation-audio-video-team]
 ---
 Khartoum, Sudan, April 2021. I was sitting in a small hotel conference room with the leaders of Greater Reach Alliance and half a dozen representatives of unreached Sudanese people groups. We were talking about the potential of Church-Centric Bible Translation for their people. Wanting to illustrate what God had done in other places, I shared a brief video of some South Asian brothers and sisters celebrating with exuberant singing and dancing the Bible in their language for the first time.
 

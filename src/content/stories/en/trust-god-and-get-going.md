@@ -8,6 +8,7 @@ imageAlt: People in a long wooden boat on a calm river lined with dense green ra
 excerpt: A church-centric translation team in a closed South American country trusts God to get them to a workshop.
 sensitive: true
 redirectFrom: [/spanish/trust-god-and-get-going/]
+related: [opening-minds-to-the-scriptures, life-change-in-southeast-asia, the-gospel-in-five-more-languages]
 ---
 *"God, this is your journey, your work. Please help us get out of here."*
 

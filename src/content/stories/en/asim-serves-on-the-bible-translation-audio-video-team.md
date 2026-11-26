@@ -8,6 +8,8 @@ image: stories/asim-serves-on-the-bible-translation-audio-video-team.jpg
 imageAlt: The legs of a person running across red desert sand, kicking up a spray of sand
 sensitive: true
 redirectFrom: [/africa/asim-serves-on-the-bible-translation-audio-video-team/]
+category: Africa
+related: [like-the-man-from-macedonia, the-exponential-journey, gods-initiative-in-sudan]
 ---
 Asim\* serves on the Bible translation audio-video team for unfoldingWord’s Whole Bible, Whole Nation partner in Sudan. They use Bible translation as part of their church-planting strategy for **133 unreached Sudanese people groups living in refugee settlements. Their Great Commission work impacts 44 million people.** Asim’s team produces audio versions of unfoldingWord® Open Bible Stories, a strategic outreach tool for oral cultures. That he is alive is a miracle; even more so, having him on the Bible translation team. \*Pseudonyms used for security
 

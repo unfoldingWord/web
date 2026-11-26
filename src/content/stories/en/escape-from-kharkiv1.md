@@ -8,6 +8,8 @@ image: stories/escape-from-kharkiv.jpg
 imageAlt: A bomb-damaged apartment block with burned-out windows, blackened walls and shattered balconies
 excerpt: A Eurasian translation team leader escapes the bombing of Kharkiv with his family, rare Bibles and translation work.
 redirectFrom: [/eurasia/escape-from-kharkiv1/]
+category: Eurasia
+related: [ukrainian-great-commission-partners-are-translating, the-angry-imam, hundreds-of-iranians-introduced-to-christ]
 ---
 BAM! A rocket penetrates a building, shattering windows and shaking foundations. Clatter! Bomb debris splatters cars, building façades, and adjacent roofs. Bang-Bang-Bang! The jackhammer staccato of AK-47s fills the streets as Russian soldiers assault Kharkiv. The attacks seem random, a restaurant here, an apartment there, a shop on the corner. No one can sleep. No one knows where the next bomb will strike.
 

@@ -7,6 +7,8 @@ country: Benin
 image: stories/the-gospel-in-five-more-languages.jpg
 imageAlt: Pastor Charles, a smiling man in glasses and a patterned red, black and white shirt, seated before tall windows
 redirectFrom: [/africa/the-gospel-in-five-more-languages/]
+category: Benin
+related: [overcoming-obstacles-to-the-gospel-in-benin, the-power-of-strategic-language-resources, asim-serves-on-the-bible-translation-audio-video-team]
 ---
 Pastor Charles Zinzindohoue of Benin was born into a world of voodoo. His mother was a high-ranking animist practitioner until she came to Christ through miraculous circumstances and led her children to the Lord.
 

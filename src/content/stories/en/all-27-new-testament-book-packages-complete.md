@@ -7,6 +7,9 @@ image: stories/all-27-new-testament-book-packages.jpg
 imageAlt: Antique leather-bound books stacked on a wooden desk beside a tablet whose screen shows more books spilling out of it
 excerpt: Open-license tools for translating everything from Matthew to Revelation are now complete.
 redirectFrom: [/worldwide/all-27-new-testament-book-packages-complete/]
+category: Worldwide
+bannerWidth: 2500
+related: [the-crisis-in-islands-asia-bible-translation, hundreds-of-iranians-introduced-to-christ, the-gospel-in-five-more-languages]
 ---
 It used to take western experts at least 20 years to translate the New Testament into a Bible-less language. Now, every bilingual church-planting network has access to the open-license English tools they need to translate everything from Matthew to Revelation quickly and accurately.
 

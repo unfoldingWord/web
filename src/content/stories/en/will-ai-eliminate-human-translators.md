@@ -7,6 +7,8 @@ region: worldwide
 image: stories/will-ai-eliminate-human-translators.jpg
 imageAlt: Hands typing on a keyboard beneath a glowing digital globe ringed with the names of languages
 redirectFrom: [/worldwide/will-ai-eliminate-human-translators/]
+category: Tools
+related: [critical-tools-for-courageous-translators, translationcore-engine-of-a-bible-translation-revolution, the-exponential-journey]
 ---
 Will Artificial Intelligence accelerate Bible translation? Will it produce better translations than humans can? Will it eliminate the need for human translators? These and other questions swirl around discussions of Bible translation in the AI era. Birch Champeon of unfoldingWord's Tools and Technology Innovation team outlines three critical points in our approach to using AI.
 
