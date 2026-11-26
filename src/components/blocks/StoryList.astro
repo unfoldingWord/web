@@ -1,14 +1,23 @@
 ---
-// Stories from the field, newest first. With `showFilter`, a row of region
-// buttons filters the list in the browser (every story stays in the HTML, so
-// crawlers and no-JS visitors see them all).
+// Stories from the field, newest first (or the hand-picked `slugs`).
+// Layouts:
+//   grid     — cards in columns
+//   carousel — production's home slider: three cards per view (two on
+//              tablets, one on phones) on an Ocean band
+//   rows     — production's stories index: a tall photo with a diagonal
+//              edge beside the title and excerpt, nine per page
+// With `showFilter`, a row of region buttons filters the list in the
+// browser. Every story stays in the HTML, so crawlers and visitors without
+// JavaScript see them all (the rows' page numbers only appear with JS).
 import { getCollection } from 'astro:content';
 import type { Block } from '../../content.config';
 import { ui, localizePath } from '../../i18n';
 import { splitId } from '../../lib/routes';
+import { mdInline } from '../../lib/md';
 import Section from '../ui/Section.astro';
 import SectionHeader from '../ui/SectionHeader.astro';
 import StoryCard from '../ui/StoryCard.astro';
+import Carousel from '../ui/Carousel.astro';
 import Icon from '../ui/Icon.astro';
 
 type StoryList = Extract<Block, { type: 'storyList' }>;
@@ -35,64 +44,157 @@ if (block.region) stories = stories.filter((s) => s.data.region === block.region
 if (block.limit) stories = stories.slice(0, block.limit);
 const regions = [...new Set(stories.map((s) => s.data.region))].sort();
 const regionName = (r: string) => (t.regions as Record<string, string>)[r] ?? r;
+const layout = block.layout;
+const level = block.title ? 'h3' : 'h2';
+const PER_PAGE = 9;
 ---
 
 <Section background={block.background}>
-  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-    <SectionHeader eyebrow={block.eyebrow} title={block.title} locale={locale} />
+  <div data-story-list data-per-page={layout === 'rows' ? PER_PAGE : undefined}>
     {
-      (block.limit || block.slugs) && (
-        <a href={localizePath('/stories/', locale)} class="mb-8 inline-flex items-center gap-1.5 font-heading font-extrabold lg:mb-12">
-          {t.allStories}
-          <Icon name="arrow-right" class="size-4 rtl:-scale-x-100" />
-        </a>
+      layout === 'grid' ? (
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <SectionHeader title={block.title} locale={locale} />
+          {(block.limit || block.slugs) && (
+            <a href={localizePath('/stories/', locale)} class="mb-5 inline-flex items-center gap-1.5 font-heading font-black">
+              {t.allStories}
+              <Icon name="arrow-right" class="size-4 rtl:-scale-x-100" />
+            </a>
+          )}
+        </div>
+      ) : (
+        block.title && <h2 class="mb-5 text-center" set:html={mdInline(block.title, locale)} />
+      )
+    }
+    {
+      block.showFilter && regions.length > 1 && (
+        <div class="story-filter mb-10 flex flex-wrap justify-center gap-2.5" role="group" aria-label={t.filterByRegion}>
+          <button type="button" data-region="" aria-pressed="true" class="filter-chip">{t.allRegions}</button>
+          {regions.map((r) => (
+            <button type="button" data-region={r} aria-pressed="false" class="filter-chip">
+              {regionName(r)}
+            </button>
+          ))}
+        </div>
+      )
+    }
+    {
+      layout === 'carousel' ? (
+        <Carousel label={block.title ?? t.allStories} locale={locale} class="story-carousel">
+          {stories.map((s) => (
+            <li data-region={s.data.region}>
+              <StoryCard story={s} locale={locale} headingLevel={level} />
+            </li>
+          ))}
+        </Carousel>
+      ) : layout === 'rows' ? (
+        <>
+          <ul class="story-items story-rows mx-auto flex max-w-[800px] flex-col gap-[25px]">
+            {stories.map((s) => (
+              <li data-region={s.data.region}>
+                <StoryCard story={s} locale={locale} headingLevel={level} variant="row" />
+              </li>
+            ))}
+          </ul>
+          <nav class="story-pages" aria-label={t.storyPages} data-next={t.next} data-previous={t.previous} hidden />
+        </>
+      ) : (
+        <ul class="story-items grid gap-[25px] sm:grid-cols-2 lg:grid-cols-3">
+          {stories.map((s) => (
+            <li data-region={s.data.region} class="flex">
+              <StoryCard story={s} locale={locale} headingLevel={level} />
+            </li>
+          ))}
+        </ul>
       )
     }
   </div>
-  {
-    block.showFilter && regions.length > 1 && (
-      <div class="story-filter -mx-1 mb-8 flex gap-2 overflow-x-auto px-1 pb-2" role="group" aria-label={t.filterByRegion}>
-        <button type="button" data-region="" aria-pressed="true" class="filter-chip">{t.allRegions}</button>
-        {regions.map((r) => (
-          <button type="button" data-region={r} aria-pressed="false" class="filter-chip">
-            {regionName(r)}
-          </button>
-        ))}
-      </div>
-    )
-  }
-  <ul class="story-grid grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-    {
-      stories.map((s) => (
-        <li data-region={s.data.region} class="flex">
-          <StoryCard story={s} locale={locale} headingLevel={block.title ? 'h3' : 'h2'} />
-        </li>
-      ))
-    }
-  </ul>
 </Section>
 
 <style>
-  @reference '../../styles/global.css';
   .filter-chip {
-    @apply min-h-11 shrink-0 rounded-full border border-line bg-white px-4 text-sm font-bold whitespace-nowrap text-ocean;
+    min-height: 39px;
+    padding: 8px 16px;
+    border: 1px solid var(--color-kindle);
+    border-radius: var(--radius-button);
+    background: #fff;
+    color: var(--color-kindle);
+    font-family: var(--font-heading);
+    font-size: var(--text-button);
+    line-height: 1;
+    font-weight: 900;
+    white-space: nowrap;
+    transition: all 0.3s;
   }
-  .filter-chip[aria-pressed='true'] {
-    @apply border-ocean bg-ocean text-white;
+  .filter-chip:hover, .filter-chip[aria-pressed='true'] {
+    background: var(--color-kindle);
+    color: #fff;
   }
+  .story-pages {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 12px;
+    margin-top: 25px;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+  .story-pages[hidden] { display: none; }
+  .story-pages :global(button) {
+    color: var(--color-kindle);
+    font-weight: 300;
+  }
+  .story-pages :global(button:hover) { color: var(--color-inspire); }
+  .story-pages :global(button[aria-current='page']) { color: var(--color-tech); cursor: default; }
 </style>
 
 <script>
-  document.querySelectorAll<HTMLElement>('.story-filter').forEach((bar) => {
-    const grid = bar.parentElement?.querySelector('.story-grid');
-    bar.addEventListener('click', (e) => {
-      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-region]');
-      if (!btn || !grid) return;
-      const region = btn.dataset.region;
-      bar.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
-      grid.querySelectorAll<HTMLElement>('li[data-region]').forEach((li) => {
-        li.hidden = !!region && li.dataset.region !== region;
+  document.querySelectorAll<HTMLElement>('[data-story-list]').forEach((root) => {
+    const bar = root.querySelector<HTMLElement>('.story-filter');
+    const items = [...root.querySelectorAll<HTMLElement>('li[data-region]')];
+    const perPage = Number(root.dataset.perPage) || 0;
+    const nav = root.querySelector<HTMLElement>('.story-pages');
+    const labels = nav;
+    const carousel = root.querySelector<HTMLElement>('[data-carousel]');
+    let region = '';
+    let page = 0;
+
+    const render = (scroll = false) => {
+      const matching = items.filter((li) => !region || li.dataset.region === region);
+      const pages = perPage ? Math.max(1, Math.ceil(matching.length / perPage)) : 1;
+      page = Math.min(page, pages - 1);
+      items.forEach((li) => {
+        const i = matching.indexOf(li);
+        li.hidden = i < 0 || (perPage > 0 && Math.floor(i / perPage) !== page);
       });
+      if (nav) {
+        nav.hidden = pages < 2;
+        const btn = (text: string, to: number, current = false) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.textContent = text;
+          if (current) b.setAttribute('aria-current', 'page');
+          else b.addEventListener('click', () => { page = to; render(true); });
+          return b;
+        };
+        const parts: HTMLElement[] = [];
+        if (page > 0) parts.push(btn(`« ${labels?.dataset.previous ?? 'Previous'}`, page - 1));
+        for (let p = 0; p < pages; p++) parts.push(btn(String(p + 1), p, p === page));
+        if (page < pages - 1) parts.push(btn(`${labels?.dataset.next ?? 'Next'} »`, page + 1));
+        nav.replaceChildren(...parts);
+      }
+      carousel?.dispatchEvent(new Event('carousel:refresh'));
+      if (scroll) root.scrollIntoView({ block: 'start' });
+    };
+
+    bar?.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-region]');
+      if (!btn) return;
+      region = btn.dataset.region ?? '';
+      page = 0;
+      bar.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      render();
     });
+    if (perPage || bar) render();
   });
 </script>

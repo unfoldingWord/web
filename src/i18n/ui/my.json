@@ -129,5 +129,9 @@
   "sweetIllustration": "Sweet Publishing ၏ သရုပ်ဖော်ပုံ — {label}",
   "sweetLicense": "Sweet Publishing ၏ သရုပ်ဖော်ပုံများကို <a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">Creative Commons Attribution-ShareAlike 3.0</a> လိုင်စင်အောက်တွင် ထုတ်ပြန်ထားပါသည်။ အသုံးပြုသည့်အခါ “Sweet Publishing” ဟု ကျေးဇူးပြု၍ ဖော်ပြပေးပါ။",
   "sweetIndexTitle": "Sweet Publishing ၏ သရုပ်ဖော်ပုံများ",
-  "search": "ရှာဖွေရန်"
+  "search": "ရှာဖွေရန်",
+  "goToSlide": "ဆလိုက် {n} သို့ သွားရန်",
+  "pause": "ခဏရပ်ရန်",
+  "play": "ဖွင့်ရန်",
+  "storyPages": "ဇာတ်လမ်း စာမျက်နှာများ"
 }

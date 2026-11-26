@@ -1,0 +1,50 @@
+---
+// Two columns of short, bold, centered statements (production home, under
+// the hero). Each item opens with a larger `lead` phrase. Ocean items are
+// 16px with a 24px lead; Inspire items are 20px with a 30px lead.
+import type { Block } from '../../content.config';
+import { mdInline } from '../../lib/md';
+import Section from '../ui/Section.astro';
+
+type Statement = Extract<Block, { type: 'statement' }>;
+interface Props {
+  block: Statement;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+---
+
+<Section>
+  <div class="flex flex-col items-center gap-5 md:flex-row">
+    {
+      block.columns.map((col) => (
+        <div class:list={['statement-col flex w-full flex-col gap-5 p-[10px] md:w-[48%]', `tone-${col.tone}`]}>
+          {col.items.map((item) => (
+            <p class="statement">
+              <span class="statement-lead" set:html={mdInline(item.lead, locale)} /> <span set:html={mdInline(item.text, locale)} />
+            </p>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</Section>
+
+<style>
+  .statement {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 16px;
+    line-height: 34px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-align: center;
+    color: var(--color-ocean);
+  }
+  .statement-lead { font-size: 24px; }
+  .tone-inspire .statement { font-size: 20px; color: var(--color-inspire); }
+  .tone-inspire .statement-lead { font-size: 30px; }
+  /* Production's Inspire column carries 20px of empty space at its foot. */
+  .tone-inspire { padding-bottom: 30px; }
+  .statement :global(strong) { font-weight: 700; }
+</style>

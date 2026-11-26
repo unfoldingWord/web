@@ -23,6 +23,10 @@ import ContactForm from './ContactForm.astro';
 import Embed from './Embed.astro';
 import SweetBooks from './SweetBooks.astro';
 import Signup from './Signup.astro';
+import HeroSlideshow from './HeroSlideshow.astro';
+import Statement from './Statement.astro';
+import Testimonials from './Testimonials.astro';
+import LogoMarquee from './LogoMarquee.astro';
 
 interface Props {
   blocks: Block[];
@@ -34,6 +38,7 @@ const C = {
   hero: Hero, prose: Prose, cards: Cards, split: Split, stats: Stats, quote: Quote, cta: Cta, video: Video,
   giving: Giving, faq: Faq, people: People, storyList: StoryList, prayerList: PrayerList, resources: Resources,
   steps: Steps, gallery: Gallery, trust: Trust, contactForm: ContactForm, embed: Embed, sweetBooks: SweetBooks, signup: Signup,
+  heroSlideshow: HeroSlideshow, statement: Statement, testimonials: Testimonials, logoMarquee: LogoMarquee,
 } as const;
 ---
 

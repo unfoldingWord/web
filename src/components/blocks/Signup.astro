@@ -8,9 +8,14 @@
 // which overrides this site's styles (button backgrounds, h1 sizes, figure
 // margins). From another origin it can only style itself. The frame reports
 // its height so it never scrolls.
+//
+// variant `band` is production's home sign-up: a Cultivate band with the
+// title, text and form in the start half and a photo in the end half
+// (hidden on phones). The form is asked for its dark theme (white labels).
 import type { Block } from '../../content.config';
 import { md, mdInline } from '../../lib/md';
 import Section from '../ui/Section.astro';
+import Picture from '../ui/Picture.astro';
 import { SITE } from '../../lib/site';
 
 const frameOrigin = new URL(SITE.mediaBase).origin;
@@ -21,26 +26,57 @@ interface Props {
   locale: string;
 }
 const { block, locale } = Astro.props;
+const src = `${SITE.mediaBase}/embeds/virtuous-signup.html?form=${encodeURIComponent(block.formId)}&org=${encodeURIComponent(block.orgId)}`;
 ---
 
-<Section background={block.background} id={block.id}>
-  <div class="grid gap-8 lg:grid-cols-12 lg:gap-14">
-    <div class="lg:col-span-5">
-      {block.eyebrow && <p class="eyebrow mb-3">{block.eyebrow}</p>}
-      {block.title && <h2 set:html={mdInline(block.title)} />}
-      {block.body && <div class="prose mt-4" set:html={md(block.body, locale)} />}
-    </div>
-    <div class="rounded-card bg-white p-4 shadow-card sm:p-6 lg:col-span-7">
-      <iframe
-        class="signup-frame block min-h-[20rem] w-full border-0"
-        src={`${SITE.mediaBase}/embeds/virtuous-signup.html?form=${encodeURIComponent(block.formId)}&org=${encodeURIComponent(block.orgId)}`}
-        title={block.title ?? 'Sign up'}
-        loading="lazy"
-        data-form={block.formId}
-        data-origin={frameOrigin}></iframe>
-    </div>
-  </div>
-</Section>
+{
+  block.variant === 'band' ? (
+    <section id={block.id} class="signup-band bg-cultivate on-dark">
+      <div class="mx-auto flex max-w-[1000px] md:min-h-[378px]">
+        <div class="signup-band-text w-full p-10 md:w-1/2">
+          {block.title && <h2 set:html={mdInline(block.title, locale)} />}
+          {block.body && <div class="prose signup-band-body" set:html={md(block.body, locale)} />}
+          <iframe
+            class="signup-frame block min-h-[199px] w-full border-0"
+            src={`${src}&theme=dark`}
+            title={block.title ?? 'Sign up'}
+            loading="lazy"
+            data-form={block.formId}
+            data-origin={frameOrigin}></iframe>
+        </div>
+        {block.image && (
+          <div class="relative hidden w-1/2 md:block">
+            <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="500px" widths={[500, 1000]} fill class="absolute inset-0 h-full w-full object-cover" />
+          </div>
+        )}
+      </div>
+    </section>
+  ) : (
+    <Section background={block.background} id={block.id}>
+      <div class="grid gap-8 lg:grid-cols-12 lg:gap-14">
+        <div class="lg:col-span-5">
+          {block.title && <h2 set:html={mdInline(block.title, locale)} />}
+          {block.body && <div class="prose mt-5" set:html={md(block.body, locale)} />}
+        </div>
+        <div class="rounded-card bg-white p-4 sm:p-6 lg:col-span-7">
+          <iframe
+            class="signup-frame block min-h-[20rem] w-full border-0"
+            src={src}
+            title={block.title ?? 'Sign up'}
+            loading="lazy"
+            data-form={block.formId}
+            data-origin={frameOrigin}></iframe>
+        </div>
+      </div>
+    </Section>
+  )
+}
+
+<style>
+  .signup-band-body { color: #fff; }
+  .signup-band-body :global(p:last-child) { margin-bottom: 0.9rem; }
+  .signup-band-body :global(a) { color: #fff; }
+</style>
 
 <script>
   window.addEventListener('message', (e) => {

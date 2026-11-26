@@ -1,0 +1,162 @@
+---
+// Home hero, as on production: full-width photos that crossfade every 10s
+// with a slow zoom, under a flat 50% Tech overlay, and a 380px text column
+// (title, subtitle, a short paragraph and a button).
+//
+// Accessibility: a pause button stops the slideshow; visitors who prefer
+// reduced motion see only the first photo, still. Without JavaScript the
+// first photo shows.
+import type { Block } from '../../content.config';
+import { mdInline } from '../../lib/md';
+import { ui } from '../../i18n';
+import Picture from '../ui/Picture.astro';
+import Actions from '../ui/Actions.astro';
+
+type HeroSlideshow = Extract<Block, { type: 'heroSlideshow' }>;
+interface Props {
+  block: HeroSlideshow;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+const t = ui(locale);
+const many = block.slides.length > 1;
+---
+
+<section class="uw-hero-home hero-slideshow on-dark relative isolate flex min-h-[80vh] flex-col justify-center overflow-hidden p-5 md:p-10" data-slideshow>
+  <div class="absolute inset-0 -z-20">
+    {
+      block.slides.map((s, i) => (
+        <div class:list={['hero-slide absolute inset-0', i === 0 && 'is-active']}>
+          <Picture path={s.image} alt={s.imageAlt} eager={i === 0} sizes="100vw" fill class="h-full w-full object-cover" />
+        </div>
+      ))
+    }
+  </div>
+  <div class="absolute inset-0 -z-10 bg-tech/50"></div>
+  <div class="mx-auto w-full max-w-[1000px]">
+    <div class="max-w-[400px] p-[10px]">
+      <h1 class="hero-title" set:html={mdInline(block.title, locale)} />
+      {block.subtitle && <p class="hero-subtitle mt-10" set:html={mdInline(block.subtitle, locale)} />}
+      {block.body && <p class="hero-body mt-[10px]" set:html={mdInline(block.body, locale)} />}
+      {block.actions.length > 0 && <div class="hero-actions mt-6"><Actions actions={block.actions} locale={locale} /></div>}
+    </div>
+  </div>
+  {
+    many && (
+      <button type="button" class="hero-pause" data-pause hidden aria-pressed="false" aria-label={t.pause} data-label-pause={t.pause} data-label-play={t.play}>
+        <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 5h3v14H7zM14 5h3v14h-3z" /></svg>
+        <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z" /></svg>
+      </button>
+    )
+  }
+</section>
+
+<style>
+  @reference '../../styles/global.css';
+  .hero-title {
+    font-size: 36px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #fff;
+  }
+  @media (min-width: 768px) {
+    .hero-title { font-size: var(--text-display); line-height: var(--text-display--line-height); }
+  }
+  .hero-subtitle {
+    font-family: var(--font-heading);
+    font-size: var(--text-h3);
+    line-height: 1;
+    font-weight: 700;
+    color: #fff;
+  }
+  .hero-body {
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 500;
+    color: #fff;
+  }
+  .hero-body :global(strong) { font-weight: 900; }
+  /* Production's hero button is the Virtuous "Donate Now" button: 14px/600
+     Arial, 12px 16px padding, 56px tall. */
+  .hero-actions :global(.uw-btn) {
+    font-family: var(--font-system);
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 600;
+    min-height: 56px;
+    padding: 12px 16px;
+  }
+  .hero-slide {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+  .hero-slide.is-active { opacity: 1; }
+  .hero-slide :global(img) { transform: scale(1); transform-origin: center; }
+  .hero-slide.is-zoom :global(img) { transform: scale(1.3); transition: transform 10s linear; }
+  .hero-pause {
+    position: absolute;
+    inset-block-end: 16px;
+    inset-inline-end: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    color: #fff;
+    background: rgb(35 31 32 / 0.45);
+    opacity: 0.7;
+    transition: opacity 0.3s;
+  }
+  .hero-pause:hover, .hero-pause:focus-visible { opacity: 1; }
+  .hero-pause:focus-visible { outline-color: #fff; }
+  .hero-pause[hidden] { display: none; }
+  .hero-pause svg { width: 18px; height: 18px; }
+  .hero-pause .icon-play, .hero-pause[aria-pressed='true'] .icon-pause { display: none; }
+  .hero-pause[aria-pressed='true'] .icon-play { display: block; }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-slide.is-zoom :global(img) { transform: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-slideshow]').forEach((root) => {
+    const slides = [...root.querySelectorAll<HTMLElement>('.hero-slide')];
+    const btn = root.querySelector<HTMLButtonElement>('[data-pause]');
+    if (slides.length < 2 || !btn) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let i = 0;
+    let timer: number | undefined;
+    // Load the other photos once the first one is up, not all at page load.
+    slides.slice(1).forEach((s) => s.querySelectorAll('img').forEach((img) => (img.loading = 'eager')));
+    const zoom = (s: HTMLElement) => { s.classList.remove('is-zoom'); void s.offsetWidth; s.classList.add('is-zoom'); };
+    const step = () => {
+      const prev = slides[i];
+      i = (i + 1) % slides.length;
+      zoom(slides[i]);
+      slides[i].classList.add('is-active');
+      prev.classList.remove('is-active');
+      setTimeout(() => { if (!prev.classList.contains('is-active')) prev.classList.remove('is-zoom'); }, 1100);
+    };
+    const play = () => { timer = window.setInterval(step, 10000); };
+    zoom(slides[0]);
+    play();
+    btn.hidden = false;
+    btn.addEventListener('click', () => {
+      const paused = btn.getAttribute('aria-pressed') === 'true';
+      const img = slides[i].querySelector('img');
+      if (paused) {
+        if (img) img.style.transform = '';
+        zoom(slides[i]);
+        play();
+      } else {
+        clearInterval(timer);
+        // Hold the photo where the zoom has got to.
+        if (img) img.style.transform = getComputedStyle(img).transform;
+        slides[i].classList.remove('is-zoom');
+      }
+      btn.setAttribute('aria-pressed', String(!paused));
+      btn.setAttribute('aria-label', (paused ? btn.dataset.labelPause : btn.dataset.labelPlay) ?? '');
+    });
+  });
+</script>

@@ -129,5 +129,9 @@
   "sweetIllustration": "Иллюстрация Sweet Publishing: {label}",
   "sweetLicense": "Иллюстрации Sweet Publishing распространяются по лицензии <a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">Creative Commons «Атрибуция — С сохранением условий» 3.0</a>. При их использовании, пожалуйста, указывайте «Sweet Publishing».",
   "sweetIndexTitle": "Иллюстрации Sweet Publishing",
-  "search": "Поиск"
+  "search": "Поиск",
+  "goToSlide": "Перейти к слайду {n}",
+  "pause": "Пауза",
+  "play": "Воспроизвести",
+  "storyPages": "Страницы историй"
 }

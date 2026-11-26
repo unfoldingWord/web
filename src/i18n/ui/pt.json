@@ -129,5 +129,9 @@
   "sweetIllustration": "Ilustração da Sweet Publishing: {label}",
   "sweetLicense": "Ilustrações da Sweet Publishing, publicadas sob a licença <a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">Creative Commons Atribuição-CompartilhaIgual 3.0</a>. Por favor, dê os créditos a “Sweet Publishing” ao utilizá-las.",
   "sweetIndexTitle": "Ilustrações da Sweet Publishing",
-  "search": "Pesquisar"
+  "search": "Pesquisar",
+  "goToSlide": "Ir para o slide {n}",
+  "pause": "Pausar",
+  "play": "Reproduzir",
+  "storyPages": "Páginas de histórias"
 }

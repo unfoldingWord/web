@@ -129,5 +129,9 @@
   "sweetIllustration": "Sweet Publishing کی تصویر: {label}",
   "sweetLicense": "تصاویر Sweet Publishing کی ہیں، جو <a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">کری ایٹو کامنز انتساب-یکساں اشتراک 3.0</a> لائسنس کے تحت جاری کی گئی ہیں۔ انہیں استعمال کرتے وقت براہِ کرم “Sweet Publishing” کا حوالہ دیں۔",
   "sweetIndexTitle": "Sweet Publishing کی تصاویر",
-  "search": "تلاش"
+  "search": "تلاش",
+  "goToSlide": "سلائیڈ {n} پر جائیں",
+  "pause": "روکیں",
+  "play": "چلائیں",
+  "storyPages": "کہانیوں کے صفحات"
 }

@@ -5,9 +5,11 @@ redirectFrom: [/stories-from-the-field/]
 schemaType: CollectionPage
 sections:
   - type: hero
-    variant: ocean
+    variant: photo
     title: Stories from the Field
-    lead: How local churches around the world are translating God's Word into their own languages, and what God is doing through it.
+    image: stories/banner-stories-from-the-field.jpg
+    imageAlt: A smiling woman in a patterned headscarf hugs a smiling young girl with curly hair
   - type: storyList
+    layout: rows
     showFilter: true
 ---

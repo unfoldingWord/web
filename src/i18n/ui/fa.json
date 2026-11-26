@@ -129,5 +129,9 @@
   "sweetIllustration": "تصویرسازی Sweet Publishing: {label}",
   "sweetLicense": "تصویرسازی‌ها از Sweet Publishing است و تحت مجوز <a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">کریتیو کامنز انتساب-اشتراک همسان ۳٫۰</a> منتشر شده‌اند. لطفاً هنگام استفاده از آن‌ها، نام «Sweet Publishing» را ذکر کنید.",
   "sweetIndexTitle": "تصویرسازی‌های Sweet Publishing",
-  "search": "جستجو"
+  "search": "جستجو",
+  "goToSlide": "رفتن به اسلاید {n}",
+  "pause": "توقف",
+  "play": "پخش",
+  "storyPages": "صفحه‌های داستان"
 }

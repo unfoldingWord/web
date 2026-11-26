@@ -129,5 +129,9 @@
   "sweetIllustration": "Ilustrasi Sweet Publishing: {label}",
   "sweetLicense": "Ilustrasi oleh Sweet Publishing, dirilis di bawah lisensi <a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">Creative Commons Atribusi-BerbagiSerupa 3.0</a>. Mohon cantumkan “Sweet Publishing” saat Anda menggunakannya.",
   "sweetIndexTitle": "Ilustrasi Sweet Publishing",
-  "search": "Cari"
+  "search": "Cari",
+  "goToSlide": "Buka slide {n}",
+  "pause": "Jeda",
+  "play": "Putar",
+  "storyPages": "Halaman cerita"
 }
