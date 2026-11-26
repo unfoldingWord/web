@@ -1,8 +1,13 @@
 ---
+// Long text: production's heading + text-editor widgets in one 1000px
+// section. `align: center` centers it (about "Our Strategy", core values);
+// `divider` adds the 50×3 Kindle rule under a Tech title, as production does
+// on centered section headings.
 import type { Block } from '../../content.config';
-import { md } from '../../lib/md';
+import { md, mdInline } from '../../lib/md';
 import Section from '../ui/Section.astro';
-import SectionHeader from '../ui/SectionHeader.astro';
+import Actions from '../ui/Actions.astro';
+import Icon from '../ui/Icon.astro';
 
 type Prose = Extract<Block, { type: 'prose' }>;
 interface Props {
@@ -10,9 +15,37 @@ interface Props {
   locale: string;
 }
 const { block, locale } = Astro.props;
+const center = block.align === 'center';
+// A title with no text is a heading strip (overview "Our Programs"): 20px padding.
+const strip = !block.body.trim();
+// A narrow Ocean block is production's Ocean box inside a white section (wbwn "Prayers").
+const box = block.width === 'narrow' && block.background === 'ocean';
 ---
 
-<Section background={block.background} width={block.width === 'wide' ? 'page' : 'prose'}>
-  <SectionHeader eyebrow={block.eyebrow} title={block.title} locale={locale} />
-  <div class:list={['prose', block.width === 'wide' && '!max-w-none', block.serif && 'prose-serif']} set:html={md(block.body, locale)} />
+<Section background={box ? 'white' : block.background} class={strip ? '!py-5' : undefined}>
+  <div class:list={['flex flex-col gap-5', center && 'items-center text-center', block.width === 'narrow' && 'mx-auto max-w-[800px]', box && 'on-dark bg-ocean p-5']}>
+    {block.icon && <Icon name={block.icon} class="size-[42px] text-white" />}
+    {
+      block.title && (
+        <>
+          <h2 class:list={['w-full', block.divider && '!text-tech']} set:html={mdInline(block.title, locale)} />
+          {block.divider && <span class="block py-[2px]" aria-hidden="true"><span class="block h-[3px] w-[50px] bg-kindle" /></span>}
+        </>
+      )
+    }
+    {!strip && <div class:list={['prose w-full', center && 'uw-prose-center', block.serif && 'prose-serif']} set:html={md(block.body, locale)} />}
+    <Actions actions={block.actions ?? []} locale={locale} class="uw-donate w-full justify-center" />
+  </div>
 </Section>
+
+<style>
+  /* A Donate button here is production's Virtuous "Donate Now" button. */
+  :global(.uw-donate .uw-btn-give) { height: 56px; padding: 12px 16px; font-family: Arial, 'Helvetica Neue', Helvetica, var(--font-sans); font-size: 14px; line-height: 16.8px; font-weight: 600; }
+  /* Production's long-text quotes sit 20px from the text above and below. */
+  .prose :global(:where(blockquote)) { margin-block: 20px; }
+  /* Centered sections: production stacks heading and text widgets 20px apart. */
+  .uw-prose-center :global(:where(h3:not(:first-child))) { margin-block: 20px; }
+  .uw-prose-center :global(:where(h3:first-child)) { margin-bottom: 20px; }
+  .uw-prose-center :global(:where(p + h3)) { margin-top: calc(20px + 0.9rem); }
+  .uw-prose-center :global(:where(ul, ol)) { text-align: start; display: inline-block; }
+</style>

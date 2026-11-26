@@ -1,7 +1,9 @@
 ---
 // Accountability marks (ECFA, Candid, MinistryWatch). Text links rather than
 // hot-linked badge images: the third-party badge scripts on the old site
-// slowed every page and two of them 404ed.
+// slowed every page and two of them 404ed. Production has no such list (the
+// badges live in the footer); it is kept and styled quietly to match: no
+// boxes, an Inspire check, Kindle 900 names like production's links.
 import type { Block } from '../../content.config';
 import { SITE } from '../../lib/site';
 import Section from '../ui/Section.astro';
@@ -15,21 +17,24 @@ interface Props {
 const { block } = Astro.props;
 ---
 
-<Section tight>
-  {block.title && <h2 class="mb-6 text-center text-h3">{block.title}</h2>}
-  <ul class="grid gap-4 md:grid-cols-3">
+<Section>
+  {block.title && <h2 class="mb-5 text-center">{block.title}</h2>}
+  <ul class="grid gap-5 md:grid-cols-3">
     {
       SITE.trust.map((b) => (
-        <li>
-          <a href={b.href} rel="noopener" class="flex h-full items-start gap-3 rounded-card border border-line p-5 text-ink no-underline hover:border-inspire hover:shadow-card">
-            <Icon name="check" class="mt-0.5 size-6 text-inspire-ink" />
-            <span>
-              <span class="block font-heading font-extrabold text-ocean">{b.name}</span>
-              <span class="text-sm text-ink-muted">{b.label}</span>
-            </span>
-          </a>
+        <li class="flex items-start gap-2.5">
+          <Icon name="check" class="mt-0.5 size-6 shrink-0 text-inspire" />
+          <span>
+            <a href={b.href} rel="noopener" class="uw-trust-link">{b.name}</a>
+            <span class="block text-body">{b.label}</span>
+          </span>
         </li>
       ))
     }
   </ul>
 </Section>
+
+<style>
+  .uw-trust-link { color: var(--color-kindle); font-weight: 900; }
+  .uw-trust-link:hover { color: var(--color-inspire); }
+</style>

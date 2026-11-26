@@ -6,16 +6,17 @@ description: >-
 updated: 2026-08-27
 sections:
   - type: hero
-    variant: ocean
-    eyebrow: Frequently asked questions
+    variant: banner
     title: 'Church-Centric Bible Translation: questions'
+    uppercase: false
+    image: what-we-do/bt-servant-banner.jpg
+    imageAlt: Close-up of a laptop keyboard lit in soft blue light
 
   - type: prose
     body: |-
       Church-Centric Bible Translation (CCBT) is a paradigm of Bible translation focused on the establishing and strengthening of a lingual church using a translation process that is led by leaders of the church and done by believers translating into their own language, as an integral part of their theological and spiritual formation. CCBT is a subset of Church-Based Bible Translation (CBBT) in which the aim is establishing the church. It aims at formation and capacity.
 
   - type: faq
-    title: Questions and answers
     items:
       - q: What is Church-Centric Bible Translation?
         a: |-
@@ -107,12 +108,11 @@ sections:
 
   - type: prose
     title: Related pages
-    background: mist
     body: |-
       - [What is Church-Centric Bible Translation?](/ccbt/)
       - [Glossary](/ccbt/glossary/)
       - [Church-centric vs Bible-centric](/ccbt/church-centric-vs-bible-centric/)
       - [How churches translate](/ccbt/how-churches-translate/)
 
-      <small>Original content © unfoldingWord, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Last reviewed 27 August 2026.</small>
+      Original content © unfoldingWord, CC BY-SA 4.0. Last reviewed 27 August 2026.
 ---

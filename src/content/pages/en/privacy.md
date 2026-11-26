@@ -2,6 +2,8 @@
 title: Privacy Policy
 description: How unfoldingWord collects, uses, protects and discloses information from visitors to its website, and the choices you have about your information.
 schemaType: WebPage
+heading: Privacy Policy
+bodyStyle: legal
 updated: 2025-08-15
 ---
 

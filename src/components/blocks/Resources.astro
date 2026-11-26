@@ -1,5 +1,12 @@
 ---
 // A list of downloads and links (publications, PDFs, apps, training).
+//   cards     — bordered link boxes, two columns
+//   list      — production's icon list: 24px Inspire icon, 16px Ocean link
+//               (financial information)
+//   accordion — production's nested accordion: one 1px #D5D8DC box per item,
+//               "+" before a 16px title, first item open; inside, "Download
+//               <title> by …" and the description (publications,
+//               for-translators)
 import type { Block } from '../../content.config';
 import { md, mdInline, localizeHref } from '../../lib/md';
 import Section from '../ui/Section.astro';
@@ -15,35 +22,124 @@ interface Props {
 const { block, locale } = Astro.props;
 const icon = { pdf: 'pdf', link: 'link', video: 'play', audio: 'audio', book: 'book', app: 'app' } as const;
 const isExternal = (h: string) => /^https?:\/\//.test(h);
+const ext = (h: string) => (isExternal(h) ? { rel: 'noopener' } : {});
+// list: an item's image is the report cover beside the list (financial information)
+const cover = block.variant === 'list' ? block.items.find((it) => it.image) : undefined;
+const plainTitle = (t: string) => t.replace(/<[^>]+>/g, '');
+// "By A, B" reads as "… by A, B" after the link; anything else follows a dash.
+const byline = (m?: string) => (!m ? '' : /^by\s/i.test(m) ? ` by ${m.slice(3)}` : ` (${m})`);
 ---
 
-<Section id={block.id}>
-  <SectionHeader eyebrow={block.eyebrow} title={block.title} intro={block.intro} locale={locale} />
-  <ul class="grid gap-4 md:grid-cols-2">
-    {
-      block.items.map((it) => (
-        <li class="group relative flex gap-4 rounded-card border border-line bg-white p-5 transition hover:border-inspire hover:shadow-card">
-          {it.image ? (
-            <div class="w-20 shrink-0 overflow-hidden rounded-lg">
-              <Picture path={it.image} alt={it.imageAlt ?? ''} sizes="80px" widths={[80, 160]} />
+<Section id={block.id} background={block.background} class={cover ? '!py-[30px]' : block.variant === 'accordion' ? 'uw-acc-section' : undefined}>
+  {!cover && <SectionHeader title={block.title} intro={block.intro} locale={locale} />}
+  {
+    block.variant === 'accordion' ? (
+      <div class:list={['uw-acc', block.textSize === 'large' && 'uw-acc-large']}>
+        {block.items.map((it, i) => (
+          <details class="uw-acc-item" open={i === 0}>
+            <summary class="uw-acc-summary">
+              <span class="uw-acc-icon" aria-hidden="true" />
+              <span set:html={mdInline(it.title)} />
+            </summary>
+            <div class="uw-acc-body prose">
+              {it.image && <Picture path={it.image} alt={it.imageAlt ?? ''} sizes="200px" widths={[200, 400]} class="mb-3.5 !w-[200px]" />}
+              {it.href && (
+                <p>
+                  {it.kind === 'pdf' || it.kind === 'book' ? 'Download ' : ''}
+                  <a href={localizeHref(it.href, locale)} {...ext(it.href)}>
+                    {plainTitle(it.title)}
+                    {it.kind === 'pdf' && <span class="sr-only"> (PDF)</span>}
+                  </a>
+                  {byline(it.meta)}
+                </p>
+              )}
+              {it.description && <Fragment set:html={md(it.description, locale)} />}
             </div>
-          ) : (
-            <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-inspire-50 text-inspire-ink">
-              <Icon name={icon[it.kind]} class="size-5.5" />
-            </span>
-          )}
-          <div class="min-w-0">
-            <h3 class="text-lg leading-snug">
-              <a href={localizeHref(it.href, locale)} class="text-ocean no-underline after:absolute after:inset-0 hover:underline" {...(isExternal(it.href) ? { rel: 'noopener' } : {})}>
-                <span set:html={mdInline(it.title)} />
-                {it.kind === 'pdf' && <span class="sr-only"> (PDF)</span>}
-              </a>
-            </h3>
-            {it.description && <div class="prose mt-1 text-[0.9375rem] text-ink-muted" set:html={md(it.description, locale)} />}
-            {it.meta && <p class="mt-1 text-sm text-ink-muted">{it.meta}</p>}
-          </div>
-        </li>
-      ))
-    }
-  </ul>
+          </details>
+        ))}
+      </div>
+    ) : block.variant === 'list' ? (
+      <div class:list={['flex flex-col gap-5', cover && 'mx-auto max-w-[800px] md:flex-row md:items-center md:justify-center md:gap-[50px]']}>
+        {cover && <Picture path={cover.image!} alt={cover.imageAlt ?? ''} sizes="292px" widths={[292, 584]} class="rounded-media-split !w-[292px] shrink-0" />}
+        <div class:list={['flex flex-col gap-5', cover && 'md:w-[390px]']}>
+          {cover && block.title && <h2 set:html={mdInline(block.title, locale)} />}
+          <ul class="flex flex-col gap-2.5">
+            {block.items.map((it) => (
+              <li class="flex items-start gap-2.5 py-2.5">
+                <Icon name={icon[it.kind]} class="size-6 shrink-0 text-inspire" />
+                <span class="min-w-0">
+                  {it.href ? (
+                    <a href={localizeHref(it.href, locale)} class="uw-list-link" {...ext(it.href)}>
+                      <span set:html={mdInline(it.title)} />
+                      {it.kind === 'pdf' && <span class="sr-only"> (PDF)</span>}
+                    </a>
+                  ) : (
+                    <span class="uw-list-link" set:html={mdInline(it.title)} />
+                  )}
+                  {it.description && <span class="block text-body" set:html={mdInline(it.description, locale)} />}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    ) : (
+      <ul class="grid gap-5 md:grid-cols-2">
+        {block.items.map((it) => (
+          <li class="relative flex gap-4 rounded-card border border-rule bg-white p-5">
+            {it.image ? (
+              <div class="w-20 shrink-0">
+                <Picture path={it.image} alt={it.imageAlt ?? ''} sizes="80px" widths={[80, 160]} />
+              </div>
+            ) : (
+              <Icon name={icon[it.kind]} class="mt-0.5 size-6 shrink-0 text-inspire" />
+            )}
+            <div class="min-w-0">
+              <h3 class="text-h5 font-bold">
+                {it.href ? (
+                  <a href={localizeHref(it.href, locale)} class="uw-card-link after:absolute after:inset-0" {...ext(it.href)}>
+                    <span set:html={mdInline(it.title)} />
+                    {it.kind === 'pdf' && <span class="sr-only"> (PDF)</span>}
+                  </a>
+                ) : (
+                  <span set:html={mdInline(it.title)} />
+                )}
+              </h3>
+              {it.description && <div class="prose mt-2 [&>:last-child]:mb-0" set:html={md(it.description, locale)} />}
+              {it.meta && <p class="mt-1 text-sm">{it.meta}</p>}
+            </div>
+          </li>
+        ))}
+      </ul>
+    )
+  }
 </Section>
+
+<style>
+  /* Consecutive accordion groups sit in one section on production: 20px apart. */
+  :global(.uw-acc-section:has(+ .uw-acc-section)) { padding-bottom: 20px; }
+  :global(.uw-acc-section + .uw-acc-section) { padding-top: 0; }
+  .uw-card-link { color: var(--color-kindle); font-weight: 900; }
+  .uw-card-link:hover { color: var(--color-inspire); }
+  /* Production's icon list: 16px/400 Ocean link text beside a 24px Inspire icon. */
+  .uw-list-link { font-size: 1rem; line-height: 1.5; font-weight: 400; color: var(--color-ocean); }
+  .uw-list-link:hover { color: var(--color-inspire); }
+
+  /* Production's nested accordion (Elementor): full width, boxes 1px #D5D8DC,
+     10px padding, icon first, 16px/400 #1F2124 system font. */
+  .uw-acc-item + .uw-acc-item { margin-top: -1px; }
+  .uw-acc-summary {
+    display: flex; align-items: center; gap: 10px; padding: 10px;
+    border: 1px solid #d5d8dc; cursor: pointer; list-style: none;
+    font-family: var(--font-system); font-size: 1rem; line-height: 1.5; font-weight: 400; color: #1f2124;
+  }
+  .uw-acc-summary::-webkit-details-marker { display: none; }
+  .uw-acc-icon { position: relative; flex: none; width: 15px; height: 15px; }
+  .uw-acc-icon::before, .uw-acc-icon::after { content: ''; position: absolute; background: currentColor; inset-inline-start: 0; top: 7px; width: 15px; height: 1.5px; }
+  .uw-acc-icon::after { transform: rotate(90deg); }
+  details[open] > .uw-acc-summary .uw-acc-icon::after { display: none; }
+  .uw-acc-body { border: 1px solid #d5d8dc; border-top: 0; padding: 10px; }
+  /* publications: 20px padding and 19.36/29.04 text */
+  .uw-acc-large .uw-acc-body { padding: 20px; font-size: var(--text-story); line-height: 1.5; }
+  .uw-acc-body > :global(:last-child) { margin-bottom: 0; }
+</style>

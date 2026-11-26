@@ -1,4 +1,8 @@
 ---
+// Text beside an image or video: production's two 490px columns (10px
+// padding each, 20px apart, vertically centered), 4px image corners, no
+// shadow. Stacks at ≤767px in source order, as production does: an image at
+// the start comes first.
 import type { Block } from '../../content.config';
 import { md, mdInline } from '../../lib/md';
 import Section from '../ui/Section.astro';
@@ -13,24 +17,44 @@ interface Props {
 }
 const { block, locale } = Astro.props;
 const mediaFirst = block.imagePosition === 'start';
+const hasMedia = Boolean(block.video || block.image);
 ---
 
 <Section background={block.background}>
-  <div class="grid items-center gap-8 md:grid-cols-2 lg:gap-16">
-    <div class:list={[mediaFirst && 'md:order-2']}>
-      {block.eyebrow && <p class="eyebrow mb-3">{block.eyebrow}</p>}
-      {block.title && <h2 class="mb-5" set:html={mdInline(block.title)} />}
-      <div class="prose" set:html={md(block.body, locale)} />
-      <Actions actions={block.actions} locale={locale} class="mt-8" />
-    </div>
-    <div class:list={[mediaFirst && 'md:order-1']}>
-      {block.video ? (
-        <VideoFrame provider={block.video.provider} id={block.video.id} hash={block.video.hash} title={block.video.title} />
-      ) : block.image ? (
-        <div class="overflow-hidden rounded-card shadow-card">
-          <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="(min-width: 48rem) 50vw, 100vw" />
+  <div class="flex flex-col gap-5 md:flex-row md:items-center">
+    {
+      mediaFirst && hasMedia && (
+        <div class="p-2.5 md:w-[calc(50%-10px)]">
+          {block.video ? (
+            <VideoFrame provider={block.video.provider} id={block.video.id} hash={block.video.hash} title={block.video.title} />
+          ) : (
+            <Picture path={block.image!} alt={block.imageAlt ?? ''} sizes="(min-width: 68rem) 470px, (min-width: 48rem) 45vw, 100vw" class="rounded-media-split" />
+          )}
         </div>
-      ) : null}
+      )
+    }
+    <div class:list={['flex flex-col gap-5 p-2.5', hasMedia ? 'md:w-[calc(50%-10px)]' : 'md:w-full']}>
+      {block.title && <h2 class:list={[block.uppercase && 'uppercase']} set:html={mdInline(block.title)} />}
+      <div class="prose [&>:last-child]:mb-0" set:html={md(block.body, locale)} />
+      {block.impact && <p class="uw-impact" set:html={mdInline(block.impact, locale)} />}
+      <Actions actions={block.actions} locale={locale} />
     </div>
+    {
+      !mediaFirst && hasMedia && (
+        <div class="p-2.5 md:w-[calc(50%-10px)]">
+          {block.video ? (
+            <VideoFrame provider={block.video.provider} id={block.video.id} hash={block.video.hash} title={block.video.title} />
+          ) : (
+            <Picture path={block.image!} alt={block.imageAlt ?? ''} sizes="(min-width: 68rem) 470px, (min-width: 48rem) 45vw, 100vw" class="rounded-media-split" />
+          )}
+        </div>
+      )
+    }
   </div>
 </Section>
+
+<style>
+  /* Production's "Impact:" line: Kindle, 17.6/28.16, weight 400. */
+  .uw-impact { color: var(--color-kindle); font-size: var(--text-body); line-height: 1.6; font-weight: 400; margin-top: -6px; }
+  /* (production's heading widget sits 14px under the text, not 20px) */
+</style>
