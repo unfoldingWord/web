@@ -48,7 +48,9 @@ function add(from, to, status, source) {
   const path = to.split(/[?#]/, 1)[0];
   const target = to.startsWith('/') ? withSlash(path) + to.slice(path.length) : to;
   for (const f of new Set([noSlash(from), withSlash(from)])) {
-    if (f === '/' || f === target.split('#')[0]) continue; // /x → /x/ is html_handling's job
+    // /x → /x/ is html_handling's job; /x → /x/#part would loop (the browser
+    // never sends the #part or ?query back), so the page itself serves /x/.
+    if (f === '/' || f === target.split(/[?#]/)[0]) continue;
     const prev = rules.get(f);
     if (prev && prev.to !== target) errors.push(`${f} is redirected twice: → ${prev.to} (${prev.source}) and → ${target} (${source})`);
     if (!prev || source.startsWith('legacy')) rules.set(f, { to: target, status, source });
@@ -80,6 +82,14 @@ for (const [from, { to, source }] of rules) {
 const dynamic = [
   // category archives: /category/africa/ → stories index
   ['/category/*', '/stories/', 301],
+  // the pre-WordPress Sweet Publishing gallery (Redirection plugin rule)
+  ['/resources/illustrations/sweet-publishing/*', '/sweet-publishing/', 301],
+  // old tool pages (/tools/tr has its own static rule, which wins)
+  ['/tools/*', '/for-translators/tools/', 301],
+  // old region/project section addresses (404 log); specific ones are in legacy.txt
+  ['/our-work/*', '/wbwn/', 301],
+  ['/portfolio/*', '/wbwn/', 301],
+  ['/projects/*', '/wbwn/', 301],
   // the old story index's pagination
   ['/stories-from-the-field/page/*', '/stories/', 301],
   ['/tag/*', '/stories/', 301],

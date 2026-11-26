@@ -305,7 +305,7 @@ Built on `main` (pushed to `unfoldingWord/web`), Phases 0–3 except the items m
 **Waiting on information or access**
 1. Translation scope and reviewers (section 9, decision 1).
 2. `/obs/` vs `/open-bible-stories/` — both built at their current URLs.
-3. The Redirection plugin's rule list and 404 log (WordPress admin) — 37 rules recovered by probing and from the old pages' own links so far.
+3. ~~The Redirection plugin's rule list and 404 log~~ — done 25 November: all 446 rules exported (410 enabled) and converted (`scripts/migrate/redirection-to-legacy.mjs`); real addresses from the 2,302-entry 404 log added. 576 old URLs now checked on every build. A few destinations are guesses to confirm, and five short links (`/box2`, `/dsm-landingpage`, `/eten`, `/gcn`, `/gcnn`) and `/praylive` wait on a decision — `docs/open-questions.md`.
 4. GTM container audit and GA4 custom dimensions (GTM/GA4 access) — `docs/analytics.md`.
 5. Virtuous: register the preview domain(s) so giving forms render on previews (`*.unfoldingword.workers.dev`); confirm what a completed gift reports (A/B conversion).
 6. Contact form destination (Contact Form 7 settings) — `docs/forms.md`.

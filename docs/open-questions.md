@@ -6,7 +6,6 @@ Things only someone at unfoldingWord can decide or supply. Each is safe to leave
 
 | What | Why | Where it goes |
 |---|---|---|
-| WordPress **Redirection plugin** rule list and 404 log | Only 37 rules could be recovered by probing; the rest are invisible from outside | `redirects/legacy.txt`, `redirects/old-urls.txt` |
 | **GTM** container audit, GA4 custom dimensions | Triggers built for Elementor/Contact Form 7 markup will stop firing | `docs/analytics.md` |
 | **Virtuous**: register the staging/preview domains | Giving forms refuse unregistered domains, so previews show "not embedded on a registered domain" | Virtuous → Page & Form Settings |
 | **Virtuous**: what does a completed gift report? | The A/B goal "completed gift" needs a signal (`/donation-confirmation/` page view, or a message from the form) | `docs/ab-testing.md` |
@@ -32,3 +31,14 @@ Things only someone at unfoldingWord can decide or supply. Each is safe to leave
 15. **Low-resolution story images** — `critical-tools-for-courageous-translators` (265×159) and `making-gods-word-accessible` (420×283) look soft; better originals?
 16. **Knowledge graph** — unfoldingWord has no Wikidata item or Wikipedia article. Creating a Wikidata item (an outside publication, so a team decision) would strengthen search/AI entity recognition and the GEO score.
 17. **The `filedn.com` image folder** — still used by anything else? It can be retired once nothing points at it.
+
+## Redirects (from the Redirection plugin export, 25 November)
+
+All 446 plugin rules and the real addresses in its 404 log are in `redirects/legacy.txt`. About 80 rules already led to a 404 on the old site (their WordPress targets were deleted); they now go somewhere sensible. These need a person:
+
+18. **Short links with no destination**, all pointing at deleted `/sa/…` pages and still in use: `/box2` (23,020 uses, plus 333 direct hits on `/sa/box2`), `/dsm-landingpage` (4,664), `/gcn`, `/gcnn`, `/eten`. Where should each go? They 404 today and on the new site until answered.
+19. **`/praylive`** sends people to a Zoom meeting whose link includes its passcode. The repository is public, so it was left out. Options: put the link in the redirect anyway (it is already public to anyone who visits the short link), use a Zoom link without the passcode, or point it at `/pray/`.
+20. **`/welcome`** has about 570 hits in the 404 log and has never existed on the site. Does an app or printed piece link to it?
+21. **Guessed destinations** (marked `(?)` in `redirects/legacy.txt`): `/license` (1,102 uses) and `/about/license` → the open-license page; `/disclosures-credits` → charitable disclosures; `/strategic-overview` → the CCBT strategic overview (the old site sent it to the staff giving page); `/gateway/how-to-open` → gateway languages; "His Light" / Global Forum 2025 links → global and regional forums; the deleted catalyst story → `/catalyzation/`.
+22. **Monthly prayer calendar** — `/prayer-calendar` points at the November 2026 PDF; someone must update it each month (as in WordPress).
+23. **`/d/iran`** — the plugin sent it to a Donorbox campaign; the new site sends it to `/wbwn/iran/` (decided earlier). Confirm.

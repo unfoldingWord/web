@@ -4,17 +4,17 @@
 # Format: one rule per line, "<from> <to> [status]" (status defaults to 301).
 # <from> is a path on unfoldingword.org; <to> is a path or a full URL.
 # Trailing slashes do not matter: every rule is written for both /x and /x/.
-# Lines starting with # are comments.
+# Only whole lines starting with # are comments. A # in a target
+# (/publications/#TGLS) is a page section; it must exist on that page.
+# A target may carry tracking codes (/give/?segment=AN26EV2); keep them.
 #
 # scripts/postbuild.mjs merges this file with every content file's
 # `redirectFrom` into dist/_redirects, and FAILS THE BUILD if a rule points at
 # a page that was not built, chains through another redirect, or is listed
 # twice. Fix the rule; do not remove the check.
 #
-# STATUS: the WordPress Redirection plugin's full rule list has not been
-# exported yet (it needs an admin login). The rules below were found by
-# probing the live site on 2026-11-24 and from links in the site's own
-# pages. When the export arrives, add every rule here.
+# The first sections were found by probing the live site on 2026-11-24. The
+# WordPress Redirection plugin's full export (2026-11-25) is at the bottom.
 
 # --- Found by probing the live site (Redirection plugin) ---
 /home                       /
@@ -61,3 +61,361 @@
 /local-sitemap.xml          /sitemap-index.xml
 /news-sitemap.xml           /sitemap-index.xml
 /wp-sitemap.xml             /sitemap-index.xml
+
+# Exported from the Redirection plugin on 2026-11-25 (446 rules; 410 enabled).
+# Converted by scripts/migrate/redirection-to-legacy.mjs. Left out: /praylive (a Zoom link with its passcode; the repo is public — see docs/open-questions.md). /tools/* is a pattern rule in scripts/postbuild.mjs.
+/donate-preview                             /give/
+/stories/ukraine-bomb-shelter-bible-translation /stories/ukrainian-great-commission-partners-are-translating/
+/stories/jeremiah-and-the-occult-king       /stories/when-jeremiah-first-heard-that-his-chadian-church-planting/
+/privacy-policy                             /privacy/
+/audio-engineering                          /publications/
+/projects                                   /wbwn/
+/christmas-2024                             /give/
+/endure2024                                 /give/
+/uncategorized/in-the-republic-of-iran-for-the-church-to-be-planted /stories/in-the-republic-of-iran-for-the-church-to-be-planted/
+/projects/worldwide                         /wbwn/
+/projects-overview                          /wbwn/
+/russiangateway                             /wbwn/
+/license/projects/eurasia/russian           /wbwn/
+/door43/projects/eurasia/russian            /wbwn/
+/s/1-Russia-Speaking-World_11052020.pdf     /wbwn/
+/what-we-do                                 /about/
+/details                                    /about/
+/about-unfoldingword                        /about/
+/who-we-are                                 /about/
+/about/what                                 /about/
+/dashboard                                  /for-translators/
+/content-overview                           /for-translators/content/
+/content                                    /for-translators/content/
+/ubc                                        /for-translators/content/
+/ubh                                        /for-translators/content/
+/ubm                                        /for-translators/content/#UBM
+/ubn                                        /for-translators/content/#UBN
+/ugg                                        /for-translators/content/#UGG
+/ugl                                        /for-translators/content/#UGL
+/ugnt                                       /for-translators/content/#UGNT
+/uhal                                       /for-translators/content/#UHAL
+/uhb                                        /for-translators/content/#UHB
+/uhg                                        /for-translators/content/#UHG
+/ult                                        /for-translators/content/#ULT
+/ULT                                        /for-translators/content/#ULT
+/UST                                        /for-translators/content/#UST
+/ust                                        /for-translators/content/#UST
+/utn                                        /for-translators/content/#UTN
+/utq                                        /for-translators/content/#UTQ
+/utw                                        /for-translators/content/#UTW
+/tW                                         /for-translators/content/#UTW
+/translationwords                           /for-translators/content/#UTW
+/tw                                         /for-translators/content/#UTW
+/versioning                                 /for-translators/content/
+/bible                                      /for-translators/content/
+/Bible                                      /for-translators/content/
+/principles                                 /for-translators/content/
+/tq                                         /for-translators/content/#UTQ
+/translationnotes                           /for-translators/content/#UTN
+/translationquestions                       /for-translators/content/#UTQ
+/uhl                                        /for-translators/content/#UHAL
+/tools                                      /for-translators/tools/
+/translationdatabase                        /for-translators/tools/
+/translationStudio                          /for-translators/tools/#translationstudio
+/translationstudio                          /for-translators/tools/#translationstudio
+/tC                                         /for-translators/tools/#translationcore
+/door43                                     /for-translators/tools/#door43
+/app                                        /for-translators/tools/#unfoldingword-app
+/apps                                       /for-translators/tools/#unfoldingword-app
+/api                                        /for-translators/tools/#api
+/apis                                       /for-translators/tools/#api
+/blockchain                                 /for-translators/tools/#publishing-blockchain
+/autographa                                 /for-translators/tools/
+/services                                   /for-translators/tools/
+/tc/index.html                              /for-translators/tools/#translationcore
+/td                                         /for-translators/tools/
+/ts                                         /for-translators/tools/#translationstudio
+/tS                                         /for-translators/tools/#translationstudio
+/uw                                         /for-translators/tools/#unfoldingword-app
+/training                                   /for-translators/training/
+/ugc                                        /for-translators/training/#UGC
+/academy                                    /for-translators/training/#UTA
+/uta                                        /for-translators/training/#UTA
+/guidelines                                 /for-translators/training/
+/ta                                         /for-translators/training/#UTA
+/tA                                         /for-translators/training/#UTA
+/translationacademy                         /for-translators/training/#UTA
+/publications-home                          /publications/
+/unrestricted-original-language-resources   /publications/
+/letting-go                                 /publications/
+/duplication                                /publications/
+/equipping-the-church                       /publications/
+/tcc                                        /publications/
+/audio                                      /publications/
+/ccbt-getting-started                       /publications/
+/blog/category/ccbt                         /publications/
+/s/CCBT-Getting_Started.pdf                 /publications/
+/freetranslate                              /publications/
+/ietf                                       /publications/#language-identification
+/gateway-languages-project                  /publications/#TGLS
+/bt3                                        /publications/
+/copyright                                  /publications/
+/dsm-landingpage/resources/illustrations/sweet-publishing /sweet-publishing/
+/sweet-                                     /sweet-publishing/
+/sweet-publishing/1-                        /sweet-publishing/
+/images/rg/[name]                           /sweet-publishing/
+/gateway/about                              /publications/#TGLS
+/gl                                         /publications/#TGLS
+/glossary                                   /publications/
+/qa                                         /publications/
+/quality                                    /publications/
+/resources/illustrations/sweet-publishing   /sweet-publishing/
+/thechristiancommons                        /publications/
+/translation                                /for-translators/
+/s/1-Equipping-the-Global-Church_Oakes.pdf  /publications/
+/s/NT-UST-Editor-Job-Description.pdf        /careers/
+/s/Bible-Text-Editor-and-Notes-Writer.pdf   /careers/
+/s/Job-Description-TNW_OT.pdf               /careers/
+/do-something                               /careers/
+/engage                                     /careers/
+/volunteer                                  /careers/
+/network                                    /careers/
+/givenow                                    /give/
+/giving                                     /give/
+/dosomething                                /give/
+/blog/bible-stories-open-ministry-doors     /open-bible-stories/
+/home-page                                  /
+/hopefortheholidays                         /
+/infographicsignup                          /
+/new-initiatives-2021                       /
+/ruscaroma                                  /
+/welcome-to-unfoldingword                   /
+/stories/we-will-walk-with-you              /
+/stories/dr.-maryam-ghobadi-was-a-little-girl-living-near-the /
+/church-translates                          /publications/
+/grand-strategy                             /publications/#grand-strategy
+/dichotomies-in-bible-translation           /publications/
+/from-unreached-to-established              /publications/#U2E
+/seven-big-rocks-of-church-centric-missions /publications/
+/the-gateway-languages-strategy             /publications/#TGLS
+/publications/unrestricted-original-language-resources /publications/
+/publications/from-unreached-to-established /publications/#U2E
+/whole-bible-page                           /wbwn/
+/uncategorized/gods-initiative-in-sudan     /stories/gods-initiative-in-sudan/
+/for-translators/tools/content              /for-translators/content/
+/GN-OCT25                                   /give/?utm_campaign=GoodNews2025&utm_medium=QR&utm_source=OCT25-01-QR
+/GN-OCT25WEB                                /give/?utm_campaign=GoodNews2025&utm_medium=Website&utm_source=OCT25-01-WEB
+/brmc26                                     /give/?segment=AN26EV2
+/givewmn                                    /give/
+/givetoday                                  /give/?segmentCode=AF0626SM1
+/GiveWhereNeeded                            /give/?segmentCode=AF0626SM3
+/partnertoday                               /give/?segmentCode=AF0626SM2
+/2026Q3NL                                   /give/?segmentCode=26NL08AFPTQ3
+/kbuganda                                   /give/kingdom-business/
+/sudanese/asim-serves-on-the-bible-translation-audio-video-team /stories/asim-serves-on-the-bible-translation-audio-video-team/
+/2026Q4NL                                   /give/?segmentCode=26NL11AFPTQ4
+/whole-bible-whole-nation                   /wbwn/
+/wbwn/benin-v2                              /wbwn/benin/
+/wbwn/chad-v2                               /wbwn/chad/
+/wbwn/iran-v2                               /wbwn/iran/
+/wbwn/islands-asia-v2                       /wbwn/islands-asia/
+/wbwn/sudan-v2                              /wbwn/sudan/
+/what-is-church-centric-bible-translation   /ccbt/
+/why-the-church-needs-open-licensed-biblical-content /ccbt/open-licensed-biblical-content/
+/how-a-church-begins-translating-the-bible  /ccbt/how-churches-translate/
+/unfoldingword-strategic-overview           /ccbt/strategic-overview/
+/a-translation-must-be-trustworthy-and-trusted /ccbt/trustworthy-and-trusted/
+/church-centric-and-bible-centric-translation /ccbt/church-centric-vs-bible-centric/
+/church-centric-bible-translation-questions /ccbt/faq/
+/equipping-servants-in-the-new-testament-church /ccbt/equipping-servants/
+/ccbt/from-unreached-to-established         /ccbt/establishing-the-church/
+/wbwn/southeast-asia-2                      /wbwn/se-asia/
+/prayer-calendar                            /wp-content/uploads/2026/11/2026-November-Prayer-Calendar.pdf  302
+
+# --- Redirection plugin: to other sites ---
+/endure                                     https://unfoldingword.us/give/?utm_campaign=Christmas2024&utm_source=goodnews&utm_medium=ad
+/christmas                                  https://unfoldingword.us/give/?utm_campaign=Christmas2024&utm_source=NOV24-DM&utm_medium=print
+/endure-2024                                https://unfoldingword.us/give/?utm_campaign=Christmas2024&utm_source=NOV24-SOCIAL&utm_medium=Social
+/for-translators/fe                         https://unfoldingword.github.io/en_obs_tf/index.html
+/d/villages                                 https://donorbox.org/villages
+/d/sugarcreek                               https://donorbox.org/sugarcreek
+/life-changing-gospel                       https://donorbox.org/life-changing-gospel
+/gospel                                     https://donorbox.org/gospel
+/gospel-podcast                             https://donorbox.org/gospel-podcast
+/d/freedom-10                               https://donorbox.org/freedom10-challenge
+/gospel-2                                   https://donorbox.org/gospel-2
+/d/austin                                   https://donorbox.org/uw-kirby
+/d/williamsburg                             https://donorbox.org/uw-young
+/d/marietta                                 https://donorbox.org/uw-reiner
+/d/colorado-springs                         https://donorbox.org/uw-trapp
+/d/eurasia                                  https://donorbox.org/eurasia-gl
+/d/general                                  https://donorbox.org/uw-general
+/d/sudan                                    https://donorbox.org/open-the-gates-sudan-2
+/d/seasia                                   https://donorbox.org/southeast-asia
+/chad-2                                     https://donorbox.org/chad-2
+/d/chad                                     https://donorbox.org/chad-2
+/chad                                       https://donorbox.org/chad
+/iran                                       https://donorbox.org/open-the-gates-persian
+/openthegates                               https://donorbox.org/open-the-gates
+/otg-sudan                                  https://donorbox.org/open-the-gates-sudan
+/stories/sudanese-bible-translators-take-equipping-journey https://donorbox.org/open-the-gates-sudan-2
+/stories/222-ministries-president-lazarus-yeghnazar-dreams-of https://donorbox.org/open-the-gates-persian-3
+/freedom-10                                 https://connect.unfoldingword.us/freedom10challenge/
+/coutcher                                   https://connect.unfoldingword.us/coutcher/
+/mcdonald                                   https://connect.unfoldingword.us/mcdonald/
+/young                                      https://connect.unfoldingword.us/young/
+/lundy                                      https://connect.unfoldingword.us/lundy/
+/axt                                        https://connect.unfoldingword.us/axt/
+/stoltzfus                                  https://connect.unfoldingword.us/stoltzfus/
+/spickler                                   https://connect.unfoldingword.us/spickler/
+/pringle                                    https://connect.unfoldingword.us/pringle/
+/pruett                                     https://connect.unfoldingword.us/pruett/
+/trapp                                      https://connect.unfoldingword.us/trapp/
+/reiner                                     https://connect.unfoldingword.us/reiner/
+/s/2019-Audited-Financial-Statement.pdf     https://unfolding-word.cdn.prismic.io/unfolding-word/5590f2b3-4bbf-43c6-95b9-6431ec46d672_2019%2BAudited%2BFinancial%2BStatement.pdf
+/s/2019_DSM_990_Public_Copy.pdf             https://unfolding-word.cdn.prismic.io/unfolding-word/c02dd132-49b4-4245-8cac-d1922c0f730c_2019%2BUW%2B990%2BPublic%2BCopy.PDF
+/s/2012_DSM_990_Public_Copy.pdf             https://unfolding-word.cdn.prismic.io/unfolding-word/eb58f66c-6b06-4a01-b3db-7df773936d8e_2012_DSM_990_Public_Copy.pdf
+/christmas-coloring-book                    https://connect.unfoldingword.us/free-coloring-book/
+/s/ccbt-getting-started-rev-1.pdf           https://unfolding-word.cdn.prismic.io/unfolding-word/f64e1747-cbf7-4afa-a2cf-8683662fe33f_ccbt-getting-started-rev%2B1.pdf
+/s/uW_audio-file-quality-standards_v20.pdf  https://unfolding-word.cdn.prismic.io/unfolding-word/f4881e34-cb29-4878-b0a9-62dffade4f7f_uW_audio%2Bfile%2Bquality%2Bstandards_v2.0.pdf
+/s/uW_audio-file-naming-standard_v20.pdf    https://unfolding-word.cdn.prismic.io/unfolding-word/61242c73-c9d6-4e41-9376-52442a9e98f5_uW_audio%2Bfile%2Bnaming%2Bstandard_v2.0.pdf
+/transactions                               https://unfoldingword.us/donate-a/
+/tcore-3-0                                  https://www.translationcore.com
+/tcore-project                              https://www.translationcore.com
+/assets/img/uw_resource_map.png             https://images.prismic.io/unfolding-word/8e057d67-4f19-400c-a2e3-b81612f888bd_2500w.png
+/glm                                        https://gl-manual.readthedocs.io/en/latest/
+/pub                                        https://forum.door43.org/t/how-to-manually-publish-your-resource/2295
+/team43                                     https://door43.org/en/contact/
+/tn                                         https://door43.org/u/unfoldingWord/en_tn/v27
+/tools/tr                                   http://translationrecorder.com/
+/www.facebook.com/unfoldingWord             https://www.facebook.com/unfoldingWord/
+/contact/www.linkedin.com/company/unfoldingword https://www.linkedin.com/company/unfoldingword
+/blog/unfoldingword-releases-translationcore-20 https://forum.door43.org/t/translationcore-2-0-release-notes/394
+/s/GatewayLanguageSourceTextAffirmationForm.pdf https://ufw.io/pub
+/onair                                      https://engage.unfoldingword.org/onair
+/gathering2022                              https://connect.unfoldingword.us/synergize/
+/12passages                                 https://www.bible.com/reading-plans/35989-12-passages-every-christian-should-know
+/training-hub                               https://unfoldingword.notion.site/Church-Based-Bible-Translation-Training-Resources-f4568b2fbaa9435c9be6999466c5d61a
+
+# --- Redirection plugin rules that already ended in a 404 on the old site ---
+# Their WordPress targets were deleted or renamed. Destinations chosen during the
+# migration (2026-11-25); the ones marked (?) are guesses for the team to confirm
+# (docs/open-questions.md). Left out until someone decides: /box2, /dsm-landingpage,
+# /eten, /gcn, /gcnn — they pointed at /sa/... pages that no longer exist.
+
+# Story nicknames
+/escape-from-kharkiv                        /stories/escape-from-kharkiv1/
+/ten-times-faster                           /stories/imagine-you-are-ordering-a-new-internet-connection/
+/meeshas-story                              /stories/in-the-republic-of-iran-for-the-church-to-be-planted/
+/man-on-the-run                             /stories/asim-serves-on-the-bible-translation-audio-video-team/
+/amazing-grace                              /stories/from-street-beggar-to-bold-evangelist/
+/saved-while-escaping                       /stories/i-was-a-terrible-husband-for-the-first-fifteen-years/
+# (?) the catalyst story is no longer on either site
+/meet-amy-priscilla                         /catalyzation/
+/stories/unfoldingword-operates-as-a-catalyst-for-the-church-centric /catalyzation/
+
+# Worked on the old site through WordPress's own old-address guessing
+/annualreport                               /financial-information/
+/chad-initiative                            /wbwn/chad/
+/chad-arabic-spanish                        /wbwn/chad/
+/blog/open-bible-stories-help-draw-new-believers-in-chad /obs/
+/en                                         /obs/
+/faith                                      /statement-of-faith/
+/donation-complete                          /donation-confirmation/
+# (?) the old site sent this to the staff giving page
+/strategic-overview                         /ccbt/strategic-overview/
+
+# Old project pages (now Whole Bible, Whole Nation)
+/projects/africa/sudan                      /wbwn/sudan/
+/projects/asia/southeast-asia-1             /wbwn/se-asia/
+/southeastasia1                             /wbwn/se-asia/
+/contact/projects/asia/southeastasia1       /wbwn/se-asia/
+/door43/projects/asia/southeastasia1        /wbwn/se-asia/
+/translationstudio/projects/asia/southeastasia1 /wbwn/se-asia/
+/s/Chad_UnfoldingWord_85x11_12112020.pdf    /wbwn/chad/
+/africa                                     /wbwn/
+/projects/middle-east-north-africa-pakistan /wbwn/
+/arabic-speaking-world                      /wbwn/
+/projects/menapak/arabic-speaking-world     /wbwn/
+/arabic                                     /wbwn/
+/gl-spanish                                 /wbwn/
+/spanishgateway                             /wbwn/
+/latin-american-spanish-story-revamp        /wbwn/
+/s/LatinAmericanSpanish_UnfoldingWord_85x11_06262020-1.pdf /wbwn/
+/blog/tag/southasia                         /wbwn/
+
+# About and resources
+/s/uWLegalandDoctrinalStatementForm.pdf     /statement-of-faith/
+/s/unfoldingWord-Grand-Strategy-draft10.pdf /publications/#grand-strategy
+/tk                                         /for-translators/tools/
+/tk/index.html                              /for-translators/tools/
+/translationKeyboard                        /for-translators/tools/
+/ulb                                        /for-translators/content/#ULT
+/udb                                        /for-translators/content/#UST
+/ueb                                        /for-translators/content/
+/ccbt-church-growth                         /ccbt/
+/how-ccbt-works                             /ccbt/
+/blog/tag/ccbt                              /ccbt/
+# (?)
+/license                                    /ccbt/open-licensed-biblical-content/
+/disclosures-credits                        /charitable-solicitation-disclosures/
+/gateway/how-to-open                        /ccbt/gateway-languages/
+/portfolio                                  /wbwn/
+/videos                                     /stories/
+
+# Finished campaigns: to the main giving page, keeping their tracking codes
+/summer-match-2024                          /give/
+/race-for-the-nations-2024-copy             /give/
+/sudan-ebook/sudan-ebook-donate             /give/
+/he-is-risen-2025-donation                  /give/
+/elementor-12615                            /give/
+/donate-whole-bible                         /give/wbwn/
+/christmas-2024-thank-you                   /donation-confirmation/
+/general-thank-you                          /donation-confirmation/
+/easter                                     /give/?utm_campaign=Easter2025&utm_source=MAR25-DM&utm_medium=print
+/GN-SEPT25                                  /give/?utm_campaign=GoodNews2025&utm_medium=QR&utm_source=SEPT25-01-QR
+/GN-SEPT25WEB                               /give/?utm_campaign=GoodNews2025&utm_medium=Website&utm_source=SEPT25-01-WEB
+/GNYearEnd                                  /give/?utm_campaign=GoodNews2025&utm_medium=QR&utm_source=Q425-01-QR
+/GNYearEndWeb                               /give/?utm_campaign=GoodNews2025&utm_medium=Website&utm_source=Q425-01-WEB
+/his-light2025                              /give/?utm_campaign=GF25&utm_source=GF25-01-NL&utm_medium=Print
+/share-his-light                            /give/?utm_campaign=LIGHT2025&utm_source=LIGHT25-01-AC&utm_medium=print
+/2025AnnualReport                           /give/?segment=ANR25DM2
+/2026Q1NL                                   /give/?segment=AN26Q1NL
+/2026Q2NL                                   /give/?segment=AN26Q2NL
+# (?) "His Light" was the Global Forum 2025 campaign
+/globalforum25                              /global-regional-forums/
+/his-light-2                                /global-regional-forums/
+/global-forum-draft-3-nov-4-dnp             /global-regional-forums/
+
+# --- From the Redirection plugin's 404 log (2,302 addresses, 2026-11-25) ---
+# Addresses real visitors still try that already failed on the old site.
+# Bot probes (logins, admin pages, config files) are left to the 404 page.
+# /our-work/*, /portfolio/* and /projects/* are pattern rules in scripts/postbuild.mjs.
+/projects/africa/sudanese                   /wbwn/sudan/
+/our-work/africa/sudanese                   /wbwn/sudan/
+/projects/asia/southeastasia1               /wbwn/se-asia/
+/portfolio/asia/southeastasia1              /wbwn/se-asia/
+/projects/eurasia/persian                   /wbwn/iran/
+/our-work/eurasia/persian                   /wbwn/iran/
+/portfolio/eurasia/persian                  /wbwn/iran/
+/worldwide/unfoldingword-operates-as-a-catalyst-for-the-church-centric /catalyzation/
+/stories/iran-bibles                        /stories/
+/prayer-request/unprecedented-opportunity-in-chad /pray/
+/prayer-request/important-shifts-in-south-sudan   /pray/
+/uag                                        /for-translators/content/#UAG
+/publications/letting-go                    /publications/
+/about-us                                   /about/
+/team                                       /our-team/
+/get-in-touch                               /contact/
+/for-churches                               /ccbt/
+/give-wbwn                                  /give/wbwn/
+/he-is-risen-2025                           /give/
+/race-for-the-nations-2024                  /give/
+/thank-you                                  /donation-confirmation/
+/year-end2025-thank-you                     /donation-confirmation/
+/feed.xml                                   /stories/rss.xml
+/author-sitemap.xml                         /sitemap-index.xml
+# (?) same guesses as the plugin rules above
+/about/license                              /ccbt/open-licensed-biblical-content/
+/licenses                                   /ccbt/open-licensed-biblical-content/
+/about/disclosures-and-credits              /charitable-solicitation-disclosures/
+/join-us/open-gateway                       /ccbt/gateway-languages/
+/his-light                                  /global-regional-forums/
+/global-forum-25-thank-you                  /global-regional-forums/
+/our-work                                   /wbwn/

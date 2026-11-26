@@ -28,3 +28,5 @@ Done when `npm run build` passes and the request appears on `/pray/`.
 4. **Publish** with the **publish-changes** skill.
 
 To take a request down when it is no longer current, delete the file and add its URL to `redirects/legacy.txt` pointing at `/pray/`, so links to it keep working.
+
+**Monthly prayer calendar (PDF).** The short link `/prayer-calendar` points at the current month's PDF. Upload the new PDF to the media bucket under `uploads/<year>/<month>/`, then change the `/prayer-calendar` line in `redirects/legacy.txt` to the new `/wp-content/uploads/<year>/<month>/<file>.pdf` path (keep the `302`).
