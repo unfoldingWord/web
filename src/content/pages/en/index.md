@@ -44,7 +44,7 @@ sections:
     hash: 92b6193486
 
   - type: giving
-    title: Give the Gospel **Change lives forever**
+    title: Give the Gospel *Change lives forever*
     body: |-
       1.45 billion people still do not have access to God’s Word in their heart language. Your gifts equip church planters to meet those needs forever.
     formId: 16dec80a-ad5e-470e-ae62-4ed13821ccca

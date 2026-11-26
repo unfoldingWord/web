@@ -201,18 +201,20 @@ const fallbackLink = `<a href="${SITE.givingFallbackUrl}">give.unfoldingword.org
   }
   .giving-trust :global(a) { font-weight: 700; }
 
-  /* Landing on phones: centered copy, no photo (production hides it). */
+  /* On phones: no photo (production hides it, on the home page as on the
+     landing pages), a centered title, and on landing pages centered text. */
   @media (max-width: 767px) {
     .giving-landing {
       padding-block-end: 30px;
     }
+    .giving-title,
     .giving-landing .giving-copy {
       text-align: center;
     }
-    .giving-landing .giving-image {
+    .giving-image {
       display: none;
     }
-    .giving-landing .giving-trust {
+    .giving-trust {
       text-align: center;
     }
   }

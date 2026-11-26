@@ -235,6 +235,8 @@
     @apply text-body text-ink;
     font-weight: 300;
     max-width: none;
+    /* A long bare URL (disclosures) breaks instead of pushing the page sideways on phones. */
+    overflow-wrap: break-word;
   }
   .prose > :first-child { margin-top: 0; }
   .prose :where(p) { margin: 0 0 0.9rem; }
