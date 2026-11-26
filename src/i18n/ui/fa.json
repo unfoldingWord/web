@@ -50,6 +50,7 @@
   "contactFormEmail": "ایمیل",
   "contactFormMessage": "پیام",
   "contactFormSend": "ارسال پیام",
+  "contactFormSubmit": "ارسال",
   "contactFormSent": "سپاسگزاریم. پیام شما ارسال شد.",
   "contactFormError": "پیام شما ارسال نشد. لطفاً دوباره تلاش کنید یا با ما تماس بگیرید.",
   "footer": {

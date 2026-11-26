@@ -19,6 +19,7 @@ sections:
   title: 2025 Financials
   items:
   - title: Download Annual Report
+    icon: download
     href: /wp-content/uploads/2026/02/unfoldingWord_2025_AnnualReport.pdf
     kind: pdf
     image: about/annual-report-2025.jpg
@@ -27,6 +28,7 @@ sections:
     href: https://heyzine.com/flip-book/5ebaad78c0.html
     kind: book
   - title: Audited Financial Statement
+    icon: statement
     href: /wp-content/uploads/2026/04/FINAL-Financial-Statements-2025-Audit.pdf
     kind: pdf
   - title: 990 Forms
@@ -38,6 +40,7 @@ sections:
   title: 2024 Financials
   items:
   - title: Download Annual Report
+    icon: download
     href: /wp-content/uploads/2025/01/unfoldingWord_AnnualReport_2024.pdf
     kind: pdf
     image: about/annual-report-2024.jpg
@@ -46,6 +49,7 @@ sections:
     href: https://heyzine.com/flip-book/adbe31ef67.html
     kind: book
   - title: Audited Financial Statement
+    icon: statement
     href: /wp-content/uploads/2025/05/2024uWAuditedFinancialStatements.pdf
     kind: pdf
   - title: 990 Forms
@@ -57,11 +61,13 @@ sections:
   title: 2023 Financials
   items:
   - title: Download Annual Report
+    icon: download
     href: /wp-content/uploads/2024/10/AnnualReport_2023-.pdf
     kind: pdf
     image: about/annual-report-2023.jpg
     imageAlt: Cover of the unfoldingWord 2023 Annual Report, unfoldingWord Comes of Age, showing a boy in a white head covering on a gold background
   - title: Audited Financial Statement
+    icon: statement
     href: /wp-content/uploads/2024/10/ZnSPKZm069VX17vA_2023-Audited-Financial-Statement.pdf
     kind: pdf
   - title: 990 Forms
@@ -73,11 +79,13 @@ sections:
   title: 2022 Financials
   items:
   - title: Download Annual Report
+    icon: download
     href: /wp-content/uploads/2025/01/2022-unfoldingWord-Annual-Report-.pdf
     kind: pdf
     image: about/annual-report-2022.jpg
     imageAlt: Cover of the unfoldingWord 2022 Annual Report showing a smiling girl reading a tablet on a hillside with mountains behind her
   - title: Audited Financial Statement
+    icon: statement
     href: /wp-content/uploads/2024/10/2022-unfoldingWord-Audited-Financial-Statement.pdf
     kind: pdf
   - title: 990 Forms
@@ -89,11 +97,13 @@ sections:
   title: 2021 Financials
   items:
   - title: Download Annual Report
+    icon: download
     href: /wp-content/uploads/2024/10/UnfoldingWord_AnnualReport_2021_C.pdf
     kind: pdf
     image: about/annual-report-2021.jpg
     imageAlt: Cover of the unfoldingWord 2021 Annual Report showing a young child reading an open Bible
   - title: Audited Financial Statement
+    icon: statement
     href: /wp-content/uploads/2024/10/2021-unfoldingWord-Audited-Financial-Statement.pdf
     kind: pdf
   - title: 990 Forms
@@ -105,6 +115,7 @@ sections:
   title: 2020 Financials
   items:
   - title: Audited Financial Statement
+    icon: statement
     href: /wp-content/uploads/2024/10/2020_uW_Audited-FS-Final.pdf
     kind: pdf
   - title: 990 Forms
@@ -116,6 +127,7 @@ sections:
   title: 2019 Financials
   items:
   - title: Audited Financial Statement
+    icon: statement
     href: /wp-content/uploads/2024/10/2019AuditedFinancialStatement.pdf
     kind: pdf
   - title: 990 Forms

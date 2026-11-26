@@ -45,6 +45,7 @@
   "contactFormEmail": "Email",
   "contactFormMessage": "Message",
   "contactFormSend": "Send message",
+  "contactFormSubmit": "Submit",
   "contactFormSent": "Thank you. Your message has been sent.",
   "contactFormError": "Your message could not be sent. Please try again, or call us.",
   "footer": {

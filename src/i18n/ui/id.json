@@ -50,6 +50,7 @@
   "contactFormEmail": "Email",
   "contactFormMessage": "Pesan",
   "contactFormSend": "Kirim pesan",
+  "contactFormSubmit": "Kirim",
   "contactFormSent": "Terima kasih. Pesan Anda telah terkirim.",
   "contactFormError": "Pesan Anda tidak dapat dikirim. Silakan coba lagi, atau hubungi kami melalui telepon.",
   "footer": {

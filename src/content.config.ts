@@ -59,7 +59,10 @@ const hero = z.object({
   //   centered 32px title (the default opener for standard pages)
   // project — photo band with a text column (wbwn country pages)
   // heading — no band: a centered 40px title and line (donation confirmation)
-  variant: z.enum(['photo', 'ocean', 'light', 'split', 'banner', 'project', 'heading']).default('ocean'),
+  // feature — the old post layout (forms): a black band with a 42px title and
+  //   the photo in a 920px column, then `lead` as Markdown text between
+  //   100px spacers
+  variant: z.enum(['photo', 'ocean', 'light', 'split', 'banner', 'project', 'heading', 'feature']).default('ocean'),
   actions: z.array(action).default([]),
   // banner: uppercase title (production does this on most pages, not ccbt/*)
   uppercase: z.boolean().optional(),
@@ -88,7 +91,12 @@ const prose = z.object({
   width: z.enum(['prose', 'wide', 'narrow']).default('prose'),
   background: z.enum(['white', 'mist', 'ocean']).default('white'),
   serif: z.boolean().default(false),
-  align: z.enum(['start', 'center']).optional(),
+  // title — only the title (and divider) centered, the text start-aligned
+  //   (vision and mission "Our Mission")
+  align: z.enum(['start', 'center', 'title']).optional(),
+  // A centered 19.2px light line under the title, 20px above the next
+  // section's heading (vision and mission "THE CHURCH IN EVERY PEOPLE GROUP")
+  lead: z.string().optional(),
   // A short Kindle rule under the title (about "Our Strategy")
   divider: z.boolean().optional(),
   // Buttons centered under the text (production's "Donate Now")
@@ -100,6 +108,11 @@ const prose = z.object({
   inset: z.boolean().optional(),
   // large — 19.36/29.04 text (global-regional-forums)
   textSize: z.enum(['normal', 'large']).optional(),
+  // Production's Inspire accents (careers): **bold** text shows in Inspire,
+  // and a `####` line is a 20px bold Inspire statement
+  accent: z.boolean().optional(),
+  // Lists indented 20px with no space under them (statement of faith)
+  compactLists: z.boolean().optional(),
 });
 
 const cards = z.object({
@@ -323,6 +336,8 @@ const resources = z.object({
       image: imagePath.optional(),
       imageAlt: z.string().optional(),
       meta: z.string().optional(),
+      // list: production's solid icon (default: form for pdf, magazine for book)
+      icon: z.enum(['download', 'magazine', 'statement', 'form']).optional(),
     }).refine(hasImageAlt, missingAlt),
   ),
 });
@@ -348,6 +363,8 @@ const contactForm = z.object({
   type: z.literal('contactForm'),
   title: z.string().optional(),
   intro: z.string().optional(),
+  // Shown instead of `intro` while the form is switched on (PUBLIC_CONTACT_FORM)
+  formIntro: z.string().optional(),
 });
 
 const embed = z.object({

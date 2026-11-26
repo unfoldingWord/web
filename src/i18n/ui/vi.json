@@ -50,6 +50,7 @@
   "contactFormEmail": "Email",
   "contactFormMessage": "Lời nhắn",
   "contactFormSend": "Gửi lời nhắn",
+  "contactFormSubmit": "Gửi",
   "contactFormSent": "Xin cảm ơn. Lời nhắn của quý vị đã được gửi.",
   "contactFormError": "Không thể gửi lời nhắn của quý vị. Vui lòng thử lại hoặc gọi điện cho chúng tôi.",
   "footer": {

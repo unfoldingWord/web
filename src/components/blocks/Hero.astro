@@ -1,7 +1,7 @@
 ---
 // Page-opening block. Variants:
-//   banner  — production's page-title band: full-bleed photo under a flat
-//             50% Ocean overlay, centered white 32px title (uppercase unless
+//   banner  — production's page-title band: photo (at its own size, from
+//             the top-left corner) under a flat 50% Ocean overlay, centered white 32px title (uppercase unless
 //             `uppercase: false`), optional extra lines, Kindle divider and
 //             subtitle. 200px tall. The opener for standard pages.
 //   project — photo band with a 50% Ocean overlay and a text column on one
@@ -11,12 +11,18 @@
 //   split   — text beside a photo
 //   light   — quiet tinted band
 //   heading — no band: a centered 40px/500 title and a line of text
+//   feature — the old post layout (forms): a black band holding a 42px/500
+//             title and the photo in a 920px column (as production shows
+//             it, flush to the start), then `lead` as Markdown text in the
+//             1000px column between 100px spacers. The title is an h2: the
+//             page's h1 is the banner above it.
 import type { Block } from '../../content.config';
-import { mdInline } from '../../lib/md';
+import { md, mdInline } from '../../lib/md';
 import Picture from '../ui/Picture.astro';
 import Actions from '../ui/Actions.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
 import { SITE } from '../../lib/site';
+import { img } from '../../lib/images';
 
 type Hero = Extract<Block, { type: 'hero' }>;
 interface Props {
@@ -28,14 +34,29 @@ const { block, locale, crumbs } = Astro.props;
 const { variant, eyebrow, title, lead, image, imageAlt, actions } = block;
 const dark = variant === 'ocean' || (variant === 'photo' && !!image);
 const lines = [title, ...(block.lines ?? [])];
+// Production's banner shows its photo the way an unsized CSS background does:
+// at the image's own pixel size, from the top-left (start) corner, repeated
+// across when the window is wider than the photo. Copies after the first are
+// decorative.
+const bannerImage = variant === 'banner' && image ? img(image) : undefined;
+const bannerTiles = bannerImage ? Math.max(1, Math.ceil(2560 / bannerImage.width)) : 0;
 ---
 
 {
   variant === 'banner' ? (
     <section class:list={['uw-banner on-dark relative isolate flex min-h-[200px] items-center justify-center overflow-hidden px-10 py-10 text-center', !image && 'uw-banner-plain']}>
-      {image && (
+      {image && block.imagePosition && (
         <div class="absolute inset-0 -z-20">
           <Picture path={image} alt={imageAlt ?? ''} eager sizes="100vw" fill class:list={['h-full w-full object-cover', block.imagePosition === 'top' && 'object-top', block.imagePosition === 'bottom' && 'object-bottom']} />
+        </div>
+      )}
+      {bannerImage && !block.imagePosition && (
+        <div class="absolute inset-0 -z-20 overflow-hidden">
+          {Array.from({ length: bannerTiles }, (_, i) => (
+            <div class="absolute top-0" style={`inset-inline-start:${i * bannerImage.width}px;width:${bannerImage.width}px`} aria-hidden={i > 0 ? 'true' : undefined}>
+              <Picture path={image!} alt={i === 0 ? (imageAlt ?? '') : ''} eager sizes={`${bannerImage.width}px`} widths={[bannerImage.width]} class="block" />
+            </div>
+          ))}
         </div>
       )}
       <div class="absolute inset-0 -z-10 bg-ocean/50" aria-hidden="true" />
@@ -56,6 +77,20 @@ const lines = [title, ...(block.lines ?? [])];
         </h1>
         {block.subtitle && <p class="text-h3 font-normal text-white" set:html={mdInline(block.subtitle, locale)} />}
       </div>
+    </section>
+  ) : variant === 'feature' ? (
+    <section class="pt-[var(--spacing-section)]">
+      <div class="on-dark min-h-[320px] bg-black">
+        <div class="max-w-[920px] pt-[26px]">
+          <h2 class="text-center font-heading text-[42px] leading-[1.2] font-medium text-white [text-wrap:wrap]" set:html={mdInline(title)} />
+          {image && <Picture path={image} alt={imageAlt ?? ''} sizes="(min-width: 57.5rem) 920px, 100vw" class="block" />}
+        </div>
+      </div>
+      {lead && (
+        <div class="container-page pt-[100px] pb-[calc(140px+0.9rem)]">
+          <div class="prose" set:html={md(lead, locale)} />
+        </div>
+      )}
     </section>
   ) : variant === 'heading' ? (
     <section class="px-10 pt-10 pb-2.5 text-center md:pt-[175px]">

@@ -13,12 +13,11 @@ sections:
     align: center
     divider: true
     width: narrow
-    body: |-
-      THE CHURCH IN EVERY PEOPLE GROUP<br>
-      THE BIBLE IN EVERY LANGUAGE
+    lead: THE CHURCH IN EVERY PEOPLE GROUP<br>THE BIBLE IN EVERY LANGUAGE
+    body: ''
   - type: prose
     title: Our Mission
-    align: center
+    align: title
     divider: true
     width: narrow
     body: |-

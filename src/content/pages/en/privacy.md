@@ -49,7 +49,7 @@ We collect this information:
 - Directly from you when you provide it to us.
 - Automatically as you navigate through the site. Information collected automatically may include usage details, IP addresses, and information collected through cookies or other legal tracking technologies.
 
-### Information You Provide to Us
+*Information You Provide to Us*
 
 The information we collect on or through our Website may include:
 

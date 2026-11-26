@@ -50,6 +50,7 @@
   "contactFormEmail": "ইমেইল",
   "contactFormMessage": "বার্তা",
   "contactFormSend": "বার্তা পাঠান",
+  "contactFormSubmit": "জমা দিন",
   "contactFormSent": "ধন্যবাদ। আপনার বার্তা পাঠানো হয়েছে।",
   "contactFormError": "আপনার বার্তা পাঠানো যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন, অথবা আমাদের ফোন করুন।",
   "footer": {
