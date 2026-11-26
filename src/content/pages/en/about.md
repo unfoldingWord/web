@@ -61,5 +61,5 @@ sections:
     image: about/pastor-indonesia.jpg
     imageAlt: An Indonesian pastor in a floral shirt reads an illustrated book at a table beside an open window
     actions:
-      - { label: Donate Now, href: /give/, style: give }
+      - { label: Donate Now, href: /give/, style: give, formId: 18871070-1ef0-4bb3-b74f-a70954a2b016 }
 ---

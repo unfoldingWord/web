@@ -275,6 +275,9 @@ const fallbackLink = `<a href="${SITE.givingFallbackUrl}">give.unfoldingword.org
      the text's look and underline on hover. */
   .giving-contact-body :global(a) { color: inherit; font-weight: inherit; }
   .giving-contact-body :global(a:hover) { color: inherit; text-decoration: underline; }
+  /* A link to another page (the Whole Bible Whole Nation program) must look
+     like a link: underlined, still white. */
+  .giving-contact-body :global(a:not([href^="mailto:"], [href^="tel:"])) { text-decoration: underline; text-underline-offset: 2px; }
   .giving-contact-body :global(strong) { font-weight: 300; }
 </style>
 

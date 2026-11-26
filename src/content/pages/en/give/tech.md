@@ -28,5 +28,5 @@ sections:
 
         donationhelp@unfoldingword.org • (407) 604-0883
 
-        Due to banking, governmental, and corporate restrictions, unfoldingWord does not accept online donations for humanitarian relief in Iran. If you would like to support Bible translation for Persian-speaking communities, you can give to our Whole Bible Whole Nation program.
+        Due to banking, governmental, and corporate restrictions, unfoldingWord does not accept online donations for humanitarian relief in Iran. If you would like to support Bible translation for Persian-speaking communities, you can give to our [Whole Bible Whole Nation program](/give/wbwn/).
 ---

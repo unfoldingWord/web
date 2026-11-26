@@ -40,6 +40,12 @@ const action = z.object({
   label: z.string(),
   href,
   style: z.enum(['primary', 'secondary', 'give']).default('primary'),
+  // A Donate button for one campaign: the Virtuous form id (the `data-rd`
+  // value from the editor or Virtuous, never from memory). The button is
+  // then Virtuous's own "Donate Now" button, which opens that form in a
+  // modal, as production does; `href` stays as the fallback link until it
+  // loads (and wherever it cannot: previews, no script).
+  formId: z.string().regex(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/, 'A Virtuous form id is the data-rd value from the embed code, like 16dec80a-ad5e-470e-ae62-4ed13821ccca').optional(),
 });
 
 const translationStatus = z.enum(['source', 'draft', 'reviewed']).default('source');
