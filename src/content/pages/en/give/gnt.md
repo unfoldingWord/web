@@ -24,9 +24,7 @@ sections:
     contact:
       title: Contact Us With Questions
       body: |-
-        Consider giving through your Donor Advised Fund: **EIN 14-1888977**
-
-        donationhelp@unfoldingword.org • (407) 604-0883
-
+        Consider giving through your Donor Advised Fund: **EIN 14-1888977**\
+        donationhelp@unfoldingword.org • (407) 604-0883\
         Due to banking, governmental, and corporate restrictions, unfoldingWord does not accept online donations for humanitarian relief in Iran. You may give by check to support Whole Bible for the Whole Nation Iran.
 ---

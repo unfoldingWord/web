@@ -4,6 +4,8 @@ description: >-
   Include Church-Centric Bible Translation in your estate plans through a bequest, a
   beneficiary designation or your donor-advised fund. EIN 14-1888977.
 ogImage: give/planned-giving.jpg
+bannerImage: give/planned-giving.jpg
+bannerImageAlt: A fountain pen writing cursive script on lined paper
 redirectFrom: [/planned-giving/]
 ---
 

@@ -5,8 +5,11 @@ description: >-
   translation, training, technology and partnerships, and give to their work.
 schemaType: DonatePage
 redirectFrom: [/staff/]
+bannerImage: banners/desk-coffee.jpg
+bannerImageAlt: A cup of black coffee, a leather notebook, glasses, a pen and a phone on a dark desk
 sections:
   - type: cards
+    variant: plain-centered
     columns: 3
     items:
       - title: Grant Ailie
@@ -48,7 +51,7 @@ sections:
         imageAlt: Mark Flood in glasses and a navy checked shirt
         body: >-
           Mark is a Pastor Teacher who serves and shepherds our team while catalyzing and
-          equipping partners for [Church-Centric Bible Translation](/ccbt/).
+          equipping partners for Church-Centric Bible Translation.
         href: https://give.unfoldingword.org/donate/staff?projectCodePreselect=Flood
         linkLabel: Support Mark Flood
       - title: Jesse Griffin

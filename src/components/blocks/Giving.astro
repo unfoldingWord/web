@@ -111,7 +111,9 @@ const fallbackLink = `<a href="${SITE.givingFallbackUrl}">give.unfoldingword.org
     flex-direction: column;
     gap: 20px;
   }
-  .giving-form { grid-area: form; }
+  /* Production's form column has no padding on phones (the form spans the
+     full 310px there), 10px from 768px up. */
+  .giving-form { grid-area: form; padding: 0; margin-block-start: 10px; }
   .giving-trust { grid-area: trust; }
 
   .giving-title {
@@ -152,6 +154,22 @@ const fallbackLink = `<a href="${SITE.givingFallbackUrl}">give.unfoldingword.org
      form's place while it loads. */
   .virtuous-form {
     min-height: 547px;
+    /* The form inherits from its page: give it production's theme defaults
+       (weight 400, buttons that never wrap) rather than our 300 body. */
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+  }
+  .virtuous-form :global(button) {
+    white-space: nowrap;
+  }
+  /* On a domain Virtuous has not registered (previews, local builds) the
+     embed draws a 900px-tall "can't be displayed" card instead of the form.
+     Let it take the form's place instead, so previews keep the page's real
+     proportions. */
+  .virtuous-form :global(.invalid-domain-card-bg) {
+    min-height: 0 !important;
+    height: 100%;
   }
   .virtuous-loading {
     padding-block: 40px;
@@ -206,6 +224,18 @@ const fallbackLink = `<a href="${SITE.givingFallbackUrl}">give.unfoldingword.org
       grid-template-areas: 'copy form' 'trust form';
       column-gap: 20px;
       row-gap: 0;
+    }
+    .giving-form {
+      padding: 10px;
+      margin-block-start: 0;
+    }
+    /* Content height, not stretched: the trust-list script measures them. */
+    .giving-copy,
+    .giving-form {
+      align-self: start;
+    }
+    .giving-row[data-trust-under-form] {
+      grid-template-areas: 'copy form' 'copy trust';
     }
     .giving-trust {
       align-self: start;
@@ -268,5 +298,24 @@ const fallbackLink = `<a href="${SITE.givingFallbackUrl}">give.unfoldingword.org
       });
     });
     obs.observe(document.body, { childList: true, subtree: true });
+    // Two columns: put our trust list under whichever column is shorter
+    // (the copy or the form, whose height Virtuous decides), so it does not
+    // make the row taller than production's.
+    if (!('ResizeObserver' in window)) return;
+    var wide = window.matchMedia('(min-width: 768px)');
+    document.querySelectorAll('.giving-row').forEach(function (row) {
+      var copy = row.querySelector('.giving-copy');
+      var form = row.querySelector('.giving-form');
+      var trust = row.querySelector('.giving-trust');
+      if (!copy || !form || !trust) return;
+      var place = function () {
+        if (!wide.matches) return row.removeAttribute('data-trust-under-form');
+        var c = copy.offsetHeight, f = form.offsetHeight, t = trust.offsetHeight;
+        row.toggleAttribute('data-trust-under-form', Math.max(c, f + t) < Math.max(c + t, f));
+      };
+      new ResizeObserver(place).observe(copy);
+      new ResizeObserver(place).observe(form);
+      wide.addEventListener('change', place);
+    });
   })();
 </script>

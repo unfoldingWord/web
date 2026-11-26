@@ -8,6 +8,10 @@
 //              28px Inspire title, outline "Learn More" and optional filled
 //              Donate button (wbwn regions)
 //   card     — a white 4px card (kept for older content)
+//   plain-centered — people cards (give/staff): photo at 293:217, square
+//              corners, a 32px/400 Tech name, 19.36px text and a Kindle
+//              button right under it, centered; all rows as tall as the
+//              tallest, as production's grid does
 import type { Block } from '../../content.config';
 import { md, mdInline, localizeHref } from '../../lib/md';
 import { ui } from '../../i18n';
@@ -23,7 +27,10 @@ interface Props {
 const { block, locale } = Astro.props;
 const t = ui(locale);
 const v = block.variant ?? 'plain';
-const center = v === 'centered' || v === 'outlined' || block.align === 'center';
+const people = v === 'plain-centered';
+const center = v === 'centered' || v === 'outlined' || people || block.align === 'center';
+// People cards name each person in an h2 when the block has no title of its own.
+const Title = people && !block.title ? 'h2' : 'h3';
 const cols = {
   2: 'md:grid-cols-2',
   3: 'md:grid-cols-2 tablet:grid-cols-3',
@@ -41,7 +48,7 @@ const isExternal = (h: string) => /^https?:\/\//.test(h);
 
 <Section background={block.background}>
   <SectionHeader title={block.title} intro={block.intro} align={block.align === 'center' || v === 'centered' ? 'center' : 'start'} locale={locale} />
-  <ul class:list={['grid gap-5', cols]}>
+  <ul class:list={['grid gap-5', cols, people && 'uw-people p-2.5']} style={people ? `--uw-rows: ${Math.ceil(block.items.length / block.columns)}` : undefined}>
     {
       block.items.map((item) => (
         <li
@@ -58,18 +65,18 @@ const isExternal = (h: string) => /^https?:\/\//.test(h);
               path={item.image}
               alt={item.imageAlt ?? ''}
               sizes={sizes}
-              aspect={v === 'outlined' ? '278 / 182' : v === 'centered' ? '1 / 1' : undefined}
+              aspect={v === 'outlined' ? '278 / 182' : v === 'centered' ? '1 / 1' : people ? '293 / 217' : undefined}
               class:list={['w-full', (v === 'outlined' || v === 'plain') && 'rounded-media-split']}
             />
           )}
-          <h3 class:list={['uw-card-title', v === 'outlined' ? 'text-h3' : 'text-h2', item.logo && 'flex items-center gap-5', block.background === 'ocean' && '!text-kindle']}>
+          <Title class:list={['uw-card-title', v === 'outlined' ? 'text-h3' : 'text-h2', item.logo && 'flex items-center gap-5', block.background === 'ocean' && '!text-kindle', people && 'uw-person-name']}>
             <span set:html={mdInline(item.title)} />
             {item.logo && <Picture path={item.logo} alt={item.logoAlt ?? ''} sizes="50px" widths={[50, 100]} class="!w-[50px] shrink-0" />}
-          </h3>
-          {item.body && <div class="prose w-full [&>:last-child]:mb-0" set:html={md(item.body, locale)} />}
+          </Title>
+          {item.body && <div class:list={['prose w-full', people ? 'uw-person-text' : '[&>:last-child]:mb-0']} set:html={md(item.body, locale)} />}
           {item.impact && <p class="uw-impact w-full" set:html={mdInline(item.impact, locale)} />}
           {(item.href || item.donateHref) && (
-            <div class:list={['mt-auto flex flex-wrap gap-2.5', center && 'justify-center', v === 'outlined' && block.columns <= 3 && 'uw-tall-btns']}>
+            <div class:list={['flex flex-wrap gap-2.5', !people && 'mt-auto', center && 'justify-center', v === 'outlined' && block.columns <= 3 && 'uw-tall-btns']}>
               {item.href && (
                 <a
                   href={localizeHref(item.href, locale)}
@@ -94,6 +101,15 @@ const isExternal = (h: string) => /^https?:\/\//.test(h);
 </Section>
 
 <style>
+  /* People cards (give/staff): production's grid declares as many 1fr rows
+     as the full-width layout needs, so those rows are all as tall as the
+     tallest card (on phones only the first rows are; the rest fit their
+     card). 32/32 400 Tech names, 19.36/29.04 text that keeps its 14.4px
+     paragraph margin. */
+  .uw-people { grid-template-rows: repeat(var(--uw-rows), 1fr); }
+  .uw-person-name { font-size: 32px; line-height: 32px; font-weight: 400; color: var(--color-tech); }
+  .uw-person-text { font-size: 19.36px; line-height: 29.04px; color: var(--color-tech); }
+  .uw-person-text > :global(:last-child) { margin-bottom: 14.4px; }
   /* wbwn region cards: production's buttons are 56px tall (20px 15px 19px). */
   .uw-tall-btns .uw-btn { padding: 20px 15px 19px; }
   .uw-impact { color: var(--color-kindle); font-size: var(--text-body); line-height: 1.6; font-weight: 400; margin-top: -6px; }
