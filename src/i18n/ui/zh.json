@@ -50,6 +50,7 @@
   "contactFormEmail": "电子邮箱",
   "contactFormMessage": "留言",
   "contactFormSend": "发送留言",
+  "contactFormSubmit": "提交",
   "contactFormSent": "谢谢您。您的留言已发送。",
   "contactFormError": "您的留言未能发送。请重试，或致电联系我们。",
   "footer": {

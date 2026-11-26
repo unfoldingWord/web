@@ -7,9 +7,12 @@ sections:
     title: Forms
     image: about/forms.jpg
     imageAlt: A hand signs a printed form with a silver fountain pen on a wooden desk
-  - type: prose
-    width: narrow
-    body: |-
+  - type: hero
+    variant: feature
+    title: Forms
+    image: about/forms.jpg
+    imageAlt: A hand signs a printed form with a silver fountain pen on a wooden desk
+    lead: |-
       To request that a resource be added to the Door43 Catalog, please use [this online form](http://ufw.io/pub).
 
       To download the **Legal and Doctrinal agreement** form, [click here](/wp-content/uploads/2024/10/uWLegalandDoctrinalStatementForm.pdf).

@@ -1,8 +1,10 @@
 ---
 // A list of downloads and links (publications, PDFs, apps, training).
 //   cards     — bordered link boxes, two columns
-//   list      — production's icon list: 24px Inspire icon, 16px Ocean link
-//               (financial information)
+//   list      — production's financial-report rows: the item with an image
+//               is the cover beside the title and an icon list (34px solid
+//               Inspire icons, 19.2px Ocean links); two years without a cover
+//               share the last row (financial information)
 //   accordion — production's nested accordion: one 1px #D5D8DC box per item,
 //               "+" before a 16px title, first item open; inside, "Download
 //               <title> by …" and the description (publications,
@@ -13,6 +15,7 @@ import Section from '../ui/Section.astro';
 import SectionHeader from '../ui/SectionHeader.astro';
 import Picture from '../ui/Picture.astro';
 import Icon from '../ui/Icon.astro';
+import { img } from '../../lib/images';
 
 type Resources = Extract<Block, { type: 'resources' }>;
 interface Props {
@@ -26,12 +29,21 @@ const ext = (h: string) => (isExternal(h) ? { rel: 'noopener' } : {});
 // list: an item's image is the report cover beside the list (financial information)
 const cover = block.variant === 'list' ? block.items.find((it) => it.image) : undefined;
 const plainTitle = (t: string) => t.replace(/<[^>]+>/g, '');
+// list: production's Font Awesome 5 solid icons (Font Awesome Free 5.15.4 by
+// @fontawesome, https://fontawesome.com, icons CC BY 4.0).
+const LIST_ICONS = {
+  download: { viewBox: '0 0 640 512', d: 'M537.6 226.6c4.1-10.7 6.4-22.4 6.4-34.6 0-53-43-96-96-96-19.7 0-38.1 6-53.3 16.2C367 64.2 315.3 32 256 32c-88.4 0-160 71.6-160 160 0 2.7.1 5.4.2 8.1C40.2 219.8 0 273.2 0 336c0 79.5 64.5 144 144 144h368c70.7 0 128-57.3 128-128 0-61.9-44-113.6-102.4-125.4zm-132.9 88.7L299.3 420.7c-6.2 6.2-16.4 6.2-22.6 0L171.3 315.3c-10.1-10.1-2.9-27.3 11.3-27.3H248V176c0-8.8 7.2-16 16-16h48c8.8 0 16 7.2 16 16v112h65.4c14.2 0 21.4 17.2 11.3 27.3z' },
+  magazine: { viewBox: '0 0 576 512', d: 'M542.22 32.05c-54.8 3.11-163.72 14.43-230.96 55.59-4.64 2.84-7.27 7.89-7.27 13.17v363.87c0 11.55 12.63 18.85 23.28 13.49 69.18-34.82 169.23-44.32 218.7-46.92 16.89-.89 30.02-14.43 30.02-30.66V62.75c.01-17.71-15.35-31.74-33.77-30.7zM264.73 87.64C197.5 46.48 88.58 35.17 33.78 32.05 15.36 31.01 0 45.04 0 62.75V400.6c0 16.24 13.13 29.78 30.02 30.66 49.49 2.6 149.59 12.11 218.77 46.95 10.62 5.35 23.21-1.94 23.21-13.46V100.63c0-5.29-2.62-10.14-7.27-12.99z' },
+  statement: { viewBox: '0 0 512 512', d: 'M256 32C114.62 32 0 125.12 0 240c0 49.56 21.41 95.01 57.02 130.74C44.46 421.05 2.7 465.97 2.2 466.5A7.995 7.995 0 0 0 8 480c66.26 0 115.99-31.75 140.6-51.38C181.29 440.93 217.59 448 256 448c141.38 0 256-93.12 256-208S397.38 32 256 32zm24 302.44V352c0 8.84-7.16 16-16 16h-16c-8.84 0-16-7.16-16-16v-17.73c-11.42-1.35-22.28-5.19-31.78-11.46-6.22-4.11-6.82-13.11-1.55-18.38l17.52-17.52c3.74-3.74 9.31-4.24 14.11-2.03 3.18 1.46 6.66 2.22 10.26 2.22h32.78c4.66 0 8.44-3.78 8.44-8.42 0-3.75-2.52-7.08-6.12-8.11l-50.07-14.3c-22.25-6.35-40.01-24.71-42.91-47.67-4.05-32.07 19.03-59.43 49.32-63.05V128c0-8.84 7.16-16 16-16h16c8.84 0 16 7.16 16 16v17.73c11.42 1.35 22.28 5.19 31.78 11.46 6.22 4.11 6.82 13.11 1.55 18.38l-17.52 17.52c-3.74 3.74-9.31 4.24-14.11 2.03a24.516 24.516 0 0 0-10.26-2.22h-32.78c-4.66 0-8.44 3.78-8.44 8.42 0 3.75 2.52 7.08 6.12 8.11l50.07 14.3c22.25 6.36 40.01 24.71 42.91 47.67 4.05 32.06-19.03 59.42-49.32 63.04z' },
+  form: { viewBox: '0 0 384 512', d: 'M224 136V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zm160-14.1v6.1H256V0h6.1c6.4 0 12.5 2.5 17 7l97.9 98c4.5 4.5 7 10.6 7 16.9z' },
+} as const;
+const listIcon = (it: Resources['items'][number]) => LIST_ICONS[it.icon ?? (it.kind === 'book' ? 'magazine' : it.kind === 'pdf' ? 'form' : 'download')];
 // "By A, B" reads as "… by A, B" after the link; anything else follows a dash.
 const byline = (m?: string) => (!m ? '' : /^by\s/i.test(m) ? ` by ${m.slice(3)}` : ` (${m})`);
 ---
 
-<Section id={block.id} background={block.background} class={cover ? '!py-[30px]' : block.variant === 'accordion' ? 'uw-acc-section' : undefined}>
-  {!cover && <SectionHeader title={block.title} intro={block.intro} locale={locale} />}
+<Section id={block.id} background={block.background} class={block.variant === 'list' ? (cover ? 'uw-list-cover' : 'uw-list-plain') : block.variant === 'accordion' ? 'uw-acc-section' : undefined}>
+  {block.variant !== 'list' && <SectionHeader title={block.title} intro={block.intro} locale={locale} />}
   {
     block.variant === 'accordion' ? (
       <div class:list={['uw-acc', block.textSize === 'large' && 'uw-acc-large']}>
@@ -59,15 +71,22 @@ const byline = (m?: string) => (!m ? '' : /^by\s/i.test(m) ? ` by ${m.slice(3)}`
         ))}
       </div>
     ) : block.variant === 'list' ? (
-      <div class:list={['flex flex-col gap-5', cover && 'mx-auto max-w-[800px] md:flex-row md:items-center md:justify-center md:gap-[50px]']}>
-        {cover && <Picture path={cover.image!} alt={cover.imageAlt ?? ''} sizes="292px" widths={[292, 584]} class="rounded-media-split !w-[292px] shrink-0" />}
-        <div class:list={['flex flex-col gap-5', cover && 'md:w-[390px]']}>
-          {cover && block.title && <h2 set:html={mdInline(block.title, locale)} />}
-          <ul class="flex flex-col gap-2.5">
+      <div class:list={['uw-list', cover ? 'uw-list-row' : 'uw-list-col']}>
+        {cover && (
+          <div class="uw-list-img">
+            <Picture path={cover.image!} alt={cover.imageAlt ?? ''} sizes="292px" widths={[292, 584]} aspect={`${img(cover.image!).width} / ${img(cover.image!).height}`} class="rounded-media-split" />
+          </div>
+        )}
+        <div class="uw-list-text flex flex-col gap-5">
+          {block.title && <h2 set:html={mdInline(block.title, locale)} />}
+          {block.intro && <p class="text-body" set:html={mdInline(block.intro, locale)} />}
+          <ul class="flex flex-col">
             {block.items.map((it) => (
-              <li class="flex items-start gap-2.5 py-2.5">
-                <Icon name={icon[it.kind]} class="size-6 shrink-0 text-inspire" />
-                <span class="min-w-0">
+              <li class="uw-list-item">
+                <span class="uw-list-icon" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox={listIcon(it).viewBox} fill="currentColor"><path d={listIcon(it).d} /></svg>
+                </span>
+                <span class="min-w-0 ps-[5px]">
                   {it.href ? (
                     <a href={localizeHref(it.href, locale)} class="uw-list-link" {...ext(it.href)}>
                       <span set:html={mdInline(it.title)} />
@@ -121,8 +140,38 @@ const byline = (m?: string) => (!m ? '' : /^by\s/i.test(m) ? ` by ${m.slice(3)}`
   :global(.uw-acc-section + .uw-acc-section) { padding-top: 0; }
   .uw-card-link { color: var(--color-kindle); font-weight: 900; }
   .uw-card-link:hover { color: var(--color-inspire); }
-  /* Production's icon list: 16px/400 Ocean link text beside a 24px Inspire icon. */
-  .uw-list-link { font-size: 1rem; line-height: 1.5; font-weight: 400; color: var(--color-ocean); }
+  /* Production's financial-report rows (Elementor grid of 800px boxes with
+     10px padding): a 292px cover beside the title and an icon list, centered
+     on each other; a year without a cover is a 390px half of the last row.
+     The section paddings stand in for the box paddings and the 20px grid gap. */
+  :global(.uw-list-cover) { padding-block: 30px 20px; }
+  :global(:not(.uw-list-cover) + .uw-list-cover) { padding-top: 60px; }
+  :global(.uw-list-plain) { padding-block: 20px 50px; }
+  :global(.uw-list-plain:has(+ .uw-list-plain)) { padding-bottom: 20px; }
+  .uw-list-row { display: flex; flex-direction: column; gap: 50px; max-width: 800px; margin-inline: auto; }
+  .uw-list-img { padding-inline: 20px; }
+  .uw-list-img :global(img) { max-width: 292px; }
+  .uw-list-text { padding-inline: 10px; }
+  @media (min-width: 48rem) {
+    :global(.uw-list-cover) { padding-bottom: 30px; }
+    .uw-list-row { flex-direction: row; align-items: center; gap: 30px; padding-inline: 29px 10px; }
+    .uw-list-img { flex: none; width: 312px; padding-inline: 10px; }
+    .uw-list-row .uw-list-text { flex: none; width: 410px; }
+    /* Two years without a cover share a row, each a 390px box beside the
+       page's center line. */
+    :global(.uw-list-plain) { display: inline-block; vertical-align: top; width: 50%; }
+    :global(.uw-list-plain > div) { padding-inline: 10px; }
+    .uw-list-col { width: 390px; margin-inline-start: auto; }
+    :global(.uw-list-plain + .uw-list-plain) .uw-list-col { margin-inline: 0 auto; }
+  }
+  /* Elementor icon list: 34px solid Inspire icon in a 42.5px box, 19.2px/400
+     Ocean text 5px after it, items 20px apart. */
+  .uw-list-item { display: flex; align-items: center; min-height: 34px; }
+  .uw-list-item:not(:last-child) { padding-bottom: 10px; }
+  .uw-list-item + .uw-list-item { margin-top: 10px; }
+  .uw-list-icon { flex: none; display: flex; justify-content: center; width: 42.5px; color: var(--color-inspire); }
+  .uw-list-icon svg { width: 34px; height: 34px; }
+  .uw-list-link { font-size: 1.2rem; line-height: 1.5; font-weight: 400; color: var(--color-ocean); }
   .uw-list-link:hover { color: var(--color-inspire); }
 
   /* Production's nested accordion (Elementor): full width, boxes 1px #D5D8DC,

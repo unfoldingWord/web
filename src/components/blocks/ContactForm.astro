@@ -22,13 +22,16 @@ const { block, locale } = Astro.props;
 const t = ui(locale);
 const enabled = import.meta.env.PUBLIC_CONTACT_FORM === '1';
 const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
+// Production's wording ("Use the contact form below…") only makes sense with
+// the form on; without it the block shows `intro`.
+const intro = enabled && block.formIntro ? block.formIntro : block.intro;
 ---
 
 <Section>
   <div class="mx-auto flex max-w-[800px] flex-col gap-5">
     <div class="prose [&>:last-child]:mb-0">
       {block.title && <h2 set:html={mdInline(block.title)} />}
-      {block.intro && <p set:html={mdInline(block.intro, locale)} />}
+      {intro && <p set:html={mdInline(intro, locale)} />}
       <address class="not-italic">
         <p>{SITE.address.streetAddress.split(/,\s*/).map((part) => <>{part}<br /></>)}{SITE.address.addressLocality}, {SITE.address.addressRegion} {SITE.address.postalCode}</p>
         <p><a href={`tel:${SITE.telephone}`} class="!font-light !text-tech">{SITE.telephoneDisplay}</a></p>
@@ -36,23 +39,23 @@ const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
     </div>
     {
       enabled && (
-        <form class="contact-form mt-5 flex flex-col gap-5" method="post" action="/api/contact" novalidate>
-          <div>
+        <form class="contact-form uw-cf" method="post" action="/api/contact" novalidate>
+          <div class="uw-cf-field">
             <label for="cf-name" class="uw-cf-label">{t.contactFormName}</label>
-            <input id="cf-name" name="name" type="text" autocomplete="name" required class="uw-input" />
+            <input id="cf-name" name="name" type="text" autocomplete="name" required class="uw-input block" />
           </div>
-          <div>
+          <div class="uw-cf-field">
             <label for="cf-email" class="uw-cf-label">{t.contactFormEmail}</label>
-            <input id="cf-email" name="email" type="email" autocomplete="email" required class="uw-input" />
+            <input id="cf-email" name="email" type="email" autocomplete="email" required class="uw-input block" />
           </div>
-          <div>
+          <div class="uw-cf-field">
             <label for="cf-message" class="uw-cf-label">{t.contactFormMessage}</label>
-            <textarea id="cf-message" name="message" rows="10" required class="uw-input min-h-[258px]" />
+            <textarea id="cf-message" name="message" rows="10" required class="uw-input block min-h-[258px]" />
           </div>
           <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
-          {siteKey && <div class="cf-turnstile" data-sitekey={siteKey} />}
-          <div><button type="submit" class="uw-cf-submit">{t.contactFormSend}</button></div>
-          <p class="form-status text-sm" role="status" aria-live="polite" data-sent={t.contactFormSent} data-error={t.contactFormError} />
+          {siteKey && <div class="cf-turnstile mt-[14.4px]" data-sitekey={siteKey} />}
+          <div class="mt-1.5"><button type="submit" class="uw-cf-submit">{t.contactFormSubmit}</button></div>
+          <p class="form-status mt-[14.4px] text-sm empty:hidden" role="status" aria-live="polite" data-sent={t.contactFormSent} data-error={t.contactFormError} />
         </form>
       )
     }
@@ -60,10 +63,14 @@ const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
 </Section>
 
 <style>
-  /* Contact Form 7 on production: h6-style labels, theme-reset inputs, a
-     Kindle submit at 16px/400. */
-  .uw-cf-label { display: block; margin-bottom: 18px; font-family: var(--font-heading); font-size: 1rem; line-height: 1.2; font-weight: 500; color: #333; }
-  .uw-cf-submit { font-family: var(--font-system); font-size: 1rem; line-height: 1.5; font-weight: 400; color: #fff; background: var(--color-kindle); border-radius: 4px; padding: 8px 16px; cursor: pointer; transition: background-color 0.3s; }
+  /* Contact Form 7 on production: h6-style labels (8px above, 16px below),
+     theme-reset inputs on lines of their own, a Kindle submit at 16px/400
+     with the theme's 1px #c36 border. The form sits 20px below the address
+     text (whose last paragraph keeps its 14.4px), after an empty 24px line. */
+  .uw-cf { margin-top: calc(24px + 0.9rem); margin-bottom: 0.9rem; }
+  .uw-cf-field + .uw-cf-field { margin-top: calc(24px + 0.9rem); }
+  .uw-cf-label { display: block; margin-bottom: 16px; font-family: var(--font-heading); font-size: 1rem; line-height: 1.2; font-weight: 500; color: #333; }
+  .uw-cf-submit { font-family: var(--font-system); font-size: 1rem; line-height: 1.5; font-weight: 400; color: #fff; background: var(--color-kindle); border: 1px solid #c36; border-radius: 4px; padding: 8px 16px; cursor: pointer; transition: background-color 0.3s; }
   .uw-cf-submit:hover, .uw-cf-submit:focus-visible { background: var(--color-inspire); }
   .uw-cf-submit:focus-visible { outline-color: var(--color-ocean); }
 </style>

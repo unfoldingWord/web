@@ -94,10 +94,16 @@ const legal = d.bodyStyle === 'legal';
 <style>
   /* Production's policy pages: a 40px/500 heading between 100px spacers, and
      the section headings at 16px bold (Gutenberg h6 with <strong>). */
-  .uw-legal-heading { font-family: var(--font-heading); font-size: var(--text-h1); line-height: 1.2; font-weight: 500; color: var(--color-tech); margin: 100px 0; }
-  .prose-legal :global(:where(h2, h3, h4)) { font-size: 1rem; line-height: 1.2; font-weight: 700; color: var(--color-tech); margin: 0 0 14.4px; }
-  .prose-legal :global(:where(* + h2, * + h3, * + h4)) { margin-top: 20px; }
+  .uw-legal-heading { font-family: var(--font-heading); font-size: var(--text-h1); line-height: 1.2; font-weight: 500; color: var(--color-tech); margin: 108px 0 116px; }
+  /* The text is its own block (flow-root) so a first heading's 8px adds to the
+     116px above it, and it ends on production's 100px spacer. */
+  .prose-legal { display: flow-root; padding-bottom: 100px; }
+  .prose-legal :global(:where(h2, h3, h4)) { font-size: 1rem; line-height: 1.2; font-weight: 700; color: var(--color-tech); margin: 8px 0 16px; }
+  /* Gutenberg lists on these pages have no bottom margin. */
+  .prose-legal :global(:where(ul, ol)) { margin-bottom: 0; }
   .prose-post :global(:where(h3, h4, h5, h6)) { color: var(--color-tech); font-weight: 500; line-height: 1.2; margin: 8px 0 16px; }
+  /* A heading widget's h2 then a text widget opening with an h3: 20px gap plus the h3's 8px. */
+  .prose-post :global(:where(h2 + h3)) { margin-top: 28px; }
   /* Production's long-text quotes sit 20px from the text above and below. */
   .prose :global(:where(blockquote)) { margin-block: 20px; }
 </style>

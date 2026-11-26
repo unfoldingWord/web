@@ -50,6 +50,7 @@
   "contactFormEmail": "البريد الإلكتروني",
   "contactFormMessage": "الرسالة",
   "contactFormSend": "إرسال الرسالة",
+  "contactFormSubmit": "إرسال",
   "contactFormSent": "شكرًا لك. لقد أُرسلت رسالتك.",
   "contactFormError": "تعذَّر إرسال رسالتك. يُرجى المحاولة مرة أخرى أو الاتصال بنا.",
   "footer": {

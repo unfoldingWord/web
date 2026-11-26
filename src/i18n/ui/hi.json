@@ -50,6 +50,7 @@
   "contactFormEmail": "ईमेल",
   "contactFormMessage": "संदेश",
   "contactFormSend": "संदेश भेजें",
+  "contactFormSubmit": "सबमिट करें",
   "contactFormSent": "धन्यवाद। आपका संदेश भेज दिया गया है।",
   "contactFormError": "आपका संदेश नहीं भेजा जा सका। कृपया फिर से प्रयास करें, या हमें फ़ोन करें।",
   "footer": {

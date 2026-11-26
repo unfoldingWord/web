@@ -50,6 +50,7 @@
   "contactFormEmail": "E-mail",
   "contactFormMessage": "Bericht",
   "contactFormSend": "Bericht verzenden",
+  "contactFormSubmit": "Verzenden",
   "contactFormSent": "Dank u wel. Uw bericht is verzonden.",
   "contactFormError": "Uw bericht kon niet worden verzonden. Probeer het opnieuw of bel ons.",
   "footer": {

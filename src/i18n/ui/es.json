@@ -50,6 +50,7 @@
   "contactFormEmail": "Correo electrónico",
   "contactFormMessage": "Mensaje",
   "contactFormSend": "Enviar mensaje",
+  "contactFormSubmit": "Enviar",
   "contactFormSent": "Gracias. Su mensaje ha sido enviado.",
   "contactFormError": "No se pudo enviar su mensaje. Por favor, inténtelo de nuevo o llámenos.",
   "footer": {

@@ -50,6 +50,7 @@
   "contactFormEmail": "Электронная почта",
   "contactFormMessage": "Сообщение",
   "contactFormSend": "Отправить сообщение",
+  "contactFormSubmit": "Отправить",
   "contactFormSent": "Спасибо. Ваше сообщение отправлено.",
   "contactFormError": "Не удалось отправить сообщение. Пожалуйста, попробуйте ещё раз или позвоните нам.",
   "footer": {
