@@ -20,7 +20,7 @@ const single = block.images.length === 1;
 const afterIntro = block.intro ? 'pt-[0.9rem]' : '';
 ---
 
-<Section>
+<Section class={single ? undefined : 'gallery-grid-band'}>
   <SectionHeader title={block.title} intro={block.intro} locale={locale} />
   {
     single ? (
@@ -29,12 +29,12 @@ const afterIntro = block.intro ? 'pt-[0.9rem]' : '';
         {block.images[0].caption && <figcaption class="mb-[0.9rem] text-body text-ink" set:html={mdInline(block.images[0].caption, locale)} />}
       </figure>
     ) : (
-      <ul class:list={['grid grid-cols-2 gap-5 md:grid-cols-3', afterIntro]}>
+      <ul class:list={['grid gap-5 px-2.5 md:grid-cols-3 md:px-0', afterIntro]}>
         {block.images.map((im) => (
           <li>
             <figure>
-              <div class="overflow-hidden rounded-media">
-                <Picture path={im.src} alt={im.alt} sizes="(min-width: 48rem) 33vw, 50vw" widths={[320, 640, 960]} aspect="4 / 3" />
+              <div class="overflow-hidden rounded-[var(--radius-media-split)]">
+                <Picture path={im.src} alt={im.alt} sizes="(min-width: 48rem) 320px, calc(100vw - 100px)" widths={[320, 640, 960]} aspect="3 / 2" />
               </div>
               {im.caption && <figcaption class="mt-2.5 text-body text-ink" set:html={mdInline(im.caption, locale)} />}
             </figure>
@@ -46,6 +46,18 @@ const afterIntro = block.intro ? 'pt-[0.9rem]' : '';
 </Section>
 
 <style>
+  /* Several images (production's image grid on donation-confirmation, the
+     only grid): 3:2 photos with 4px corners, 20px under the page title and
+     a 186px white space before the footer (50px on phones, where they stack
+     in one column inset 10px). */
+  :global(section.gallery-grid-band) {
+    padding-block: 20px 50px;
+  }
+  @media (min-width: 768px) {
+    :global(section.gallery-grid-band) {
+      padding-block-end: 186px;
+    }
+  }
   /* Production: names in <strong> over 300-weight text come out at 400. */
   figcaption :global(strong) { font-weight: bolder; }
 </style>

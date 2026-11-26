@@ -1,7 +1,8 @@
 ---
 // A video, as production's Elementor video widget: 600px wide, centered,
 // square corners, with the section heading centered above it (white on an
-// Ocean band, `background: ocean`).
+// Ocean band, `background: ocean`). `variant: landing` (give/* pages): an
+// Inspire 6% band, an 800px video, the heading kept for screen readers only.
 import type { Block } from '../../content.config';
 import { md, mdInline } from '../../lib/md';
 import { ui } from '../../i18n';
@@ -14,11 +15,12 @@ interface Props {
   locale: string;
 }
 const { block, locale } = Astro.props;
+const landing = block.variant === 'landing';
 ---
 
-<Section background={block.background}>
-  <h2 class="mb-5 text-center text-wrap" set:html={mdInline(block.heading ?? block.title, locale)} />
-  <div class="mx-auto max-w-[600px]">
+<Section background={block.background} class={landing ? 'video-landing' : undefined}>
+  <h2 class:list={[landing ? 'sr-only' : 'mb-5 text-center text-wrap']} set:html={mdInline(block.heading ?? block.title, locale)} />
+  <div class:list={['mx-auto', landing ? 'max-w-[800px]' : 'max-w-[600px]']}>
     <VideoFrame provider={block.provider} id={block.id} hash={block.hash} title={block.title} />
     {block.caption && <p class="mt-3 text-center">{block.caption}</p>}
     {
@@ -31,3 +33,9 @@ const { block, locale } = Astro.props;
     }
   </div>
 </Section>
+
+<style>
+  :global(section.video-landing) {
+    background-color: rgb(49 173 227 / 0.06);
+  }
+</style>

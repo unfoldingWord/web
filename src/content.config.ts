@@ -104,7 +104,9 @@ const cards = z.object({
   // plain — production's columns: no card, Inspire title, a Learn More button
   // centered — plain and centered (for-translators)
   // outlined — 1px Kindle border, centered title, outline + filled buttons (wbwn)
-  variant: z.enum(['card', 'plain', 'centered', 'outlined']).optional(),
+  // plain-centered — people cards: photo, 32px/400 Tech name, text and a
+  //   button, centered, every row as tall as the tallest (give/staff)
+  variant: z.enum(['card', 'plain', 'centered', 'outlined', 'plain-centered']).optional(),
   align: z.enum(['start', 'center']).optional(),
   items: z.array(
     z.object({
@@ -188,6 +190,9 @@ const video = z.object({
   // The heading shown above the video, when it should differ from `title`
   // (which names the video for screen readers and search).
   heading: z.string().optional(),
+  // landing — production's give/* video band: an Inspire 6% band, an 800px
+  // video and no visible heading (it stays for screen readers)
+  variant: z.enum(['landing']).optional(),
 });
 
 const giving = z.object({

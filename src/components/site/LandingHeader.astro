@@ -17,7 +17,13 @@ interface Props {
 }
 const { locale, basePath } = Astro.props;
 const t = ui(locale);
-const route = (await allRoutes()).find((r) => r.kind === 'pages' && r.locale === locale && r.basePath === basePath);
+// Look the page up by the URL being built first: an A/B variant is built at
+// its own hidden path but carries its control page's basePath.
+const routes = await allRoutes();
+const here = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const route =
+  routes.find((r) => (r.kind === 'pages' || r.kind === 'variant') && r.path === here) ??
+  routes.find((r) => r.kind === 'pages' && r.locale === locale && r.basePath === basePath);
 const sections = ((route?.entry.data as { sections?: { type: string }[] } | undefined)?.sections ?? []) as {
   type: string;
   tagline?: string;

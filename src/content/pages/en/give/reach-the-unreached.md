@@ -8,6 +8,7 @@ ogImage: give/reach-the-unreached.jpg
 redirectFrom: [/give-now-reach-the-unreached/]
 sections:
   - type: video
+    variant: landing
     title: Reach the Unreached by Equipping the Local Church
     provider: youtube
     id: HXDIl5sZn7Q
