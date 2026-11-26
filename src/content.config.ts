@@ -445,6 +445,18 @@ const stories = defineCollection({
     // region. Such stories need the security review in
     // .claude/skills/publish-story/ before they are committed.
     sensitive: z.boolean().default(false),
+    // The "Related" list at the end of the story: up to three other stories,
+    // by file name (without .md), in order. Leave out to pick automatically
+    // (newest from the same region first).
+    related: z.array(z.string()).max(3).optional(),
+    // The category shown as In "…" when this story appears in another
+    // story's Related list (production's WordPress category). Defaults to
+    // the region name.
+    category: z.string().optional(),
+    // The width in pixels at which the banner photo is drawn (production
+    // drew the original upload at its full size). Defaults to the image
+    // file's own width.
+    bannerWidth: z.number().int().positive().optional(),
     redirectFrom,
   }),
 });

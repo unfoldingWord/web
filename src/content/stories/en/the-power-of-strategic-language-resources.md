@@ -8,6 +8,9 @@ country: Benin
 image: stories/the-power-of-strategic-language-resources.jpg
 imageAlt: Silhouetted hands of a large crowd raised toward a bright sunrise sky
 redirectFrom: [/benin/the-power-of-strategic-language-resources/]
+category: Benin
+bannerWidth: 4704
+related: [will-ai-eliminate-human-translators, the-crisis-in-islands-asia-bible-translation, translationcore-engine-of-a-bible-translation-revolution]
 ---
 One of the many rewards of partnership in the Church-Centric Bible Translation movement is having a front-row seat to remarkable advances in Bible translation brought on by empowering the global church for quality Bible translation.
 

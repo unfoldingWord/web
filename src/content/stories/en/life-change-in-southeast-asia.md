@@ -6,6 +6,8 @@ region: asia
 image: stories/life-change-in-southeast-asia.jpg
 imageAlt: A busy city street at night with motorbikes, a pedicab and vendors carrying bunches of colorful balloons
 redirectFrom: [/southasia/life-change-in-southeast-asia/]
+category: South Asia
+related: [translationcore-a-massive-hit-in-myanmar, the-crisis-in-islands-asia-bible-translation, the-lost-sheep-of-islands-asia]
 ---
 Mr. H (pseudonym) lives in Southeast Asia and works with unfoldingWord’s Whole Bible, Whole Nation partner in a country village. Like many church-centric Bible translators around the world, Mr. H discovered that Church-Centric Bible Translation (CCBT) is about more than just producing a Bible in his heart language. It’s about life change. This is his story.
 

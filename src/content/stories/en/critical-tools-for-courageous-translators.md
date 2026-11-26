@@ -7,6 +7,8 @@ image: stories/critical-tools-for-courageous-translators.jpg
 imageAlt: Bincy Jobby, a smiling woman with glasses and long dark hair, in a meeting room
 excerpt: Open-source tools that help church networks solve their own Bible translation needs.
 redirectFrom: [/worldwide/critical-tools-for-courageous-translators/]
+category: Worldwide
+related: [translationcore-engine-of-a-bible-translation-revolution, will-ai-eliminate-human-translators, ukrainian-great-commission-partners-are-translating]
 ---
 The global demand for Bible translation far exceeds the capacity of existing Bible translation agencies. Doing translation in dangerous places makes it doubly difficult. That's why members of the illumiNations Bible translation alliance are adopting Church-Centric Bible Translation strategies, including developing open-source Bible translation tools. Your financial partnership has enabled unfoldingWord to serve as a leader in that space. In collaboration with church network partners globally, unfoldingWord has developed seven innovative Bible translation tools now in use by church-planting partners in dangerous places like Sudan, Iran, and Ukraine.
 

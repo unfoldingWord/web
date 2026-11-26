@@ -1,5 +1,5 @@
 ---
-title: Meesha's Story
+title: Meesha’s Story
 description: Forced into marriage at 13 and persecuted for following Jesus, Meesha now translates Open Bible Stories into Balochi with Transform Iran.
 date: 2023-07-03
 region: middle-east
@@ -9,6 +9,9 @@ imageAlt: Close-up of a woman's tearful brown eyes, her face veiled in black clo
 excerpt: An Iranian translator who left everything to follow Jesus now translates God's Word for her people.
 sensitive: true
 redirectFrom: [/eurasia/in-the-republic-of-iran-for-the-church-to-be-planted/]
+category: Eurasia
+bannerWidth: 2830
+related: [i-was-a-terrible-husband-for-the-first-fifteen-years, hope-in-harrowing-times, new-believers-in-iran]
 ---
 **In the Republic of Iran, for the church to be planted, discipled, and grown, more than 60 people groups need a Bible translation in their own language.**
 

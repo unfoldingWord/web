@@ -8,6 +8,7 @@ image: stories/renounce-christ-or-die.jpg
 imageAlt: A smiling young woman in a graduation gown and garland stands between a man in a bow tie and a smiling woman
 sensitive: true
 redirectFrom: [/uncategorized/renounce-christ-or-die/]
+related: [breaching-a-500-year-old-barrier, the-angry-imam, tara-felt-like-job]
 ---
 Life in a Sudanese refugee camp is no picnic, and Ajoung Thok is no exception. Founded in 2013 along South Sudan’s northern border, it has grown into a rough rural town of about 40,000. And it needs everything. Food, shelter, clean water, hygiene, and healthcare are all in short supply.
 
