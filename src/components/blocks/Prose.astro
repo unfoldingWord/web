@@ -22,7 +22,9 @@ const strip = !block.body.trim();
 const box = block.width === 'narrow' && block.background === 'ocean';
 ---
 
-<Section background={box ? 'white' : block.background} class={strip ? '!py-5' : undefined}>
+{/* The box sits 20px under the block above and 60px over the next
+    section (production's wbwn container), hence its 20px padding. */}
+<Section background={box ? 'white' : block.background} class={strip || box ? '!py-5' : undefined}>
   <div class:list={['flex flex-col gap-5', center && 'items-center text-center', block.width === 'narrow' && 'mx-auto max-w-[800px]', box && 'on-dark bg-ocean p-5']}>
     {block.icon && <Icon name={block.icon} class="size-[42px] text-white" />}
     {
@@ -33,7 +35,8 @@ const box = block.width === 'narrow' && block.background === 'ocean';
         </>
       )
     }
-    {!strip && <div class:list={['prose w-full', center && 'uw-prose-center', block.serif && 'prose-serif']} set:html={md(block.body, locale)} />}
+    {/* In the box the text follows the title with no gap (production). */}
+    {!strip && <div class:list={['prose w-full', center && 'uw-prose-center', block.serif && 'prose-serif', box && block.title && '-mt-5']} set:html={md(block.body, locale)} />}
     <Actions actions={block.actions ?? []} locale={locale} class="uw-donate w-full justify-center" />
   </div>
 </Section>

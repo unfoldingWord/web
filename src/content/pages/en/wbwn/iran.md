@@ -39,22 +39,12 @@ sections:
   align: center
   width: narrow
   body: In Iran, the risks associated with Bible translation have increased. Pray for God’s protection over our partner, Transform Iran’s translators, and fellow believers in Iran.
-- type: cards
+- type: storyList
   title: Stories from the Field
-  columns: 2
-  items:
-  - title: Hundreds of Iranians Introduced to Christ
-    body: As rockets rain and bombs fall, dedicated Iranians continue working on a spiritual revolution, translating God’s Word into the heart languages of its ninety-two million people.
-    href: /stories/hundreds-of-iranians-introduced-to-christ/
-    image: stories/hundreds-of-iranians-introduced-to-christ.jpg
-    imageAlt: Two men in white shirts baptize a person in an outdoor pool while family and friends watch from the edge
-    linkLabel: Read More
-  - title: Tara felt like Job
-    body: Tara’s first experience with the Bible in her language was with the book of Job.
-    href: /stories/tara-felt-like-job/
-    image: stories/tara-felt-like-job.jpg
-    imageAlt: A smiling woman in a pink, white and navy headscarf hugs a smiling young girl outdoors
-    linkLabel: Read More
+  layout: rows
+  slugs:
+  - hundreds-of-iranians-introduced-to-christ
+  - tara-felt-like-job
 - type: cards
   columns: 5
   variant: outlined

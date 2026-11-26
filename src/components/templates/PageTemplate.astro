@@ -100,4 +100,7 @@ const legal = d.bodyStyle === 'legal';
   .prose-post :global(:where(h3, h4, h5, h6)) { color: var(--color-tech); font-weight: 500; line-height: 1.2; margin: 8px 0 16px; }
   /* Production's long-text quotes sit 20px from the text above and below. */
   .prose :global(:where(blockquote)) { margin-block: 20px; }
+  /* After a paragraph the quote is its own widget: the paragraph's 14.4px
+     margin plus the 20px gap (ccbt). */
+  .prose :global(:where(p + blockquote)) { margin-top: calc(20px + 0.9rem); }
 </style>

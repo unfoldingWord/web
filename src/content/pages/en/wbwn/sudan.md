@@ -13,8 +13,9 @@ sections:
   contentPosition: end
   actions:
   - label: Donate Now
-    href: '#give-form'
+    href: https://give.unfoldingword.org/
     style: give
+  donateFormId: 477fe600-fec0-413c-b7d4-2fcc991a1f0c
 - type: prose
   title: Project Overview
   width: narrow
@@ -39,32 +40,13 @@ sections:
   align: center
   width: narrow
   body: Pray for courage and perseverance as church-planting Bible translators continue their work despite personal loss from the Sudanese civil war.
-- type: cards
+- type: storyList
   title: Stories from the Field
-  columns: 3
-  items:
-  - title: God’s Initiative in Sudan
-    body: Jesus said, “The Son of Man came to seek and to save that which was lost.” He takes the initiative to seek and save his dear ones in the darkness.
-    href: /stories/gods-initiative-in-sudan/
-    image: stories/gods-initiative-in-sudan.jpg
-    imageAlt: A young man in an orange shirt smiling, with green foliage blurred behind him
-    linkLabel: Read More
-  - title: The Exponential Journey
-    body: Suddenly, a man toward the back of the room began weeping audibly. I thought, uh oh, what have I done? His name is Faheem.
-    href: /stories/the-exponential-journey/
-    image: stories/the-exponential-journey.jpg
-    imageAlt: A smiling man with a yellow scarf wrapped around his head and over his mouth, standing in a dry, sandy landscape
-    linkLabel: Read More
-  - title: Like the man from Macedonia
-    body: Greater Reach Alliance reports that Church-Centric Bible Translation gives them the tools they need to reach Muslims in Sudan.
-    href: /stories/like-the-man-from-macedonia/
-    image: stories/like-the-man-from-macedonia.jpg
-    imageAlt: An older man in a white robe smiling softly on a sunlit, sandy village street
-    linkLabel: Read More
-- type: giving
-  title: Light for 130 languages
-  body: Your giving will open the door for Bible translation resources to be translated into Sudanese Arabic and then 130 minority languages.
-  formId: 477fe600-fec0-413c-b7d4-2fcc991a1f0c
+  layout: rows
+  slugs:
+  - gods-initiative-in-sudan
+  - the-exponential-journey
+  - like-the-man-from-macedonia
 - type: cards
   columns: 5
   variant: outlined

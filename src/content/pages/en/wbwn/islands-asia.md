@@ -13,8 +13,9 @@ sections:
   contentPosition: start
   actions:
   - label: Donate Now
-    href: '#give-form'
+    href: https://give.unfoldingword.org/
     style: give
+  donateFormId: d70c917d-07f8-4f5b-91a9-478e43e0ea38
 - type: prose
   title: Project Overview
   width: narrow
@@ -39,26 +40,12 @@ sections:
   align: center
   width: narrow
   body: Because of Church-Centric Bible Translation, a tiny people group in Islands-Asia now has the New Testament in their heart language. Rejoice! Pray that God would bring a great harvest among all of the 234 people groups of Islands-Asia.
-- type: cards
+- type: storyList
   title: Stories from the Field
-  columns: 2
-  items:
-  - title: The Lost Sheep of Islands-Asia
-    body: One of Jesus’s most beloved parables is the story of the wandering sheep.
-    href: /stories/the-lost-sheep-of-islands-asia/
-    image: stories/the-lost-sheep-of-islands-asia.jpg
-    imageAlt: A small wooden boat crosses calm sea at dusk, with a cloud-capped volcanic island on the horizon
-    linkLabel: Read More
-  - title: The Cry for the Gospel in Islands-Asia
-    body: With tears in her eyes, the tribal woman stood up in the meeting, slapped her palms on the table, and said, “We could all be gone by the time you …”
-    href: /stories/the-crisis-in-islands-asia-bible-translation/
-    image: stories/the-crisis-in-islands-asia-bible-translation.jpg
-    imageAlt: A woman in a woven striped net top and head covering stands in front of bundled cane poles in a green village garden
-    linkLabel: Read More
-- type: giving
-  title: Impact 234 unreached people groups in Islands-Asia
-  body: Support our church network partner’s goal of providing Church-Centric Bible Translation tools to local church teams across the whole nation.
-  formId: d70c917d-07f8-4f5b-91a9-478e43e0ea38
+  layout: rows
+  slugs:
+  - the-lost-sheep-of-islands-asia
+  - the-crisis-in-islands-asia-bible-translation
 - type: cards
   columns: 5
   variant: outlined

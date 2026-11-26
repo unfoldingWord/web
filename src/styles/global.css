@@ -270,14 +270,19 @@
   .prose :where(figure) { margin: 0 0 20px; }
   .prose :where(figure figcaption) { font-size: var(--text-body); font-weight: 300; font-style: normal; color: var(--color-tech); margin-top: 0.5em; }
   .prose :where(hr) { border: 0; border-top: 1px solid var(--color-rule); margin-block: 20px; }
-  .prose :where(table) { width: 100%; border-collapse: collapse; font-size: 0.9em; margin-bottom: 15px; }
+  .prose :where(table) { width: 100%; border-collapse: collapse; font-size: 0.9em; margin-block: 20px 35px; }
   /* Wide comparison tables scroll inside themselves on phones instead of
      widening the whole page. */
   @media (width < 48rem) {
     .prose :where(table) { display: block; overflow-x: auto; }
   }
   .prose :where(th, td) { border: 1px solid rgb(128 128 128 / 0.5); padding: 15px; line-height: 1.5; text-align: start; vertical-align: top; }
-  .prose :where(tbody > tr:nth-child(odd) > td) { background: rgb(128 128 128 / 0.071); }
+  /* Production's (Notion-pasted) tables keep the header row in tbody, so the
+     theme's odd-row zebra lands on the header and the even body rows. Its
+     header cells are centered. Margins: the table is its own widget, 20px
+     from the text above and 15px + 20px from the text below. */
+  .prose :where(thead > tr > th) { background: rgb(128 128 128 / 0.071); text-align: center; }
+  .prose :where(tbody > tr:nth-child(even) > td) { background: rgb(128 128 128 / 0.071); }
   .prose :where(iframe) { width: 100%; aspect-ratio: 16 / 9; height: auto; border-radius: var(--radius-media); }
   /* Single story body. The class name is historical: production sets stories
      in the site sans, larger, on a 980px column. */
