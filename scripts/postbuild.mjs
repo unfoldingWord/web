@@ -43,6 +43,8 @@ const rules = new Map(); // from -> { to, status, source }
 const errors = [];
 function add(from, to, status, source) {
   if (!from.startsWith('/')) return errors.push(`${source}: "${from}" must start with /`);
+  // Cloudflare rejects the whole _redirects file if a target is absolute but not https.
+  if (!to.startsWith('/') && !to.startsWith('https://')) return errors.push(`${source}: "${to}" must start with / or https:// (Cloudflare refuses http:// targets)`);
   // Uploads live in the media bucket: send straight there (one hop).
   if (to.startsWith('/wp-content/uploads/')) to = `${MEDIA}/uploads/${to.slice('/wp-content/uploads/'.length)}`;
   const path = to.split(/[?#]/, 1)[0];
