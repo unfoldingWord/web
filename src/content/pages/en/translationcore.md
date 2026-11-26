@@ -26,5 +26,5 @@ sections:
     body: |-
       In a world where at least 6,640 languages still lack a complete Bible and 3,389 language groups have no Scripture at all, unfoldingWord has created an open-licensed suite of software tools designed specifically for under-resourced, restricted-access, and oral-preference communities. Rather than depending on high-tech infrastructure, external consultants, or constant internet connectivity, translationCore equips local churches with simple, offline-capable, and self-service tools that allow them to translate, check, and publish Scripture in both written and oral formats.
     actions:
-      - { label: Donate Now, href: /give/tech/, style: give }
+      - { label: Donate Now, href: /give/tech/, style: give, formId: a94d830d-a3c3-42e7-9156-d91ae8b7cfc0 }
 ---

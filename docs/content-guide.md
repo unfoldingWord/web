@@ -161,6 +161,17 @@ text-heading look (28px, dark, not blue), as on the statement of faith.
   actions: [{ label: Give, href: /give/, style: give }]
 ```
 
+**A campaign's Donate button.** Any button (`actions` in hero, prose, split, cta) can open a
+campaign's own Virtuous form, as production's "Donate Now" buttons do:
+```yaml
+actions:
+  - { label: Donate Now, href: /give/tech/, style: give, formId: a94d830d-a3c3-42e7-9156-d91ae8b7cfc0 }
+```
+`formId` is the `data-rd` value from Virtuous's embed code — from the editor or Virtuous, never
+copied from memory or another page. The button becomes Virtuous's own button, which opens that
+form in a modal; `href` is the fallback link while it loads and wherever it cannot (previews).
+When a page's design changes, keep the form id its old giving block or button used.
+
 ### video
 ```yaml
 - type: video

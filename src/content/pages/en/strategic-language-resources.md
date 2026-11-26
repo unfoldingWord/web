@@ -13,7 +13,7 @@ sections:
     body: |-
       unfoldingWord’s Strategic Language Resources are the most comprehensive, user-friendly, high-quality open-license Bible translation resources available for the church.
     actions:
-      - { label: Donate Now, href: /give/slr/, style: give }
+      - { label: Donate Now, href: /give/slr/, style: give, formId: c04ef3fd-ae59-4af4-931e-9d0c94672e8e }
   - type: split
     title: English Book Packages
     body: |-

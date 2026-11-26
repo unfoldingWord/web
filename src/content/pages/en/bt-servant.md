@@ -34,5 +34,5 @@ sections:
 
       A translation movement that is local, durable, and trustworthy: churches producing and sharing the Bible in their own languages, with tools they can keep using long after a project visit ends.
     actions:
-      - { label: Donate Now, href: /give/bt/, style: give }
+      - { label: Donate Now, href: /give/bt/, style: give, formId: 64b2fc9b-3a55-4c47-bea0-d600bf8b5ffb }
 ---
