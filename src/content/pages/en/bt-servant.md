@@ -18,6 +18,7 @@ sections:
     imageAlt: 'BT Servant web page reading "BT Servant equips disciples to understand God''s Word," beside a phone chat where a user asks for help understanding Romans 12:1-2 and BT Servant replies with the passage and translation notes'
     actions:
       - { label: Try it Now, href: 'https://www.btservant.ai/' }
+    actionsBelowMedia: true
   - type: prose
     background: ocean
     body: |-

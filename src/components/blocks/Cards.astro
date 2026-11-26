@@ -14,12 +14,25 @@
 //              corners, a 32px/400 Tech name, 19.36px text and a Kindle
 //              button right under it, centered; all rows as tall as the
 //              tallest, as production's grid does
+//   legacy   — production's old block-editor columns, with dark pill
+//              buttons: items with images are three centered tiles in a
+//              1200px row, full width on phones (for-translators); items
+//              without are two start-aligned columns 54px apart
+//              (open-bible-stories). The section's padding reproduces
+//              production's spacers around them.
+// Columns with a logo beside the title (tools-technology) put the text right
+// under the logo row and leave each button under its own text, as production
+// does. `padding: wide` is production's 20px column padding with no gap
+// between columns, the text keeping its last paragraph's 14.4px margin
+// (catalyzation, for-translators/content). `video` adds production's 600px
+// video under the columns in the same band (catalyzation).
 import type { Block } from '../../content.config';
 import { md, mdInline, localizeHref } from '../../lib/md';
 import { ui } from '../../i18n';
 import Section from '../ui/Section.astro';
 import SectionHeader from '../ui/SectionHeader.astro';
 import Picture from '../ui/Picture.astro';
+import VideoFrame from '../ui/VideoFrame.astro';
 
 type Cards = Extract<Block, { type: 'cards' }>;
 interface Props {
@@ -46,11 +59,34 @@ const sizes = {
   5: '(min-width: 66rem) 150px, (min-width: 48rem) calc((100vw - 100px) / 3 - 42px), calc(100vw - 122px)',
 }[block.columns];
 const isExternal = (h: string) => /^https?:\/\//.test(h);
+const logoRow = block.items.some((it) => it.logo);
+const tiles = block.items.some((it) => it.image);
+const wide = block.padding === 'wide';
 ---
 
+{
+  v === 'legacy' ? (
+    <section class:list={['uw-legacy-cards', tiles ? 'uw-legacy-tiles' : 'uw-legacy-cols']}>
+      <ul class:list={tiles ? 'mx-auto grid max-w-[1200px] gap-y-9 min-[782px]:grid-cols-3 min-[782px]:gap-x-[10.5px]' : 'container-page grid gap-y-6 min-[782px]:grid-cols-2 min-[782px]:gap-x-[54px]'}>
+        {block.items.map((item) => (
+          <li class:list={['flex flex-col', tiles && 'items-center text-center']}>
+            {item.image && <Picture path={item.image} alt={item.imageAlt ?? ''} sizes="(min-width: 75rem) 393px, (min-width: 48.875rem) 33vw, 100vw" widths={[390, 393, 780, 786]} aspect="1 / 1" class="block w-full" />}
+            <h3 class="uw-legacy-card-title" set:html={mdInline(item.title)} />
+            {item.body && <div class="prose uw-legacy-card-body w-full" set:html={md(item.body, locale)} />}
+            {item.href && (
+              <a href={localizeHref(item.href, locale)} class="uw-legacy-btn" {...(isExternal(item.href) ? { rel: 'noopener' } : {})}>
+                {item.linkLabel ?? t.readMore}
+                <span class="sr-only">: {item.title.replace(/[*_`]/g, '')}</span>
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  ) : (
 <Section background={block.background}>
-  <SectionHeader title={block.title} intro={block.intro} align={block.align === 'center' || v === 'centered' ? 'center' : 'start'} locale={locale} />
-  <ul class:list={['grid', v === 'outlined' && block.columns === 5 ? 'gap-2.5' : 'gap-5', v === 'outlined' && block.intro && 'pt-[0.9rem]', cols, people && 'uw-people p-2.5']} style={people ? `--uw-rows: ${Math.ceil(block.items.length / block.columns)}` : undefined}>
+  <SectionHeader title={block.title} intro={block.intro} align={block.align === 'center' || block.align === 'heading' || v === 'centered' ? 'center' : 'start'} locale={locale} />
+  <ul class:list={['grid', wide ? 'gap-0' : v === 'outlined' && block.columns === 5 ? 'gap-2.5' : 'gap-5', v === 'outlined' && block.intro && 'pt-[0.9rem]', cols, people && 'uw-people p-2.5']} style={people ? `--uw-rows: ${Math.ceil(block.items.length / block.columns)}` : undefined}>
     {
       block.items.map((item) => (
         <li
@@ -59,7 +95,7 @@ const isExternal = (h: string) => /^https?:\/\//.test(h);
             center && 'items-center text-center',
             v === 'outlined' && 'justify-between rounded-card border border-kindle bg-white p-5',
             v === 'card' && 'uw-card p-5',
-            v !== 'outlined' && v !== 'card' && 'p-2.5',
+            v !== 'outlined' && v !== 'card' && (wide ? 'p-5' : 'p-2.5'),
           ]}
         >
           {item.image && (
@@ -71,14 +107,14 @@ const isExternal = (h: string) => /^https?:\/\//.test(h);
               class:list={['w-full', (v === 'outlined' || v === 'plain') && 'rounded-media-split']}
             />
           )}
-          <Title class:list={['uw-card-title', v === 'outlined' ? 'text-h3' : 'text-h2', item.logo && 'flex items-center gap-5', block.background === 'ocean' && '!text-kindle', people && 'uw-person-name']}>
+          <Title class:list={['uw-card-title', v === 'outlined' ? 'text-h3' : 'text-h2', item.logo && 'flex flex-wrap items-center gap-5', block.background === 'ocean' && '!text-kindle', people && 'uw-person-name']}>
             <span set:html={mdInline(item.title)} />
             {item.logo && <Picture path={item.logo} alt={item.logoAlt ?? ''} sizes="50px" widths={[50, 100]} class="!w-[50px] shrink-0" />}
           </Title>
-          {item.body && <div class:list={['prose w-full', people ? 'uw-person-text' : '[&>:last-child]:mb-0']} set:html={md(item.body, locale)} />}
+          {item.body && <div class:list={['prose w-full', people ? 'uw-person-text' : !wide && '[&>:last-child]:mb-0', item.logo && '-mt-5']} set:html={md(item.body, locale)} />}
           {item.impact && <p class="uw-impact w-full" set:html={mdInline(item.impact, locale)} />}
           {(item.href || item.donateHref) && (
-            <div class:list={['flex flex-wrap gap-2.5', !people && v !== 'outlined' && 'mt-auto', center && 'justify-center', v === 'outlined' && block.columns <= 3 && 'uw-tall-btns']}>
+            <div class:list={['flex flex-wrap gap-2.5', !people && v !== 'outlined' && !logoRow && 'mt-auto', center && 'justify-center', v === 'outlined' && block.columns <= 3 && 'uw-tall-btns']}>
               {item.href && (
                 <a
                   href={localizeHref(item.href, locale)}
@@ -100,7 +136,16 @@ const isExternal = (h: string) => /^https?:\/\//.test(h);
       ))
     }
   </ul>
+  {
+    block.video && (
+      <div class="mx-auto mt-5 max-w-[600px]">
+        <VideoFrame provider={block.video.provider} id={block.video.id} hash={block.video.hash} title={block.video.title} />
+      </div>
+    )
+  }
 </Section>
+  )
+}
 
 <style>
   /* People cards (give/staff): production's grid declares as many 1fr rows
@@ -114,6 +159,19 @@ const isExternal = (h: string) => /^https?:\/\//.test(h);
   .uw-person-text > :global(:last-child) { margin-bottom: 14.4px; }
   /* wbwn region cards: production's buttons are 56px tall (20px 15px 19px). */
   .uw-tall-btns .uw-btn { padding: 20px 15px 19px; }
+  /* legacy: production's block-editor spacing and type */
+  .uw-legacy-tiles { padding: 88px 0 203px; }
+  .uw-legacy-cols { padding: 81px 0 252px; }
+  .uw-legacy-card-title { font-size: 20px; line-height: 24px; font-weight: 500; color: var(--color-tech); }
+  .uw-legacy-tiles .uw-legacy-card-title { margin-top: 24px; text-transform: uppercase; }
+  .uw-legacy-cols .uw-legacy-card-title { font-size: 28px; line-height: 33.6px; }
+  .uw-legacy-card-body { margin-top: 24px; }
+  .uw-legacy-card-body :global(p) { margin: 0; }
+  /* WordPress's default button: a #32373C pill, here with Kindle text. */
+  .uw-legacy-btn { display: inline-block; margin-top: 24px; padding: 13.74px 25.46px; border-radius: 9999px; background: #32373c; color: var(--color-kindle); font-size: var(--text-body); line-height: 1.5; font-weight: 900; }
+  .uw-legacy-btn:hover { color: var(--color-inspire); }
+  .uw-legacy-tiles .uw-legacy-btn { align-self: center; }
+  .uw-legacy-cols .uw-legacy-btn { align-self: flex-start; }
   .uw-impact { color: var(--color-kindle); font-size: var(--text-body); line-height: 1.6; font-weight: 400; margin-top: -6px; }
   /* (production's heading widget sits 14px under the text, not 20px) */
 </style>

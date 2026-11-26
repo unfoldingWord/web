@@ -22,6 +22,8 @@ sections:
     imageAlt: A man walking on a grassy path carries a dark blue printed copy of Open Bible Stories from unfoldingWord
   - type: video
     title: Open Bible Stories
+    heading: ''
+    background: ocean
     provider: vimeo
     id: '1232213477'
     hash: 10bf4c03bf
@@ -30,11 +32,11 @@ sections:
     body: |-
       **Terms of Use for these Illustrations:** The free Bible illustrations listed below are © [Sweet Publishing](https://sweetpublishing.com/) and are made available under the terms of the [Creative Commons Attribution-Share Alike 3.0 Unported](https://creativecommons.org/licenses/by-sa/3.0/) license. This means you are free to redistribute, adapt, and use these illustrations in your own work, provided that you
 
-      1. Attribute the illustrations to Sweet Publishing with a link, where possible, to [http://sweetpublishing.com](https://sweetpublishing.com/),
+      1\. Attribute the illustrations to Sweet Publishing with a link, where possible, to [http://sweetpublishing.com](https://sweetpublishing.com/),
 
       *and*
 
-      2. Release any derivative works (what you create with them) under the same license.
+      2\. Release any derivative works (what you create with them) under the same license.
 
       *Please be sure you understand and are willing to abide by the terms of this license before using these illustrations.*
 

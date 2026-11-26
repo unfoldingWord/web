@@ -6,7 +6,9 @@
 //   accordion — production's nested accordion: one 1px #D5D8DC box per item,
 //               "+" before a 16px title, first item open; inside, "Download
 //               <title> by …" and the description (publications,
-//               for-translators)
+//               for-translators). `inset` adds production's 10px column
+//               padding (publications); `licenseBadge` ends each item with
+//               the CC BY-SA badge (for-translators content and training).
 import type { Block } from '../../content.config';
 import { md, mdInline, localizeHref } from '../../lib/md';
 import Section from '../ui/Section.astro';
@@ -30,7 +32,8 @@ const plainTitle = (t: string) => t.replace(/<[^>]+>/g, '');
 const byline = (m?: string) => (!m ? '' : /^by\s/i.test(m) ? ` by ${m.slice(3)}` : ` (${m})`);
 ---
 
-<Section id={block.id} background={block.background} class={cover ? '!py-[30px]' : block.variant === 'accordion' ? 'uw-acc-section' : undefined}>
+<Section id={block.id} background={block.background} class={cover ? '!py-[30px]' : block.variant === 'accordion' ? ['uw-acc-section', block.inset && 'uw-acc-inset'].filter(Boolean).join(' ') : undefined}>
+  <div class:list={[block.inset && 'px-2.5']}>
   {!cover && <SectionHeader title={block.title} intro={block.intro} locale={locale} />}
   {
     block.variant === 'accordion' ? (
@@ -54,6 +57,11 @@ const byline = (m?: string) => (!m ? '' : /^by\s/i.test(m) ? ` by ${m.slice(3)}`
                 </p>
               )}
               {it.description && <Fragment set:html={md(it.description, locale)} />}
+              {block.licenseBadge && (
+                <div class="uw-acc-badge">
+                  <Picture path="for-translators/cc-by-sa-badge.png" alt="CC BY-SA license badge" sizes="88px" widths={[88]} class="!w-[88px]" />
+                </div>
+              )}
             </div>
           </details>
         ))}
@@ -113,12 +121,19 @@ const byline = (m?: string) => (!m ? '' : /^by\s/i.test(m) ? ` by ${m.slice(3)}`
       </ul>
     )
   }
+  </div>
 </Section>
 
 <style>
-  /* Consecutive accordion groups sit in one section on production: 20px apart. */
-  :global(.uw-acc-section:has(+ .uw-acc-section)) { padding-bottom: 20px; }
-  :global(.uw-acc-section + .uw-acc-section) { padding-top: 0; }
+  /* Consecutive accordion groups sit in one section on production: 20px apart.
+     So do a video file before them (Embed, `uw-flow`) and plain white text
+     after them (for-translators/training). */
+  :global(:is(.uw-acc-section, .uw-flow):has(+ .uw-acc-section)) { padding-bottom: 20px; }
+  :global(:is(.uw-acc-section, .uw-flow) + .uw-acc-section) { padding-top: 0; }
+  :global(.uw-acc-section:not(.uw-acc-inset):has(+ section.bg-white:not(.uw-acc-section))) { padding-bottom: 20px; }
+  :global(.uw-acc-section:not(.uw-acc-inset) + section.bg-white:not(.uw-acc-section)) { padding-top: 0; }
+  /* publications: one section with 10px column padding (50px from its edges) */
+  :global(.uw-acc-inset) { padding-top: 50px; padding-bottom: 50px; }
   .uw-card-link { color: var(--color-kindle); font-weight: 900; }
   .uw-card-link:hover { color: var(--color-inspire); }
   /* Production's icon list: 16px/400 Ocean link text beside a 24px Inspire icon. */
@@ -127,19 +142,24 @@ const byline = (m?: string) => (!m ? '' : /^by\s/i.test(m) ? ` by ${m.slice(3)}`
 
   /* Production's nested accordion (Elementor): full width, boxes 1px #D5D8DC,
      10px padding, icon first, 16px/400 #1F2124 system font. */
-  .uw-acc-item + .uw-acc-item { margin-top: -1px; }
+  /* Each box keeps its own 1px border, so lines between boxes are 2px. */
   .uw-acc-summary {
     display: flex; align-items: center; gap: 10px; padding: 10px;
     border: 1px solid #d5d8dc; cursor: pointer; list-style: none;
     font-family: var(--font-system); font-size: 1rem; line-height: 1.5; font-weight: 400; color: #1f2124;
   }
   .uw-acc-summary::-webkit-details-marker { display: none; }
-  .uw-acc-icon { position: relative; flex: none; width: 15px; height: 15px; }
-  .uw-acc-icon::before, .uw-acc-icon::after { content: ''; position: absolute; background: currentColor; inset-inline-start: 0; top: 7px; width: 15px; height: 1.5px; }
+  /* Production's Font Awesome plus/minus: 13px bars, 3px thick. */
+  .uw-acc-icon { position: relative; flex: none; width: 13px; height: 13px; }
+  .uw-acc-icon::before, .uw-acc-icon::after { content: ''; position: absolute; background: currentColor; inset-inline-start: 0; top: 5px; width: 13px; height: 3px; }
   .uw-acc-icon::after { transform: rotate(90deg); }
   details[open] > .uw-acc-summary .uw-acc-icon::after { display: none; }
-  .uw-acc-body { border: 1px solid #d5d8dc; border-top: 0; padding: 10px; }
-  /* publications: 20px padding and 19.36/29.04 text */
-  .uw-acc-large .uw-acc-body { padding: 20px; font-size: var(--text-story); line-height: 1.5; }
-  .uw-acc-body > :global(:last-child) { margin-bottom: 0; }
+  .uw-acc-body { border: 1px solid #d5d8dc; padding: 10px; }
+  /* Elementor's text widget: lists sit right on the next paragraph. */
+  .uw-acc-body :global(:where(ul, ol)) { margin-bottom: 0; }
+  /* The badge is an inline image in a paragraph: 31px plus the line's descender. */
+  .uw-acc-badge { height: 38px; }
+  /* publications: 19.36/29.04 text */
+  .uw-acc-large .uw-acc-body { font-size: var(--text-story); line-height: 1.5; }
+  /* (the last paragraph keeps its 14.4px margin, as in production) */
 </style>
