@@ -1,6 +1,7 @@
 ---
 import { localizeHref } from '../../lib/md';
 import { SITE } from '../../lib/site';
+import VirtuousListener from './VirtuousListener.astro';
 
 // A row of buttons. Production buttons have no icons and keep their own
 // width on phones; they wrap with Elementor's 20px widget gap.
@@ -32,7 +33,7 @@ const hasForm = actions.some((a) => a.formId);
         return a.formId ? (
           <div class="uw-vdonate" data-form-id={a.formId}>
             {link}
-            <div class="uw-vdonate-embed">
+            <div class="uw-vdonate-embed" data-virtuous-embed>
               <script is:inline src={SITE.virtuousEmbedSrc} data-rd={a.formId} data-organizationId={SITE.virtuousOrgId} data-type="form" defer></script>
             </div>
           </div>
@@ -43,6 +44,8 @@ const hasForm = actions.some((a) => a.formId);
     </div>
   )
 }
+
+{hasForm && <VirtuousListener />}
 
 {
   hasForm && (
