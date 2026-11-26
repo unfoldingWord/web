@@ -1,13 +1,13 @@
 ---
-import { getCollection } from 'astro:content';
+// Current prayer requests, as production's /pray/ shows them: an Ocean band
+// with a white heading and intro, then a carousel of white cards (three per
+// view on desktop, two on tablets, one on phones) with Kindle arrows and
+// dots. Each card holds the request's title, its text and its month.
+import { getCollection, render } from 'astro:content';
 import type { Block } from '../../content.config';
 import { ui, formatMonth, localizePath } from '../../i18n';
 import { basePathFor, splitId } from '../../lib/routes';
-import { mdInline } from '../../lib/md';
-import Section from '../ui/Section.astro';
-import SectionHeader from '../ui/SectionHeader.astro';
-import Picture from '../ui/Picture.astro';
-import Icon from '../ui/Icon.astro';
+import { md, mdInline } from '../../lib/md';
 
 type PrayerList = Extract<Block, { type: 'prayerList' }>;
 interface Props {
@@ -23,43 +23,173 @@ for (const p of all) {
   if (l === 'en' && !bySlug.has(rest)) bySlug.set(rest, p);
   if (l === locale) bySlug.set(rest, p);
 }
-let items = [...bySlug.entries()].sort(([, a], [, b]) => b.data.date.getTime() - a.data.date.getTime());
-if (block.limit) items = items.slice(0, block.limit);
+let entries = [...bySlug.entries()].sort(([, a], [, b]) => b.data.date.getTime() - a.data.date.getTime());
+if (block.limit) entries = entries.slice(0, block.limit);
+const items = await Promise.all(entries.map(async ([slug, p]) => ({ slug, p, Content: (await render(p)).Content })));
+const headingId = `prayer-list-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
-<Section background="mist">
-  <SectionHeader title={block.title} intro={block.intro} locale={locale} />
-  <ul class="grid gap-5 md:grid-cols-2">
-    {
-      items.map(([slug, p]) => (
-        <li class="uw-card group relative flex gap-0 sm:flex-row">
-          {p.data.image && (
-            <div class="hidden w-40 shrink-0 sm:block">
-              <Picture path={p.data.image} alt={p.data.imageAlt ?? ''} sizes="160px" widths={[160, 320]} class="h-full object-cover" />
-            </div>
-          )}
-          <div class="flex flex-1 flex-col p-6">
-            <p class="flex items-center gap-2 text-sm text-ink-muted">
-              <Icon name="pray" class="size-4 text-inspire-ink" />
-              <time datetime={p.data.date.toISOString()}>{formatMonth(p.data.date, locale)}</time>
-            </p>
-            <h3 class="mt-2 text-xl">
-              <a href={localizePath(basePathFor('prayer', slug), locale)} class="text-ocean no-underline after:absolute after:inset-0 hover:underline" set:html={mdInline(p.data.title)} />
-            </h3>
-            <p class="mt-2 line-clamp-3 text-[0.9375rem] text-ink-muted">{p.data.description}</p>
-          </div>
-        </li>
-      ))
-    }
-  </ul>
-  {
-    block.limit && (
-      <p class="mt-8">
-        <a href={localizePath('/pray/', locale)} class="inline-flex items-center gap-1.5 font-heading font-extrabold">
-          {t.allPrayerRequests}
-          <Icon name="arrow-right" class="size-4 rtl:-scale-x-100" />
-        </a>
-      </p>
-    )
+<section class="bg-ocean on-dark py-[var(--spacing-section)]" aria-labelledby={block.title ? headingId : undefined}>
+  <div class="container-page flex flex-col gap-5">
+    {block.title && <h2 id={headingId} class="pl-heading" set:html={mdInline(block.title, locale)} />}
+    {block.intro && <div class="pl-intro" set:html={md(block.intro, locale)} />}
+    <div class="pl-carousel" data-prayer-carousel role="region" aria-roledescription="carousel" aria-label={block.title ? undefined : (t.nav as Record<string, string>).prayer} aria-labelledby={block.title ? headingId : undefined}>
+      <div class="pl-viewport" data-viewport tabindex="0">
+        <ul class="pl-track">
+          {
+            items.map(({ slug, p, Content }) => (
+              <li class="pl-slide">
+                <article class="pl-card">
+                  <h3 class="pl-title">
+                    <a href={localizePath(basePathFor('prayer', slug), locale)} set:html={mdInline(p.data.title)} />
+                  </h3>
+                  <div class="pl-text">
+                    <Content />
+                    <p class="pl-month"><time datetime={p.data.date.toISOString()}>{formatMonth(p.data.date, locale)}</time></p>
+                  </div>
+                </article>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <button type="button" class="pl-arrow pl-prev" data-prev aria-label={t.previous} hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14.5 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </button>
+      <button type="button" class="pl-arrow pl-next" data-next aria-label={t.next} hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9.5 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </button>
+      <div class="pl-dots" data-dots hidden></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // A small carousel on native scroll-snap: arrows and dots move one page
+  // (as many cards as fit) and wrap around at the ends, like production's
+  // looping slider. Without JavaScript the track still scrolls by touch.
+  function setup(root: HTMLElement) {
+    const viewport = root.querySelector<HTMLElement>('[data-viewport]')!;
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    const dots = root.querySelector<HTMLElement>('[data-dots]')!;
+    const slides = [...viewport.querySelectorAll<HTMLElement>('.pl-slide')];
+    const rtl = getComputedStyle(viewport).direction === 'rtl';
+    let pages = 1;
+    const perView = () => Math.max(1, Math.round(viewport.clientWidth / (slides[0]?.getBoundingClientRect().width || viewport.clientWidth)));
+    const current = () => Math.round(Math.abs(viewport.scrollLeft) / viewport.clientWidth);
+    const go = (i: number) => {
+      const page = (i + pages) % pages;
+      const target = Math.min(page * perView(), slides.length - 1);
+      const s = slides[target];
+      const x = s.offsetLeft - slides[0].offsetLeft;
+      viewport.scrollTo({ left: rtl ? -Math.abs(x) : x, behavior: 'smooth' });
+    };
+    const paint = () => {
+      const c = Math.min(current(), pages - 1);
+      [...dots.children].forEach((d, i) => d.setAttribute('aria-current', String(i === c)));
+    };
+    const build = () => {
+      pages = Math.ceil(slides.length / perView());
+      const show = pages > 1;
+      prev.hidden = next.hidden = dots.hidden = !show;
+      dots.replaceChildren(
+        ...Array.from({ length: show ? pages : 0 }, (_, i) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'pl-dot';
+          b.setAttribute('aria-label', `${i + 1} / ${pages}`);
+          b.addEventListener('click', () => go(i));
+          return b;
+        }),
+      );
+      paint();
+    };
+    prev.addEventListener('click', () => go(current() - 1));
+    next.addEventListener('click', () => go(current() + 1));
+    viewport.addEventListener('scroll', () => requestAnimationFrame(paint), { passive: true });
+    viewport.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      const forward = (e.key === 'ArrowRight') !== rtl;
+      go(current() + (forward ? 1 : -1));
+    });
+    new ResizeObserver(build).observe(viewport);
+    build();
   }
-</Section>
+  document.querySelectorAll<HTMLElement>('[data-prayer-carousel]').forEach(setup);
+</script>
+
+<style>
+  /* Production wraps text plainly (no balance or pretty). */
+  .pl-heading, .pl-title, .pl-intro :global(p), .pl-text :global(p) { text-wrap: wrap; }
+  .pl-heading { margin: 0; font-size: var(--text-h2); line-height: 1; font-weight: 700; color: #fff; }
+  .pl-intro { color: #fff; }
+  .pl-intro :global(p) { margin: 0 0 14.4px; }
+  .pl-intro :global(a) { color: var(--color-kindle); font-weight: 900; }
+
+  /* Track: production's Swiper, 25px between cards, all cards as tall as
+     the tallest. */
+  .pl-carousel { position: relative; }
+  .pl-viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .pl-viewport::-webkit-scrollbar { display: none; }
+  .pl-viewport:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+  .pl-track { display: flex; gap: 25px; margin: 0; padding: 0; list-style: none; }
+  .pl-slide { flex: 0 0 100%; display: flex; scroll-snap-align: start; }
+  @media (min-width: 768px) { .pl-slide { flex-basis: calc((100% - 25px) / 2); } }
+  @media (min-width: 1057px) { .pl-slide { flex-basis: calc((100% - 50px) / 3); } }
+
+  /* Card: production's PowerPack post card without an image. */
+  .pl-card { flex: 1; padding: 20px; border-radius: 4px; background: #fff; text-align: center; }
+  .pl-title { margin: 8px 0 20px; font-size: 22px; line-height: 26.4px; font-weight: 700; color: var(--color-ocean); }
+  .pl-title a { color: inherit; font-weight: inherit; text-decoration: none; }
+  .pl-title a:hover, .pl-title a:focus-visible { color: var(--color-kindle); }
+  .pl-text { margin-bottom: 20px; font-size: var(--text-body); line-height: var(--text-body--line-height); font-weight: 300; color: var(--color-ocean); }
+  .pl-text :global(p) { margin: 0; }
+  .pl-text :global(a) { color: var(--color-kindle); font-weight: 900; }
+  /* The month: production's bold "medium" paragraph (Avenir 300 made bolder). */
+  .pl-text .pl-month { font-size: 20px; line-height: 30px; font-weight: 400; color: #000; }
+
+  /* Kindle arrows, 40px circles, half outside the cards, centered on the
+     carousel (cards and dots together, as production does). */
+  .pl-arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    margin-top: -20px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-kindle);
+    color: #fff;
+    cursor: pointer;
+  }
+  .pl-arrow[hidden] { display: none; }
+  .pl-arrow svg { width: 22px; height: 22px; }
+  .pl-arrow:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+  .pl-prev { inset-inline-start: -24px; }
+  .pl-next { inset-inline-end: -24px; }
+  .pl-arrow svg:dir(rtl) { transform: scaleX(-1); }
+  @media (max-width: 1056px) { .pl-prev { inset-inline-start: -22px; } .pl-next { inset-inline-end: -22px; } }
+
+  .pl-dots { display: flex; min-height: 24px; align-items: center; justify-content: center; margin-top: 20px; line-height: 0; }
+  .pl-dots[hidden] { display: none; }
+  .pl-dots :global(.pl-dot) {
+    width: 8px;
+    height: 8px;
+    margin: 0 6px;
+    padding: 0;
+    border-radius: 50%;
+    background: #ccc;
+    cursor: pointer;
+  }
+  .pl-dots :global(.pl-dot:hover), .pl-dots :global(.pl-dot[aria-current='true']) { background: var(--color-kindle); }
+</style>

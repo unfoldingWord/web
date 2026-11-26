@@ -12,7 +12,7 @@ redirectFrom: [/sudanese/the-exponential-journey/]
 ---
 Khartoum, Sudan, April 2021. I was sitting in a small hotel conference room with the leaders of Greater Reach Alliance and half a dozen representatives of unreached Sudanese people groups. We were talking about the potential of Church-Centric Bible Translation for their people. Wanting to illustrate what God had done in other places, I shared a brief video of some South Asian brothers and sisters celebrating with exuberant singing and dancing the Bible in their language for the first time.
 
-Suddenly, a man toward the back of the room began weeping audibly. I thought, uh oh, what have I done? His name is Faheem. He's a high school physics teacher and member of the Masalit, a half-a-million-member people group in western Sudan. When he regained his composure, I asked, "Can you tell us why you are so moved?"
+Suddenly, a man toward the back of the room began weeping audibly. I thought, *uh oh, what have I done*? His name is Faheem. He's a high school physics teacher and member of the Masalit, a half-a-million-member people group in western Sudan. When he regained his composure, I asked, "Can you tell us why you are so moved?"
 
 Through a translator, he replied, "I can never imagine a day when that will be true for my people. I can never imagine a day when the Masalit will have God's Word in our language."
 

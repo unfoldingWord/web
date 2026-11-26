@@ -19,4 +19,4 @@ Our friends at PCET are overjoyed and have already begun reading Open Bible Stor
 
 The prayers and gifts of unfoldingWord’s friends made that first OBS translation in the Cilasi language possible, and keep our CCBT ministry partners from Chad, Africa, and the rest of the world in the work and on the move.
 
-[Become a financial partner today](/give/), and help overcome barriers for people who’ve never heard the gospel!
+Become a financial partner today, and help overcome barriers for people who’ve never heard the gospel!

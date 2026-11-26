@@ -6,11 +6,10 @@ region: middle-east
 image: stories/from-street-beggar-to-bold-evangelist.jpg
 imageAlt: A woman in a black top, seen from behind, raises both arms toward a blue sky beside a house and open fields
 sensitive: true
+largeText: true
 redirectFrom: [/menapak/from-street-beggar-to-bold-evangelist/]
 ---
-Grace,\* married at age 14 and a mother of two soon after, suffered physical abuse, endured the humiliation of an unfaithful husband, and finally fled to save her life. Divorce forced her to the fringes of her Islamic society, cleaning houses, begging on the streets, and doing anything to earn a living.
-
-*\*Pseudonyms used for security.*
+Grace,\* married at age 14 and a mother of two soon after, suffered physical abuse, endured the humiliation of an unfaithful husband, and finally fled to save her life. Divorce forced her to the fringes of her Islamic society, cleaning houses, begging on the streets, and doing anything to earn a living. \*Pseudonyms used for security.
 
 Finally, she met and married Barad,\* who loved her and agreed to be a father to her children. But Grace’s soul was still empty. That is until the day she first heard the name Jesus. Barad had become involved with some extended family members translating unfoldingWord® Open Bible Stories. Worried that she might accidentally betray their work, Barad wouldn’t allow her into the room when he met with other translators. But Grace was not going to be so quickly stifled. She sat by the closed door, crying because she was excluded but listening with every inch of her being.
 

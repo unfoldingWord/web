@@ -8,6 +8,8 @@ imageAlt: A woman places a hand on the shoulder of a friend who prays with folde
 excerpt: Sofia Ivanov speaks on the impact of unfoldingWord's Bible translation tools.
 redirectFrom: [/worldwide/making-gods-word-accessible-to-ordinary-people/]
 ---
+***Sofia Ivanov speaks on the impact of unfoldingWord's Bible Translation tools***
+
 *Editor's Note: Sofia Ivanov\* is a project manager for unfoldingWord's Eurasian Whole Bible, Whole Nation partner. Her thoughts on the impact of unfoldingWord's Bible translation tools in Eurasia follow. \*Pseudonyms used for security.*
 
 Bible translation is vital for three reasons. First, it puts God's Word into a language ordinary people understand.

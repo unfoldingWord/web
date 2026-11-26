@@ -10,9 +10,9 @@ excerpt: War, rocket attacks and flooding have not stopped Ukrainian Great Commi
 sensitive: true
 redirectFrom: [/eurasia/ukrainian-great-commission-partners-are-translating/]
 ---
-Ukrainian Great Commission partners are translating unfoldingWord's suite of Bible translation tools to make God's Word accessible to more than 540 languages spoken across the countries of the former Soviet Union. That's more than 161 million people who need to hear God's Word in their heart language, not Russian!
+**Ukrainian Great Commission partners are translating unfoldingWord's suite of Bible translation tools** to make God's Word accessible to more than 540 languages spoken across the countries of the former Soviet Union. **That's more than 161 million people who need to hear God's Word in their heart language, not Russian!**
 
-But the war in Ukraine creates many challenges to their work.
+**But the war in Ukraine creates many challenges to their work.**
 
 Mission Network News reports, "Tens of thousands of people are on the move in southern Ukraine after flooding from the destroyed Nova Kakhovka dam drove them out of their villages. More than 6.5 million people have been internally displaced in Ukraine since Russia invaded in February 2022."
 
