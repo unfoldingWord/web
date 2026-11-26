@@ -1,6 +1,7 @@
 ---
 title: Terms of Use
 heading: unfoldingWord Terms of Use
+bodyStyle: legal
 description: The terms that govern use of the unfoldingWord website, including intellectual property, copyright notices, disclaimers, liability and jurisdiction.
 ---
 

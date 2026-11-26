@@ -6,13 +6,11 @@ description: >-
 ogImage: obs/man-reading-obs.jpg
 sections:
   - type: hero
-    variant: split
+    variant: banner
     title: Open Bible Stories
-    lead: Bible illustrations from Sweet Publishing
+    subtitle: '**Bible Illustrations from Sweet Publishing**'
     image: obs/man-reading-obs.jpg
     imageAlt: A man in glasses and a floral shirt reads an illustrated printed copy of Open Bible Stories at a table beside a window
-    actions:
-      - { label: Download the illustrations, href: '#downloads' }
   - type: split
     body: |-
       Our first open-licensed resource was Open Bible Stories (OBS). OBS is fifty carefully crafted, illustrated stories covering Genesis to Revelation. Designed as a disciple-making tool and translation primer, it touches lives around the world every day.
@@ -28,30 +26,24 @@ sections:
     id: '1232213477'
     hash: 10bf4c03bf
   - type: prose
-    title: Terms of use for these illustrations
     background: mist
     body: |-
-      The free Bible illustrations listed below are © [Sweet Publishing](https://sweetpublishing.com/) and are made available under the terms of the [Creative Commons Attribution-Share Alike 3.0 Unported](https://creativecommons.org/licenses/by-sa/3.0/) license. This means you are free to redistribute, adapt, and use these illustrations in your own work, provided that you
+      **Terms of Use for these Illustrations:** The free Bible illustrations listed below are © [Sweet Publishing](https://sweetpublishing.com/) and are made available under the terms of the [Creative Commons Attribution-Share Alike 3.0 Unported](https://creativecommons.org/licenses/by-sa/3.0/) license. This means you are free to redistribute, adapt, and use these illustrations in your own work, provided that you
 
-      1. Attribute the illustrations to Sweet Publishing with a link, where possible, to [sweetpublishing.com](https://sweetpublishing.com/), and
+      1. Attribute the illustrations to Sweet Publishing with a link, where possible, to [http://sweetpublishing.com](https://sweetpublishing.com/),
+
+      *and*
+
       2. Release any derivative works (what you create with them) under the same license.
 
-      Please be sure you understand and are willing to abide by the terms of this license before using these illustrations.
-  - type: resources
-    id: downloads
-    title: Download all the illustrations
-    intro: >-
-      You may download a zip file of all the images using one of the links below. The illustrations
-      are organized by book(s) of the Bible, using a numeric code for each book (e.g. 01 is Genesis).
-    items:
-      - title: High quality
-        href: https://filedn.com/lD0GfuMvTstXgqaJfpLL87S/sweet_images/SweetPublishingBibleIllustrations.zip
-        kind: link
-        meta: 4GB zip file
-      - title: Medium quality
-        href: https://filedn.com/lD0GfuMvTstXgqaJfpLL87S/sweet_images/SweetPublishingBibleIllustrations-610px.zip
-        kind: link
-        meta: 440MB zip file
+      *Please be sure you understand and are willing to abide by the terms of this license before using these illustrations.*
+
+      You may download a zip file of all the images using one of the links below:
+
+      - [High Quality](https://filedn.com/lD0GfuMvTstXgqaJfpLL87S/sweet_images/SweetPublishingBibleIllustrations.zip) – (4GB zip file)
+      - [Medium quality](https://filedn.com/lD0GfuMvTstXgqaJfpLL87S/sweet_images/SweetPublishingBibleIllustrations-610px.zip) – (440MB zip file)
+
+      The illustrations are organized by book(s) of the Bible, using a numeric code for each book (e.g. 01 is Genesis).
   - type: sweetBooks
-    title: Illustration files
+    title: Illustration Files
 ---

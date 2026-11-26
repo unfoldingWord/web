@@ -1,11 +1,19 @@
 ---
+// A row of items. Production builds these from plain Elementor columns, so
+// the default has no card chrome. Variants:
+//   plain    — image, 32px Inspire title, text, Kindle "Impact" line, a
+//              Learn More button (tools-technology, catalyzation, ccbt)
+//   centered — the same, centered (for-translators, staff)
+//   outlined — white box with a 1px Kindle border and 4px corners, centered
+//              28px Inspire title, outline "Learn More" and optional filled
+//              Donate button (wbwn regions)
+//   card     — a white 4px card (kept for older content)
 import type { Block } from '../../content.config';
 import { md, mdInline, localizeHref } from '../../lib/md';
 import { ui } from '../../i18n';
 import Section from '../ui/Section.astro';
 import SectionHeader from '../ui/SectionHeader.astro';
 import Picture from '../ui/Picture.astro';
-import Icon from '../ui/Icon.astro';
 
 type Cards = Extract<Block, { type: 'cards' }>;
 interface Props {
@@ -14,44 +22,80 @@ interface Props {
 }
 const { block, locale } = Astro.props;
 const t = ui(locale);
-const cols = { 2: 'md:grid-cols-2', 3: 'md:grid-cols-2 lg:grid-cols-3', 4: 'sm:grid-cols-2 lg:grid-cols-4' }[block.columns];
-const sizes = { 2: '(min-width: 48rem) 50vw, 100vw', 3: '(min-width: 64rem) 33vw, (min-width: 48rem) 50vw, 100vw', 4: '(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw' }[block.columns];
+const v = block.variant ?? 'plain';
+const center = v === 'centered' || v === 'outlined' || block.align === 'center';
+const cols = {
+  2: 'md:grid-cols-2',
+  3: 'md:grid-cols-2 tablet:grid-cols-3',
+  4: 'sm:grid-cols-2 tablet:grid-cols-4',
+  5: 'grid-cols-2 md:grid-cols-3 tablet:grid-cols-5',
+}[block.columns];
+const sizes = {
+  2: '(min-width: 48rem) 490px, 100vw',
+  3: '(min-width: 66rem) 320px, (min-width: 48rem) 50vw, 100vw',
+  4: '(min-width: 66rem) 235px, (min-width: 40rem) 50vw, 100vw',
+  5: '(min-width: 66rem) 190px, 50vw',
+}[block.columns];
+const isExternal = (h: string) => /^https?:\/\//.test(h);
 ---
 
 <Section background={block.background}>
-  <SectionHeader eyebrow={block.eyebrow} title={block.title} intro={block.intro} locale={locale} />
-  <ul class:list={['grid gap-5 lg:gap-7', cols]}>
+  <SectionHeader title={block.title} intro={block.intro} align={block.align === 'center' || v === 'centered' ? 'center' : 'start'} locale={locale} />
+  <ul class:list={['grid gap-5', cols]}>
     {
       block.items.map((item) => (
-        <li class="uw-card group relative flex flex-col text-ink">
+        <li
+          class:list={[
+            'flex flex-col gap-5',
+            center && 'items-center text-center',
+            v === 'outlined' && 'justify-between rounded-card border border-kindle bg-white p-5',
+            v === 'card' && 'uw-card p-5',
+            v !== 'outlined' && v !== 'card' && 'p-2.5',
+          ]}
+        >
           {item.image && (
-            <div class="overflow-hidden">
-              <Picture path={item.image} alt={item.imageAlt ?? ''} sizes={sizes} aspect="3 / 2" class="transition duration-500 group-hover:scale-[1.03]" />
+            <Picture
+              path={item.image}
+              alt={item.imageAlt ?? ''}
+              sizes={sizes}
+              aspect={v === 'outlined' ? '278 / 182' : v === 'centered' ? '1 / 1' : undefined}
+              class:list={['w-full', (v === 'outlined' || v === 'plain') && 'rounded-media-split']}
+            />
+          )}
+          <h3 class:list={['uw-card-title', v === 'outlined' ? 'text-h3' : 'text-h2', item.logo && 'flex items-center gap-5', block.background === 'ocean' && '!text-kindle']}>
+            <span set:html={mdInline(item.title)} />
+            {item.logo && <Picture path={item.logo} alt={item.logoAlt ?? ''} sizes="50px" widths={[50, 100]} class="!w-[50px] shrink-0" />}
+          </h3>
+          {item.body && <div class="prose w-full [&>:last-child]:mb-0" set:html={md(item.body, locale)} />}
+          {item.impact && <p class="uw-impact w-full" set:html={mdInline(item.impact, locale)} />}
+          {(item.href || item.donateHref) && (
+            <div class:list={['mt-auto flex flex-wrap gap-2.5', center && 'justify-center', v === 'outlined' && block.columns <= 3 && 'uw-tall-btns']}>
+              {item.href && (
+                <a
+                  href={localizeHref(item.href, locale)}
+                  class:list={['uw-btn', v === 'outlined' ? 'uw-btn-secondary' : 'uw-btn-primary']}
+                  {...(isExternal(item.href) ? { rel: 'noopener' } : {})}
+                >
+                  {item.linkLabel ?? t.readMore}
+                  <span class="sr-only">: {item.title.replace(/[*_`]/g, '')}</span>
+                </a>
+              )}
+              {item.donateHref && (
+                <a href={localizeHref(item.donateHref, locale)} class="uw-btn uw-btn-give">
+                  {item.donateLabel ?? t.donateNow}
+                </a>
+              )}
             </div>
           )}
-          <div class="flex flex-1 flex-col p-6">
-            {item.icon && !item.image && (
-              <span class="mb-4 inline-flex size-12 items-center justify-center rounded-full bg-inspire-50 text-inspire-ink">
-                <Icon name={item.icon} class="size-6" />
-              </span>
-            )}
-            <h3 class="text-h3">
-              {item.href ? (
-                <a href={localizeHref(item.href, locale)} class="text-ocean no-underline after:absolute after:inset-0 hover:underline" set:html={mdInline(item.title)} />
-              ) : (
-                <span set:html={mdInline(item.title)} />
-              )}
-            </h3>
-            {item.body && <div class="prose mt-3 text-ink-muted" set:html={md(item.body, locale)} />}
-            {item.href && (
-              <span class="mt-auto inline-flex items-center gap-1.5 pt-5 font-heading font-extrabold text-inspire-ink" aria-hidden="true">
-                {item.linkLabel ?? t.readMore}
-                <Icon name="arrow-right" class="size-4 transition group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1" />
-              </span>
-            )}
-          </div>
         </li>
       ))
     }
   </ul>
 </Section>
+
+<style>
+  /* wbwn region cards: production's buttons are 56px tall (20px 15px 19px). */
+  .uw-tall-btns .uw-btn { padding: 20px 15px 19px; }
+  .uw-impact { color: var(--color-kindle); font-size: var(--text-body); line-height: 1.6; font-weight: 400; margin-top: -6px; }
+  /* (production's heading widget sits 14px under the text, not 20px) */
+</style>

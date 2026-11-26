@@ -1,6 +1,7 @@
 ---
 // A third-party embed in an iframe (flip-book, map, form). Use sparingly:
-// every embed is a request to another site on page load.
+// every embed is a request to another site on page load. Square corners and
+// no frame, like production's embeds.
 import type { Block } from '../../content.config';
 import Section from '../ui/Section.astro';
 
@@ -13,5 +14,5 @@ const { block } = Astro.props;
 ---
 
 <Section>
-  <iframe src={block.src} title={block.title} loading="lazy" class="w-full rounded-card border border-line" style={`aspect-ratio:${block.aspect}`} allowfullscreen></iframe>
+  <iframe src={block.src} title={block.title} loading="lazy" class="block w-full border-0" style={`aspect-ratio:${block.aspect}`} allowfullscreen></iframe>
 </Section>

@@ -55,8 +55,22 @@ const hero = z.object({
   lead: z.string().optional(),
   image: imagePath.optional(),
   imageAlt: z.string().optional(),
-  variant: z.enum(['photo', 'ocean', 'light', 'split']).default('ocean'),
+  // banner — production's page-title band: photo under a 50% Ocean overlay,
+  //   centered 32px title (the default opener for standard pages)
+  // project — photo band with a text column (wbwn country pages)
+  // heading — no band: a centered 40px title and line (donation confirmation)
+  variant: z.enum(['photo', 'ocean', 'light', 'split', 'banner', 'project', 'heading']).default('ocean'),
   actions: z.array(action).default([]),
+  // banner: uppercase title (production does this on most pages, not ccbt/*)
+  uppercase: z.boolean().optional(),
+  // banner: more title lines in the same style (about, overview)
+  lines: z.array(z.string()).optional(),
+  // banner: a short Kindle rule between the title lines
+  divider: z.boolean().optional(),
+  // banner: a smaller line under the title
+  subtitle: z.string().optional(),
+  // project: which half of the band holds the text
+  contentPosition: z.enum(['start', 'end']).optional(),
 }).refine(hasImageAlt, missingAlt);
 
 const prose = z.object({
@@ -64,9 +78,17 @@ const prose = z.object({
   eyebrow: z.string().optional(),
   title: z.string().optional(),
   body: z.string(),
-  width: z.enum(['prose', 'wide']).default('prose'),
+  // narrow — production's 800px text column (vision and mission)
+  width: z.enum(['prose', 'wide', 'narrow']).default('prose'),
   background: z.enum(['white', 'mist', 'ocean']).default('white'),
   serif: z.boolean().default(false),
+  align: z.enum(['start', 'center']).optional(),
+  // A short Kindle rule under the title (about "Our Strategy")
+  divider: z.boolean().optional(),
+  // Buttons centered under the text (production's "Donate Now")
+  actions: z.array(action).optional(),
+  // A white icon above the title (wbwn "Prayers" box), from ui/Icon.astro
+  icon: z.string().optional(),
 });
 
 const cards = z.object({
@@ -74,8 +96,14 @@ const cards = z.object({
   eyebrow: z.string().optional(),
   title: z.string().optional(),
   intro: z.string().optional(),
-  columns: z.union([z.literal(2), z.literal(3), z.literal(4)]).default(3),
-  background: z.enum(['white', 'mist', 'ocean']).default('white'),
+  columns: z.union([z.literal(2), z.literal(3), z.literal(4), z.literal(5)]).default(3),
+  // kindle — the Kindle 25% tint band (wbwn region cards)
+  background: z.enum(['white', 'mist', 'ocean', 'kindle']).default('white'),
+  // plain — production's columns: no card, Inspire title, a Learn More button
+  // centered — plain and centered (for-translators)
+  // outlined — 1px Kindle border, centered title, outline + filled buttons (wbwn)
+  variant: z.enum(['card', 'plain', 'centered', 'outlined']).optional(),
+  align: z.enum(['start', 'center']).optional(),
   items: z.array(
     z.object({
       title: z.string(),
@@ -85,7 +113,15 @@ const cards = z.object({
       icon: z.string().optional(),
       href: href.optional(),
       linkLabel: z.string().optional(),
-    }).refine(hasImageAlt, missingAlt),
+      // Kindle "Impact:" line (tools-technology)
+      impact: z.string().optional(),
+      // outlined: a second, filled button
+      donateHref: href.optional(),
+      donateLabel: z.string().optional(),
+      // a small logo beside the title (tools-technology)
+      logo: imagePath.optional(),
+      logoAlt: z.string().optional(),
+    }).refine(hasImageAlt, missingAlt).refine((i) => !i.logo || Boolean(i.logoAlt?.trim()), { message: 'A logo needs logoAlt text', path: ['logoAlt'] }),
   ),
 });
 
@@ -100,6 +136,9 @@ const split = z.object({
   imagePosition: z.enum(['start', 'end']).default('end'),
   background: z.enum(['white', 'mist', 'ocean']).default('white'),
   actions: z.array(action).default([]),
+  // Kindle "Impact:" line under the text (overview programs)
+  impact: z.string().optional(),
+  uppercase: z.boolean().optional(),
 }).refine(hasImageAlt, missingAlt);
 
 const stats = z.object({
@@ -107,7 +146,9 @@ const stats = z.object({
   eyebrow: z.string().optional(),
   title: z.string().optional(),
   background: z.enum(['white', 'mist', 'ocean']).default('ocean'),
-  items: z.array(z.object({ value: z.string(), label: z.string() })),
+  // bars — label above a full-width colored bar holding the number (wbwn)
+  variant: z.enum(['grid', 'bars']).optional(),
+  items: z.array(z.object({ value: z.string(), label: z.string(), color: z.enum(['ocean', 'kindle']).optional() })),
 });
 
 const quote = z.object({
@@ -123,9 +164,12 @@ const cta = z.object({
   type: z.literal('cta'),
   title: z.string(),
   body: z.string().optional(),
-  variant: z.enum(['ocean', 'kindle', 'mist']).default('ocean'),
+  // split — Ocean band, heading and button beside a photo (about)
+  variant: z.enum(['ocean', 'kindle', 'mist', 'split']).default('ocean'),
   actions: z.array(action).min(1),
-});
+  image: imagePath.optional(),
+  imageAlt: z.string().optional(),
+}).refine(hasImageAlt, missingAlt);
 
 const video = z.object({
   type: z.literal('video'),
@@ -195,11 +239,18 @@ const resources = z.object({
   eyebrow: z.string().optional(),
   title: z.string().optional(),
   intro: z.string().optional(),
+  // cards — bordered link cards; list — production's icon list; accordion —
+  // one collapsible box per item (for-translators, publications)
+  variant: z.enum(['cards', 'list', 'accordion']).optional(),
+  // accordion: larger text and padding inside the boxes (publications)
+  textSize: z.enum(['normal', 'large']).optional(),
+  background: z.enum(['white', 'mist', 'ocean']).optional(),
   items: z.array(
     z.object({
       title: z.string(),
       description: z.string().optional(),
-      href,
+      // Optional only for accordion items that are all text
+      href: href.optional(),
       kind: z.enum(['pdf', 'link', 'video', 'audio', 'book', 'app']).default('link'),
       image: imagePath.optional(),
       imageAlt: z.string().optional(),
@@ -279,6 +330,16 @@ const pages = defineCollection({
     sections: z.array(block).default([]),
     // Where the Markdown body goes relative to the sections.
     bodyPosition: z.enum(['before', 'after']).default('after'),
+    // legal — production's policy pages: a large `heading` above the text and
+    // small bold section headings (privacy, terms of use)
+    // post — WordPress block-editor headings: h3 and smaller in Tech at
+    // weight 500 (charitable solicitation disclosures)
+    bodyStyle: z.enum(['default', 'legal', 'post']).optional(),
+    // The page-title banner when there is no hero: its photo, and whether the
+    // title is uppercase (production: yes on most pages).
+    bannerImage: imagePath.optional(),
+    bannerImageAlt: z.string().optional(),
+    bannerUppercase: z.boolean().optional(),
     breadcrumbs: z.boolean().default(true),
     redirectFrom,
     // FAQPage / other extra schema.org types are derived from blocks; this
