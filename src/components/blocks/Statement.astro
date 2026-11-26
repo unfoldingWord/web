@@ -44,7 +44,9 @@ const { block, locale } = Astro.props;
   .statement-lead { font-size: 24px; }
   .tone-inspire .statement { font-size: 20px; color: var(--color-inspire); }
   .tone-inspire .statement-lead { font-size: 30px; }
-  /* Production's Inspire column carries 20px of empty space at its foot. */
-  .tone-inspire { padding-bottom: 30px; }
+  /* Production's Inspire column carries 20px of empty space at its foot
+     (40px on phones). */
+  .tone-inspire { padding-bottom: 50px; }
+  @media (min-width: 768px) { .tone-inspire { padding-bottom: 30px; } }
   .statement :global(strong) { font-weight: 700; }
 </style>

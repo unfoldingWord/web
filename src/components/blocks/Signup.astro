@@ -9,6 +9,10 @@
 // margins). From another origin it can only style itself. The frame reports
 // its height so it never scrolls.
 //
+// variant `card` (default) is production's /pray/ sign-up: the title (Inspire)
+// and text in a 485px start column, the form in an Inspire box (20px padding,
+// 4px corners) filling the rest; stacked on phones.
+//
 // variant `band` is production's home sign-up: a Cultivate band with the
 // title, text and form in the start half and a photo in the end half
 // (hidden on phones). The form is asked for its dark theme (white labels).
@@ -34,7 +38,7 @@ const src = `${SITE.mediaBase}/embeds/virtuous-signup.html?form=${encodeURICompo
     <section id={block.id} class="signup-band bg-cultivate on-dark">
       <div class="mx-auto flex max-w-[1000px] md:min-h-[378px]">
         <div class="signup-band-text w-full p-10 md:w-1/2">
-          {block.title && <h2 set:html={mdInline(block.title, locale)} />}
+          {block.title && <h2 class="text-wrap" set:html={mdInline(block.title, locale)} />}
           {block.body && <div class="prose signup-band-body" set:html={md(block.body, locale)} />}
           <iframe
             class="signup-frame block min-h-[199px] w-full border-0"
@@ -53,14 +57,14 @@ const src = `${SITE.mediaBase}/embeds/virtuous-signup.html?form=${encodeURICompo
     </section>
   ) : (
     <Section background={block.background} id={block.id}>
-      <div class="grid gap-8 lg:grid-cols-12 lg:gap-14">
-        <div class="lg:col-span-5">
-          {block.title && <h2 set:html={mdInline(block.title, locale)} />}
+      <div class="flex flex-col gap-5 md:flex-row md:items-start">
+        <div class="p-[10px] md:w-[485px] md:shrink-0">
+          {block.title && <h2 class="text-wrap" set:html={mdInline(block.title, locale)} />}
           {block.body && <div class="prose mt-5" set:html={md(block.body, locale)} />}
         </div>
-        <div class="rounded-card bg-white p-4 sm:p-6 lg:col-span-7">
+        <div class="min-w-0 flex-1 rounded-[4px] bg-inspire p-5">
           <iframe
-            class="signup-frame block min-h-[20rem] w-full border-0"
+            class="signup-frame block min-h-[199px] w-full border-0"
             src={src}
             title={block.title ?? 'Sign up'}
             loading="lazy"
@@ -82,7 +86,7 @@ const src = `${SITE.mediaBase}/embeds/virtuous-signup.html?form=${encodeURICompo
   window.addEventListener('message', (e) => {
     if (e.data?.type !== 'uw-embed-height') return;
     document.querySelectorAll<HTMLIFrameElement>('iframe.signup-frame').forEach((f) => {
-      if (f.contentWindow === e.source && e.origin === f.dataset.origin) f.style.height = `${Math.min(4000, Math.ceil(Number(e.data.height)) + 4)}px`;
+      if (f.contentWindow === e.source && e.origin === f.dataset.origin) f.style.height = `${Math.min(4000, Math.ceil(Number(e.data.height)))}px`;
     });
   });
 </script>

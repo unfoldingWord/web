@@ -13,8 +13,9 @@
 
   <media base>/embeds/virtuous-signup.html?form=<data-vform>&org=<data-orgId>[&theme=dark]
 
-  theme=dark: white bold labels and an Ocean button, for a form on a
-  coloured band (the home page's Cultivate "Find out more" band).
+  Labels are bold #1A1414 and the button Ocean, as production's /pray/ form.
+  theme=dark: white labels, for a form on a coloured band (the home page's
+  Cultivate "Find out more" band).
 
   This file is not part of the site build. After changing it, upload it:
   npm run embeds:upload
@@ -26,13 +27,30 @@
 <meta name="robots" content="noindex" />
 <title>Sign up</title>
 <style>
-  html, body { margin: 0; padding: 0; background: transparent; }
+  html, body { margin: 0; padding: 0; background: transparent; overflow: hidden; }
   body { font-family: 'Avenir', 'Avenir Next', 'Nunito Sans', ui-sans-serif, system-ui, sans-serif; color: #231f20; }
   form[id*='vcrm'] { max-width: 100% !important; }
-  /* theme=dark: production's home sign-up on Cultivate */
-  .theme-dark label { color: #fff !important; font: 700 16px/16px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important; }
-  .theme-dark input[type='text'], .theme-dark input[type='email'] { box-sizing: border-box; height: 41px; padding: 10px; border: 1px solid #007cad !important; border-radius: 3px !important; background: #fff; font-size: 16px; }
-  .theme-dark button, .theme-dark input[type='submit'] { background: #014263 !important; color: #fff !important; border: 0 !important; border-radius: 3px !important; padding: 15px 30px !important; font: 700 16px/24px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important; }
+  /* Production's form (measured on unfoldingword.org /pray/ and /): rows 10px
+     apart, columns 10px either side, first and last name side by side (two
+     218px inputs at 455px; Virtuous would stack them in a frame this narrow),
+     16/16/700 system-font labels, 41px inputs with a 1px #007CAD border and
+     3px corners, and a 161x54 Ocean button. In a phone-width frame (under
+     400px) every field is full width and the fields sit 20px apart, as
+     production's form does on a phone. */
+  .v_fr { display: flex !important; flex-wrap: wrap; margin: 20px -10px 0 !important; padding: 0 !important; }
+  .v_fr:first-child { margin-top: 0 !important; }
+  .v_fc { box-sizing: border-box; flex: 0 0 100%; width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 10px !important; }
+  .v_fc__2 + .v_fc__2 { margin-top: 20px !important; }
+  @media (min-width: 400px) {
+    .v_fr { margin-top: 10px !important; }
+    .v_fc__2 { flex-basis: 50%; width: 50% !important; max-width: 50% !important; }
+    .v_fc__2 + .v_fc__2 { margin-top: 0 !important; }
+  }
+  label { color: #1a1414 !important; font: 700 16px/16px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important; margin: 0 !important; }
+  input[type='text'], input[type='email'] { box-sizing: border-box; width: 100%; height: 41px; margin: 0 !important; padding: 10px !important; border: 1px solid #007cad !important; border-radius: 3px !important; background: #fff; font-size: 16px; }
+  button, input[type='submit'] { margin: 0 !important; background: #014263 !important; color: #fff !important; border: 0 !important; border-radius: 3px !important; padding: 15px 30px !important; font: 700 16px/24px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important; }
+  /* theme=dark: production's home sign-up on Cultivate (white labels). */
+  .theme-dark label { color: #fff !important; }
 </style>
 </head>
 <body>
@@ -52,9 +70,11 @@
     s.setAttribute('data-dependencies', '[]');
     document.getElementById('host').appendChild(s);
     function post() {
-      parent.postMessage({ type: 'uw-embed-height', form: form, height: document.documentElement.scrollHeight }, '*'); // height only; nothing private
+      parent.postMessage({ type: 'uw-embed-height', form: form, height: Math.ceil(document.getElementById('host').getBoundingClientRect().height) }, '*'); // height only; nothing private
     }
-    new ResizeObserver(post).observe(document.body);
+    // The form's own height (not the document's, which never shrinks below
+    // the frame), so the frame fits it exactly.
+    new ResizeObserver(post).observe(document.getElementById('host'));
     window.addEventListener('load', post);
   })();
 </script>

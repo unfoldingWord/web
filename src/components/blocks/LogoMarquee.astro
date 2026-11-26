@@ -23,7 +23,7 @@ const copies = [0, 1];
   <div class="container-page">
     <div class="flex flex-col items-center justify-center gap-5 p-[10px] min-[1057px]:flex-row">
       {block.titleImage && <Picture path={block.titleImage} alt={block.titleImageAlt ?? ''} sizes="150px" widths={[150, 300]} class="!w-[150px] shrink-0" />}
-      <h2 class="text-center text-tech" set:html={mdInline(block.title, locale)} />
+      <h2 class="text-center text-tech text-wrap" set:html={mdInline(block.title, locale)} />
     </div>
     <div class="marquee-viewport relative mt-5">
       <div class="marquee-track">

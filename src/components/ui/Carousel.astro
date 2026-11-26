@@ -74,7 +74,8 @@ const t = ui(locale);
   .carousel-track > :global(li > *) { flex: 1; min-width: 0; }
   .carousel-arrow {
     position: absolute;
-    top: calc(50% + 12px);
+    /* Production's arrows sit 23px below the middle of the slides. */
+    top: calc(50% + 23px);
     z-index: 1;
     display: inline-flex;
     align-items: center;

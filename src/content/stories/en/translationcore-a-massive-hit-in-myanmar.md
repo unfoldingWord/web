@@ -1,5 +1,6 @@
 ---
 title: 'translationCore: A Massive Hit in Myanmar'
+excerpt: When we demonstrated how they could align their translations with Burmese, we got gasps!
 description: When we demonstrated how they could align their translations with Burmese, we got gasps!
 date: 2026-01-09
 region: asia

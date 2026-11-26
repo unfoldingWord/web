@@ -79,6 +79,9 @@ const excerpt = story.data.excerpt ?? (variant === 'row' ? openingWords(story.bo
 }
 
 <style>
+  /* Production wraps text plainly (no balance or pretty). */
+  .story-card-title, .story-row-title { text-wrap: wrap; }
+
   /* card */
   .story-card {
     display: flex;

@@ -71,6 +71,8 @@ const hero = z.object({
   subtitle: z.string().optional(),
   // project: which half of the band holds the text
   contentPosition: z.enum(['start', 'end']).optional(),
+  // banner: which part of the photo the band shows (default: the middle)
+  imagePosition: z.enum(['top', 'center', 'bottom']).optional(),
 }).refine(hasImageAlt, missingAlt);
 
 const prose = z.object({
@@ -457,6 +459,9 @@ const prayer = defineCollection({
     region: z.string().optional(),
     image: imagePath.optional(),
     imageAlt: z.string().optional(),
+    // Up to three other requests (their slugs) listed under "Related", as
+    // production's Jetpack list. Most production requests show none.
+    related: z.array(z.string()).max(3).optional(),
     redirectFrom,
   }).refine(hasImageAlt, missingAlt),
 });
