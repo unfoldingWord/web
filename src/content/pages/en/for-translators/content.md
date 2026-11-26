@@ -35,7 +35,7 @@ sections:
 
       Status: Released – v9
 
-      [Find out more](https://www.unfoldingword.org/open-bible-stories)
+      [Find out more](/open-bible-stories/)
 
       *This work is designed by unfoldingWord® and developed by the [Door43 World Missions Community](https://door43.org/); it is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/).*
   - title: <span id="UBN"></span>unfoldingWord® Bible Notes (UBN)
@@ -44,7 +44,7 @@ sections:
 
       - **Free of copyright and licensing restrictions** (CC BY-SA), permitting the entire global Church to use and build on it without hindrance.
       - **Based on existing work** of excellent pedigree and academic repute.
-      - **Translated** into all the [Gateway Languages](https://www.unfoldingword.org/publications/the-gateway-languages-strategy) of the world, and any other language in which the Church desires to have a study Bible notes.
+      - **Translated** into all the [Gateway Languages](/publications/#TGLS) of the world, and any other language in which the Church desires to have a study Bible notes.
 
       [View source](https://git.door43.org/unfoldingWord/en_ubn)
 
@@ -189,7 +189,7 @@ sections:
     description: |-
       An open-licensed update of the ASV, intended to provide a ‘form-centric’ understanding of the Bible. It increases the translator’s understanding of the lexical and grammatical composition of the underlying text by adhering closely to the word order and structure of the originals.
 
-      The unfoldingWord® Literal Text is intended to be used together with the [unfoldingWord® Simplified Text](https://www.unfoldingword.org/for-translators/content#UST) to provide a more robust view of both the form and function of the original texts.
+      The unfoldingWord® Literal Text is intended to be used together with the [unfoldingWord® Simplified Text](/for-translators/content/#UST) to provide a more robust view of both the form and function of the original texts.
 
       [Click here](https://git.door43.org/unfoldingWord/en_ult/releases/download/v91/en_ult_v91.pdf) to download the PDF (Whole ULT)
 
@@ -204,7 +204,7 @@ sections:
     description: |-
       An open-licensed translation, intended to provide a ‘functional’ understanding of the Bible. It increases the translator’s understanding of the text by translating theological terms as descriptive phrases.
 
-      The unfoldingWord® Simplified Text is intended to be used together with the [unfoldingWord® Literal Text](https://www.unfoldingword.org/for-translators/content#ULT) to provide a more robust view of both the form and function of the original texts.
+      The unfoldingWord® Simplified Text is intended to be used together with the [unfoldingWord® Literal Text](/for-translators/content/#ULT) to provide a more robust view of both the form and function of the original texts.
 
       [Click here](https://git.door43.org/unfoldingWord/en_ust/releases/download/v91/en_ust_v91.pdf) to download the PDF (Whole UST)
 
