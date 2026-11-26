@@ -13,6 +13,7 @@
   "footerNav": "页脚导航",
   "language": "语言",
   "donate": "奉献",
+  "donateNow": "立即奉献",
   "readMore": "阅读更多",
   "readStory": "阅读故事",
   "allStories": "所有故事",
@@ -48,15 +49,17 @@
   "contactFormSent": "谢谢您。您的留言已发送。",
   "contactFormError": "您的留言未能发送。请重试，或致电联系我们。",
   "footer": {
-    "mission": "为完成大使命，unfoldingWord 提供可扩展的策略——包括工具、培训和技术——装备在最少被触及的群体中建立兴旺教会时面临重大障碍的全球领袖。",
+    "missionHeading": "为完成大使命，",
+    "mission": "unfoldingWord 提供可扩展的策略——包括工具、培训和技术——装备在最少被触及的群体中建立兴旺教会时面临重大障碍的全球领袖。",
     "quickLinks": "快速链接",
-    "followUs": "关注我们",
+    "donate": "奉献",
     "thanks": "感谢您的代祷和慷慨支持。我们深深感谢您在这项事工中所发挥的重要作用。",
     "trust": "unfoldingWord® 是一家美国 501(c)(3) 非营利机构，是福音派财务问责委员会（ECFA）的成员，获得了 GuideStar 白金透明度认证，并获得 MinistryWatch 100%“放心奉献”评级。",
     "copyright": "© {year} unfoldingWord。保留所有权利。",
     "privacy": "隐私",
     "terms": "使用条款",
-    "disclosures": "慈善募款信息披露"
+    "disclosures": "慈善募款信息披露",
+    "backToTop": "返回顶部"
   },
   "nav": {
     "whoWeAre": "我们是谁",

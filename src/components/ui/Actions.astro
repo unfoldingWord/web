@@ -1,7 +1,8 @@
 ---
 import { localizeHref } from '../../lib/md';
-import Icon from './Icon.astro';
 
+// A row of buttons. Production buttons have no icons and keep their own
+// width on phones; they wrap with Elementor's 20px widget gap.
 interface Props {
   actions: { label: string; href: string; style?: 'primary' | 'secondary' | 'give' }[];
   locale: string;
@@ -13,11 +14,10 @@ const isExternal = (h: string) => /^https?:\/\//.test(h);
 
 {
   actions.length > 0 && (
-    <div class:list={['flex flex-col gap-3 sm:flex-row sm:flex-wrap', cls]}>
+    <div class:list={['flex flex-wrap items-center gap-5', cls]}>
       {actions.map((a) => (
         <a href={localizeHref(a.href, locale)} class:list={['uw-btn', `uw-btn-${a.style ?? 'primary'}`]} {...(isExternal(a.href) ? { rel: 'noopener' } : {})}>
           {a.label}
-          {a.style !== 'give' && <Icon name="arrow-right" class="size-4.5 rtl:-scale-x-100" />}
         </a>
       ))}
     </div>

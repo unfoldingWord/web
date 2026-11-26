@@ -1,92 +1,43 @@
 ---
-// Language switcher. Every locale links to this page's URL in that locale;
-// where the page has no translation yet the link still works (the fallback
-// page shows the interface in that language and the body in English).
+// Language switcher, rendered as the last item of the header's main menu
+// (Header.astro styles it and its script opens it). Every locale links to
+// this page's URL in that locale; where the page has no translation yet the
+// link still works (the fallback page shows the interface in that language
+// and the body in English).
 //
-// The accessible name contains the visible language name, so voice-control
-// users can say "click English" (WCAG 2.5.3).
+// In the bar layout the item shows a globe and the short code ("EN"); in the
+// menu panel it reads "Language: English". The accessible name always
+// contains the visible text, so voice-control users can say "click EN" or
+// "click Language" (WCAG 2.5.3).
 import { locales, localizePath, ui, byCode } from '../../i18n';
-import Icon from '../ui/Icon.astro';
 
 interface Props {
   locale: string;
   basePath: string;
   translations?: string[];
-  variant?: 'dropdown' | 'list';
 }
-const { locale, basePath, variant = 'dropdown' } = Astro.props;
+const { locale, basePath } = Astro.props;
 const t = ui(locale);
 const current = byCode(locale);
+const ANGLE = 'M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z';
 ---
 
-{
-  variant === 'list' ? (
-    <div>
-      <p class="eyebrow mb-3">{t.language}</p>
-      <ul class="grid grid-cols-2 gap-1">
-        {locales.map((l) => (
-          <li>
-            <a
-              href={localizePath(basePath, l.code)}
-              lang={l.tag}
-              dir={l.dir}
-              hreflang={l.tag}
-              aria-current={l.code === locale ? 'true' : undefined}
-              class="flex min-h-11 items-center rounded-lg px-3 text-ink no-underline hover:bg-mist aria-[current=true]:bg-inspire-50 aria-[current=true]:font-bold aria-[current=true]:text-ocean"
-            >
-              {l.name}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  ) : (
-    <div class="lang-switcher relative">
-      <button type="button" class="inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-sm font-bold text-ocean hover:bg-inspire-50" aria-expanded="false" aria-controls="lang-menu">
-        <Icon name="globe" class="size-4.5" />
-        <span class="sr-only">{t.language}:</span>
-        <span lang={current.tag}>{current.name}</span>
-        <Icon name="chevron-down" class="size-3.5" />
-      </button>
-      <ul id="lang-menu" hidden class="absolute end-0 top-[calc(100%+0.5rem)] z-50 grid max-h-[70vh] w-64 grid-cols-1 overflow-y-auto rounded-card border border-line bg-white p-2 shadow-raised">
-        {locales.map((l) => (
-          <li>
-            <a
-              href={localizePath(basePath, l.code)}
-              lang={l.tag}
-              dir={l.dir}
-              hreflang={l.tag}
-              aria-current={l.code === locale ? 'true' : undefined}
-              class="flex min-h-10 items-center justify-between rounded-lg px-3 text-sm text-ink no-underline hover:bg-mist aria-[current=true]:bg-inspire-50 aria-[current=true]:font-bold aria-[current=true]:text-ocean"
-            >
-              <span>{l.name}</span>
-              <span class="text-xs text-ink-muted" lang="en">{l.english}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-<script>
-  document.querySelectorAll<HTMLElement>('.lang-switcher').forEach((root) => {
-    const btn = root.querySelector<HTMLButtonElement>('button');
-    const menu = root.querySelector<HTMLElement>('ul');
-    if (!btn || !menu) return;
-    const set = (open: boolean) => {
-      btn.setAttribute('aria-expanded', String(open));
-      menu.hidden = !open;
-    };
-    btn.addEventListener('click', () => set(menu.hidden));
-    document.addEventListener('click', (e) => {
-      if (!root.contains(e.target as Node)) set(false);
-    });
-    root.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        set(false);
-        btn.focus();
-      }
-    });
-  });
-</script>
+<li class="nav-item nav-lang">
+  <button type="button" class="nav-top" aria-expanded="false" aria-controls="lang-menu">
+    <svg class="lang-globe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg>
+    <span class="lang-short"><span class="sr-only">{t.language}: </span><span lang="en">{current.code.toUpperCase()}</span><span class="sr-only"> (<span lang={current.tag}>{current.name}</span>)</span></span>
+    <span class="lang-long">{t.language}: <span lang={current.tag}>{current.name}</span></span>
+    <span class="sub-arrow" aria-hidden="true"><svg viewBox="0 0 320 512"><path d={ANGLE} /></svg></span>
+  </button>
+  <ul id="lang-menu" class="nav-sub" hidden>
+    {
+      locales.map((l) => (
+        <li>
+          <a class="nav-sub-link" href={localizePath(basePath, l.code)} lang={l.tag} hreflang={l.tag} aria-current={l.code === locale ? 'true' : undefined}>
+            <span dir={l.dir}>{l.name}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</li>

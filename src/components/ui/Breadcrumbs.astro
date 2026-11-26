@@ -1,7 +1,8 @@
 ---
 import { ui } from '../../i18n';
-import Icon from './Icon.astro';
 
+// Kept from our site (production has none), styled to stay quiet: small
+// site-sans text, Kindle links like production's, "/" separators.
 interface Props {
   items: { name: string; href?: string }[];
   locale: string;
@@ -11,14 +12,14 @@ const { items, locale, onDark = false } = Astro.props;
 const t = ui(locale);
 ---
 
-<nav aria-label={t.breadcrumb} class:list={['text-sm', onDark ? 'text-white/80' : 'text-ink-muted']}>
-  <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+<nav aria-label={t.breadcrumb} class:list={['font-sans text-sm leading-5 font-normal', onDark ? 'text-white' : 'text-ink']}>
+  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
     {
       items.map((it, i) => (
-        <li class="flex items-center gap-1.5">
-          {i > 0 && <Icon name="chevron-right" class="size-3.5 opacity-60 rtl:-scale-x-100" />}
+        <li class="flex items-center gap-2">
+          {i > 0 && <span aria-hidden="true" class="opacity-50">/</span>}
           {it.href && i < items.length - 1 ? (
-            <a href={it.href} class:list={['no-underline hover:underline', onDark && '!text-white/90']}>
+            <a href={it.href} class:list={['font-normal', onDark ? 'text-white hover:text-kindle' : 'text-kindle hover:text-inspire']}>
               {it.name}
             </a>
           ) : (

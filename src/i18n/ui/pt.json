@@ -13,6 +13,7 @@
   "footerNav": "Navegação do rodapé",
   "language": "Idioma",
   "donate": "Doar",
+  "donateNow": "Doar agora",
   "readMore": "Leia mais",
   "readStory": "Leia a história",
   "allStories": "Todas as histórias",
@@ -48,15 +49,17 @@
   "contactFormSent": "Obrigado. Sua mensagem foi enviada.",
   "contactFormError": "Não foi possível enviar sua mensagem. Tente novamente ou ligue para nós.",
   "footer": {
-    "mission": "Para cumprir a Grande Comissão, unfoldingWord oferece estratégias escaláveis — incluindo ferramentas, treinamento e tecnologias — para capacitar líderes globais que enfrentam barreiras significativas para plantar igrejas prósperas entre os menos alcançados.",
+    "missionHeading": "Para cumprir a Grande Comissão,",
+    "mission": "unfoldingWord oferece estratégias escaláveis — incluindo ferramentas, treinamento e tecnologias — para capacitar líderes globais que enfrentam barreiras significativas para plantar igrejas prósperas entre os menos alcançados.",
     "quickLinks": "Links rápidos",
-    "followUs": "Siga-nos",
+    "donate": "Doar",
     "thanks": "Agradecemos suas orações e seu apoio generoso. Valorizamos profundamente o papel vital que você desempenha nesta obra.",
     "trust": "unfoldingWord® é uma organização sem fins lucrativos 501(c)(3), membro do Evangelical Council for Financial Accountability (ECFA), conquistou o Selo Platina de Transparência da GuideStar e possui a classificação de 100% «Give With Confidence» da MinistryWatch.",
     "copyright": "© {year} unfoldingWord. Todos os direitos reservados.",
     "privacy": "Privacidade",
     "terms": "Termos de uso",
-    "disclosures": "Divulgações sobre solicitação de doações beneficentes"
+    "disclosures": "Divulgações sobre solicitação de doações beneficentes",
+    "backToTop": "Voltar ao topo"
   },
   "nav": {
     "whoWeAre": "Quem somos",

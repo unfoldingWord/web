@@ -13,6 +13,7 @@
   "footerNav": "Navigatie in de voettekst",
   "language": "Taal",
   "donate": "Geven",
+  "donateNow": "Geef nu",
   "readMore": "Lees meer",
   "readStory": "Lees het verhaal",
   "allStories": "Alle verhalen",
@@ -48,15 +49,17 @@
   "contactFormSent": "Dank u wel. Uw bericht is verzonden.",
   "contactFormError": "Uw bericht kon niet worden verzonden. Probeer het opnieuw of bel ons.",
   "footer": {
-    "mission": "Om de Grote Opdracht te vervullen, biedt unfoldingWord schaalbare strategieën — waaronder hulpmiddelen, training en technologie — om leiders wereldwijd toe te rusten die op grote obstakels stuiten bij het stichten van bloeiende gemeenten onder de minst bereikte volken.",
+    "missionHeading": "Om de Grote Opdracht te vervullen,",
+    "mission": "biedt unfoldingWord schaalbare strategieën — waaronder hulpmiddelen, training en technologie — om leiders wereldwijd toe te rusten die op grote obstakels stuiten bij het stichten van bloeiende gemeenten onder de minst bereikte volken.",
     "quickLinks": "Snelle links",
-    "followUs": "Volg ons",
+    "donate": "Geven",
     "thanks": "Dank u voor uw gebeden en uw gulle steun. We waarderen de onmisbare rol die u in dit werk speelt ten zeerste.",
     "trust": "unfoldingWord® is een 501(c)(3)-organisatie zonder winstoogmerk, lid van de Evangelical Council for Financial Accountability (ECFA), heeft het GuideStar Platinum Seal of Transparency behaald en heeft de 100% Give With Confidence-beoordeling van MinistryWatch.",
     "copyright": "© {year} unfoldingWord. Alle rechten voorbehouden.",
     "privacy": "Privacy",
     "terms": "Gebruiksvoorwaarden",
-    "disclosures": "Informatie over fondsenwerving"
+    "disclosures": "Informatie over fondsenwerving",
+    "backToTop": "Terug naar boven"
   },
   "nav": {
     "whoWeAre": "Wie we zijn",

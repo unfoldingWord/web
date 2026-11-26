@@ -13,6 +13,7 @@
   "footerNav": "Navigasi bagian bawah halaman",
   "language": "Bahasa",
   "donate": "Berdonasi",
+  "donateNow": "Donasi Sekarang",
   "readMore": "Baca selengkapnya",
   "readStory": "Baca kisahnya",
   "allStories": "Semua kisah",
@@ -48,15 +49,17 @@
   "contactFormSent": "Terima kasih. Pesan Anda telah terkirim.",
   "contactFormError": "Pesan Anda tidak dapat dikirim. Silakan coba lagi, atau hubungi kami melalui telepon.",
   "footer": {
-    "mission": "Untuk menggenapi Amanat Agung, unfoldingWord menyediakan strategi yang dapat dikembangkan—termasuk perangkat, pelatihan, dan teknologi—untuk memperlengkapi para pemimpin global yang menghadapi hambatan besar dalam menanam gereja-gereja yang bertumbuh di antara mereka yang paling sedikit terjangkau.",
+    "missionHeading": "Untuk menggenapi Amanat Agung,",
+    "mission": "unfoldingWord menyediakan strategi yang dapat dikembangkan—termasuk perangkat, pelatihan, dan teknologi—untuk memperlengkapi para pemimpin global yang menghadapi hambatan besar dalam menanam gereja-gereja yang bertumbuh di antara mereka yang paling sedikit terjangkau.",
     "quickLinks": "Tautan cepat",
-    "followUs": "Ikuti kami",
+    "donate": "Berdonasi",
     "thanks": "Terima kasih atas doa dan dukungan Anda yang murah hati. Kami sangat menghargai peran penting Anda dalam pelayanan ini.",
     "trust": "unfoldingWord® adalah organisasi nirlaba 501(c)(3), anggota Evangelical Council for Financial Accountability (ECFA), telah meraih GuideStar Platinum Seal of Transparency, dan memegang peringkat 100% Give With Confidence dari MinistryWatch.",
     "copyright": "© {year} unfoldingWord. Hak cipta dilindungi undang-undang.",
     "privacy": "Privasi",
     "terms": "Ketentuan penggunaan",
-    "disclosures": "Pengungkapan penggalangan dana amal"
+    "disclosures": "Pengungkapan penggalangan dana amal",
+    "backToTop": "Kembali ke atas"
   },
   "nav": {
     "whoWeAre": "Siapa kami",

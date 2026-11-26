@@ -13,6 +13,7 @@
   "footerNav": "Điều hướng chân trang",
   "language": "Ngôn ngữ",
   "donate": "Dâng hiến",
+  "donateNow": "Dâng hiến ngay",
   "readMore": "Đọc thêm",
   "readStory": "Đọc câu chuyện",
   "allStories": "Tất cả câu chuyện",
@@ -48,15 +49,17 @@
   "contactFormSent": "Xin cảm ơn. Lời nhắn của quý vị đã được gửi.",
   "contactFormError": "Không thể gửi lời nhắn của quý vị. Vui lòng thử lại hoặc gọi điện cho chúng tôi.",
   "footer": {
-    "mission": "Để hoàn thành Đại Mạng Lệnh, unfoldingWord cung cấp các chiến lược có thể mở rộng—bao gồm công cụ, đào tạo và công nghệ—nhằm trang bị cho những người lãnh đạo trên toàn cầu đang đối diện những rào cản lớn trong việc thành lập các Hội Thánh phát triển mạnh mẽ giữa những nhóm người ít được tiếp cận nhất.",
+    "missionHeading": "Để hoàn thành Đại Mạng Lệnh,",
+    "mission": "unfoldingWord cung cấp các chiến lược có thể mở rộng—bao gồm công cụ, đào tạo và công nghệ—nhằm trang bị cho những người lãnh đạo trên toàn cầu đang đối diện những rào cản lớn trong việc thành lập các Hội Thánh phát triển mạnh mẽ giữa những nhóm người ít được tiếp cận nhất.",
     "quickLinks": "Liên kết nhanh",
-    "followUs": "Theo dõi chúng tôi",
+    "donate": "Dâng hiến",
     "thanks": "Cảm ơn quý vị đã cầu nguyện và rộng lòng hỗ trợ. Chúng tôi rất trân trọng vai trò thiết yếu của quý vị trong công việc này.",
     "trust": "unfoldingWord® là tổ chức phi lợi nhuận 501(c)(3) tại Hoa Kỳ, là thành viên của Hội đồng Tin Lành về Trách nhiệm Tài chính (ECFA), đã đạt Con dấu Minh bạch Bạch kim của GuideStar và được MinistryWatch xếp hạng 100% “Dâng hiến với sự tin tưởng”.",
     "copyright": "© {year} unfoldingWord. Bảo lưu mọi quyền.",
     "privacy": "Quyền riêng tư",
     "terms": "Điều khoản sử dụng",
-    "disclosures": "Công bố thông tin gây quỹ từ thiện"
+    "disclosures": "Công bố thông tin gây quỹ từ thiện",
+    "backToTop": "Lên đầu trang"
   },
   "nav": {
     "whoWeAre": "Chúng tôi là ai",

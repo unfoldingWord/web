@@ -13,6 +13,7 @@
   "footerNav": "Navigation du pied de page",
   "language": "Langue",
   "donate": "Faire un don",
+  "donateNow": "Faire un don",
   "readMore": "En savoir plus",
   "readStory": "Lire le récit",
   "allStories": "Tous les récits",
@@ -48,15 +49,17 @@
   "contactFormSent": "Merci. Votre message a bien été envoyé.",
   "contactFormError": "Votre message n’a pas pu être envoyé. Veuillez réessayer ou nous appeler.",
   "footer": {
-    "mission": "Pour accomplir le Grand Mandat, unfoldingWord fournit des stratégies évolutives — notamment des outils, des formations et des technologies — afin d’équiper des responsables du monde entier qui font face à des obstacles importants pour implanter des Églises florissantes parmi les peuples les moins atteints.",
+    "missionHeading": "Pour accomplir le Grand Mandat,",
+    "mission": "unfoldingWord fournit des stratégies évolutives — notamment des outils, des formations et des technologies — afin d’équiper des responsables du monde entier qui font face à des obstacles importants pour implanter des Églises florissantes parmi les peuples les moins atteints.",
     "quickLinks": "Liens rapides",
-    "followUs": "Suivez-nous",
+    "donate": "Faire un don",
     "thanks": "Merci pour vos prières et votre généreux soutien. Nous apprécions profondément le rôle essentiel que vous jouez dans cette œuvre.",
     "trust": "unfoldingWord® est un organisme à but non lucratif 501(c)(3), membre de l’Evangelical Council for Financial Accountability (ECFA). Il a obtenu le Sceau Platine de transparence de GuideStar et détient la note de 100 % « Give With Confidence » de MinistryWatch.",
     "copyright": "© {year} unfoldingWord. Tous droits réservés.",
     "privacy": "Confidentialité",
     "terms": "Conditions d’utilisation",
-    "disclosures": "Informations relatives aux sollicitations caritatives"
+    "disclosures": "Informations relatives aux sollicitations caritatives",
+    "backToTop": "Retour en haut"
   },
   "nav": {
     "whoWeAre": "Qui nous sommes",
