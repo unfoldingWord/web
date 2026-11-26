@@ -1,8 +1,17 @@
 ---
 // Text beside an image or video: production's two 490px columns (10px
-// padding each, 20px apart, vertically centered), 4px image corners, no
-// shadow. Stacks at ≤767px in source order, as production does: an image at
-// the start comes first.
+// padding each, 20px apart), 4px image corners, no shadow. As in
+// production's Elementor rows, both columns stretch to the taller one: the
+// text is centered in its column and the image or video sits at the top of
+// its own. The text keeps its last paragraph's 14.4px margin, as Elementor's
+// text widget does. `actionsBelowMedia` puts the buttons centered under the
+// image instead of under the text (bt-servant). Stacks at ≤767px in source
+// order, as production does: an image at the start comes first.
+// `variant: callout` is production's old block-editor row
+// (open-bible-stories): a 1200px box with 48px padding, image 55% and text
+// 45% 55px apart and vertically centered, a 42px light Tech title and 16px
+// text 24px apart; consecutive rows touch, and the first sits 100px under
+// the text before it.
 import type { Block } from '../../content.config';
 import { md, mdInline } from '../../lib/md';
 import Section from '../ui/Section.astro';
@@ -18,10 +27,33 @@ interface Props {
 const { block, locale } = Astro.props;
 const mediaFirst = block.imagePosition === 'start';
 const hasMedia = Boolean(block.video || block.image);
+const actionsUnderMedia = hasMedia && block.actionsBelowMedia;
 ---
 
+{
+  block.variant === 'callout' ? (
+    <section class="uw-callout">
+      <div class="mx-auto flex max-w-[1200px] flex-col gap-6 p-12 min-[782px]:flex-row min-[782px]:items-center min-[782px]:gap-[55px]">
+        {mediaFirst && block.image && (
+          <div class="uw-callout-media">
+            <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="(min-width: 75rem) 577px, 100vw" widths={[390, 577, 780, 1154]} class="block w-full" />
+          </div>
+        )}
+        <div class="uw-callout-text">
+          {block.title && <h2 class="uw-callout-title" set:html={mdInline(block.title)} />}
+          <div class="uw-callout-body" set:html={md(block.body, locale)} />
+          <Actions actions={block.actions} locale={locale} class="mt-6" />
+        </div>
+        {!mediaFirst && block.image && (
+          <div class="uw-callout-media">
+            <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="(min-width: 75rem) 577px, 100vw" widths={[390, 577, 780, 1154]} class="block w-full" />
+          </div>
+        )}
+      </div>
+    </section>
+  ) : (
 <Section background={block.background}>
-  <div class="flex flex-col gap-5 md:flex-row md:items-center">
+  <div class="flex flex-col gap-5 md:flex-row">
     {
       mediaFirst && hasMedia && (
         <div class="p-2.5 md:w-[calc(50%-10px)]">
@@ -30,14 +62,15 @@ const hasMedia = Boolean(block.video || block.image);
           ) : (
             <Picture path={block.image!} alt={block.imageAlt ?? ''} sizes="(min-width: 68rem) 470px, (min-width: 48rem) 45vw, 100vw" class="rounded-media-split" />
           )}
+          {actionsUnderMedia && <Actions actions={block.actions} locale={locale} class="mt-5 justify-center" />}
         </div>
       )
     }
-    <div class:list={['flex flex-col gap-5 p-2.5', hasMedia ? 'md:w-[calc(50%-10px)]' : 'md:w-full']}>
+    <div class:list={['flex flex-col justify-center gap-5 p-2.5', hasMedia ? 'md:w-[calc(50%-10px)]' : 'md:w-full']}>
       {block.title && <h2 class:list={[block.uppercase && 'uppercase']} set:html={mdInline(block.title)} />}
-      <div class="prose [&>:last-child]:mb-0" set:html={md(block.body, locale)} />
+      <div class="prose" set:html={md(block.body, locale)} />
       {block.impact && <p class="uw-impact" set:html={mdInline(block.impact, locale)} />}
-      <Actions actions={block.actions} locale={locale} />
+      {!actionsUnderMedia && <Actions actions={block.actions} locale={locale} />}
     </div>
     {
       !mediaFirst && hasMedia && (
@@ -47,14 +80,27 @@ const hasMedia = Boolean(block.video || block.image);
           ) : (
             <Picture path={block.image!} alt={block.imageAlt ?? ''} sizes="(min-width: 68rem) 470px, (min-width: 48rem) 45vw, 100vw" class="rounded-media-split" />
           )}
+          {actionsUnderMedia && <Actions actions={block.actions} locale={locale} class="mt-5 justify-center" />}
         </div>
       )
     }
   </div>
 </Section>
+  )
+}
 
 <style>
   /* Production's "Impact:" line: Kindle, 17.6/28.16, weight 400. */
-  .uw-impact { color: var(--color-kindle); font-size: var(--text-body); line-height: 1.6; font-weight: 400; margin-top: -6px; }
-  /* (production's heading widget sits 14px under the text, not 20px) */
+  .uw-impact { color: var(--color-kindle); font-size: var(--text-body); line-height: 1.6; font-weight: 400; margin-top: -20px; }
+  /* (production's heading widget sits right under the text's 14.4px margin) */
+
+  /* callout: the first row of a run sits under production's 100px spacer
+     (60px here plus the 40px under the section before it). */
+  .uw-callout:not(.uw-callout + .uw-callout) { padding-top: 60px; }
+  @media (min-width: 782px) {
+    .uw-callout-media { flex: none; width: calc((100% - 55px) * 0.55); }
+    .uw-callout-text { flex: none; width: calc((100% - 55px) * 0.45); }
+  }
+  .uw-callout-title { font-size: 42px; line-height: 1; font-weight: 300; color: var(--color-tech); }
+  .uw-callout-body :global(p) { margin: 24px 0 0; font-size: 1rem; line-height: 1.5; font-weight: 300; color: var(--color-tech); }
 </style>

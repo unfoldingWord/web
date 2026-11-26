@@ -16,6 +16,7 @@ sections:
       *We do not replace the church. We strengthen it from within by building lasting capacity.*
   - type: cards
     columns: 2
+    padding: wide
     background: mist
     items:
       - title: Regional Forums
@@ -24,11 +25,7 @@ sections:
       - title: Global Forums
         body: |-
           **unfoldingWord’s annual Global Church-Centric Bible Translation (CCBT) Forum** is a one-week event designed to empower global CCBT leaders by providing opportunities for connection, fellowship, relationship building, spiritual encouragement, strategic collaboration, program innovation, and building technical expertise in CCBT as we bring the Bible to every nation.
-  - type: video
-    title: 'Catalyzation: Global Forums'
-    provider: vimeo
-    id: '1232153016'
-    hash: da588139f7
+    video: { provider: vimeo, id: '1232153016', hash: da588139f7, title: 'Catalyzation: Global Forums' }
   - type: split
     title: Open Greek New Testament
     body: |-

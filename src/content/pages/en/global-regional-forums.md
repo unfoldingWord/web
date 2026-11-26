@@ -10,6 +10,8 @@ sections:
     image: what-we-do/people-reading-together.jpg
     imageAlt: Three people sitting side by side in chairs near a window, each reading an open book
   - type: prose
+    inset: true
+    textSize: large
     title: Every year, our hearts prepare for something remarkable.
     body: |-
       Church leaders and Bible translators from across Africa, Asia, and the Middle East join us for Global or Regional Church-Centric Bible Translation Forums—a time to worship, learn, train, and equip one another to bring God’s Word to the nations. These men and women serve in places where following Jesus comes with serious persecution, and often where no Western missionary can help.

@@ -1,7 +1,7 @@
 ---
 // A video, as production's Elementor video widget: 600px wide, centered,
 // square corners, with the section heading centered above it (white on an
-// Ocean band, `background: ocean`).
+// Ocean band, `background: ocean`). `heading: ''` shows no heading (obs).
 import type { Block } from '../../content.config';
 import { md, mdInline } from '../../lib/md';
 import { ui } from '../../i18n';
@@ -17,7 +17,7 @@ const { block, locale } = Astro.props;
 ---
 
 <Section background={block.background}>
-  <h2 class="mb-5 text-center" set:html={mdInline(block.heading ?? block.title, locale)} />
+  {block.heading !== '' && <h2 class="mb-5 text-center" set:html={mdInline(block.heading ?? block.title, locale)} />}
   <div class="mx-auto max-w-[600px]">
     <VideoFrame provider={block.provider} id={block.id} hash={block.hash} title={block.title} />
     {block.caption && <p class="mt-3 text-center">{block.caption}</p>}

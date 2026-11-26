@@ -10,6 +10,7 @@ sections:
     image: what-we-do/tools-banner.jpg
     imageAlt: Close-up of hands typing on a backlit keyboard glowing blue in a dark room
   - type: prose
+    inset: true
     title: Critical Tools for Church-Centric Bible Translation
     body: |-
       Church networks can only take ownership of Bible translation if they have tools they can actually use—offline when the internet fails, on a phone when there is no laptop, and grounded in trusted resources rather than guesswork. translationCore, the BT Servant app, Foundations BT, and the tCMobile app help modern-day disciplers understand, translate, and check translations for the unreached people groups they are discipling.

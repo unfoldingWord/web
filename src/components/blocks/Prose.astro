@@ -2,7 +2,8 @@
 // Long text: production's heading + text-editor widgets in one 1000px
 // section. `align: center` centers it (about "Our Strategy", core values);
 // `divider` adds the 50×3 Kindle rule under a Tech title, as production does
-// on centered section headings.
+// on centered section headings. `inset` adds production's 10px column
+// padding; `textSize: large` is the 19.36px text some pages use.
 import type { Block } from '../../content.config';
 import { md, mdInline } from '../../lib/md';
 import Section from '../ui/Section.astro';
@@ -23,7 +24,7 @@ const box = block.width === 'narrow' && block.background === 'ocean';
 ---
 
 <Section background={box ? 'white' : block.background} class={strip ? '!py-5' : undefined}>
-  <div class:list={['flex flex-col gap-5', center && 'items-center text-center', block.width === 'narrow' && 'mx-auto max-w-[800px]', box && 'on-dark bg-ocean p-5']}>
+  <div class:list={['flex flex-col gap-5', center && 'items-center text-center', block.width === 'narrow' && 'mx-auto max-w-[800px]', box && 'on-dark bg-ocean p-5', block.inset && 'p-2.5']}>
     {block.icon && <Icon name={block.icon} class="size-[42px] text-white" />}
     {
       block.title && (
@@ -33,7 +34,7 @@ const box = block.width === 'narrow' && block.background === 'ocean';
         </>
       )
     }
-    {!strip && <div class:list={['prose w-full', center && 'uw-prose-center', block.serif && 'prose-serif']} set:html={md(block.body, locale)} />}
+    {!strip && <div class:list={['prose w-full', center && 'uw-prose-center', block.serif && 'prose-serif', block.textSize === 'large' && 'uw-prose-large']} set:html={md(block.body, locale)} />}
     <Actions actions={block.actions ?? []} locale={locale} class="uw-donate w-full justify-center" />
   </div>
 </Section>
@@ -48,4 +49,5 @@ const box = block.width === 'narrow' && block.background === 'ocean';
   .uw-prose-center :global(:where(h3:first-child)) { margin-bottom: 20px; }
   .uw-prose-center :global(:where(p + h3)) { margin-top: calc(20px + 0.9rem); }
   .uw-prose-center :global(:where(ul, ol)) { text-align: start; display: inline-block; }
+  .uw-prose-large { font-size: var(--text-story); line-height: 1.5; }
 </style>

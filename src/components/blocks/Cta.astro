@@ -4,6 +4,12 @@
 //   ocean / mist / kindle — centered heading, text and buttons on that surface
 //   split — Ocean band: 28px heading and buttons on the left, photo on the
 //           right (about)
+//   legacy — production's old block-editor page hero (for-translators,
+//           open-bible-stories): a full-width Ocean or black band holding a
+//           920px column at the start: 42px/500 white title, an optional
+//           24px subtitle, then the photo at its own proportions. With a
+//           subtitle the band is at least 640px tall and the text has 36px
+//           padding; without, 460px and none — production's two heroes.
 import type { Block } from '../../content.config';
 import { md, mdInline } from '../../lib/md';
 import Section from '../ui/Section.astro';
@@ -16,11 +22,24 @@ interface Props {
   locale: string;
 }
 const { block, locale } = Astro.props;
-const background = ({ ocean: 'ocean', split: 'ocean', mist: 'mist', kindle: 'kindle' } as const)[block.variant];
+const background = ({ ocean: 'ocean', split: 'ocean', mist: 'mist', kindle: 'kindle', legacy: 'ocean' } as const)[block.variant];
+const sub = Boolean(block.body);
 ---
 
 {
-  block.variant === 'split' ? (
+  block.variant === 'legacy' ? (
+    <section class:list={['uw-legacy-hero', sub ? 'pt-16' : 'pt-10']}>
+      <div class:list={['uw-legacy-band flow-root', block.background === 'black' ? 'bg-[#000]' : 'bg-ocean', sub ? 'min-h-[640px]' : 'min-h-[460px]']}>
+        <div class="max-w-[920px]">
+          <div class:list={[sub && 'py-9']}>
+            <h2 class="uw-legacy-title" set:html={mdInline(block.title, locale)} />
+            {block.body && <p class="uw-legacy-sub" set:html={mdInline(block.body, locale)} />}
+          </div>
+          {block.image && <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="(min-width: 57.5rem) 920px, 100vw" widths={[390, 780, 920, 1400]} class="block w-full" />}
+        </div>
+      </div>
+    </section>
+  ) : block.variant === 'split' ? (
     <Section background="ocean" class="uw-cta-split">
       <div class="flex flex-col gap-5 md:flex-row md:items-center">
         <div class:list={['flex flex-col gap-5 p-2.5', block.image ? 'md:w-[calc(50%-10px)]' : 'md:w-full']}>
@@ -51,4 +70,11 @@ const background = ({ ocean: 'ocean', split: 'ocean', mist: 'mist', kindle: 'kin
   :global(.uw-donate .uw-btn-give) { height: 56px; padding: 12px 16px; font-family: Arial, 'Helvetica Neue', Helvetica, var(--font-sans); font-size: 14px; line-height: 16.8px; font-weight: 600; }
   /* Production (about): h3 28px / 44px, weight 700, white. */
   .uw-cta-split-title { font-size: var(--text-h3); line-height: 44px; font-weight: 700; color: #fff; }
+  /* legacy: production's block-editor hero. The 60px under the band plus the
+     next section's 40px is production's 100px spacer. */
+  .uw-legacy-hero { padding-bottom: 60px; }
+  .uw-legacy-title { margin-top: 26px; font-size: 42px; line-height: 50.4px; font-weight: 500; color: #fff; text-align: center; }
+  .uw-legacy-sub { margin-top: 36px; font-size: 24px; line-height: 28.8px; font-weight: 500; color: var(--color-tech); text-align: center; }
+  /* (WordPress's "luminous vivid amber" link color, as production shows it) */
+  .uw-legacy-sub :global(a) { color: #fcb900; font-weight: 700; }
 </style>

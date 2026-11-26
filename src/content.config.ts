@@ -89,6 +89,11 @@ const prose = z.object({
   actions: z.array(action).optional(),
   // A white icon above the title (wbwn "Prayers" box), from ui/Icon.astro
   icon: z.string().optional(),
+  // inset — production's 10px column padding around heading and text
+  // (tools-technology, global-regional-forums)
+  inset: z.boolean().optional(),
+  // large — 19.36/29.04 text (global-regional-forums)
+  textSize: z.enum(['normal', 'large']).optional(),
 });
 
 const cards = z.object({
@@ -102,8 +107,12 @@ const cards = z.object({
   // plain — production's columns: no card, Inspire title, a Learn More button
   // centered — plain and centered (for-translators)
   // outlined — 1px Kindle border, centered title, outline + filled buttons (wbwn)
-  variant: z.enum(['card', 'plain', 'centered', 'outlined']).optional(),
-  align: z.enum(['start', 'center']).optional(),
+  // legacy — production's old block-editor columns with dark pill buttons:
+  //   with images, three centered tiles in a 1200px row (for-translators);
+  //   without, start-aligned columns (open-bible-stories)
+  variant: z.enum(['card', 'plain', 'centered', 'outlined', 'legacy']).optional(),
+  // heading — only the section heading centered (for-translators/content principles)
+  align: z.enum(['start', 'center', 'heading']).optional(),
   items: z.array(
     z.object({
       title: z.string(),
@@ -123,6 +132,11 @@ const cards = z.object({
       logoAlt: z.string().optional(),
     }).refine(hasImageAlt, missingAlt).refine((i) => !i.logo || Boolean(i.logoAlt?.trim()), { message: 'A logo needs logoAlt text', path: ['logoAlt'] }),
   ),
+  // wide — production's 20px column padding with no gap between columns; the
+  // text keeps its last paragraph's margin (catalyzation, for-translators/content)
+  padding: z.enum(['normal', 'wide']).optional(),
+  // A 600px video centered under the columns, in the same band (catalyzation)
+  video: z.object({ provider: z.enum(['youtube', 'vimeo']), id: z.string().regex(/^[\w-]+$/, 'Just the video id, e.g. 1232161297 — put an unlisted Vimeo video\'s h= value in `hash`'), hash: z.string().optional(), title: z.string() }).optional(),
 });
 
 const split = z.object({
@@ -139,6 +153,12 @@ const split = z.object({
   // Kindle "Impact:" line under the text (overview programs)
   impact: z.string().optional(),
   uppercase: z.boolean().optional(),
+  // The buttons centered under the image instead of under the text (bt-servant)
+  actionsBelowMedia: z.boolean().optional(),
+  // callout — production's old block-editor rows: image 55% and text 45% in
+  //   a 1200px box with 48px padding, 42px light Tech title, 16px text
+  //   (open-bible-stories)
+  variant: z.enum(['default', 'callout']).optional(),
 }).refine(hasImageAlt, missingAlt);
 
 const stats = z.object({
@@ -165,11 +185,16 @@ const cta = z.object({
   title: z.string(),
   body: z.string().optional(),
   // split — Ocean band, heading and button beside a photo (about)
-  variant: z.enum(['ocean', 'kindle', 'mist', 'split']).default('ocean'),
-  actions: z.array(action).min(1),
+  // legacy — production's old block-editor page hero: a full-width band with
+  //   a 920px column of a 42px white title, an optional subtitle and the
+  //   photo (for-translators, open-bible-stories); no buttons
+  variant: z.enum(['ocean', 'kindle', 'mist', 'split', 'legacy']).default('ocean'),
+  actions: z.array(action).default([]),
   image: imagePath.optional(),
   imageAlt: z.string().optional(),
-}).refine(hasImageAlt, missingAlt);
+  // legacy: the band's color
+  background: z.enum(['ocean', 'black']).optional(),
+}).refine(hasImageAlt, missingAlt).refine((c) => c.variant === 'legacy' || c.actions.length > 0, { message: 'A call to action needs at least one button in actions', path: ['actions'] });
 
 const video = z.object({
   type: z.literal('video'),
@@ -268,6 +293,10 @@ const resources = z.object({
   variant: z.enum(['cards', 'list', 'accordion']).optional(),
   // accordion: larger text and padding inside the boxes (publications)
   textSize: z.enum(['normal', 'large']).optional(),
+  // accordion: production's 10px column padding around the groups (publications)
+  inset: z.boolean().optional(),
+  // accordion: end each item with the CC BY-SA badge (for-translators)
+  licenseBadge: z.boolean().optional(),
   background: z.enum(['white', 'mist', 'ocean']).optional(),
   items: z.array(
     z.object({

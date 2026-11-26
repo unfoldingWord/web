@@ -8,29 +8,30 @@ sections:
     title: For Translators
     image: for-translators/content.jpg
     imageAlt: Rows of old leather-bound books on dark library shelves beside a wooden ladder
-  - type: prose
-    title: For Translators
-    background: ocean
-    align: center
-    body: unfoldingWord collaborates with church networks to create biblical **[content](/for-translators/content/)**, technology **[tools](/for-translators/tools/)** and translation **[training](/for-translators/training/)**.
+  - type: cta
+    variant: legacy
+    title: FOR TRANSLATORS
+    body: unfoldingWord collaborates with church networks to create biblical **[content](/for-translators/content/)**, technology **[tools](/for-translators/tools/)**, and translation **[training](/for-translators/training/)**.
+    image: for-translators/content.jpg
+    imageAlt: Rows of old leather-bound books on dark library shelves beside a wooden ladder
   - type: cards
     columns: 3
-    variant: centered
+    variant: legacy
     items:
       - title: Content
-        body: '[Open-licensed biblical content resources](/for-translators/content/) made available under the terms of a [Creative Commons Attribution Share-Alike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0).'
+        body: '[Open-licensed biblical content resources](/for-translators/content/) made available under the terms of a [Creative Commons Attribution Share-Alike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0)'
         href: /for-translators/content/
         linkLabel: Get Started
         image: for-translators/content.jpg
         imageAlt: Rows of old leather-bound books on dark library shelves beside a wooden ladder
       - title: Tools
-        body: Open-source [technology tools](/for-translators/tools/).
+        body: Open-source [technology tools](/for-translators/tools/)<br><br><br>
         href: /for-translators/tools/
         linkLabel: Get Started
         image: for-translators/tools.jpg
         imageAlt: An open silver laptop seen from above on a plain white surface
       - title: Training
-        body: '[Training resources](/for-translators/training/) made available under a [Creative Commons Attribution-ShareAlike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0).'
+        body: '[Training resources](/for-translators/training/) made available under a [Creative Commons Attribution-ShareAlike 4.0 License](https://creativecommons.org/licenses/by-sa/4.0)<br><br>'
         href: /for-translators/training/
         linkLabel: Get Started
         image: for-translators/training.jpg
