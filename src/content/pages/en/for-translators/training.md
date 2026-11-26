@@ -25,7 +25,7 @@ sections:
   items:
   - title: <span id="UGC"></span>unfoldingWord® Grammatical Concepts (UGC)
     description: |-
-      A basic explanation of grammatical concepts which applies across languages. It enables users of the [UGG](https://www.unfoldingword.org/for-translators/content#UGG), [UHG](https://www.unfoldingword.org/for-translators/content#UHG)and [UAG](https://www.unfoldingword.org/for-translators/content#UAG) who have not had formal training in biblical languages to understand the more basic grammatical concepts.
+      A basic explanation of grammatical concepts which applies across languages. It enables users of the [UGG](/for-translators/content/#UGG), [UHG](/for-translators/content/#UHG) and [UAG](/for-translators/content/#UAG) who have not had formal training in biblical languages to understand the more basic grammatical concepts.
 
       [View source](https://git.door43.org/unfoldingWord/en_ugc)
 
