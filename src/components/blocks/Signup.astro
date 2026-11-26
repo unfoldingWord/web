@@ -11,7 +11,11 @@
 //
 // variant `card` (default) is production's /pray/ sign-up: the title (Inspire)
 // and text in a 485px start column, the form in an Inspire box (20px padding,
-// 4px corners) filling the rest; stacked on phones.
+// 4px corners) filling the rest. Side by side only from 1057px (the tablet
+// breakpoint), where the form still gets 432px (455px at 1440px, as on
+// production) — enough for its 161px button and the two-up name row, which
+// needs 400px. Below that the two stack and the form takes the full width,
+// since the embed hides horizontal overflow and would clip a narrower form.
 //
 // variant `band` is production's home sign-up: a Cultivate band with the
 // title, text and form in the start half and a photo in the end half
@@ -57,8 +61,8 @@ const src = `${SITE.mediaBase}/embeds/virtuous-signup.html?form=${encodeURICompo
     </section>
   ) : (
     <Section background={block.background} id={block.id}>
-      <div class="flex flex-col gap-5 md:flex-row md:items-start">
-        <div class="p-[10px] md:w-[485px] md:shrink-0">
+      <div class="flex flex-col gap-5 tablet:flex-row tablet:items-start">
+        <div class="p-[10px] tablet:w-[485px] tablet:shrink-0">
           {block.title && <h2 class="text-wrap" set:html={mdInline(block.title, locale)} />}
           {block.body && <div class="prose mt-5" set:html={md(block.body, locale)} />}
         </div>

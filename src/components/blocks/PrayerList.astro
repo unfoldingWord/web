@@ -77,16 +77,26 @@ const headingId = `prayer-list-${Math.random().toString(36).slice(2, 8)}`;
     const rtl = getComputedStyle(viewport).direction === 'rtl';
     let pages = 1;
     const perView = () => Math.max(1, Math.round(viewport.clientWidth / (slides[0]?.getBoundingClientRect().width || viewport.clientWidth)));
-    const current = () => Math.round(Math.abs(viewport.scrollLeft) / viewport.clientWidth);
+    // Where each page starts: the offset of its first card (gaps included),
+    // capped at the furthest the viewport can scroll (a short last page).
+    const pageOffset = (p: number) => {
+      const max = viewport.scrollWidth - viewport.clientWidth;
+      const s = slides[Math.min(p * perView(), slides.length - 1)];
+      return Math.min(max, Math.abs(s.offsetLeft - slides[0].offsetLeft));
+    };
+    // The page whose start is nearest the scroll position, always 0..pages-1.
+    const current = () => {
+      const x = Math.abs(viewport.scrollLeft);
+      let best = 0;
+      for (let p = 1; p < pages; p++) if (Math.abs(pageOffset(p) - x) < Math.abs(pageOffset(best) - x)) best = p;
+      return best;
+    };
     const go = (i: number) => {
-      const page = (i + pages) % pages;
-      const target = Math.min(page * perView(), slides.length - 1);
-      const s = slides[target];
-      const x = s.offsetLeft - slides[0].offsetLeft;
-      viewport.scrollTo({ left: rtl ? -Math.abs(x) : x, behavior: 'smooth' });
+      const x = pageOffset((i + pages) % pages);
+      viewport.scrollTo({ left: rtl ? -x : x, behavior: 'smooth' });
     };
     const paint = () => {
-      const c = Math.min(current(), pages - 1);
+      const c = current();
       [...dots.children].forEach((d, i) => d.setAttribute('aria-current', String(i === c)));
     };
     const build = () => {
