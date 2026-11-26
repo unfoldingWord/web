@@ -21,6 +21,7 @@ import { md, mdInline } from '../../lib/md';
 import Picture from '../ui/Picture.astro';
 import Actions from '../ui/Actions.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
+import VirtuousListener from '../ui/VirtuousListener.astro';
 import { SITE } from '../../lib/site';
 import { img } from '../../lib/images';
 
@@ -44,6 +45,7 @@ const bannerTiles = bannerImage ? Math.max(1, Math.ceil(2560 / bannerImage.width
 
 {
   variant === 'banner' ? (
+    <>
     <section class:list={['uw-banner on-dark relative isolate flex min-h-[200px] items-center justify-center overflow-hidden px-10 py-10 text-center', !image && 'uw-banner-plain']}>
       {image && block.imagePosition && (
         <div class="absolute inset-0 -z-20">
@@ -78,6 +80,8 @@ const bannerTiles = bannerImage ? Math.max(1, Math.ceil(2560 / bannerImage.width
         {block.subtitle && <p class="text-h3 font-normal text-white" set:html={mdInline(block.subtitle, locale)} />}
       </div>
     </section>
+    {crumbs && <Breadcrumbs items={crumbs} locale={locale} phone />}
+    </>
   ) : variant === 'feature' ? (
     <section class="pt-[var(--spacing-section)]">
       <div class="on-dark min-h-[320px] bg-black">
@@ -101,6 +105,7 @@ const bannerTiles = bannerImage ? Math.max(1, Math.ceil(2560 / bannerImage.width
       </div>
     </section>
   ) : variant === 'project' ? (
+    <>
     <section class:list={['uw-banner on-dark relative isolate overflow-hidden px-10 md:py-10', block.contentPosition === 'end' ? 'pt-[70px] pb-10' : 'pt-10 pb-[70px]']}>
       {/* On phones production stacks the empty photo half too, which adds
           30px on its side: above the text when the text is the end half. */}
@@ -130,15 +135,18 @@ const bannerTiles = bannerImage ? Math.max(1, Math.ceil(2560 / bannerImage.width
             <div id="give-form" class="uw-project-donate">
               <Actions actions={actions} locale={locale} class="uw-donate uw-donate-fallback" />
               {block.donateFormId && (
-                <div class="uw-virtuous-donate" data-form-id={block.donateFormId}>
+                <div class="uw-virtuous-donate" data-virtuous-embed data-form-id={block.donateFormId}>
                   <script is:inline src={SITE.virtuousEmbedSrc} data-rd={block.donateFormId} data-organizationId={SITE.virtuousOrgId} data-type="form" defer></script>
                 </div>
               )}
+              {block.donateFormId && <VirtuousListener />}
             </div>
           )}
         </div>
       </div>
     </section>
+    {crumbs && <Breadcrumbs items={crumbs} locale={locale} phone />}
+    </>
   ) : variant === 'split' ? (
     <section class="bg-mist">
       <div class="container-page grid items-center gap-8 py-10 md:grid-cols-2 lg:gap-14 lg:py-16">
@@ -197,7 +205,8 @@ const bannerTiles = bannerImage ? Math.max(1, Math.ceil(2560 / bannerImage.width
   /* No photo: production's band shows the overlay over white. */
   .uw-banner-plain { background-color: #fff; }
   /* Breadcrumbs sit in the band's top padding so the title stays centered;
-     on phones there is no room, so they hide (the JSON-LD trail remains). */
+     on phones there is no room, so they hide there and a compact row of
+     parent links follows the band instead (Breadcrumbs `phone`). */
   @media (max-width: 767px) { .uw-banner-crumbs { display: none; } }
 </style>
 

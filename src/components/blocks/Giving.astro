@@ -16,19 +16,16 @@
 // Ocean "Contact Us With Questions" band follows. The landing header and
 // footer come from Base.astro (template: giving).
 //
-// Analytics: GTM sees the page view and the form's own events. Whether the
-// Virtuous embed reports a COMPLETED gift back to this page is not yet
-// verified (docs/analytics.md, "Donation conversions"). Until it is, the
-// listener below pushes a bare `virtuous_message` event to the dataLayer when
-// a frame embedded in the giving form posts a message. The payload is not
-// forwarded (it can hold donor or payment details), so the completion signal
-// still has to be found with a test gift (docs/ab-testing.md, step 4).
+// Analytics: GTM sees the page view and the form's own events, and
+// VirtuousListener (shared with the project hero's Donate form) pushes a bare
+// `virtuous_message` event when a frame in the form posts a message.
 import type { Block } from '../../content.config';
 import { SITE } from '../../lib/site';
 import { md, mdInline } from '../../lib/md';
 import { ui, fmt } from '../../i18n';
 import Picture from '../ui/Picture.astro';
 import Icon from '../ui/Icon.astro';
+import VirtuousListener from '../ui/VirtuousListener.astro';
 
 type Giving = Extract<Block, { type: 'giving' }>;
 interface Props {
@@ -59,7 +56,7 @@ const fallbackLink = `<a href="${SITE.givingFallbackUrl}">give.unfoldingword.org
     </div>
 
     <div class="giving-form">
-      <div class="virtuous-form" data-form-id={block.formId}>
+      <div class="virtuous-form" data-virtuous-embed data-form-id={block.formId}>
         <p class="virtuous-loading">{t.givingFormLoading}</p>
         <script is:inline src={SITE.virtuousEmbedSrc} data-rd={block.formId} data-organizationId={SITE.virtuousOrgId} data-type="form" defer></script>
         <noscript><p set:html={fmt(t.givingFormFallback, { link: fallbackLink })} /></noscript>
@@ -278,21 +275,12 @@ const fallbackLink = `<a href="${SITE.givingFallbackUrl}">give.unfoldingword.org
   .giving-contact-body :global(strong) { font-weight: 300; }
 </style>
 
+<VirtuousListener />
+
 <script is:inline>
   (function () {
-    if (window.__uwVirtuousListener) return;
-    window.__uwVirtuousListener = true;
-    window.addEventListener('message', function (e) {
-      // Only acknowledge a message from an iframe actually embedded in the
-      // giving form. Its payload can include donor or payment details.
-      var frames = document.querySelectorAll('.virtuous-form iframe[src]');
-      var fromForm = Array.from(frames).some(function (frame) {
-        return frame.contentWindow === e.source && new URL(frame.src).origin === e.origin && e.origin !== 'null';
-      });
-      if (!fromForm) return;
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'virtuous_message' });
-    });
+    if (window.__uwGivingLayout) return;
+    window.__uwGivingLayout = true;
     // Hide the loading line once Virtuous has inserted its form.
     var obs = new MutationObserver(function () {
       document.querySelectorAll('.virtuous-form').forEach(function (el) {

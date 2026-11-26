@@ -3,30 +3,48 @@ import { ui } from '../../i18n';
 
 // Kept from our site (production has none), styled to stay quiet: small
 // site-sans text, Kindle links like production's, "/" separators.
+//
+// `phone`: the row for phones, placed right under a banner whose own
+// breadcrumbs (in its top padding) hide below 768px. It shows the parent
+// links only, on one quiet line; the current page, already the banner's
+// title, stays for screen readers. From 768px up it is not shown, so the
+// desktop look is unchanged and only one trail is ever in the page.
 interface Props {
   items: { name: string; href?: string }[];
   locale: string;
   onDark?: boolean;
+  phone?: boolean;
 }
-const { items, locale, onDark = false } = Astro.props;
+const { items, locale, onDark = false, phone = false } = Astro.props;
 const t = ui(locale);
+const show = !phone || items.length > 1;
+// Only the phone row gets a wrapper; the banner trail keeps its markup.
+const Wrap = phone ? 'div' : Fragment;
+const wrapProps = phone ? { class: 'container-page pt-2.5 md:hidden' } : {};
 ---
 
-<nav aria-label={t.breadcrumb} class:list={['font-sans text-sm leading-5 font-normal', onDark ? 'text-white' : 'text-ink']}>
-  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
-    {
-      items.map((it, i) => (
-        <li class="flex items-center gap-2">
-          {i > 0 && <span aria-hidden="true" class="opacity-50">/</span>}
-          {it.href && i < items.length - 1 ? (
-            <a href={it.href} class:list={['font-normal', onDark ? 'text-white hover:text-kindle' : 'text-kindle hover:text-inspire']}>
-              {it.name}
-            </a>
-          ) : (
-            <span aria-current="page">{it.name}</span>
-          )}
-        </li>
-      ))
-    }
-  </ol>
-</nav>
+{
+  show && (
+    <Wrap {...wrapProps}>
+      <nav aria-label={t.breadcrumb} class:list={['font-sans text-sm leading-5 font-normal', onDark ? 'text-white' : 'text-ink']}>
+        <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
+          {items.map((it, i) => {
+            const current = !(it.href && i < items.length - 1);
+            return (
+              <li class:list={['flex items-center gap-2', phone && current && 'sr-only']}>
+                {i > 0 && <span aria-hidden="true" class="opacity-50">/</span>}
+                {current ? (
+                  <span aria-current="page">{it.name}</span>
+                ) : (
+                  <a href={it.href} class:list={['font-normal', onDark ? 'text-white hover:text-kindle' : 'text-kindle hover:text-inspire']}>
+                    {it.name}
+                  </a>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
+    </Wrap>
+  )
+}

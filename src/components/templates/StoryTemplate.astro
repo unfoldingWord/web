@@ -72,6 +72,7 @@ const jsonLd = [
       </div>
       <h1 class="post-title">{d.title}</h1>
     </header>
+    <Breadcrumbs items={crumbs} locale={route.locale} phone />
     <div class="container-page py-[var(--spacing-section)]">
       <div class:list={['prose post-body', d.largeText && 'post-body-large']}>
         <LocalizedBody locale={route.locale}><Content /></LocalizedBody>
@@ -113,7 +114,8 @@ const jsonLd = [
     text-transform: uppercase;
   }
   /* Our breadcrumbs, kept small in the banner's top padding so the title
-     stays centered; on phones there is no room (the JSON-LD trail remains). */
+     stays centered; on phones there is no room, so a compact row of parent
+     links follows the banner instead (Breadcrumbs `phone`). */
   .post-crumbs { position: absolute; inset-inline: 0; top: 10px; }
   @media (max-width: 767px) { .post-crumbs { display: none; } }
 

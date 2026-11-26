@@ -56,6 +56,8 @@ const jsonLd = [
     </div>
     <h1 class="sweet-title uppercase">{d.book}</h1>
   </section>
+  {/* Phones: the banner trail hides, so this row keeps the way back to the book index. */}
+  <Breadcrumbs items={crumbs} locale={route.locale} phone />
 
   <div class="container-page py-10">
     {entry.body?.trim() && <div class="prose mb-5"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>}
@@ -116,7 +118,8 @@ const jsonLd = [
   .sweet-banner { background-repeat: repeat; background-position: 0 0; background-size: 820px auto; }
   /* Banner title: production's h2 32/32/700 white, centered. Ours stays an h1. */
   .sweet-title { font-size: var(--text-h2); line-height: 1; font-weight: 700; color: #fff; margin: 0; text-wrap: wrap; }
-  /* Breadcrumbs sit in the banner's top padding; no room on phones. */
+  /* Breadcrumbs sit in the banner's top padding; no room on phones, where
+     the compact row under the banner takes their place. */
   @media (max-width: 767px) { .sweet-crumbs { display: none; } }
 
   /* Chapter links: quiet, production's 900-weight Kindle links. One 14/20

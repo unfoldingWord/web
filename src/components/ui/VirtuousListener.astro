@@ -1,0 +1,34 @@
+---
+// Analytics for every Virtuous giving form on a page: the full form of the
+// giving block (Giving.astro) and the "Donate Now" form of a project hero
+// (Hero.astro, `donateFormId`, the wbwn country pages). Each embed's
+// container carries `data-virtuous-embed`.
+//
+// Whether the Virtuous embed reports a COMPLETED gift back to this page is
+// not yet verified (docs/analytics.md, "Donation conversions"). Until it is,
+// this pushes a bare `virtuous_message` event to the dataLayer when a frame
+// embedded in a giving form posts a message. The payload is not forwarded
+// (it can hold donor or payment details), so the completion signal still has
+// to be found with a test gift (docs/ab-testing.md, step 4).
+//
+// Include it next to each embed; the script registers its listener once per
+// page however many times it is included.
+---
+
+<script is:inline>
+  (function () {
+    if (window.__uwVirtuousListener) return;
+    window.__uwVirtuousListener = true;
+    window.addEventListener('message', function (e) {
+      // Only acknowledge a message from an iframe actually embedded in a
+      // giving form, sent from that frame's own origin.
+      var frames = document.querySelectorAll('[data-virtuous-embed] iframe[src]');
+      var fromForm = Array.from(frames).some(function (frame) {
+        return frame.contentWindow === e.source && new URL(frame.src).origin === e.origin && e.origin !== 'null';
+      });
+      if (!fromForm) return;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'virtuous_message' });
+    });
+  })();
+</script>
