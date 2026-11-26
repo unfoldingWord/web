@@ -1,0 +1,153 @@
+---
+// The reduced footer of production's give/* landing pages: on Tech, the
+// three accountability seals, the 501(c)3 line, the copyright and address
+// lines and the reversed logo, all centered in an 800px column. Our legal
+// links (Privacy, Terms, Disclosures) follow the address in the same quiet
+// 14px style (decision 2).
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-horizontal-reversed.png';
+import ecfa from '../../assets/images/brand/ecfa-seal.png';
+import ministrywatch from '../../assets/images/brand/ministrywatch-2026.jpg';
+import { SITE } from '../../lib/site';
+import { ui, localizePath, fmt } from '../../i18n';
+
+interface Props {
+  locale: string;
+}
+const { locale } = Astro.props;
+const t = ui(locale);
+const footer = t.footer as Record<string, string>;
+const year = new Date().getUTCFullYear();
+const badgeImages = { ecfa, ministrywatch } as const;
+const legal = [
+  { href: '/privacy/', label: footer.privacy },
+  { href: '/terms-of-use/', label: footer.terms },
+  { href: '/charitable-solicitation-disclosures/', label: footer.disclosures },
+];
+---
+
+<footer class="lf mt-auto">
+  <div class="lf-inner">
+    <ul class="lf-badges">
+      {
+        SITE.trust.map((b) => (
+          <li class={`lf-badge lf-badge-${b.name.toLowerCase()}`}>
+            <a href={b.href} target="_blank" rel="noopener" title={b.label}>
+              {b.badge in badgeImages ? (
+                <Image src={badgeImages[b.badge as keyof typeof badgeImages]} alt={b.alt} widths={[108, 216]} sizes="108px" loading="lazy" />
+              ) : (
+                <img src={b.badge} alt={b.alt} width="108" height="108" loading="lazy" decoding="async" />
+              )}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="lf-trust">{footer.trustLanding}</p>
+    <p class="lf-small lf-copy">{fmt(footer.copyright, { year })}</p>
+    <p class="lf-small lf-address"><bdi dir="ltr">{SITE.addressDisplay}</bdi> | <bdi dir="ltr">{SITE.telephoneDisplay}</bdi></p>
+    <p class="lf-small lf-legal">
+      {legal.map((l, i) => (
+        <>
+          {i > 0 && <span aria-hidden="true"> | </span>}
+          <a href={localizePath(l.href, locale)}>{l.label}</a>
+        </>
+      ))}
+    </p>
+    <a href={localizePath('/', locale)} class="lf-logo-link" aria-label={`${t.siteName} — ${t.home}`}>
+      <Image src={logo} alt="unfoldingWord" widths={[250, 500]} sizes="250px" loading="lazy" class="lf-logo" />
+    </a>
+  </div>
+</footer>
+
+<style>
+  /* Production values (give-1440.json, section d6e5484). */
+  .lf {
+    background: var(--color-tech);
+    color: #fff;
+    padding: 40px;
+  }
+  .lf-inner {
+    max-width: 800px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .lf p {
+    margin: 0;
+  }
+  .lf a {
+    color: #fff;
+    font-weight: 400;
+    text-decoration: none;
+  }
+  .lf-badges {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .lf-badge {
+    flex: 0 1 108px;
+    min-width: 0;
+  }
+  .lf-badge a {
+    display: block;
+    transition: opacity 0.3s;
+  }
+  .lf-badge a:hover {
+    opacity: 0.9;
+  }
+  .lf-badge img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .lf-trust {
+    margin-block-start: 37px !important;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 300;
+  }
+  .lf-small {
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: 400;
+  }
+  .lf-copy {
+    margin-block-start: 44.4px !important; /* 14.4 paragraph margin + 30 gap */
+  }
+  .lf-address {
+    margin-block-start: 10px !important;
+  }
+  .lf-legal {
+    margin-block-start: 10px !important;
+  }
+  .lf-legal a:hover {
+    text-decoration: underline;
+  }
+  .lf-logo-link {
+    display: block;
+    margin-block-start: 30px;
+  }
+  .lf-logo {
+    display: block;
+    width: 250px;
+    max-width: 100%;
+    height: auto;
+  }
+  :global(html[data-script='nastaliq']) .lf,
+  :global(html[data-script='myanmar']) .lf {
+    line-height: 1.9;
+  }
+  :global(html[data-script='nastaliq']) .lf-small,
+  :global(html[data-script='myanmar']) .lf-small {
+    line-height: 1.9;
+  }
+</style>

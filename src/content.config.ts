@@ -200,7 +200,19 @@ const giving = z.object({
   formId: z.string().regex(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/, 'A Virtuous form id is the data-rd value from the embed code, like 16dec80a-ad5e-470e-ae62-4ed13821ccca'),
   image: imagePath.optional(),
   imageAlt: z.string().optional(),
-}).refine(hasImageAlt, missingAlt);
+  // landing — the give/* landing pages: the title is the page's h1, and the
+  // page gets the reduced landing header and footer (template: giving).
+  variant: z.enum(['section', 'landing']).optional(),
+  // compact — the 16px system-font paragraph some landing pages use.
+  textStyle: z.enum(['default', 'compact']).optional(),
+  // landing: a line under the logo in the landing header ("Thank you! …"),
+  // and a partner logo beside ours (GivingTuesday).
+  tagline: z.string().optional(),
+  partnerLogo: imagePath.optional(),
+  partnerLogoAlt: z.string().optional(),
+  // landing: the Ocean "Contact Us With Questions" band under the form.
+  contact: z.object({ title: z.string(), body: z.string() }).optional(),
+}).refine(hasImageAlt, missingAlt).refine((g) => !g.partnerLogo || Boolean(g.partnerLogoAlt?.trim()), { message: 'A partner logo needs partnerLogoAlt text', path: ['partnerLogoAlt'] });
 
 const faq = z.object({
   type: z.literal('faq'),
