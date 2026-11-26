@@ -73,6 +73,7 @@ const jsonLd = [
       </div>
       <h1 class="post-title">{d.title}</h1>
     </header>
+    <Breadcrumbs items={crumbs} locale={route.locale} phone />
     <div class="container-page py-[var(--spacing-section)]">
       <div class="prose post-body"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
       <p class="prayer-month"><time datetime={d.date.toISOString()}>{formatMonth(d.date, route.locale)}</time></p>
@@ -106,6 +107,7 @@ const jsonLd = [
     color: #fff;
     text-transform: uppercase;
   }
+  /* On phones the banner trail hides; a compact row follows the banner. */
   .post-crumbs { position: absolute; inset-inline: 0; top: 10px; }
   @media (max-width: 767px) { .post-crumbs { display: none; } }
   .post-body { max-width: none; }
