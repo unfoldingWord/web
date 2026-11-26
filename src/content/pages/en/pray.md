@@ -4,7 +4,7 @@ description: Join thousands of believers praying for the Church-Centric Bible Tr
 ogImage: pray/banner.jpg
 sections:
   - type: hero
-    variant: photo
+    variant: banner
     title: Pray
     image: pray/banner.jpg
     imageAlt: An outstretched hand brushing ripe golden wheat in a field at sunset

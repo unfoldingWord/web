@@ -1,7 +1,7 @@
 ---
 title: 'translationCore: Engine of a Bible translation revolution'
 description: I thought only experts with PhDs could translate the Bible. How can we know church-based translations are trustworthy?
-date: 2026-01-09
+date: 2026-01-09T12:00:00Z
 region: worldwide
 image: stories/translationcore-engine-of-a-bible-translation-revolution.jpg
 imageAlt: Over the shoulder of a man typing on a laptop that shows the translationCore software

@@ -304,6 +304,7 @@ date: 2026-10-02
 region: middle-east     # optional
 image: prayer/checkpoints.jpg   # optional
 imageAlt: …
+related: [travel-in-south-sudan]   # optional: up to 3 slugs listed under "Related"
 redirectFrom: []
 ---
 Prayer request text.

@@ -1,7 +1,7 @@
 ---
 title: Amazing Grace
 description: Grace heard the name of Jesus through a closed door while an Open Bible Stories team worked. Now she shares his love daily, and 80 people have followed Christ.
-date: 2025-10-31
+date: 2025-10-31T12:00:00Z
 region: middle-east
 image: stories/from-street-beggar-to-bold-evangelist.jpg
 imageAlt: A woman in a black top, seen from behind, raises both arms toward a blue sky beside a house and open fields

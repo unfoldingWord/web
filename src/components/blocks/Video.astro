@@ -17,7 +17,7 @@ const { block, locale } = Astro.props;
 ---
 
 <Section background={block.background}>
-  <h2 class="mb-5 text-center" set:html={mdInline(block.heading ?? block.title, locale)} />
+  <h2 class="mb-5 text-center text-wrap" set:html={mdInline(block.heading ?? block.title, locale)} />
   <div class="mx-auto max-w-[600px]">
     <VideoFrame provider={block.provider} id={block.id} hash={block.hash} title={block.title} />
     {block.caption && <p class="mt-3 text-center">{block.caption}</p>}

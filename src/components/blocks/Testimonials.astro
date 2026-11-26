@@ -18,7 +18,7 @@ const { block, locale } = Astro.props;
 
 <section class="testimonials py-[var(--spacing-section)]">
   <div class="container-page">
-    {block.title && <h2 class="mb-5 text-center" set:html={mdInline(block.title, locale)} />}
+    {block.title && <h2 class="mb-5 text-center text-wrap" set:html={mdInline(block.title, locale)} />}
     <Carousel label={block.title ?? 'Testimonials'} locale={locale} perView={1} arrows={false} dots="dark">
       {
         block.items.map((item) => (

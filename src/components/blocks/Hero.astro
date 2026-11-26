@@ -34,7 +34,7 @@ const lines = [title, ...(block.lines ?? [])];
     <section class:list={['uw-banner on-dark relative isolate flex min-h-[200px] items-center justify-center overflow-hidden px-10 py-10 text-center', !image && 'uw-banner-plain']}>
       {image && (
         <div class="absolute inset-0 -z-20">
-          <Picture path={image} alt={imageAlt ?? ''} eager sizes="100vw" fill class="h-full w-full object-cover" />
+          <Picture path={image} alt={imageAlt ?? ''} eager sizes="100vw" fill class:list={['h-full w-full object-cover', block.imagePosition === 'top' && 'object-top', block.imagePosition === 'bottom' && 'object-bottom']} />
         </div>
       )}
       <div class="absolute inset-0 -z-10 bg-ocean/50" aria-hidden="true" />

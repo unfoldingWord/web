@@ -63,12 +63,12 @@ const PER_PAGE = 9;
           )}
         </div>
       ) : (
-        block.title && <h2 class="mb-5 text-center" set:html={mdInline(block.title, locale)} />
+        block.title && <h2 class="mb-5 text-center text-wrap" set:html={mdInline(block.title, locale)} />
       )
     }
     {
       block.showFilter && regions.length > 1 && (
-        <div class="story-filter mb-10 flex flex-wrap justify-center gap-2.5" role="group" aria-label={t.filterByRegion}>
+        <div class="story-filter mb-[25px] flex gap-2 overflow-x-auto md:flex-wrap md:justify-center md:overflow-visible" role="group" aria-label={t.filterByRegion}>
           <button type="button" data-region="" aria-pressed="true" class="filter-chip">{t.allRegions}</button>
           {regions.map((r) => (
             <button type="button" data-region={r} aria-pressed="false" class="filter-chip">
@@ -112,15 +112,20 @@ const PER_PAGE = 9;
 </Section>
 
 <style>
+  /* Region filter (ours only): small and quiet, one row above the list
+     (sideways-scrolling on phones, so it never pushes the stories down). */
+  .story-filter { scrollbar-width: none; }
+  .story-filter::-webkit-scrollbar { display: none; }
   .filter-chip {
-    min-height: 39px;
-    padding: 8px 16px;
+    flex: none;
+    min-height: 28px;
+    padding: 6px 12px;
     border: 1px solid var(--color-kindle);
     border-radius: var(--radius-button);
     background: #fff;
     color: var(--color-kindle);
     font-family: var(--font-heading);
-    font-size: var(--text-button);
+    font-size: 13px;
     line-height: 1;
     font-weight: 900;
     white-space: nowrap;

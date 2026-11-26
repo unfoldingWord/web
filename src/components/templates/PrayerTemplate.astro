@@ -1,7 +1,8 @@
 ---
 // A prayer request, laid out like production: the page-title banner (title
 // in white capitals over a 50% Ocean overlay), the request in the 1000px
-// column, its month centered underneath, then three related requests.
+// column, its month centered underneath, then (when `related` names them)
+// up to three related requests.
 import { render, getCollection, type CollectionEntry } from 'astro:content';
 import { SITE } from '../../lib/site';
 import { webPageNode, breadcrumbNode, articleNode } from '../../lib/jsonld';
@@ -25,18 +26,22 @@ const { Content } = await render(entry);
 const url = new URL(route.path, SITE.url).href;
 const regions = t.regions as Record<string, string>;
 
-// Related: the three newest other requests (one per slug, in this locale
-// when translated), like production's Jetpack list.
+// Related: the requests named in `related` (one per slug, in this locale
+// when translated), like production's Jetpack list, which most production
+// requests do not show. A translation without its own list uses English's.
 const bySlug = new Map<string, CollectionEntry<'prayer'>>();
+const own = splitId(entry.id).rest;
+let englishRelated: string[] | undefined;
 for (const p of await getCollection('prayer')) {
   const { locale: l, rest } = splitId(p.id);
-  if (rest === splitId(entry.id).rest) continue;
+  if (l === 'en' && rest === own) englishRelated = p.data.related;
   if (l === 'en' && !bySlug.has(rest)) bySlug.set(rest, p);
   if (l === route.locale) bySlug.set(rest, p);
 }
-const related = [...bySlug.entries()]
-  .sort(([, a], [, b]) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 3)
+const relatedSlugs = d.related ?? englishRelated ?? [];
+const related = relatedSlugs
+  .filter((slug) => slug !== own && bySlug.has(slug))
+  .map((slug) => [slug, bySlug.get(slug)!] as const)
   .map(([slug, p]) => ({
     title: p.data.title,
     href: localizePath(basePathFor('prayer', slug), route.locale),

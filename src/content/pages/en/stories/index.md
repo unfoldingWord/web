@@ -5,9 +5,10 @@ redirectFrom: [/stories-from-the-field/]
 schemaType: CollectionPage
 sections:
   - type: hero
-    variant: photo
+    variant: banner
     title: Stories from the Field
     image: stories/banner-stories-from-the-field.jpg
+    imagePosition: top
     imageAlt: A smiling woman in a patterned headscarf hugs a smiling young girl with curly hair
   - type: storyList
     layout: rows
