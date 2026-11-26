@@ -1,10 +1,16 @@
 ---
-// One Sweet Publishing book: every illustration, grouped by chapter.
+// One Sweet Publishing book, laid out like production: the page-title banner
+// (the book's cover illustration under a 50% Ocean overlay, uppercase
+// title), then every illustration as one centered flow of 115×85 thumbnails
+// (a 3px white frame around each, 5px apart), each opening the original
+// JPEG in a new tab, then a "related" row of the next three books.
 //
-// Phones must never download the ~1.5 MB originals just to browse: the grid
-// shows 480 px thumbnails (lazy-loaded), each opens the 1280 px web version,
-// and the original JPEG is a separate download link. Images come from R2
-// (src/lib/sweet.ts), not from this repository.
+// Kept from our site (production has none): breadcrumbs in the banner, the
+// chapter jump links above the thumbnails (each chapter's first thumbnail is
+// its anchor) and the Creative Commons credit line.
+//
+// The grid loads 480 px thumbnails lazily, never the ~1.5 MB originals.
+// Images come from R2 (src/lib/sweet.ts), not from this repository.
 import { render, getCollection, type CollectionEntry } from 'astro:content';
 import { SITE } from '../../lib/site';
 import { webPageNode, breadcrumbNode } from '../../lib/jsonld';
@@ -14,7 +20,6 @@ import { basePathFor, splitId, type Route } from '../../lib/routes';
 import LocalizedBody from '../ui/LocalizedBody.astro';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
-import Icon from '../ui/Icon.astro';
 
 interface Props {
   route: Route;
@@ -26,84 +31,108 @@ const d = entry.data;
 const t = ui(route.locale);
 const { Content } = await render(entry);
 const url = new URL(route.path, SITE.url).href;
-const total = d.chapters.reduce((n, c) => n + c.images.length, 0);
 const books = (await getCollection('sweet')).filter((b) => splitId(b.id).locale === 'en').sort((a, b) => a.data.order - b.data.order);
 const idx = books.findIndex((b) => splitId(b.id).rest === splitId(entry.id).rest);
-const prev = books[idx - 1];
-const next = books[idx + 1];
+// Production's Jetpack "Related" shows the next three books.
+const related = [1, 2, 3].map((n) => books[(idx + n) % books.length]).filter((b) => b && b !== books[idx]);
 const bookHref = (b: (typeof books)[number]) => localizePath(basePathFor('sweet', splitId(b.id).rest), route.locale);
+const countOf = (b: (typeof books)[number]) => b.data.chapters.reduce((n, c) => n + c.images.length, 0);
 const first = d.chapters[0]?.images[0];
+const cover = d.cover ?? first;
 const slug = (c: string) => `ch-${c.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 const chapterTitle = (c: string) => (/[a-z]/i.test(c) ? c : `${d.book} ${c}`);
+const lang = byCode(route.locale).tag;
 const jsonLd = [
-  webPageNode({ url, title: d.title, description: d.description, lang: route.locale, type: 'CollectionPage', image: first ? sweetImageUrl(first, 'web') : undefined, breadcrumbId: `${url}#breadcrumb` }),
+  webPageNode({ url, title: d.title, description: d.description, lang: route.locale, type: 'CollectionPage', image: cover ? sweetImageUrl(cover, 'web') : undefined, breadcrumbId: `${url}#breadcrumb` }),
   breadcrumbNode(url, crumbs.map((c) => ({ name: c.name, url: new URL(c.href ?? route.path, SITE.url).href }))),
 ];
 ---
 
-<Base locale={route.locale} basePath={route.basePath} title={d.title} description={d.description} ogImage={first ? sweetImageUrl(first, 'web') : undefined} jsonLd={jsonLd} translations={route.translations} fallback={route.fallback} noindex={route.noindex} pageType="sweet-publishing">
-  <section class="bg-mist">
-    <div class="container-page py-10 lg:py-14">
-      <div class="mb-5"><Breadcrumbs items={crumbs} locale={route.locale} /></div>
-      <p class="eyebrow mb-3">Sweet Publishing</p>
-      <h1>{d.book}</h1>
-      <p class="mt-3 text-ink-muted">{fmt(t.imagesCount, { count: total })}</p>
-      {entry.body?.trim() && <div class="prose mt-6"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>}
-      <p class="mt-4 max-w-3xl text-sm text-ink-muted" set:html={t.sweetLicense} />
-      {
-        d.chapters.length > 1 && (
-          <nav class="mt-8" aria-label={t.jumpToChapter}>
-            <p class="mb-2 text-sm font-bold">{t.jumpToChapter}</p>
-            <ul class="flex flex-wrap gap-2">
-              {d.chapters.map((c) => (
-                <li>
-                  <a href={`#${slug(c.chapter)}`} class="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-line bg-white px-3 text-sm font-bold text-ocean no-underline hover:border-ocean">
-                    {c.chapter}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        )
-      }
+<Base locale={route.locale} basePath={route.basePath} title={d.title} description={d.description} ogImage={cover ? sweetImageUrl(cover, 'web') : undefined} jsonLd={jsonLd} translations={route.translations} fallback={route.fallback} noindex={route.noindex} pageType="sweet-publishing">
+  <section class="uw-banner sweet-banner on-dark relative isolate flex min-h-[200px] items-center justify-center overflow-hidden px-10 py-10 text-center" style={cover ? `background-image:url(${sweetImageUrl(cover, 'web')})` : undefined}>
+    <div class="absolute inset-0 -z-10 bg-ocean/50" aria-hidden="true" />
+    <div class="sweet-crumbs absolute inset-x-0 top-2.5">
+      <div class="container-page text-start"><Breadcrumbs items={crumbs} locale={route.locale} onDark /></div>
     </div>
+    <h1 class="sweet-title uppercase">{d.book}</h1>
   </section>
 
-  <div class="container-page py-10 lg:py-14">
+  <div class="container-page py-10">
+    {entry.body?.trim() && <div class="prose mb-5"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>}
     {
-      d.chapters.map((c) => (
-        <section id={slug(c.chapter)} class="mb-12 scroll-mt-24" aria-labelledby={`${slug(c.chapter)}-h`}>
-          <h2 id={`${slug(c.chapter)}-h`} class="mb-5 text-h3">{chapterTitle(c.chapter)}</h2>
-          <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
-            {c.images.map((name) => {
-              const p = sweetParts(name);
-              const label = `${chapterTitle(c.chapter)}, ${p.frame}`;
-              return (
-                <li>
-                  <figure class="group">
-                    <a href={sweetImageUrl(name, 'web')} class="block overflow-hidden rounded-media bg-mist">
-                      <img src={sweetImageUrl(name, 'thumb')} lang={byCode(route.locale).tag} alt={fmt(t.sweetIllustration, { label })} width="480" height="320" loading="lazy" decoding="async" class="aspect-[3/2] w-full object-cover transition group-hover:scale-[1.03]" />
-                    </a>
-                    <figcaption class="mt-1.5 flex items-center justify-between gap-2 text-xs text-ink-muted">
-                      <span>{name}</span>
-                      <a href={sweetImageUrl(name, 'jpg')} download class="inline-flex min-h-8 items-center gap-1 font-bold" title={t.downloadOriginal}>
-                        <Icon name="download" class="size-3.5" />
-                        <span class="sr-only">{t.downloadOriginal}: {label}</span>
-                      </a>
-                    </figcaption>
-                  </figure>
-                </li>
-              );
-            })}
+      d.chapters.length > 1 && (
+        <nav class="sweet-chapters mb-5 text-center" aria-label={t.jumpToChapter}>
+          <span class="me-2">{t.jumpToChapter}:</span>
+          <ul class="inline">
+            {d.chapters.map((c) => (
+              <li class="inline">
+                <a href={`#${slug(c.chapter)}`} class="inline-block min-w-6 px-1">{c.chapter}</a>
+              </li>
+            ))}
           </ul>
-        </section>
-      ))
+        </nav>
+      )
     }
 
-    <nav class="mt-6 flex flex-wrap justify-between gap-4 border-t border-line pt-8">
-      {prev ? <a href={bookHref(prev)} class="uw-btn uw-btn-secondary"><Icon name="arrow-right" class="size-4 rotate-180 rtl:rotate-0" />{prev.data.book}</a> : <span />}
-      <a href={localizePath('/sweet-publishing/', route.locale)} class="uw-btn uw-btn-secondary" lang={byCode(route.locale).tag}>{t.sweetIndexTitle}</a>
-      {next ? <a href={bookHref(next)} class="uw-btn uw-btn-secondary">{next.data.book}<Icon name="arrow-right" class="size-4 rtl:-scale-x-100" /></a> : <span />}
-    </nav>
+    <ul class="flex flex-wrap justify-center gap-x-[5px] gap-y-[7px]">
+      {
+        d.chapters.flatMap((c) =>
+          c.images.map((name, i) => {
+            const label = `${chapterTitle(c.chapter)}, ${sweetParts(name).frame}`;
+            return (
+              <li id={i === 0 && d.chapters.length > 1 ? slug(c.chapter) : undefined} class="scroll-mt-24">
+                <a href={sweetImageUrl(name, 'jpg')} target="_blank" rel="noopener" class="sweet-thumb block">
+                  <img src={sweetImageUrl(name, 'thumb')} lang={lang} alt={fmt(t.sweetIllustration, { label })} width="109" height="79" loading="lazy" decoding="async" class="block h-[79px] w-[109px] object-cover" />
+                </a>
+              </li>
+            );
+          }),
+        )
+      }
+    </ul>
+
+    <div class="sweet-related">
+      <h2 class="sweet-related-title"><a href={localizePath('/sweet-publishing/', route.locale)} lang={lang}>{t.sweetIndexTitle}</a></h2>
+      <ul class="grid gap-x-0 gap-y-3.5 md:grid-cols-3">
+        {
+          related.map((b) => (
+            <li class="sweet-related-item">
+              <a href={bookHref(b)}>{b.data.book}</a>
+              <span class="block">{fmt(t.imagesCount, { count: countOf(b) })}</span>
+              <span class="block">{b.data.testament === 'ot' ? t.oldTestament : t.newTestament}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="sweet-license" set:html={t.sweetLicense} />
+    </div>
   </div>
 </Base>
+
+<style>
+  /* Production shows the cover at its natural size (about 820px wide), tiled
+     from the top-left corner, under the 50% Ocean overlay. */
+  .sweet-banner { background-repeat: repeat; background-position: 0 0; background-size: 820px auto; }
+  /* Banner title: production's h2 32/32/700 white, centered. Ours stays an h1. */
+  .sweet-title { font-size: var(--text-h2); line-height: 1; font-weight: 700; color: #fff; margin: 0; text-wrap: wrap; }
+  /* Breadcrumbs sit in the banner's top padding; no room on phones. */
+  @media (max-width: 767px) { .sweet-crumbs { display: none; } }
+
+  /* Chapter links: quiet, production's 900-weight Kindle links. */
+  .sweet-chapters { font-size: 0.9375rem; line-height: 1.7; color: var(--color-tech); }
+  .sweet-chapters a { font-weight: 900; }
+
+  /* Thumbnail: production's 115×85 files carry a 3px white frame. */
+  .sweet-thumb { padding: 3px; background: #fff; }
+
+  /* Jetpack "Related": 12px bold headline under a short rule, then three
+     14/20 columns (title link, then two quiet lines). */
+  .sweet-related { margin-top: 61px; margin-bottom: 18px; }
+  .sweet-related-title { display: inline-block; margin: 0 0 12px; padding-top: 12px; border-top: 1px solid var(--color-rule); font-size: 12px; line-height: 14.4px; font-weight: 700; font-style: italic; color: var(--color-tech); }
+  .sweet-related-title a { color: inherit; font-weight: 700; }
+  .sweet-related-title a:hover { color: var(--color-link-hover); }
+  .sweet-related-item { font-size: 14px; line-height: 20px; font-weight: 300; color: var(--color-ink-muted); padding-inline-end: 20px; }
+  .sweet-related-item a { font-weight: 400; }
+  .sweet-license { margin-top: 20px; font-size: 14px; line-height: 20px; font-weight: 300; color: var(--color-ink-muted); }
+  .sweet-license :global(a) { font-weight: 400; }
+</style>

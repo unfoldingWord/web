@@ -4,6 +4,7 @@ description: 370 Sweet Publishing illustrations of Genesis, free to download and
 book: Genesis
 order: 1
 testament: ot
+cover: 01_Ge_01_06_RG
 chapters:
   - chapter: '1'
     images:

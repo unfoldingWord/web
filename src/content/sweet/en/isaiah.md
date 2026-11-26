@@ -4,6 +4,7 @@ description: 5 Sweet Publishing illustrations of Isaiah, free to download and us
 book: Isaiah
 order: 23
 testament: ot
+cover: 23_Is_38_01_RG
 chapters:
   - chapter: '7'
     images:

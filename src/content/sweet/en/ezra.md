@@ -4,6 +4,7 @@ description: 10 Sweet Publishing illustrations of Ezra, free to download and use
 book: Ezra
 order: 15
 testament: ot
+cover: 15_Ezr_10_03_RG
 chapters:
   - chapter: '1'
     images:

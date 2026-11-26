@@ -4,6 +4,7 @@ description: 287 Sweet Publishing illustrations of Matthew, free to download and
 book: Matthew
 order: 40
 testament: nt
+cover: 40_Mt_03_08_RG
 chapters:
   - chapter: '1'
     images:

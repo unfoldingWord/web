@@ -4,6 +4,7 @@ description: 11 Sweet Publishing illustrations of Jeremiah, free to download and
 book: Jeremiah
 order: 24
 testament: ot
+cover: 24_Jer_36_02_RG
 chapters:
   - chapter: '27'
     images:

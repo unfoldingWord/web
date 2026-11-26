@@ -1,6 +1,6 @@
 ---
 name: "Grant Ailie"
-role: "OT ULT and UST Editor and Translation Note Writer"
+role: "OT ULT & UST Editor & Translation Note Writer"
 groups: [staff]
 order: 20
 photo: people/grant-ailie.jpg

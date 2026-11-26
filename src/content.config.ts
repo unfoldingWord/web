@@ -219,6 +219,8 @@ const faq = z.object({
   title: z.string().optional(),
   intro: z.string().optional(),
   items: z.array(z.object({ q: z.string(), a: z.string() })),
+  // Production opens the first question on load.
+  openFirst: z.boolean().optional(),
 });
 
 const peopleBlock = z.object({
@@ -226,7 +228,9 @@ const peopleBlock = z.object({
   title: z.string().optional(),
   intro: z.string().optional(),
   group: z.string(),
-  layout: z.enum(['grid', 'list']).default('grid'),
+  // board: two columns of photo-beside-text cards with a "Read More" bio
+  // dialog (leadership); team: four columns of photo, name and role (our-team).
+  layout: z.enum(['grid', 'list', 'board', 'team']).default('grid'),
 });
 
 const storyList = z.object({
@@ -290,6 +294,7 @@ const steps = z.object({
 const gallery = z.object({
   type: z.literal('gallery'),
   title: z.string().optional(),
+  intro: z.string().optional(),
   images: z.array(z.object({ src: imagePath, alt: z.string().trim().min(1), caption: z.string().optional() })),
 });
 
@@ -466,8 +471,14 @@ const people = defineCollection({
     photo: imagePath.optional(),
     photoAlt: z.string().optional(),
     bio: z.string().optional(),
+    // Short teaser shown on the board card before "Read More" (leadership).
+    summary: z.string().optional(),
+    // A different portrait for the board card, when the leadership page uses one.
+    boardPhoto: imagePath.optional(),
+    boardPhotoAlt: z.string().optional(),
     translationStatus,
-  }).refine((p) => !p.photo || Boolean(p.photoAlt?.trim()), { message: 'A photo needs descriptive photoAlt text', path: ['photoAlt'] }),
+  }).refine((p) => !p.photo || Boolean(p.photoAlt?.trim()), { message: 'A photo needs descriptive photoAlt text', path: ['photoAlt'] })
+    .refine((p) => !p.boardPhoto || Boolean(p.boardPhotoAlt?.trim()), { message: 'A boardPhoto needs descriptive boardPhotoAlt text', path: ['boardPhotoAlt'] }),
 });
 
 const sweet = defineCollection({
@@ -481,6 +492,9 @@ const sweet = defineCollection({
     // are their file names without extension, in display order, grouped by
     // chapter.
     chapters: z.array(z.object({ chapter: z.string(), images: z.array(z.string()) })),
+    // The illustration behind the page-title banner and on the book's card
+    // (a file name from `chapters`). Defaults to the first image.
+    cover: z.string().optional(),
     redirectFrom,
   }),
 });

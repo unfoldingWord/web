@@ -4,6 +4,7 @@ description: 34 Sweet Publishing illustrations of Ruth, free to download and use
 book: Ruth
 order: 8
 testament: ot
+cover: 08_Ru_02_01_RG
 chapters:
   - chapter: '1'
     images:
