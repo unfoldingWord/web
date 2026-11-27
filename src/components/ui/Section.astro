@@ -1,24 +1,30 @@
 ---
-// A full-width band with consistent vertical rhythm. `background` picks one
-// of the three surfaces every block can sit on.
+// A full-width band with production's rhythm: 40px padding top and bottom,
+// content in the 1000px column with 40px gutters. `background` picks one of
+// the surfaces production uses: white, an Inspire tint (`mist` = 12%,
+// `tint-light` = 7%), solid Ocean or Cultivate, or a Kindle tint.
 interface Props {
-  background?: 'white' | 'mist' | 'ocean' | 'kindle';
+  background?: 'white' | 'mist' | 'tint' | 'tint-light' | 'ocean' | 'cultivate' | 'kindle';
   width?: 'page' | 'prose';
   id?: string;
   class?: string;
+  /** Kept for existing content: production uses one section padding everywhere. */
   tight?: boolean;
   labelledby?: string;
 }
-const { background = 'white', width = 'page', id, class: cls, tight = false, labelledby } = Astro.props;
+const { background = 'white', width = 'page', id, class: cls, labelledby } = Astro.props;
 const bg = {
   white: 'bg-white',
-  mist: 'bg-mist',
+  mist: 'bg-tint',
+  tint: 'bg-tint',
+  'tint-light': 'bg-tint-light',
   ocean: 'bg-ocean on-dark',
-  kindle: 'bg-kindle-50',
+  cultivate: 'bg-cultivate',
+  kindle: 'bg-kindle-tint',
 }[background];
 ---
 
-<section id={id} aria-labelledby={labelledby} class:list={[bg, tight ? 'py-10 lg:py-14' : 'py-[var(--spacing-section)]', cls]}>
+<section id={id} aria-labelledby={labelledby} class:list={[bg, 'py-[var(--spacing-section)]', cls]}>
   <div class={width === 'prose' ? 'container-prose' : 'container-page'}>
     <slot />
   </div>

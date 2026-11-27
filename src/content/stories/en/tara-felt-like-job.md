@@ -7,6 +7,8 @@ image: stories/tara-felt-like-job.jpg
 imageAlt: A smiling woman in a pink, white and navy headscarf hugs a smiling young girl outdoors
 sensitive: true
 redirectFrom: [/persian/tara-felt-like-job/]
+category: Persian
+related: [new-believers-in-iran, when-jeremiah-first-heard-that-his-chadian-church-planting, hundreds-of-iranians-introduced-to-christ]
 ---
 Tara’s first experience with the Bible in her language was with the book of Job. Up to that point, her life had been so difficult, she said, “It felt like I had written it. It felt like they were my words. I had lost everything.”
 

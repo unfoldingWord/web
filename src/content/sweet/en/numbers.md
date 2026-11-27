@@ -4,6 +4,7 @@ description: 23 Sweet Publishing illustrations of Numbers, free to download and 
 book: Numbers
 order: 4
 testament: ot
+cover: 04_Nu_13_07_RG
 chapters:
   - chapter: '12'
     images:

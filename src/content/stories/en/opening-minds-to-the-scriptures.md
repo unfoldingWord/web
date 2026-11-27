@@ -7,8 +7,10 @@ region: africa
 image: stories/opening-minds-to-the-scriptures.jpg
 imageAlt: A smiling girl in a red embroidered dress claps her hands among a gathering of women and children
 redirectFrom: [/tools/opening-minds-to-the-scriptures/]
+category: Africa
+related: [hundreds-of-iranians-introduced-to-christ, hope-in-harrowing-times, all-27-new-testament-book-packages-complete]
 ---
-"Wow," said the pastor and translator. "I've studied this passage for years in the national language, but I never really understood it until I read it like this in my language! Thank you!"
+"Wow," said the pastor/translator. "I've studied this passage for years in the national language, but I never really understood it until I read it like this in my language! Thank you!"
 
 Every time we interview someone newly involved in Church-Centric Bible Translation using the tools we provide, we hear the same story: The translation Book Packages for each book of the Bible open up their understanding of God's Word in ways they never dreamed of. Tears of gratitude often follow.
 

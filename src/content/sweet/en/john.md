@@ -4,6 +4,7 @@ description: 125 Sweet Publishing illustrations of John, free to download and us
 book: John
 order: 43
 testament: nt
+cover: 43_Jn_13_07_RG
 chapters:
   - chapter: '1'
     images:

@@ -4,6 +4,7 @@ description: 22 Sweet Publishing illustrations of 1 Chronicles, free to download
 book: 1 Chronicles
 order: 13
 testament: ot
+cover: 13_1Ch_19_06_RG
 chapters:
   - chapter: '10'
     images:

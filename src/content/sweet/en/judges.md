@@ -4,6 +4,7 @@ description: 70 Sweet Publishing illustrations of Judges, free to download and u
 book: Judges
 order: 7
 testament: ot
+cover: 07_Ju_14_07_RG
 chapters:
   - chapter: '1'
     images:

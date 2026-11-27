@@ -4,6 +4,7 @@ description: 12 Sweet Publishing illustrations of Revelation, free to download a
 book: Revelation
 order: 66
 testament: nt
+cover: 66_Re_21_04_RG
 chapters:
   - chapter: '1'
     images:

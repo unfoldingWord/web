@@ -4,6 +4,7 @@ description: 28 Sweet Publishing illustrations of Job, free to download and use 
 book: Job
 order: 18
 testament: ot
+cover: 18_Jb_02_06_RG
 chapters:
   - chapter: '1'
     images:

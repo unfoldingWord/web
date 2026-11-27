@@ -1,25 +1,73 @@
 ---
 import { localizeHref } from '../../lib/md';
-import Icon from './Icon.astro';
+import { SITE } from '../../lib/site';
+import VirtuousListener from './VirtuousListener.astro';
 
+// A row of buttons. Production buttons have no icons and keep their own
+// width on phones; they wrap with Elementor's 20px widget gap.
+//
+// An action with a `formId` is a campaign's Donate button: production puts
+// Virtuous's embed snippet there, which draws Virtuous's own "Donate Now"
+// button and opens that form in a modal. We do the same, and keep our
+// look-alike link (to `href`) until Virtuous's button is there, and wherever
+// the form cannot load (unregistered preview domains, no script).
 interface Props {
-  actions: { label: string; href: string; style?: 'primary' | 'secondary' | 'give' }[];
+  actions: { label: string; href: string; style?: 'primary' | 'secondary' | 'give'; formId?: string }[];
   locale: string;
   class?: string;
 }
 const { actions, locale, class: cls } = Astro.props;
 const isExternal = (h: string) => /^https?:\/\//.test(h);
+const hasForm = actions.some((a) => a.formId);
 ---
 
 {
   actions.length > 0 && (
-    <div class:list={['flex flex-col gap-3 sm:flex-row sm:flex-wrap', cls]}>
-      {actions.map((a) => (
-        <a href={localizeHref(a.href, locale)} class:list={['uw-btn', `uw-btn-${a.style ?? 'primary'}`]} {...(isExternal(a.href) ? { rel: 'noopener' } : {})}>
-          {a.label}
-          {a.style !== 'give' && <Icon name="arrow-right" class="size-4.5 rtl:-scale-x-100" />}
-        </a>
-      ))}
+    <div class:list={['flex flex-wrap items-center gap-5', cls]}>
+      {actions.map((a) => {
+        const link = (
+          <a href={localizeHref(a.href, locale)} class:list={['uw-btn', `uw-btn-${a.style ?? 'primary'}`, a.formId && 'uw-vdonate-fallback']} {...(isExternal(a.href) ? { rel: 'noopener' } : {})}>
+            {a.label}
+          </a>
+        );
+        return a.formId ? (
+          <div class="uw-vdonate" data-form-id={a.formId}>
+            {link}
+            <div class="uw-vdonate-embed" data-virtuous-embed>
+              <script is:inline src={SITE.virtuousEmbedSrc} data-rd={a.formId} data-organizationId={SITE.virtuousOrgId} data-type="form" defer></script>
+            </div>
+          </div>
+        ) : (
+          link
+        );
+      })}
     </div>
   )
 }
+
+{hasForm && <VirtuousListener />}
+
+{
+  hasForm && (
+    <script is:inline>
+      (function () {
+        if (window.__uwVdonate) return;
+        window.__uwVdonate = true;
+        var check = function () {
+          document.querySelectorAll('.uw-vdonate:not(.is-ready)').forEach(function (el) {
+            if (el.querySelector('.uw-vdonate-embed .rd-btn')) el.classList.add('is-ready');
+          });
+        };
+        new MutationObserver(check).observe(document.documentElement, { childList: true, subtree: true });
+        document.addEventListener('DOMContentLoaded', check);
+        check();
+      })();
+    </script>
+  )
+}
+
+<style>
+  .uw-vdonate-embed { display: none; }
+  .uw-vdonate.is-ready .uw-vdonate-embed { display: block; }
+  .uw-vdonate.is-ready .uw-vdonate-fallback { display: none; }
+</style>

@@ -4,6 +4,7 @@ description: 12 Sweet Publishing illustrations of Nehemiah, free to download and
 book: Nehemiah
 order: 16
 testament: ot
+cover: 16_Ne_03_01_RG
 chapters:
   - chapter: '1'
     images:

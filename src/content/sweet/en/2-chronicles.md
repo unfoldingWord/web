@@ -4,6 +4,7 @@ description: 29 Sweet Publishing illustrations of 2 Chronicles, free to download
 book: 2 Chronicles
 order: 14
 testament: ot
+cover: 14_2Ch_34_01_RG
 chapters:
   - chapter: '1'
     images:

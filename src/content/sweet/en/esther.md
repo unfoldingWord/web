@@ -4,6 +4,7 @@ description: 59 Sweet Publishing illustrations of Esther, free to download and u
 book: Esther
 order: 17
 testament: ot
+cover: 17_Es_05_03_RG
 chapters:
   - chapter: '1'
     images:

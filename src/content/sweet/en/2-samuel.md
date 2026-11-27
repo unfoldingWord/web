@@ -4,6 +4,7 @@ description: 59 Sweet Publishing illustrations of 2 Samuel, free to download and
 book: 2 Samuel
 order: 10
 testament: ot
+cover: 10_2Sa_02_01_RG
 chapters:
   - chapter: '1'
     images:

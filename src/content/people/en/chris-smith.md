@@ -1,6 +1,6 @@
 ---
 name: "Chris Smith"
-role: "OT ULT and UST Editor and Translation Note Writer"
+role: "OT ULT & UST Editor & Translation Note Writer"
 groups: [staff]
 order: 300
 photo: people/chris-smith.jpg

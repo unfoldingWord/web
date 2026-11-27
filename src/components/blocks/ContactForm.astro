@@ -12,7 +12,6 @@ import { SITE } from '../../lib/site';
 import { ui } from '../../i18n';
 import { mdInline } from '../../lib/md';
 import Section from '../ui/Section.astro';
-import Icon from '../ui/Icon.astro';
 
 type ContactForm = Extract<Block, { type: 'contactForm' }>;
 interface Props {
@@ -23,50 +22,58 @@ const { block, locale } = Astro.props;
 const t = ui(locale);
 const enabled = import.meta.env.PUBLIC_CONTACT_FORM === '1';
 const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
+// Production's wording ("Use the contact form below…") only makes sense with
+// the form on; without it the block shows `intro`.
+const intro = enabled && block.formIntro ? block.formIntro : block.intro;
 ---
 
 <Section>
-  <div class="grid gap-10 lg:grid-cols-12">
-    <div class="lg:col-span-5">
+  <div class="mx-auto flex max-w-[800px] flex-col gap-5">
+    <div class="prose [&>:last-child]:mb-0">
       {block.title && <h2 set:html={mdInline(block.title)} />}
-      {block.intro && <p class="mt-4 text-lead text-ink-muted" set:html={mdInline(block.intro, locale)} />}
-      <ul class="mt-8 space-y-5">
-        <li class="flex gap-4">
-          <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-inspire-50 text-inspire-ink"><Icon name="map" /></span>
-          <address class="not-italic">
-            {SITE.address.streetAddress}<br />{SITE.address.addressLocality}, {SITE.address.addressRegion} {SITE.address.postalCode}
-          </address>
-        </li>
-        <li class="flex items-center gap-4">
-          <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-inspire-50 text-inspire-ink"><Icon name="phone" /></span>
-          <a href={`tel:${SITE.telephone}`} class="text-lg font-bold">{SITE.telephoneDisplay}</a>
-        </li>
-      </ul>
+      {intro && <p set:html={mdInline(intro, locale)} />}
+      <address class="not-italic">
+        <p>{SITE.address.streetAddress.split(/,\s*/).map((part) => <>{part}<br /></>)}{SITE.address.addressLocality}, {SITE.address.addressRegion} {SITE.address.postalCode}</p>
+        <p><a href={`tel:${SITE.telephone}`} class="!font-light !text-tech">{SITE.telephoneDisplay}</a></p>
+      </address>
     </div>
     {
       enabled && (
-        <form class="contact-form uw-card space-y-5 p-6 sm:p-8 lg:col-span-7" method="post" action="/api/contact" novalidate>
-          <div>
-            <label for="cf-name" class="mb-1.5 block font-bold">{t.contactFormName}</label>
-            <input id="cf-name" name="name" type="text" autocomplete="name" required class="block min-h-12 w-full rounded-lg border border-line px-4 focus:border-inspire" />
+        <form class="contact-form uw-cf" method="post" action="/api/contact" novalidate>
+          <div class="uw-cf-field">
+            <label for="cf-name" class="uw-cf-label">{t.contactFormName}</label>
+            <input id="cf-name" name="name" type="text" autocomplete="name" required class="uw-input block" />
           </div>
-          <div>
-            <label for="cf-email" class="mb-1.5 block font-bold">{t.contactFormEmail}</label>
-            <input id="cf-email" name="email" type="email" autocomplete="email" required class="block min-h-12 w-full rounded-lg border border-line px-4 focus:border-inspire" />
+          <div class="uw-cf-field">
+            <label for="cf-email" class="uw-cf-label">{t.contactFormEmail}</label>
+            <input id="cf-email" name="email" type="email" autocomplete="email" required class="uw-input block" />
           </div>
-          <div>
-            <label for="cf-message" class="mb-1.5 block font-bold">{t.contactFormMessage}</label>
-            <textarea id="cf-message" name="message" rows="6" required class="block w-full rounded-lg border border-line px-4 py-3 focus:border-inspire" />
+          <div class="uw-cf-field">
+            <label for="cf-message" class="uw-cf-label">{t.contactFormMessage}</label>
+            <textarea id="cf-message" name="message" rows="10" required class="uw-input block min-h-[258px]" />
           </div>
           <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
-          {siteKey && <div class="cf-turnstile" data-sitekey={siteKey} />}
-          <button type="submit" class="uw-btn uw-btn-primary w-full sm:w-auto">{t.contactFormSend}</button>
-          <p class="form-status text-sm" role="status" aria-live="polite" data-sent={t.contactFormSent} data-error={t.contactFormError} />
+          {siteKey && <div class="cf-turnstile mt-[14.4px]" data-sitekey={siteKey} />}
+          <div class="mt-1.5"><button type="submit" class="uw-cf-submit">{t.contactFormSubmit}</button></div>
+          <p class="form-status mt-[14.4px] text-sm empty:hidden" role="status" aria-live="polite" data-sent={t.contactFormSent} data-error={t.contactFormError} />
         </form>
       )
     }
   </div>
 </Section>
+
+<style>
+  /* Contact Form 7 on production: h6-style labels (8px above, 16px below),
+     theme-reset inputs on lines of their own, a Kindle submit at 16px/400
+     with the theme's 1px #c36 border. The form sits 20px below the address
+     text (whose last paragraph keeps its 14.4px), after an empty 24px line. */
+  .uw-cf { margin-top: calc(24px + 0.9rem); margin-bottom: 0.9rem; }
+  .uw-cf-field + .uw-cf-field { margin-top: calc(24px + 0.9rem); }
+  .uw-cf-label { display: block; margin-bottom: 16px; font-family: var(--font-heading); font-size: 1rem; line-height: 1.2; font-weight: 500; color: #333; }
+  .uw-cf-submit { font-family: var(--font-system); font-size: 1rem; line-height: 1.5; font-weight: 400; color: #fff; background: var(--color-kindle); border: 1px solid #c36; border-radius: 4px; padding: 8px 16px; cursor: pointer; transition: background-color 0.3s; }
+  .uw-cf-submit:hover, .uw-cf-submit:focus-visible { background: var(--color-inspire); }
+  .uw-cf-submit:focus-visible { outline-color: var(--color-ocean); }
+</style>
 
 {enabled && siteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
 {

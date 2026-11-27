@@ -4,6 +4,7 @@ description: 240 Sweet Publishing illustrations of Exodus, free to download and 
 book: Exodus
 order: 2
 testament: ot
+cover: 02_Ex_14_07_RG
 chapters:
   - chapter: '0'
     images:

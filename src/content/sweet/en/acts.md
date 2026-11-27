@@ -4,6 +4,7 @@ description: 391 Sweet Publishing illustrations of Acts, free to download and us
 book: Acts
 order: 44
 testament: nt
+cover: 44_Ac_03_07_RG
 chapters:
   - chapter: '1'
     images:

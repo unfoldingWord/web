@@ -1,5 +1,5 @@
 ---
-title: Making God's Word Accessible to Ordinary People
+title: Making God’s Word Accessible to Ordinary People
 description: A Eurasian Whole Bible, Whole Nation project manager gives three reasons Bible translation matters and how unfoldingWord's tools make it possible for ordinary people.
 date: 2023-09-11
 region: eurasia
@@ -7,7 +7,10 @@ image: stories/making-gods-word-accessible.jpg
 imageAlt: A woman places a hand on the shoulder of a friend who prays with folded hands over an open Bible
 excerpt: Sofia Ivanov speaks on the impact of unfoldingWord's Bible translation tools.
 redirectFrom: [/worldwide/making-gods-word-accessible-to-ordinary-people/]
+related: [new-believers-in-iran, in-the-republic-of-iran-for-the-church-to-be-planted, when-jeremiah-first-heard-that-his-chadian-church-planting]
 ---
+***Sofia Ivanov speaks on the impact of unfoldingWord's Bible Translation tools***
+
 *Editor's Note: Sofia Ivanov\* is a project manager for unfoldingWord's Eurasian Whole Bible, Whole Nation partner. Her thoughts on the impact of unfoldingWord's Bible translation tools in Eurasia follow. \*Pseudonyms used for security.*
 
 Bible translation is vital for three reasons. First, it puts God's Word into a language ordinary people understand.

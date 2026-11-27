@@ -1,0 +1,123 @@
+---
+// The end of a story or prayer request, as production's Jetpack blocks show
+// it: an optional "Share this:" row (X, Facebook) and a three-column
+// "Related" list of text links, each with its date and category.
+import { ui, fmt } from '../../i18n';
+
+export interface RelatedPost {
+  title: string;
+  href: string;
+  date: string;
+  datetime: string;
+  category?: string;
+}
+interface Props {
+  locale: string;
+  /** Absolute URL and title of the page, for the share links. Omit to hide the share row. */
+  share?: { url: string; title: string };
+  related: RelatedPost[];
+}
+const { locale, share, related } = Astro.props;
+const t = ui(locale);
+const networks = share
+  ? [
+      { name: 'X', key: 'x', href: `https://x.com/intent/post?url=${encodeURIComponent(share.url)}&text=${encodeURIComponent(share.title)}` },
+      { name: 'Facebook', key: 'facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(share.url)}` },
+    ]
+  : [];
+---
+
+{
+  share && (
+    <div class="pf-block">
+      <h2 class="pf-label">{t.shareThis}</h2>
+      <ul class="pf-share">
+        {networks.map((n) => (
+          <li>
+            <a href={n.href} target="_blank" rel="noopener noreferrer" class="pf-button" aria-label={fmt(t.shareOn, { network: n.name })}>
+              {n.key === 'x' ? (
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M13.982 10.622 20.54 3h-1.554l-5.693 6.618L8.745 3H3.5l6.876 10.007L3.5 21h1.554l6.012-6.989L15.868 21h5.245l-7.131-10.378Zm-2.128 2.474-.697-.997-5.543-7.93H8l4.474 6.4.697.996 5.815 8.318h-2.387l-4.745-6.787Z" /></svg>
+              ) : (
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2C6.5 2 2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12c0-5.5-4.5-10-10-10Z" /></svg>
+              )}
+              <span>{n.name}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+{
+  related.length > 0 && (
+    <div class:list={['pf-block pf-related', !share && 'pf-related-alone']}>
+      <h2 class="pf-label">{t.related}</h2>
+      <ul class="pf-grid">
+        {related.map((r) => (
+          <li class="pf-post">
+            <a href={r.href} class="pf-title">{r.title}</a>
+            <time class="pf-meta" datetime={r.datetime}>{r.date}</time>
+            {r.category && <span class="pf-meta">{fmt(t.inCategory, { name: r.category })}</span>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+<style>
+  /* Jetpack's sharing and related-posts blocks, as production shows them. */
+  .pf-block { font-family: var(--font-sans); color: var(--color-tech); }
+  /* Jetpack's spacing: 18px under the share row, 35px under the text when
+     there is no share row (prayer requests), 17px under the list. */
+  .pf-block + .pf-block { margin-top: 18px; }
+  .pf-related { margin-bottom: 17px; }
+  .pf-related-alone { margin-top: 35px; }
+  .pf-label {
+    display: inline-block;
+    margin: 0 0 12px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: var(--color-tech);
+    text-wrap: nowrap;
+  }
+  /* A 1px rule as wide as the label, 12px above it. */
+  .pf-label::before { content: ''; display: block; min-width: 30px; border-top: 1px solid #dcdcde; margin-bottom: 12px; }
+  .pf-share { display: flex; flex-wrap: wrap; list-style: none; margin: 0; padding: 0; }
+  .pf-share li { margin: 0 0 12px; margin-inline-end: 8px; }
+  .pf-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    height: 30px;
+    padding: 7px 10px;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.12), 0 0 0 1px rgb(0 0 0 / 0.12);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 16px;
+    font-weight: 500;
+    color: #2c3338;
+    text-decoration: none;
+  }
+  .pf-button:hover, .pf-button:focus-visible { color: #2c3338; box-shadow: 0 1px 2px rgb(0 0 0 / 0.22), 0 0 0 1px rgb(0 0 0 / 0.22); }
+  .pf-button svg { width: 16px; height: 16px; flex: none; }
+  .pf-grid { display: flex; flex-wrap: wrap; list-style: none; margin: 0; padding: 0; }
+  .pf-post {
+    display: flex;
+    flex-direction: column;
+    width: 33%;
+    padding-inline-end: 20px;
+    margin-bottom: 14px;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 300;
+  }
+  @media (max-width: 640px) { .pf-post { width: 50%; } }
+  .pf-title { color: var(--color-kindle); font-weight: 400; text-decoration: none; }
+  .pf-title:hover, .pf-title:focus-visible { color: var(--color-inspire); text-decoration: underline; }
+  .pf-meta { opacity: 0.6; }
+</style>

@@ -19,6 +19,8 @@ export const SITE = {
     postalCode: '32827',
     addressCountry: 'US',
   },
+  // The address as the footer's copyright line writes it (production wording).
+  addressDisplay: '13485 Veterans Way Suite 460, Orlando, FL 32827',
   // Google Tag Manager container. GA4 is configured inside it. Loaded only
   // on the production hostname (see Analytics.astro).
   gtmId: 'GTM-KS32FPTM',
@@ -47,10 +49,34 @@ export const SITE = {
     'https://app.candid.org/profile/6946577/unfoldingword-14-1888977/',
     'https://db.ministrywatch.com/ministry.php?ein=141888977',
   ],
+  // Footer badges and the giving trust list. `badge` is a local copy of the
+  // seal (src/assets/images/brand/) or, for Candid, the live seal image that
+  // Candid updates each year; `alt` describes the seal image.
   trust: [
-    { name: 'ECFA', href: 'https://www.ecfa.org/', label: 'Accredited member of the Evangelical Council for Financial Accountability' },
-    { name: 'Candid', href: 'https://app.candid.org/profile/6946577/unfoldingword-14-1888977/', label: 'Candid (GuideStar) Platinum Seal of Transparency' },
-    { name: 'MinistryWatch', href: 'https://db.ministrywatch.com/ministry.php?ein=141888977', label: 'MinistryWatch 100% Give With Confidence rating' },
+    {
+      name: 'ECFA',
+      href: 'https://www.ecfa.org/Standards.aspx',
+      label: 'Accredited member of the Evangelical Council for Financial Accountability',
+      badge: 'ecfa',
+      alt: 'ECFA accredited seal: the letters ECFA on a blue disc inside a white ring',
+      newTab: false,
+    },
+    {
+      name: 'Candid',
+      href: 'https://app.candid.org/profile/6946577/unfoldingword-14-1888977/',
+      label: 'Candid (GuideStar) Platinum Seal of Transparency',
+      badge: 'https://widgets.candid.org/TransparencySeal/6946577/svg',
+      alt: 'Candid Platinum Transparency seal for the current year',
+      newTab: true,
+    },
+    {
+      name: 'MinistryWatch',
+      href: 'https://db.ministrywatch.com/ministry.php?ein=141888977',
+      label: 'MinistryWatch 100% Give With Confidence rating',
+      badge: 'ministrywatch',
+      alt: 'MinistryWatch 2026 Give With Confidence seal in a gold rope ring',
+      newTab: true,
+    },
   ],
   annualReportUrl: 'https://heyzine.com/flip-book/5ebaad78c0.html',
 } as const;
@@ -137,13 +163,12 @@ export const NAV: NavItem[] = [
   { key: 'contact', href: '/contact/' },
 ];
 
+// Footer Quick Links, as production lists them. Labels are keys into nav, or
+// into footer when nav has no such key (donate).
 export const FOOTER_LINKS: NavItem[] = [
   { key: 'whoWeAre', href: '/about/' },
   { key: 'whatWeDo', href: '/overview/' },
-  { key: 'waysToGive', href: '/give/' },
+  { key: 'donate', href: '/give/' },
   { key: 'strategicOverview', href: '/ccbt/' },
-  { key: 'stories', href: '/stories/' },
-  { key: 'prayer', href: '/pray/' },
-  { key: 'careers', href: '/careers/' },
   { key: 'contact', href: '/contact/' },
 ];

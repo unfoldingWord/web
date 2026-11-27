@@ -8,6 +8,8 @@ image: stories/breaching-a-500-year-old-barrier.jpg
 imageAlt: A fisherman standing in a wooden canoe among green reeds and flowering shrubs raises his hand in a wave
 sensitive: true
 redirectFrom: [/uncategorized/breaching-a-500-year-old-barrier/]
+category: Chad
+related: [like-nothing-weve-ever-used, the-market-evangelist, the-angry-imam]
 ---
 For 500 years, the Cilasi (pseudonym) people have fished, farmed, and hunted around Lake Chad. Having descended from some of the first Muslims to enter the country, their roots run deep in that way of life, and they tolerate little else. They listen to little else. But because of our generous partners, that is changing.
 
@@ -19,4 +21,4 @@ Our friends at PCET are overjoyed and have already begun reading Open Bible Stor
 
 The prayers and gifts of unfoldingWord’s friends made that first OBS translation in the Cilasi language possible, and keep our CCBT ministry partners from Chad, Africa, and the rest of the world in the work and on the move.
 
-[Become a financial partner today](/give/), and help overcome barriers for people who’ve never heard the gospel!
+Become a financial partner today, and help overcome barriers for people who’ve never heard the gospel!

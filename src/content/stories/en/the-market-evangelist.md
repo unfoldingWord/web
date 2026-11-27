@@ -9,10 +9,10 @@ image: stories/the-market-evangelist.jpg
 imageAlt: A smiling woman wearing pink headphones and an orange shirt stands with arms crossed by the sea at sunset
 sensitive: true
 redirectFrom: [/chad/the-market-evangelist/]
+category: Africa
+related: [when-jeremiah-first-heard-that-his-chadian-church-planting, like-nothing-weve-ever-used, the-gospel-in-five-more-languages]
 ---
-Christian\* slung his satchel over his shoulder, swung his leg over his bike, and pedaled off for another day of evangelism and outreach in the market. His faith and dedication to reaching his Chadian neighbors had not waned, but he had been frustrated at the tepid response to the gospel.
-
-_\*Pseudonym_
+Christian\* slung his satchel over his shoulder, swung his leg over his bike, and pedaled off for another day of evangelism and outreach in the market. His faith and dedication to reaching his Chadian neighbors had not waned, but he had been frustrated at the tepid response to the gospel. \*Pseudonym
 
 Chad has 80 distinct people groups. The problem is that most gospel presentations available to Christian are in French or Arabic, trade languages that don't connect to the heart of most of his listeners. The people like his Christian music but they don't understand the lyrics, and visiting street preachers have always needed translators.
 

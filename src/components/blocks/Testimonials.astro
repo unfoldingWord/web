@@ -1,0 +1,81 @@
+---
+// Testimonial slider, as on production's home page: one testimonial at a
+// time (photo beside a title and quote) on a light Inspire gradient band,
+// with dots underneath. Built on ui/Carousel (no autoplay; swipe, buttons
+// or Tab to move).
+import type { Block } from '../../content.config';
+import { md, mdInline } from '../../lib/md';
+import Picture from '../ui/Picture.astro';
+import Carousel from '../ui/Carousel.astro';
+
+type Testimonials = Extract<Block, { type: 'testimonials' }>;
+interface Props {
+  block: Testimonials;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+---
+
+<section class="testimonials py-[var(--spacing-section)]">
+  <div class="container-page">
+    {block.title && <h2 class="mb-5 text-center text-wrap" set:html={mdInline(block.title, locale)} />}
+    <Carousel label={block.title ?? 'Testimonials'} locale={locale} perView={1} arrows={false} dots="dark">
+      {
+        block.items.map((item) => (
+          <li>
+            <figure class="testimonial">
+              {item.image && (
+                <div class="testimonial-photo">
+                  <Picture path={item.image} alt={item.imageAlt ?? ''} sizes="(min-width: 48rem) 400px, 260px" widths={[260, 400, 800]} />
+                </div>
+              )}
+              <div class="testimonial-text">
+                <h3 class="testimonial-title" set:html={mdInline(item.title, locale)} />
+                <blockquote class="testimonial-body" set:html={md(item.body, locale)} />
+              </div>
+            </figure>
+          </li>
+        ))
+      }
+    </Carousel>
+  </div>
+</section>
+
+<style>
+  .testimonials { background-image: linear-gradient(rgb(49 173 227 / 0.13) 0%, rgb(49 173 227 / 0.23) 100%); }
+  .testimonial {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    margin: 0;
+    text-align: center;
+  }
+  .testimonial-photo { width: 100%; max-width: 260px; }
+  .testimonial-photo :global(img) { display: block; border-radius: 12px; }
+  @media (min-width: 768px) {
+    .testimonial { flex-direction: row; gap: 40px; text-align: start; }
+    .testimonial-photo { flex: 0 0 40%; max-width: none; }
+    .testimonial-text { flex: 1; min-width: 0; }
+  }
+  .testimonial-title {
+    margin: 0 0 12px;
+    font-family: var(--font-system);
+    font-size: 28px;
+    line-height: 1.2;
+    font-weight: 500;
+    color: var(--color-tech);
+  }
+  /* Non-Latin scripts need their Noto face. */
+  :global(html:not([data-script='latin'], [data-script='cyrillic'])) :is(.testimonial-title, .testimonial-body) { font-family: var(--font-sans); }
+  .testimonial-body {
+    margin: 0;
+    font-family: var(--font-system);
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 700;
+    color: var(--color-tech);
+  }
+  .testimonial-body :global(p) { margin: 0 0 0.9rem; }
+  .testimonial-body :global(p:last-child) { margin-bottom: 0; }
+</style>

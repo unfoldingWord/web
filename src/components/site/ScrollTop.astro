@@ -1,0 +1,75 @@
+---
+// Back-to-top button, like production's (WPFront Scroll Top): a 60px
+// half-transparent dark disc with a see-through chevron, fixed near the
+// bottom corner, shown after 100px of scrolling, hidden on phones (≤640px).
+// Unlike production it has an accessible name and respects reduced motion.
+import { ui } from '../../i18n';
+
+interface Props {
+  locale: string;
+}
+const { locale } = Astro.props;
+const t = ui(locale);
+---
+
+<button type="button" class="scroll-top" aria-label={t.footer.backToTop} title={t.footer.backToTop} data-scroll-top>
+  <svg viewBox="0 0 64 64" width="60" height="60" aria-hidden="true" focusable="false">
+    <mask id="scroll-top-chevron">
+      <rect width="64" height="64" fill="#fff"></rect>
+      <path d="M21 37 32 26l11 11" fill="none" stroke="#000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path>
+    </mask>
+    <circle cx="32" cy="32" r="32" fill="rgba(0,0,0,.5)" mask="url(#scroll-top-chevron)"></circle>
+  </svg>
+</button>
+
+<style>
+  .scroll-top {
+    position: fixed;
+    inset-inline-end: 20px;
+    bottom: 100px;
+    z-index: 60;
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: none;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+  }
+  .scroll-top svg {
+    display: block;
+  }
+  .scroll-top.is-visible {
+    opacity: 0.8;
+    visibility: visible;
+  }
+  .scroll-top.is-visible:hover,
+  .scroll-top.is-visible:focus-visible {
+    opacity: 1;
+  }
+  @media (max-width: 640px) {
+    .scroll-top,
+    .scroll-top.is-visible {
+      visibility: hidden;
+    }
+  }
+</style>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-scroll-top]');
+  if (btn) {
+    const update = () => btn.classList.toggle('is-visible', window.scrollY > 100);
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    btn.addEventListener('click', (e) => {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+      // Keyboard users (detail 0: Enter or Space) continue from the top of
+      // the page, not from a button that is about to hide.
+      if (e.detail === 0) document.querySelector<HTMLElement>('.skip-link')?.focus({ preventScroll: true });
+    });
+  }
+</script>

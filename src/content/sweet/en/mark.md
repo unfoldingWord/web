@@ -4,6 +4,7 @@ description: 288 Sweet Publishing illustrations of Mark, free to download and us
 book: Mark
 order: 41
 testament: nt
+cover: 41_Mk_02_06_RG
 chapters:
   - chapter: '1'
     images:
