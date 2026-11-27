@@ -1,7 +1,6 @@
 ---
-// Numbered steps. Production has no step widget (its pages use a plain
-// ordered list in the text), so this keeps to production's primitives: plain
-// columns, no cards, a 28px Inspire title after a Kindle number.
+// Numbered steps (article design): Mist cards with an Ocean number circle,
+// a title and short text, wrapping in a row.
 import type { Block } from '../../content.config';
 import { md, mdInline } from '../../lib/md';
 import Section from '../ui/Section.astro';
@@ -17,15 +16,13 @@ const { block, locale } = Astro.props;
 
 <Section>
   <SectionHeader title={block.title} intro={block.intro} locale={locale} />
-  <ol class="grid gap-5 md:grid-cols-2 tablet:grid-cols-3">
+  <ol class="flex flex-wrap gap-4">
     {
       block.items.map((s, i) => (
-        <li class="flex flex-col gap-5 p-2.5">
-          <h3 class="flex items-baseline gap-2.5">
-            <span class="text-kindle" aria-hidden="true">{i + 1}.</span>
-            <span set:html={mdInline(s.title)} />
-          </h3>
-          <div class="prose [&>:last-child]:mb-0" set:html={md(s.body, locale)} />
+        <li class="flex min-w-0 flex-[1_1_220px] flex-col gap-2 rounded-card bg-mist p-6">
+          <span class="flex size-11 items-center justify-center rounded-full bg-ocean font-extrabold text-white" aria-hidden="true">{i + 1}</span>
+          <h3 class="mt-1 text-[22px] leading-tight" set:html={mdInline(s.title, locale)} />
+          <div class="prose text-ink-muted" set:html={md(s.body, locale)} />
         </li>
       ))
     }

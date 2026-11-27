@@ -1,0 +1,81 @@
+---
+// "By hand" / "With the tool" (docs/design-system/designs/Product.dc.html):
+// two toggle buttons switch one very large number. Without script both
+// halves show, one under the other.
+import type { Block } from '../../content.config';
+import { mdInline } from '../../lib/md';
+import Picture from '../ui/Picture.astro';
+
+type BeforeAfter = Extract<Block, { type: 'beforeAfter' }>;
+interface Props {
+  block: BeforeAfter;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+const sides = [
+  { key: 'before', ...block.before, figCls: 'text-inspire-100', textCls: 'text-inspire-100' },
+  { key: 'after', ...block.after, figCls: 'text-inspire', textCls: 'text-white' },
+];
+---
+
+<section class="before-after on-dark bg-ocean-900">
+  <div class="container-page flex max-w-[68.75rem] flex-col items-center gap-7 py-[var(--spacing-section)] text-center">
+    <div class="ba-toggle hidden gap-1 rounded-full border border-ocean-700 p-1" role="group">
+      {
+        sides.map((s) => (
+          <button type="button" data-side={s.key} aria-pressed={s.key === 'after' ? 'true' : 'false'} class="min-h-12 rounded-full px-7 py-2.5 text-base font-extrabold">
+            {s.label}
+          </button>
+        ))
+      }
+    </div>
+    <div class="flex min-h-58 flex-col items-center gap-10" aria-live="polite">
+      {
+        sides.map((s) => (
+          <div class="ba-side flex flex-col items-center gap-3.5" data-side={s.key}>
+            <p class="ba-nojs-label label">{s.label}</p>
+            <p class:list={['uw-impact !text-[clamp(4rem,2rem+7vw,9.375rem)]', s.figCls]}>{s.figure}</p>
+            <p class:list={['text-[1.375rem]', s.textCls]} set:html={mdInline(s.text, locale)} />
+          </div>
+        ))
+      }
+    </div>
+    {
+      block.person && (
+        <div class="flex items-center gap-3.5 text-start">
+          {block.person.image && (
+            <div class="size-16 shrink-0 overflow-hidden rounded-full">
+              <Picture path={block.person.image} alt={block.person.imageAlt ?? ''} sizes="64px" widths={[64, 128]} aspect="1 / 1" />
+            </div>
+          )}
+          <p class="text-inspire-100">
+            <strong class="block text-white">{block.person.name}</strong>
+            {block.person.role}
+          </p>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .before-after[data-ready] .ba-toggle { display: flex; }
+  .before-after[data-ready] .ba-nojs-label { display: none; }
+  .before-after[data-ready] .ba-side[hidden] { display: none; }
+  .ba-toggle button { background: transparent; color: #fff; }
+  .ba-toggle button[aria-pressed='true'] { background: #fff; color: var(--color-ocean-900); }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.before-after').forEach((el) => {
+    const buttons = [...el.querySelectorAll<HTMLButtonElement>('.ba-toggle button')];
+    const sides = [...el.querySelectorAll<HTMLElement>('.ba-side')];
+    const pick = (key: string) => {
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.side === key)));
+      sides.forEach((s) => (s.hidden = s.dataset.side !== key));
+    };
+    buttons.forEach((b) => b.addEventListener('click', () => pick(b.dataset.side!)));
+    el.dataset.ready = '';
+    pick('after');
+  });
+</script>

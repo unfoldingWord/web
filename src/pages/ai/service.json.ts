@@ -21,7 +21,7 @@ export const GET: APIRoute = () =>
       { name: 'Open-licensed biblical content (Bibles, translation helps, Open Bible Stories)', url: absolute('/for-translators/content/'), audience: 'Bible translators' },
       { name: 'Translation tools (translationCore and others)', url: absolute('/for-translators/tools/'), audience: 'Bible translators and checkers' },
       { name: 'Training', url: absolute('/for-translators/training/'), audience: 'Church-based translation teams' },
-      { name: 'Whole Bible | Whole Nation', url: absolute('/wbwn/'), audience: 'Partners and donors' },
+      { name: 'Whole Bible | Whole Nation', url: absolute('/transformation/'), audience: 'Partners and donors' },
       { name: 'Ways to give', url: absolute('/give/'), audience: 'Donors' },
     ],
     actions: [

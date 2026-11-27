@@ -65,7 +65,21 @@
     "privacy": "Privasi",
     "terms": "Ketentuan penggunaan",
     "disclosures": "Pengungkapan penggalangan dana amal",
-    "backToTop": "Kembali ke atas"
+    "backToTop": "Kembali ke atas",
+    "whatWeDo": "Apa yang kami lakukan",
+    "getInvolved": "Ikut terlibat",
+    "about": "Siapa kami",
+    "waysToGive": "Cara berdonasi",
+    "giveMonthly": "Donasi bulanan",
+    "plannedGiving": "Donasi terencana",
+    "supportStaff": "Dukung staf",
+    "pray": "Doa",
+    "stories": "Kisah dari lapangan",
+    "leadership": "Kepemimpinan",
+    "ccbt": "Penerjemahan Alkitab yang Berpusat pada Gereja",
+    "financial": "Informasi keuangan",
+    "careers": "Karier",
+    "contact": "Hubungi kami"
   },
   "nav": {
     "whoWeAre": "Siapa kami",
@@ -112,7 +126,11 @@
     "initiative": "Dukung sebuah inisiatif",
     "staff": "Dukung staf",
     "disclosures": "Pengungkapan penggalangan dana amal",
-    "contact": "Hubungi kami"
+    "contact": "Hubungi kami",
+    "pray": "Doa",
+    "aboutMenu": "Siapa kami",
+    "ccbtMenu": "Gambaran strategis",
+    "toolsMenu": "Perangkat"
   },
   "regions": {
     "africa": "Afrika",

@@ -1,0 +1,143 @@
+---
+// A story in parts (docs/design-system/designs/ScrollStory.dc.html). The
+// section pins while the visitor scrolls and the parts fade in turn, with a
+// progress bar of part names across the top. The HTML is the stacked
+// version: the script turns pinning on only when the page can scroll, the
+// window is wide enough and the visitor has not asked for reduced motion.
+import type { Block } from '../../content.config';
+import { md, mdInline } from '../../lib/md';
+import Picture from '../ui/Picture.astro';
+import Actions from '../ui/Actions.astro';
+
+type ScrollStory = Extract<Block, { type: 'scrollStory' }>;
+interface Props {
+  block: ScrollStory;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+const tone = { muted: 'text-ink-muted', ocean: 'text-ocean', inspire: 'text-inspire' } as const;
+---
+
+<section class="bg-white" id={block.id}>
+  {
+    (block.title || block.intro) && (
+      <div class="container-page pt-[var(--spacing-section)]">
+        <div class="flex max-w-3xl flex-col gap-3">
+          {block.title && <h2 set:html={mdInline(block.title, locale)} />}
+          {block.intro && <p class="lead" set:html={mdInline(block.intro, locale)} />}
+        </div>
+      </div>
+    )
+  }
+  <div class="scroll-story" data-parts={block.parts.length}>
+    <div class="scroll-story-pin">
+      <div class="container-page scroll-story-frame">
+        <ol class="scroll-story-bar" aria-hidden="true">
+          {block.parts.map((p) => <li><span class="text-[0.9375rem] font-extrabold">{p.label}</span></li>)}
+        </ol>
+        <div class="scroll-story-panes">
+          {
+            block.parts.map((p, i) => (
+              <div class="scroll-story-pane" data-i={i}>
+                <div class="flex min-w-0 flex-[1_1_420px] flex-col gap-4">
+                  <p class="scroll-story-kicker text-[0.9375rem] font-extrabold text-inspire-ink">{p.label}</p>
+                  {p.figure && (
+                    <p class:list={['uw-impact', tone[p.figureTone]]}>
+                      {p.figure}
+                      {p.unit && <span class="text-[0.4em] tracking-normal"> {p.unit}</span>}
+                    </p>
+                  )}
+                  <h3 class="text-[clamp(1.625rem,1.2rem+1.2vw,2.25rem)] leading-tight" set:html={mdInline(p.title, locale)} />
+                  {p.quote && <blockquote class="uw-quote max-w-[32.5rem] border-s-[3px] border-inspire ps-5 !text-[1.375rem] !leading-snug !text-ink" set:html={mdInline(p.quote, locale)} />}
+                  {p.body && <div class="prose max-w-[32.5rem] text-[1.1875rem] text-ink-muted" set:html={md(p.body, locale)} />}
+                  <Actions actions={p.actions} locale={locale} />
+                </div>
+                <div class="w-full min-w-0 max-w-[30rem] flex-[1_1_380px] overflow-hidden rounded-media" style={p.imagePosition ? `--op:${p.imagePosition}` : undefined}>
+                  <Picture path={p.image} alt={p.imageAlt} sizes="(min-width: 64rem) 480px, 100vw" widths={[480, 720, 960]} class="scroll-story-img" />
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .scroll-story-frame { display: flex; flex-direction: column; gap: 36px; padding-block: 56px 48px; }
+  .scroll-story-bar { display: none; gap: 8px; }
+  .scroll-story-bar li { flex: 1 1 0; min-width: 0; border-top: 5px solid var(--color-line); padding: 14px 4px 0; color: var(--color-ink-muted); transition: border-color 0.4s ease, color 0.4s ease; }
+  .scroll-story-bar li[data-on] { border-color: var(--color-inspire); }
+  .scroll-story-bar li[data-current] { color: var(--color-ocean); }
+  .scroll-story-pane { display: flex; flex-wrap: wrap; align-items: center; gap: 40px 72px; }
+  .scroll-story-pane + .scroll-story-pane { margin-top: 88px; }
+  :global(.scroll-story-img) { width: 100% !important; height: clamp(280px, 40vw, 440px) !important; object-fit: cover !important; object-position: var(--op, 50% 50%); }
+
+  /* Pinned mode (set by the script) */
+  .scroll-story[data-mode='pin'] { height: calc(var(--pane-h) * (var(--n) + 0.2)); }
+  .scroll-story[data-mode='pin'] .scroll-story-pin { position: sticky; top: var(--header-h, 0px); height: var(--pane-h); overflow: hidden; }
+  .scroll-story[data-mode='pin'] .scroll-story-frame { height: 100%; }
+  .scroll-story[data-mode='pin'] .scroll-story-bar { display: flex; }
+  .scroll-story[data-mode='pin'] .scroll-story-kicker { display: none; }
+  .scroll-story[data-mode='pin'] .scroll-story-panes { position: relative; flex: 1 1 auto; min-height: 0; }
+  .scroll-story[data-mode='pin'] .scroll-story-pane {
+    position: absolute; inset: 0; margin: 0; opacity: 0; pointer-events: none; transform: translateY(40px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .scroll-story[data-mode='pin'] .scroll-story-pane[data-past] { transform: translateY(-40px); }
+  .scroll-story[data-mode='pin'] .scroll-story-pane[data-current] { opacity: 1; pointer-events: auto; transform: none; }
+</style>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const wide = window.matchMedia('(min-width: 64rem) and (min-height: 40rem)');
+  document.querySelectorAll<HTMLElement>('.scroll-story').forEach((track) => {
+    const panes = [...track.querySelectorAll<HTMLElement>('.scroll-story-pane')];
+    const bars = [...track.querySelectorAll<HTMLElement>('.scroll-story-bar li')];
+    const n = panes.length;
+    let raf = 0;
+    function show(part: number) {
+      panes.forEach((p, i) => {
+        p.toggleAttribute('data-current', i === part);
+        p.toggleAttribute('data-past', i < part);
+        p.inert = i !== part;
+      });
+      bars.forEach((b, i) => {
+        b.toggleAttribute('data-on', i <= part);
+        b.toggleAttribute('data-current', i === part);
+      });
+    }
+    function measure() {
+      raf = 0;
+      const pin = !reduce.matches && wide.matches;
+      if (!pin) {
+        if (track.dataset.mode) {
+          delete track.dataset.mode;
+          panes.forEach((p) => (p.inert = false));
+        }
+        return;
+      }
+      // The sticky site header (Header.astro sets --header-h) sits over the
+      // top of the window: the pane pins just below it and fills the rest.
+      const headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 0;
+      const paneH = Math.max(560, window.innerHeight - headerH);
+      track.style.setProperty('--pane-h', `${paneH}px`);
+      track.style.setProperty('--n', String(n));
+      track.dataset.mode = 'pin';
+      const rect = track.getBoundingClientRect();
+      const dist = rect.height - paneH;
+      const p = Math.max(0, Math.min(0.999, dist > 0 ? (headerH - rect.top) / dist : 0));
+      show(Math.min(n - 1, Math.floor(p * n)));
+    }
+    const queue = () => { if (!raf) raf = requestAnimationFrame(measure); };
+    window.addEventListener('scroll', queue, { passive: true });
+    window.addEventListener('resize', queue);
+    reduce.addEventListener('change', queue);
+    // Header.astro sets --header-h from a ResizeObserver, possibly after
+    // this first measure: measure again when the header changes size.
+    const header = document.querySelector('.site-header');
+    if (header && 'ResizeObserver' in window) new ResizeObserver(queue).observe(header);
+    measure();
+  });
+</script>

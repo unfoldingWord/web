@@ -1,9 +1,8 @@
 ---
 // Images with optional captions. One image runs the full column width at
-// its own proportions, with its caption as a paragraph below (production's
-// stacked heading, text, image and caption widgets, 20px apart). Several
-// images form a grid.
+// its own proportions; several form a grid of 3:2 photos.
 import type { Block } from '../../content.config';
+import type { PortfolioKey } from '../../lib/portfolios';
 import { mdInline } from '../../lib/md';
 import Section from '../ui/Section.astro';
 import SectionHeader from '../ui/SectionHeader.astro';
@@ -13,51 +12,38 @@ type Gallery = Extract<Block, { type: 'gallery' }>;
 interface Props {
   block: Gallery;
   locale: string;
+  portfolio?: PortfolioKey;
 }
 const { block, locale } = Astro.props;
 const single = block.images.length === 1;
-// Production follows a paragraph with its 14.4px bottom margin plus the 20px gap (padding: a margin would collapse into the header's).
-const afterIntro = block.intro ? 'pt-[0.9rem]' : '';
 ---
 
-<Section class={single ? undefined : 'gallery-grid-band'}>
-  <SectionHeader title={block.title} intro={block.intro} locale={locale} />
-  {
-    single ? (
-      <figure class:list={['flex flex-col gap-5', afterIntro]}>
-        <Picture path={block.images[0].src} alt={block.images[0].alt} sizes="(min-width: 67.5rem) 1000px, calc(100vw - 80px)" widths={[480, 800, 1000, 1500, 2000]} class="rounded-media" />
-        {block.images[0].caption && <figcaption class="mb-[0.9rem] text-body text-ink" set:html={mdInline(block.images[0].caption, locale)} />}
-      </figure>
-    ) : (
-      <ul class:list={['grid gap-5 px-2.5 md:grid-cols-3 md:px-0', afterIntro]}>
-        {block.images.map((im) => (
-          <li>
-            <figure>
-              <div class="overflow-hidden rounded-[var(--radius-media-split)]">
-                <Picture path={im.src} alt={im.alt} sizes="(min-width: 48rem) 320px, calc(100vw - 100px)" widths={[320, 640, 960]} aspect="3 / 2" />
-              </div>
-              {im.caption && <figcaption class="mt-2.5 text-body text-ink" set:html={mdInline(im.caption, locale)} />}
-            </figure>
-          </li>
-        ))}
-      </ul>
-    )
-  }
+<Section>
+  <div class="flex flex-col gap-9">
+    <SectionHeader title={block.title} intro={block.intro} locale={locale} />
+    {
+      single ? (
+        <figure class="flex flex-col gap-3">
+          <Picture path={block.images[0].src} alt={block.images[0].alt} sizes="(min-width: 84rem) 1280px, 100vw" widths={[480, 800, 1280, 1920, 2560]} class="block rounded-media" />
+          {block.images[0].caption && <figcaption class="caption" set:html={mdInline(block.images[0].caption, locale)} />}
+        </figure>
+      ) : (
+        <ul class="grid gap-6 sm:grid-cols-2 tablet:grid-cols-3">
+          {block.images.map((im) => (
+            <li>
+              <figure class="flex flex-col gap-2.5">
+                <Picture path={im.src} alt={im.alt} sizes="(min-width: 66rem) 411px, (min-width: 40rem) 50vw, 100vw" widths={[400, 640, 840]} aspect="3 / 2" class="block rounded-small" />
+                {im.caption && <figcaption class="caption" set:html={mdInline(im.caption, locale)} />}
+              </figure>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
 </Section>
 
 <style>
-  /* Several images (production's image grid on donation-confirmation, the
-     only grid): 3:2 photos with 4px corners, 20px under the page title and
-     a 186px white space before the footer (50px on phones, where they stack
-     in one column inset 10px). */
-  :global(section.gallery-grid-band) {
-    padding-block: 20px 50px;
-  }
-  @media (min-width: 768px) {
-    :global(section.gallery-grid-band) {
-      padding-block-end: 186px;
-    }
-  }
-  /* Production: names in <strong> over 300-weight text come out at 400. */
-  figcaption :global(strong) { font-weight: bolder; }
+  .caption { font-size: 0.9375rem; line-height: 1.5; color: var(--color-ink-muted); }
+  .caption :global(strong) { color: var(--color-ink); font-weight: 800; }
 </style>

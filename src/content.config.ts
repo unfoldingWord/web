@@ -19,6 +19,7 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { PORTFOLIO_KEYS } from './lib/portfolios';
 
 // Entry ids are the file path without extension, e.g. 'en/give/monthly' —
 // src/lib/routes.ts turns that into the URL /give/monthly/.
@@ -48,6 +49,10 @@ const action = z.object({
   formId: z.string().regex(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/, 'A Virtuous form id is the data-rd value from the embed code, like 16dec80a-ad5e-470e-ae62-4ed13821ccca').optional(),
 });
 
+// One of the four portfolios (src/lib/portfolios.ts): sets the portfolio
+// color on heroes, number bands and labels.
+const portfolioKey = z.enum(PORTFOLIO_KEYS);
+
 const translationStatus = z.enum(['source', 'draft', 'reviewed']).default('source');
 
 // Old URLs that should 301 to this entry (written to dist/_redirects).
@@ -68,7 +73,25 @@ const hero = z.object({
   // feature — the old post layout (forms): a black band with a 42px title and
   //   the photo in a 920px column, then `lead` as Markdown text between
   //   100px spacers
-  variant: z.enum(['photo', 'ocean', 'light', 'split', 'banner', 'project', 'heading', 'feature']).default('ocean'),
+  variant: z.enum(['photo', 'ocean', 'light', 'split', 'banner', 'project', 'heading', 'feature', 'home', 'portfolio']).default('ocean'),
+  // Design system (docs/design-system/):
+  //   home — Deep Ocean grain panel: the brand mark behind a person cut out
+  //     from their photo (`cutout`), headline beside it. In the title,
+  //     **bold** is white and *italic* is Kindle on the Inspire headline.
+  //   portfolio — the page's portfolio color as the hero panel, photo beside.
+  //   photo / project / ocean — Deep Ocean grain panel with the photo beside.
+  //   split / light — Mist panel, text beside a rounded photo.
+  //   banner — Mist title band (photo beside when there is one).
+  // A person cut out from their photo, set in front of the brand mark (home).
+  cutout: imagePath.optional(),
+  cutoutAlt: z.string().optional(),
+  // Angled color layers over the photo (brand book). Only on photos where no
+  // face sits under the color: check the photo first.
+  angles: z.boolean().optional(),
+  // A person's words on a white card over the photo (product, give).
+  quote: z.object({ text: z.string(), name: z.string().optional(), place: z.string().optional() }).optional(),
+  // Small outline chips under the lead ("Open-source", "Works offline").
+  chips: z.array(z.string()).optional(),
   actions: z.array(action).default([]),
   // banner: uppercase title (production does this on most pages, not ccbt/*)
   uppercase: z.boolean().optional(),
@@ -123,6 +146,8 @@ const prose = z.object({
 
 const cards = z.object({
   type: z.literal('cards'),
+  // An anchor for in-page links (#tools)
+  id: z.string().optional(),
   eyebrow: z.string().optional(),
   title: z.string().optional(),
   intro: z.string().optional(),
@@ -137,7 +162,12 @@ const cards = z.object({
   // legacy — production's old block-editor columns with dark pill buttons:
   //   with images, three centered tiles in a 1200px row (for-translators);
   //   without, start-aligned columns (open-bible-stories)
-  variant: z.enum(['card', 'plain', 'centered', 'outlined', 'plain-centered', 'legacy']).optional(),
+  // Design system: tiles — dark project tiles (photo, label, name, line)
+  // with region filters built from item labels; voices — testimonial wall
+  // (photo, quote, name); leaders — quotes with round photos on Deep Ocean.
+  variant: z.enum(['card', 'plain', 'centered', 'outlined', 'plain-centered', 'legacy', 'tiles', 'voices', 'leaders']).optional(),
+  // tiles: show filter buttons built from the items' labels
+  filter: z.boolean().optional(),
   // heading — only the section heading centered (for-translators/content principles)
   align: z.enum(['start', 'center', 'heading']).optional(),
   items: z.array(
@@ -149,6 +179,8 @@ const cards = z.object({
       icon: z.string().optional(),
       href: href.optional(),
       linkLabel: z.string().optional(),
+      // tiles: the small label (a region); voices/leaders: the person's place or role
+      label: z.string().optional(),
       // Kindle "Impact:" line (tools-technology)
       impact: z.string().optional(),
       // outlined: a second, filled button
@@ -163,17 +195,18 @@ const cards = z.object({
   // text keeps its last paragraph's margin (catalyzation, for-translators/content)
   padding: z.enum(['normal', 'wide']).optional(),
   // A 600px video centered under the columns, in the same band (catalyzation)
-  video: z.object({ provider: z.enum(['youtube', 'vimeo']), id: z.string().regex(/^[\w-]+$/, 'Just the video id, e.g. 1232161297 — put an unlisted Vimeo video\'s h= value in `hash`'), hash: z.string().optional(), title: z.string() }).optional(),
+  video: z.object({ provider: z.enum(['youtube', 'vimeo']), id: z.string().regex(/^[\w-]+$/, 'Just the video id, e.g. 1232161297 — put an unlisted Vimeo video\'s h= value in `hash`'), hash: z.string().optional(), title: z.string(), poster: imagePath.optional() }).optional(),
 });
 
 const split = z.object({
   type: z.literal('split'),
+  id: z.string().optional(),
   eyebrow: z.string().optional(),
   title: z.string().optional(),
   body: z.string(),
   image: imagePath.optional(),
   imageAlt: z.string().optional(),
-  video: z.object({ provider: z.enum(['youtube', 'vimeo']), id: z.string().regex(/^[\w-]+$/, 'Just the video id, e.g. 1232161297 — put an unlisted Vimeo video\'s h= value in `hash`'), hash: z.string().optional(), title: z.string() }).optional(),
+  video: z.object({ provider: z.enum(['youtube', 'vimeo']), id: z.string().regex(/^[\w-]+$/, 'Just the video id, e.g. 1232161297 — put an unlisted Vimeo video\'s h= value in `hash`'), hash: z.string().optional(), title: z.string(), poster: imagePath.optional() }).optional(),
   imagePosition: z.enum(['start', 'end']).default('end'),
   background: z.enum(['white', 'mist', 'ocean']).default('white'),
   actions: z.array(action).default([]),
@@ -209,6 +242,7 @@ const quote = z.object({
 
 const cta = z.object({
   type: z.literal('cta'),
+  id: z.string().optional(),
   title: z.string(),
   body: z.string().optional(),
   // split — Ocean band, heading and button beside a photo (about)
@@ -234,6 +268,9 @@ const video = z.object({
   caption: z.string().optional(),
   // A text transcript is what search and AI engines index; add one.
   transcript: z.string().optional(),
+  // A photo shown behind the play button (Vimeo has no public still).
+  // Decorative: the video title names it for screen readers.
+  poster: imagePath.optional(),
   background: z.enum(['white', 'tint', 'ocean']).default('white'),
   // The heading shown above the video, when it should differ from `title`
   // (which names the video for screen readers and search).
@@ -443,10 +480,100 @@ const logoMarquee = z.object({
   logos: z.array(z.object({ image: imagePath, alt: z.string().trim().min(2), href: href.optional() })).min(1),
 });
 
+
+// ---------- design-system blocks ----------
+// A section that pins while the visitor scrolls and fades through its parts,
+// with a progress bar of part names. Parts stack for reduced motion and
+// when the page cannot scroll.
+const scrollStory = z.object({
+  type: z.literal('scrollStory'),
+  id: z.string().optional(),
+  title: z.string().optional(),
+  intro: z.string().optional(),
+  parts: z.array(z.object({
+    label: z.string(),
+    // A very large impact number, with an optional smaller unit after it.
+    figure: z.string().optional(),
+    unit: z.string().optional(),
+    figureTone: z.enum(['muted', 'ocean', 'inspire']).default('ocean'),
+    title: z.string(),
+    body: z.string().optional(),
+    quote: z.string().optional(),
+    image: imagePath,
+    imageAlt: z.string().trim().min(5, 'Describe the photo in imageAlt'),
+    imagePosition: z.string().optional(),
+    actions: z.array(action).default([]),
+  })).min(2).max(4),
+});
+
+// The four portfolios as tiles (Transformation, Innovation, Catalyzation)
+// and the Equipping Partners panel. Text is per page; names, colors and
+// links come from src/lib/portfolios.ts.
+const portfolioGrid = z.object({
+  type: z.literal('portfolioGrid'),
+  title: z.string().optional(),
+  intro: z.string().optional(),
+  background: z.enum(['white', 'mist']).default('white'),
+  transformation: z.string(),
+  innovation: z.string(),
+  catalyzation: z.string(),
+  equipping: z.string(),
+  equippingAction: z.string().default('Become an Equipping Partner'),
+  equippingHref: href.optional(),
+});
+
+// The row of four portfolio pills under a portfolio page's hero.
+const portfolioNav = z.object({ type: z.literal('portfolioNav') });
+
+// One takeaway line, introduced by the four-dot marker.
+const takeaway = z.object({
+  type: z.literal('takeaway'),
+  text: z.string(),
+  background: z.enum(['white', 'mist']).default('white'),
+});
+
+// Cards with the Inspire notch ("Why this endures").
+const pillars = z.object({
+  type: z.literal('pillars'),
+  title: z.string().optional(),
+  intro: z.string().optional(),
+  items: z.array(z.object({ title: z.string(), body: z.string() })).min(2),
+  takeaway: z.string().optional(),
+});
+
+// "By hand" / "With the tool" toggle with one big number each (product).
+const beforeAfter = z.object({
+  type: z.literal('beforeAfter'),
+  before: z.object({ label: z.string(), figure: z.string(), text: z.string() }),
+  after: z.object({ label: z.string(), figure: z.string(), text: z.string() }),
+  person: z.object({ name: z.string(), role: z.string().optional(), image: imagePath.optional(), imageAlt: z.string().optional() }).optional(),
+});
+
+// The closing give section: Ocean grain panel and a photo.
+const giveBand = z.object({
+  type: z.literal('giveBand'),
+  title: z.string(),
+  body: z.string().optional(),
+  action: action.optional(),
+  image: imagePath.optional(),
+  imageAlt: z.string().optional(),
+}).refine(hasImageAlt, missingAlt);
+
+// Partner logos in a grid, with an optional alliance logo beside the title.
+const logoGrid = z.object({
+  type: z.literal('logoGrid'),
+  title: z.string(),
+  body: z.string().optional(),
+  titleImage: imagePath.optional(),
+  titleImageAlt: z.string().optional(),
+  logos: z.array(z.object({ image: imagePath, alt: z.string().trim().min(2), href: href.optional() })).min(1),
+});
+
 export const block = z.discriminatedUnion('type', [
   hero, prose, cards, split, stats, quote, cta, video, giving, faq, peopleBlock,
   storyList, prayerList, resources, steps, gallery, trust, contactForm, embed, sweetBooks, signup,
   heroSlideshow, statement, testimonials, logoMarquee,
+  scrollStory, portfolioGrid, portfolioNav, takeaway, pillars, beforeAfter, giveBand, logoGrid,
 ]);
 export type Block = z.infer<typeof block>;
 
@@ -488,6 +615,10 @@ const pages = defineCollection({
     schemaType: z.enum(['WebPage', 'AboutPage', 'ContactPage', 'FAQPage', 'CollectionPage', 'DonatePage']).default('WebPage'),
     // A/B testing: a variant file sets `variantOf` (the path of the page it
     // replaces) and `experiment`. See docs/ab-testing.md.
+    // The portfolio this page belongs to (hero color, labels, number bands).
+    portfolio: portfolioKey.optional(),
+    // Leave out the closing give band the page gets by default.
+    giveBand: z.boolean().default(true),
     experiment: z.string().optional(),
     variantOf: z.string().optional(),
   }),
@@ -512,6 +643,9 @@ const stories = defineCollection({
     // region. Such stories need the security review in
     // .claude/skills/publish-story/ before they are committed.
     sensitive: z.boolean().default(false),
+    // The portfolio this story belongs to (a small label). Confirm with the
+    // editor before setting it.
+    portfolio: portfolioKey.optional(),
     // The "Related" list at the end of the story: up to three other stories,
     // by file name (without .md), in order. Leave out to pick automatically
     // (newest from the same region first).

@@ -1,23 +1,29 @@
 ---
-// Page-opening block. Variants:
-//   banner  — production's page-title band: photo (at its own size, from
-//             the top-left corner) under a flat 50% Ocean overlay, centered white 32px title (uppercase unless
-//             `uppercase: false`), optional extra lines, Kindle divider and
-//             subtitle. 200px tall. The opener for standard pages.
-//   project — photo band with a 50% Ocean overlay and a text column on one
-//             half: country name, Kindle heading, text, buttons (wbwn pages)
-//   ocean   — deep-blue band (giving pages)
-//   photo   — full-bleed photo with an Ocean overlay (giving pages, home)
-//   split   — text beside a photo
-//   light   — quiet tinted band
-//   heading — no band: a centered 40px/500 title and a line of text
-//   feature — the old post layout (forms): a black band holding a 42px/500
-//             title and the photo in a 920px column (as production shows
-//             it, flush to the start), then `lead` as Markdown text in the
-//             1000px column between 100px spacers. The title is an h2: the
-//             page's h1 is the banner above it.
+// Page-opening block (docs/design-system/designs). Variants:
+//   home      — Ocean grain panel: the brand mark behind a person cut out
+//               from their photo (`cutout`), the Inspire headline beside it.
+//   portfolio — the page's portfolio color as the panel, photo beside.
+//   photo, project, ocean, feature — Deep Ocean grain panel, text beside a
+//               full-bleed photo (`angles` adds the angled color layers).
+//               `project`: the title is the big place name (the h1) and the
+//               first lead paragraph a PT Serif line under it (an older
+//               `eyebrow`, if set, is still taken as the place name).
+//               `feature` is not the page's first block: its title is an h2
+//               and its `lead` is Markdown.
+//   split, light — Mist panel, text beside a rounded photo, with an
+//               optional quote card over the photo.
+//   banner, heading — Mist title band (the default for pages without a
+//               hero), photo beside when there is one; a very wide photo
+//               (an old strip banner, wider than 2.2:1) runs as a short
+//               full-width strip under the title instead of being cropped.
+// `uppercase`, `divider` and `contentPosition` (except the photo side of
+// `project`) are cosmetic leftovers and are ignored; `lines` and `subtitle`
+// show as lead text.
 import type { Block } from '../../content.config';
+import type { PortfolioKey } from '../../lib/portfolios';
+import { portfolio as portfolioOf } from '../../lib/portfolios';
 import { md, mdInline } from '../../lib/md';
+import { ui } from '../../i18n';
 import Picture from '../ui/Picture.astro';
 import Actions from '../ui/Actions.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
@@ -30,184 +36,180 @@ interface Props {
   block: Hero;
   locale: string;
   crumbs?: { name: string; href?: string }[];
+  portfolio?: PortfolioKey;
 }
-const { block, locale, crumbs } = Astro.props;
-const { variant, eyebrow, title, lead, image, imageAlt, actions } = block;
-const dark = variant === 'ocean' || (variant === 'photo' && !!image);
-const lines = [title, ...(block.lines ?? [])];
-// Production's banner shows its photo the way an unsized CSS background does:
-// at the image's own pixel size, from the top-left (start) corner, repeated
-// across when the window is wider than the photo. Copies after the first are
-// decorative.
-const bannerImage = variant === 'banner' && image ? img(image) : undefined;
-const bannerTiles = bannerImage ? Math.max(1, Math.ceil(2560 / bannerImage.width)) : 0;
+const { block, locale, crumbs, portfolio } = Astro.props;
+const { variant, title, lead, image, imageAlt, actions } = block;
+const t = ui(locale);
+
+const kind =
+  variant === 'home' ? 'home'
+  : variant === 'portfolio' ? 'portfolio'
+  : variant === 'split' || variant === 'light' ? 'split'
+  : variant === 'banner' || variant === 'heading' ? 'banner'
+  : 'deep';
+
+const pfClass = portfolio ? `pf-${portfolio}` : undefined;
+const pfName = portfolio ? (t.nav as Record<string, string>)[portfolioOf(portfolio).navKey] : undefined;
+
+// Lead paragraphs: `lead`, then any extra title lines and the subtitle, so
+// no copy from older content disappears.
+const leads = [...(lead && variant !== 'feature' ? lead.split(/\n\s*\n/) : []), ...(block.lines ?? []), ...(block.subtitle ? [block.subtitle] : [])];
+
+// Project pages: the place name is the h1, a PT Serif line under it.
+// Today the title is the place and the first lead the line; an older
+// `eyebrow` is still read as the place, with the title as the line.
+const isProject = variant === 'project';
+const place = isProject ? (block.eyebrow ?? title) : undefined;
+const serifLine = isProject ? (block.eyebrow ? title : leads[0]) : undefined;
+const restLeads = isProject && !block.eyebrow ? leads.slice(1) : leads;
+
+// Banner: an old wide strip banner (about 7:1) would be cropped to a near
+// square in the side card; it runs as a full-width strip instead.
+const meta = kind === 'banner' && image ? img(image) : undefined;
+const wideBanner = !!meta && meta.width / meta.height > 2.2;
+const HeadTag = variant === 'feature' ? 'h2' : 'h1';
+const photoFirst = variant === 'project' && block.contentPosition === 'end';
+const objectPos = block.imagePosition === 'top' ? 'object-top' : block.imagePosition === 'bottom' ? 'object-bottom' : undefined;
+const textHalf = 'flex min-w-0 flex-[1_1_520px] flex-col justify-center px-[var(--spacing-gutter)] py-14 md:px-[clamp(32px,5vw,88px)] md:py-[72px]';
 ---
 
 {
-  variant === 'banner' ? (
-    <>
-    <section class:list={['uw-banner on-dark relative isolate flex min-h-[200px] items-center justify-center overflow-hidden px-10 py-10 text-center', !image && 'uw-banner-plain']}>
-      {image && block.imagePosition && (
-        <div class="absolute inset-0 -z-20">
-          <Picture path={image} alt={imageAlt ?? ''} eager sizes="100vw" fill class:list={['h-full w-full object-cover', block.imagePosition === 'top' && 'object-top', block.imagePosition === 'bottom' && 'object-bottom']} />
-        </div>
-      )}
-      {bannerImage && !block.imagePosition && (
-        <div class="absolute inset-0 -z-20 overflow-hidden">
-          {Array.from({ length: bannerTiles }, (_, i) => (
-            <div class="absolute top-0" style={`inset-inline-start:${i * bannerImage.width}px;width:${bannerImage.width}px`} aria-hidden={i > 0 ? 'true' : undefined}>
-              <Picture path={image!} alt={i === 0 ? (imageAlt ?? '') : ''} eager sizes={`${bannerImage.width}px`} widths={[bannerImage.width]} class="block" />
-            </div>
-          ))}
-        </div>
-      )}
-      <div class="absolute inset-0 -z-10 bg-ocean/50" aria-hidden="true" />
-      {crumbs && (
-        <div class="uw-banner-crumbs absolute inset-x-0 top-2.5">
-          <div class="container-page text-start"><Breadcrumbs items={crumbs} locale={locale} onDark /></div>
-        </div>
-      )}
-      <div class="mx-auto flex w-full max-w-[1000px] flex-col items-center gap-2.5">
-        <h1 class:list={['uw-banner-title flex flex-col items-center', block.divider && 'gap-2.5', block.uppercase !== false && 'uppercase']}>
-          {lines.map((line, i) => (
-            <>
-              {i > 0 && block.divider && <span class="block py-[2px]" aria-hidden="true"><span class="block h-[3px] w-[50px] bg-kindle" /></span>}
-              {i > 0 && <span class="sr-only">. </span>}
-              <span class="block" set:html={mdInline(line)} />
-            </>
-          ))}
-        </h1>
-        {block.subtitle && <p class="text-h3 font-normal text-white" set:html={mdInline(block.subtitle, locale)} />}
+  kind === 'home' ? (
+    <section class="uw-grain on-dark flex flex-wrap overflow-hidden">
+      <div class="relative h-[420px] min-w-0 flex-[1_1_520px] overflow-hidden md:h-[680px]">
+        <div class="hero-light uw-grain-light absolute inset-0" aria-hidden="true" />
+        {/* The mark stands behind the person, never over a face. */}
+        <img src="/brand/mark-512.png" alt="" aria-hidden="true" width="512" height="512" class="absolute start-[-30px] bottom-[-70px] h-[440px] w-auto max-w-none md:start-[-40px] md:bottom-[-110px] md:h-[700px]" />
+        {block.cutout && (
+          <Picture path={block.cutout} alt={block.cutoutAlt ?? ''} eager bare sizes="(min-width: 48rem) 400px, 260px" widths={[260, 400, 520, 800]} class="absolute start-[90px] bottom-0 h-[300px] w-auto max-w-none md:start-[150px] md:h-[470px]" />
+        )}
+      </div>
+      <div class:list={[textHalf, 'gap-[26px] md:ps-[clamp(32px,3vw,48px)]']}>
+        <h1 class="headline-inspire text-[clamp(38px,4.3vw,62px)] leading-[1.08]" set:html={mdInline(title, locale)} />
+        {leads.map((p) => <p class="lead max-w-[560px]" set:html={mdInline(p, locale)} />)}
+        <Actions actions={actions} locale={locale} class="gap-3" />
       </div>
     </section>
-    {crumbs && <Breadcrumbs items={crumbs} locale={locale} phone />}
-    </>
-  ) : variant === 'feature' ? (
-    <section class="pt-[var(--spacing-section)]">
-      <div class="on-dark min-h-[320px] bg-black">
-        <div class="max-w-[920px] pt-[26px]">
-          <h2 class="text-center font-heading text-[42px] leading-[1.2] font-medium text-white [text-wrap:wrap]" set:html={mdInline(title)} />
-          {image && <Picture path={image} alt={imageAlt ?? ''} sizes="(min-width: 57.5rem) 920px, 100vw" class="block" />}
-        </div>
+  ) : kind === 'portfolio' ? (
+    <section class:list={['flex flex-wrap', pfClass ? [pfClass, 'pf-bg'] : 'uw-grain-deep on-dark']}>
+      <div class:list={[textHalf, 'gap-6']}>
+        {crumbs && <Breadcrumbs items={crumbs} locale={locale} onDark={!pfClass} inherit={!!pfClass} />}
+        <h1 class="text-[clamp(42px,5.4vw,78px)] leading-[1.02]" set:html={mdInline(title, locale)} />
+        {leads.map((p) => <p class:list={['max-w-[540px] text-[21px] leading-normal', !pfClass && 'lead']} set:html={mdInline(p, locale)} />)}
+        <Actions actions={actions} locale={locale} class="gap-3" />
       </div>
-      {lead && (
-        <div class="container-page pt-[100px] pb-[calc(140px+0.9rem)]">
-          <div class="prose" set:html={md(lead, locale)} />
-        </div>
-      )}
-    </section>
-  ) : variant === 'heading' ? (
-    <section class="px-10 pt-10 pb-2.5 text-center md:pt-[175px]">
-      <div class="mx-auto flex max-w-[1360px] flex-col items-center gap-5">
-        {crumbs && <Breadcrumbs items={crumbs} locale={locale} />}
-        <h1 class="text-[40px] leading-[48px] font-medium text-tech" set:html={mdInline(title)} />
-        {lead && <p class="text-base font-normal text-tech" set:html={mdInline(lead, locale)} />}
-      </div>
-    </section>
-  ) : variant === 'project' ? (
-    <>
-    <section class:list={['uw-banner on-dark relative isolate overflow-hidden px-10 md:py-10', block.contentPosition === 'end' ? 'pt-[70px] pb-10' : 'pt-10 pb-[70px]']}>
-      {/* On phones production stacks the empty photo half too, which adds
-          30px on its side: above the text when the text is the end half. */}
       {image && (
-        <div class="absolute inset-0 -z-20">
-          <Picture path={image} alt={imageAlt ?? ''} eager sizes="100vw" fill class="h-full w-full object-cover" />
+        <div class="relative h-[360px] min-w-0 flex-[1_1_520px] md:h-[600px]">
+          <Picture path={image} alt={imageAlt ?? ''} eager fill sizes="(min-width: 65rem) 50vw, 100vw" class:list={['absolute inset-0', objectPos]} />
         </div>
       )}
-      <div class="absolute inset-0 -z-10 bg-ocean/50" aria-hidden="true" />
-      {crumbs && (
-        <div class="uw-banner-crumbs absolute inset-x-0 top-2.5">
-          <div class="container-page text-start"><Breadcrumbs items={crumbs} locale={locale} onDark /></div>
-        </div>
-      )}
-      <div class="mx-auto flex min-h-[220px] w-full max-w-[1000px] flex-wrap items-center gap-5">
-        <div class:list={['flex w-full flex-col gap-2.5 p-2.5 md:w-[calc(50%-10px)]', block.contentPosition === 'end' && 'md:ms-auto', !actions.length && !block.donateFormId && 'pb-5']}>
-          {/* Production: the country name and the Kindle line are both 32px
-              headings, 10px apart; the name is the page's h1 here. */}
-          {eyebrow && <h1 class="text-h2 font-bold uppercase !text-white">{eyebrow}</h1>}
-          {eyebrow ? (
-            <h2 class="text-h2 !text-kindle [text-wrap:wrap]" set:html={mdInline(title)} />
-          ) : (
-            <h1 class="text-h2 !text-kindle [text-wrap:wrap]" set:html={mdInline(title)} />
-          )}
-          {lead && <div>{lead.split(/\n\s*\n/).map((para) => <p class="mb-[0.9rem] text-body text-white" set:html={mdInline(para, locale)} />)}</div>}
-          {(actions.length > 0 || block.donateFormId) && (
-            <div id="give-form" class="uw-project-donate">
-              <Actions actions={actions} locale={locale} class="uw-donate uw-donate-fallback" />
-              {block.donateFormId && (
-                <div class="uw-virtuous-donate" data-virtuous-embed data-form-id={block.donateFormId}>
-                  <script is:inline src={SITE.virtuousEmbedSrc} data-rd={block.donateFormId} data-organizationId={SITE.virtuousOrgId} data-type="form" defer></script>
-                </div>
-              )}
-              {block.donateFormId && <VirtuousListener />}
-            </div>
-          )}
-        </div>
-      </div>
     </section>
-    {crumbs && <Breadcrumbs items={crumbs} locale={locale} phone />}
-    </>
-  ) : variant === 'split' ? (
+  ) : kind === 'split' ? (
     <section class="bg-mist">
-      <div class="container-page grid items-center gap-8 py-10 md:grid-cols-2 lg:gap-14 lg:py-16">
-        <div>
-          {crumbs && <div class="mb-5"><Breadcrumbs items={crumbs} locale={locale} /></div>}
-          {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
-          <h1 class="text-display" set:html={mdInline(title)} />
-          {lead && <p class="mt-5 text-lead text-ink-muted" set:html={mdInline(lead, locale)} />}
-          <Actions actions={actions} locale={locale} class="mt-8" />
+      <div class="container-page flex flex-wrap items-center gap-x-16 gap-y-10 pt-12 pb-14 md:pt-[72px] md:pb-[88px]">
+        <div class="flex min-w-0 flex-[1_1_460px] flex-col gap-[22px]">
+          {crumbs && <Breadcrumbs items={crumbs} locale={locale} />}
+          {pfName && <div><span class:list={['pf-chip', pfClass]}>{pfName}</span></div>}
+          <h1 class="text-[clamp(36px,4.4vw,62px)] leading-[1.04]" set:html={mdInline(title, locale)} />
+          {leads.map((p) => <p class="lead max-w-[540px]" set:html={mdInline(p, locale)} />)}
+          {block.chips && block.chips.length > 0 && (
+            <ul class="flex flex-wrap gap-2">
+              {block.chips.map((c) => <li class="chip chip-outline">{c}</li>)}
+            </ul>
+          )}
+          <Actions actions={actions} locale={locale} class="gap-3" />
         </div>
         {image && (
-          <div class="overflow-hidden rounded-card shadow-raised">
-            <Picture path={image} alt={imageAlt ?? ''} eager sizes="(min-width: 48rem) 50vw, 100vw" aspect="4 / 3" />
+          <div class="relative min-w-0 flex-[1_1_520px]">
+            <div class="relative h-[320px] overflow-hidden rounded-media md:h-[520px]">
+              <Picture path={image} alt={imageAlt ?? ''} eager fill sizes="(min-width: 65rem) 50vw, 100vw" class:list={['absolute inset-0', objectPos]} />
+            </div>
+            {block.quote && (
+              <figure class="absolute inset-x-5 bottom-5 rounded-small bg-white px-5 py-4">
+                <blockquote class="font-serif text-[19px] leading-[1.35] text-ocean" set:html={mdInline(block.quote.text, locale)} />
+                {(block.quote.name || block.quote.place) && (
+                  <figcaption class="mt-2 text-[15px] text-ink-muted">
+                    {block.quote.name && <strong class="font-extrabold text-ink">{block.quote.name}</strong>}
+                    {block.quote.name && block.quote.place && ' · '}
+                    {block.quote.place}
+                  </figcaption>
+                )}
+              </figure>
+            )}
           </div>
         )}
       </div>
     </section>
-  ) : (
-    <section class:list={['relative isolate overflow-hidden', dark ? 'on-dark bg-ocean angle-bottom' : 'bg-mist']}>
-      {variant === 'photo' && image && (
-        <>
-          <div class="absolute inset-0 -z-20">
-            <Picture path={image} alt={imageAlt ?? ''} eager sizes="100vw" fill class="h-full w-full object-cover" />
-          </div>
-          <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ocean-900/90 via-ocean/75 to-ocean/55" />
-        </>
-      )}
-      {variant === 'ocean' && (
-        <div class="pointer-events-none absolute -end-24 -top-24 -z-10 size-[28rem] rounded-full bg-inspire/20 blur-3xl" aria-hidden="true" />
-      )}
-      <div class:list={['container-page', variant === 'light' ? 'py-10 lg:py-14' : variant === 'photo' ? 'pt-28 pb-12 lg:pt-44 lg:pb-16' : 'pt-12 pb-6 lg:pt-20 lg:pb-10']}>
-        {crumbs && <div class="mb-6"><Breadcrumbs items={crumbs} locale={locale} onDark={dark} /></div>}
-        <div class="max-w-3xl">
-          {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
-          <h1 class:list={[variant === 'light' ? 'text-h1' : 'text-display']} set:html={mdInline(title)} />
-          {lead && <p class:list={['mt-5 text-lead', dark ? 'text-white/90' : 'text-ink-muted']} set:html={mdInline(lead, locale)} />}
-          <Actions actions={actions} locale={locale} class="mt-8" />
+  ) : kind === 'banner' ? (
+    <section class="bg-mist">
+      <div class="container-page flex flex-wrap items-center gap-x-16 gap-y-10 pt-10 pb-12 md:pt-16 md:pb-[72px]">
+        <div class="flex min-w-0 flex-[999_1_520px] flex-col gap-[18px]">
+          {crumbs && <Breadcrumbs items={crumbs} locale={locale} />}
+          <h1 class="max-w-[900px] text-[clamp(36px,4.4vw,62px)] leading-[1.04]" set:html={mdInline(title, locale)} />
+          {leads.map((p) => <p class="lead max-w-[760px] md:text-[21px]" set:html={mdInline(p, locale)} />)}
+          <Actions actions={actions} locale={locale} class="gap-3" />
         </div>
+        {image && (wideBanner ? (
+          <div class="relative h-[140px] w-full min-w-0 basis-full overflow-hidden rounded-media md:h-[220px]">
+            <Picture path={image} alt={imageAlt ?? ''} eager fill sizes="(min-width: 80rem) 1280px, 100vw" class:list={['absolute inset-0', objectPos]} />
+          </div>
+        ) : (
+          <div class="relative h-[260px] min-w-0 flex-[1_1_400px] overflow-hidden rounded-media md:h-[340px]">
+            <Picture path={image} alt={imageAlt ?? ''} eager fill sizes="(min-width: 65rem) 40vw, 100vw" class:list={['absolute inset-0', objectPos]} />
+          </div>
+        ))}
       </div>
+    </section>
+  ) : (
+    <section class:list={['uw-grain-deep on-dark flex flex-wrap overflow-hidden', variant === 'feature' && 'mt-[var(--spacing-section)]']}>
+      <div class:list={[image ? textHalf : 'container-page flex flex-col py-14 md:py-[88px]', 'gap-[22px]']}>
+        {crumbs && <Breadcrumbs items={crumbs} locale={locale} onDark />}
+        {pfName && <div><span class:list={['pf-chip', pfClass]}>{pfName}</span></div>}
+        {place ? (
+          <>
+            <h1 class="text-[clamp(56px,8vw,120px)] leading-[0.95] tracking-[-0.02em]" set:html={mdInline(place, locale)} />
+            {serifLine && <p class="max-w-[560px] font-serif text-[clamp(22px,2.2vw,30px)] leading-[1.3] text-white" set:html={mdInline(serifLine, locale)} />}
+          </>
+        ) : (
+          <HeadTag class="max-w-[900px] text-[clamp(36px,4.2vw,58px)] leading-[1.06]" set:html={mdInline(title, locale)} />
+        )}
+        {variant === 'feature' && lead && <div class="prose max-w-[600px]" set:html={md(lead, locale)} />}
+        {restLeads.map((p) => <p class="lead max-w-[560px]" set:html={mdInline(p, locale)} />)}
+        {block.donateFormId ? (
+          <div id="give-form" class="uw-project-donate">
+            <Actions actions={actions} locale={locale} class="uw-donate-fallback gap-3" />
+            <div class="uw-virtuous-donate" data-virtuous-embed data-form-id={block.donateFormId}>
+              <script is:inline src={SITE.virtuousEmbedSrc} data-rd={block.donateFormId} data-organizationId={SITE.virtuousOrgId} data-type="form" defer></script>
+            </div>
+            <VirtuousListener />
+          </div>
+        ) : (
+          <Actions actions={actions} locale={locale} class="gap-3" />
+        )}
+      </div>
+      {image && (
+        <div class:list={['relative h-[340px] min-w-0 flex-[1_1_520px] overflow-hidden', variant === 'ocean' ? 'md:h-[520px]' : 'md:h-[600px]', photoFirst && 'min-[65rem]:order-first']}>
+          <Picture path={image} alt={imageAlt ?? ''} eager={variant !== 'feature'} fill sizes="(min-width: 65rem) 50vw, 100vw" class:list={['absolute inset-0', objectPos]} />
+          {block.angles && <div class="uw-angles" style="--angle-color: var(--pf, var(--color-cultivate))" aria-hidden="true" />}
+        </div>
+      )}
     </section>
   )
 }
 
 <style>
-  /* Project band with `donateFormId`: Virtuous draws its own "Donate Now"
-     button (it opens the form in a modal). Until that button is there, and
-     wherever the form cannot load (unregistered preview domains, no
-     script), our look-alike link stays and Virtuous's output stays hidden. */
+  /* Home: the light angled layer behind the mark. */
+  .hero-light { clip-path: polygon(0 0, 24% 0, 100% 100%, 0 100%); }
+  :global([dir='rtl']) .hero-light { transform: scaleX(-1); }
+
+  /* Project `donateFormId`: Virtuous draws its own "Donate Now" button (it
+     opens the form in a modal). Until that button is there, and wherever the
+     form cannot load (unregistered preview domains, no script), our own
+     button stays and Virtuous's output stays hidden. */
   .uw-virtuous-donate { display: none; }
   .uw-project-donate.is-ready .uw-virtuous-donate { display: block; }
   .uw-project-donate.is-ready :global(.uw-donate-fallback) { display: none; }
-  /* A Donate button in the project band is production's Virtuous button. */
-  :global(.uw-donate .uw-btn-give) { height: 56px; padding: 12px 16px; font-family: Arial, 'Helvetica Neue', Helvetica, var(--font-sans); font-size: 14px; line-height: 16.8px; font-weight: 600; }
-  /* Production: h2 32/32/700 white, centered. Ours stays an h1. */
-  .uw-banner-title { font-size: var(--text-h2); line-height: 1; font-weight: 700; color: #fff; margin: 0; text-wrap: wrap; }
-  /* No photo: production's band shows the overlay over white. */
-  .uw-banner-plain { background-color: #fff; }
-  /* Breadcrumbs sit in the band's top padding so the title stays centered;
-     on phones there is no room, so they hide there and a compact row of
-     parent links follows the band instead (Breadcrumbs `phone`). */
-  @media (max-width: 767px) { .uw-banner-crumbs { display: none; } }
 </style>
 
 <script is:inline>

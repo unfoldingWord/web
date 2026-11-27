@@ -1,0 +1,60 @@
+---
+// The four portfolios (docs/design-system/designs/PortfolioGrid.dc.html):
+// tiles for Transformation, Innovation and Catalyzation, then the Equipping
+// Partners panel in Kindle, which matches the Give button on purpose.
+import type { Block } from '../../content.config';
+import { md, mdInline, localizeHref } from '../../lib/md';
+import { ui, localizePath } from '../../i18n';
+import { PORTFOLIOS, portfolio } from '../../lib/portfolios';
+import Icon from '../ui/Icon.astro';
+
+type PortfolioGrid = Extract<Block, { type: 'portfolioGrid' }>;
+interface Props {
+  block: PortfolioGrid;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+const t = ui(locale);
+const nav = t.nav as Record<string, string>;
+const explore = (t as Record<string, unknown>).explore as string | undefined;
+const tiles = PORTFOLIOS.filter((p) => p.key !== 'equipping');
+const ep = portfolio('equipping');
+---
+
+<section class:list={[block.background === 'mist' ? 'bg-mist' : 'bg-white', 'section-y']}>
+  <div class="container-page flex flex-col gap-9">
+    {
+      (block.title || block.intro) && (
+        <div class="flex max-w-3xl flex-col gap-3">
+          {block.title && <h2 set:html={mdInline(block.title, locale)} />}
+          {block.intro && <p class="lead" set:html={mdInline(block.intro, locale)} />}
+        </div>
+      )
+    }
+    <ul class="grid gap-6 md:grid-cols-3">
+      {
+        tiles.map((p) => (
+          <li class:list={['flex', `pf-${p.key}`]}>
+            <a href={localizePath(p.href, locale)} class="group flex w-full flex-col overflow-hidden rounded-media border border-line text-ink no-underline hover:shadow-card">
+              <span class="pf-bg flex min-h-33 items-end px-6.5 py-5.5 font-heading text-[1.875rem] leading-tight font-black">{nav[p.navKey] ?? p.key}</span>
+              <span class="flex flex-1 flex-col gap-3 px-6.5 pt-5.5 pb-6.5">
+                <span class="prose" set:html={md(block[p.key], locale)} />
+                <span class="uw-more mt-auto">
+                  {explore ? explore.replace('{name}', nav[p.navKey] ?? p.key) : `Explore ${nav[p.navKey] ?? p.key}`}
+                  <Icon name="arrow-right" class="size-4 transition group-hover:translate-x-1 rtl:-scale-x-100" />
+                </span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="pf-equipping pf-bg flex flex-wrap items-center justify-between gap-x-12 gap-y-5 rounded-media px-[clamp(1.625rem,3vw,2.75rem)] py-8">
+      <div class="flex min-w-0 flex-[1_1_32rem] flex-col gap-1.5">
+        <h3 class="text-[2.125rem] leading-tight">{nav[ep.navKey] ?? 'Equipping Partners'}</h3>
+        <div class="prose max-w-[45rem] text-[1.1875rem]" set:html={md(block.equipping, locale)} />
+      </div>
+      <a href={block.equippingHref ? localizeHref(block.equippingHref, locale) : localizePath(ep.href, locale)} class="uw-btn uw-btn-primary uw-btn-lg max-w-full whitespace-normal sm:shrink-0">{block.equippingAction}</a>
+    </div>
+  </div>
+</section>

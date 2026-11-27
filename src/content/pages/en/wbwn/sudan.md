@@ -2,12 +2,12 @@
 title: Sudan
 description: Give to open the door for Bible translation resources in Sudanese Arabic and then 130 minority languages, for church planters serving Sudan.
 ogImage: wbwn/sudan.jpg
+portfolio: transformation
 sections:
 - type: hero
   variant: project
-  eyebrow: Sudan
-  title: Light for 130 languages
-  lead: '**Your giving will open the door for Bible translation resources to be translated into Sudanese Arabic and then 130 minority languages.**'
+  title: Sudan
+  lead: Light for 130 languages
   image: banners/sudan.jpg
   imageAlt: A woman carrying a box on her head walks across the desert past grazing goats, with pyramids in the haze behind
   contentPosition: end
@@ -19,7 +19,10 @@ sections:
 - type: prose
   title: Project Overview
   width: narrow
-  body: Millions of men and women are in Sudanese refugee settlements, hungry for the Good News of peace through Jesus Christ in their language. Church planters need the Bible in all the heart languages of Sudan to plant healthy churches and disciple believers.
+  body: |-
+    Your giving will open the door for Bible translation resources to be translated into Sudanese Arabic and then 130 minority languages.
+
+    Millions of men and women are in Sudanese refugee settlements, hungry for the Good News of peace through Jesus Christ in their language. Church planters need the Bible in all the heart languages of Sudan to plant healthy churches and disciple believers.
 - type: stats
   title: At a Glance
   variant: bars
@@ -31,8 +34,8 @@ sections:
   - value: 37,500,000
     label: People Impacted
     color: kindle
-  - value: '*63* unreached people groups'
-    label: People Groups affected
+  - value: '63'
+    label: Unreached people groups affected
 - type: prose
   title: Prayers
   icon: pray
@@ -48,9 +51,10 @@ sections:
   - the-exponential-journey
   - like-the-man-from-macedonia
 - type: cards
+  title: More Whole Bible | Whole Nation projects
   columns: 5
   variant: outlined
-  background: kindle
+  background: white
   items:
   - title: Benin
     image: wbwn/benin.jpg

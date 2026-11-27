@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Scroll story</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800;6..12,900&family=PT+Serif:ital@0;1&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<section id="{{trackId}}" aria-label="A story in parts" style="font-family: 'Avenir', 'Avenir Next', 'Nunito Sans', system-ui, sans-serif; color: #231f20; font-size: 17px; line-height: 1.6; height: {{trackH}}; background: #ffffff">
+  <div style="position: {{stickyPos}}; top: 0; height: {{stickyH}}; overflow: hidden; box-sizing: border-box">
+    <div style="max-width: 1180px; height: 100%; box-sizing: border-box; margin: 0 auto; padding: 64px 32px 48px; display: flex; flex-direction: column; gap: 36px">
+
+      <div aria-hidden="true" style="display: {{tabsDisplay}}; gap: 8px">
+        <sc-for list="{{items}}" as="c" hint-placeholder-count="3">
+          <div style="flex: 1 1 0; min-width: 0; border-top: 5px solid {{c.bar}}; padding: 14px 4px 0; display: flex; flex-direction: column; gap: 2px; transition: border-color 0.4s ease">
+            <span style="font-size: 15px; font-weight: 800; color: {{c.kickerFg}}">{{c.kicker}}</span>
+            <span style="font-size: 22px; font-weight: 800; color: {{c.labelFg}}">{{c.label}}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="position: relative; flex: 1 1 auto; min-height: 0">
+        <sc-for list="{{items}}" as="p" hint-placeholder-count="3">
+          <div style="position: {{panePos}}; top: 0; left: 0; width: 100%; height: {{paneH}}; margin-bottom: {{paneGap}}; opacity: {{p.o}}; pointer-events: {{p.pe}}; transform: translateY({{p.y}}); transition: opacity 0.6s ease, transform 0.6s ease; display: flex; flex-wrap: wrap; align-items: center; gap: 40px 72px">
+            <div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+              <div style="display: {{kickerDisplay}}; font-size: 15px; font-weight: 800; color: #0b6e9e">{{p.kicker}} · {{p.label}}</div>
+              <div style="display: {{p.figDisplay}}; font-size: clamp(64px, 8vw, 124px); line-height: 0.95; font-weight: 800; color: {{p.figColor}}; letter-spacing: -0.02em">{{p.figure}}</div>
+              <h2 style="margin: 0; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.15; font-weight: 900; color: #014263">{{p.title}}</h2>
+              <p style="margin: 0; font-size: 19px; color: #5b5557; max-width: 520px">{{p.body}}</p>
+            </div>
+            <img src="{{p.src}}" alt="{{p.alt}}" style="flex: 1 1 380px; min-width: 0; width: 100%; max-width: 480px; height: 440px; object-fit: cover; object-position: {{p.pos}}; border-radius: 24px">
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"parts":{"editor":null,"tsType":"Array<{kicker:string,label:string,figure?:string,figColor?:string,title:string,body:string,src:string,alt:string,pos?:string}>"},"trackId":{"editor":null,"tsType":"string"},"$preview":{"width":1440,"height":1760}}'>
+class Component extends DCLogic {
+  // "static": the whole page is visible at once (the canvas), so the parts stack.
+  // "scroll": the page scrolls (Play / full window), so the section pins and the parts swap.
+  state = { mode: 'static', part: 1, paneH: 760 };
+
+  trackId() { return this.props.trackId ?? 'scroll-story'; }
+
+  parts() {
+    return this.props.parts ?? [
+      { kicker: 'Part 1', label: 'The cry', figure: '34', figColor: '#5b5557', title: 'language groups with a complete Bible, after 70 years', body: 'The demand for Bible translation far exceeds the capacity of traditional methods.', src: '/src/assets/images/stories/the-crisis-in-islands-asia-bible-translation.jpg', alt: 'A woman in a woven striped net top stands in a green village garden', pos: '25% 25%' },
+      { kicker: 'Part 2', label: 'The shift', figure: '170 years', figColor: '#014263', title: 'Then the church took the lead.', body: 'A people group of 500,000 is now on the way to translating God’s Word for themselves.', src: '/src/assets/images/home/field-birhan.jpg', alt: 'An older man in a blue bucket hat', pos: '50% 22%' },
+      { kicker: 'Part 3', label: 'Today', figure: '130', figColor: '#31ade3', title: 'language groups now served by one partner’s ministry', body: 'Open-licensed materials churches translate once and then use across many languages.', src: '/src/assets/images/stories/translationcore-a-massive-hit-in-myanmar.jpg', alt: 'Translators lean in together around a laptop', pos: '50% 50%' }
+    ];
+  }
+
+  componentDidMount() {
+    this.onScroll = () => { this.sawScroll = true; this.queue(); };
+    this.queue = () => {
+      if (this.raf) return;
+      this.raf = requestAnimationFrame(() => { this.raf = null; this.measure(); });
+    };
+    window.addEventListener('scroll', this.onScroll, { capture: true, passive: true });
+    window.addEventListener('resize', this.queue);
+    this.measure();
+    this.settle = setTimeout(() => this.measure(), 400);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll, { capture: true });
+    window.removeEventListener('resize', this.queue);
+    if (this.raf) cancelAnimationFrame(this.raf);
+    clearTimeout(this.settle);
+  }
+
+  measure() {
+    const track = document.getElementById(this.trackId());
+    if (!track) return;
+    const s = this.state || {};
+    const n = this.parts().length || 1;
+    const vh = window.innerHeight;
+    const canScroll = this.sawScroll || document.documentElement.scrollHeight > vh + 4;
+    if (!canScroll) {
+      if (s.mode !== 'static') this.setState({ mode: 'static', part: 1 });
+      return;
+    }
+    const paneH = Math.max(640, Math.min(vh, 900));
+    const rect = track.getBoundingClientRect();
+    const dist = rect.height - paneH;
+    let p = dist > 0 ? -rect.top / dist : 0;
+    p = Math.max(0, Math.min(0.999, p));
+    const part = Math.min(n, Math.floor(p * n) + 1);
+    if (s.mode !== 'scroll' || s.part !== part || s.paneH !== paneH) {
+      this.setState({ mode: 'scroll', part, paneH });
+    }
+  }
+
+  renderVals() {
+    const s = this.state || {};
+    const scroll = s.mode === 'scroll';
+    const part = s.part || 1;
+    const paneH = s.paneH || 760;
+    const parts = this.parts();
+    return {
+      trackId: this.trackId(),
+      trackH: scroll ? (paneH * (parts.length + 0.2)) + 'px' : 'auto',
+      stickyPos: scroll ? 'sticky' : 'static',
+      stickyH: scroll ? paneH + 'px' : 'auto',
+      panePos: scroll ? 'absolute' : 'relative',
+      paneH: scroll ? '100%' : 'auto',
+      paneGap: scroll ? '0px' : '88px',
+      tabsDisplay: scroll ? 'flex' : 'none',
+      kickerDisplay: scroll ? 'none' : 'block',
+      items: parts.map((d, i) => {
+        const n = i + 1;
+        const on = !scroll || part === n;
+        return {
+          ...d,
+          pos: d.pos || '50% 50%',
+          figDisplay: d.figure ? 'block' : 'none',
+          figColor: d.figColor || '#014263',
+          o: on ? '1' : '0',
+          pe: on ? 'auto' : 'none',
+          y: on ? '0px' : part > n ? '-40px' : '40px',
+          bar: n <= part ? '#31ade3' : '#dce6eb',
+          kickerFg: n === part ? '#0b6e9e' : '#5b5557',
+          labelFg: n === part ? '#014263' : '#5b5557'
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

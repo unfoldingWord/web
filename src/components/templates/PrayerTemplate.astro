@@ -1,18 +1,21 @@
 ---
-// A prayer request, laid out like production: the page-title banner (title
-// in white capitals over a 50% Ocean overlay), the request in the 1000px
-// column, its month centered underneath, then (when `related` names them)
-// up to three related requests.
+// A prayer request, laid out like a story (Story.dc.html, Pray.dc.html): an
+// 880px header (breadcrumbs, date and region, the title), the photo when
+// there is one, the request in PT Serif on the 720px column, the "I prayed
+// for this" toggle (remembered in this browser only, shared with the
+// /pray/ list), a link back to all requests, and the requests named in
+// `related` as cards on Mist.
 import { render, getCollection, type CollectionEntry } from 'astro:content';
 import { SITE } from '../../lib/site';
 import { webPageNode, breadcrumbNode, articleNode } from '../../lib/jsonld';
-import { ui, formatDate, formatMonth, localizePath } from '../../i18n';
+import { ui, formatDate, localizePath } from '../../i18n';
 import { basePathFor, splitId, type Route } from '../../lib/routes';
+import { mdInline } from '../../lib/md';
 import LocalizedBody from '../ui/LocalizedBody.astro';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../ui/Breadcrumbs.astro';
 import Picture from '../ui/Picture.astro';
-import PostFooter from '../ui/PostFooter.astro';
+import Icon from '../ui/Icon.astro';
 
 interface Props {
   route: Route;
@@ -22,15 +25,16 @@ const { route, crumbs } = Astro.props;
 const entry = route.entry as CollectionEntry<'prayer'>;
 const d = entry.data;
 const t = ui(route.locale);
+const s = t as Record<string, unknown>;
 const { Content } = await render(entry);
 const url = new URL(route.path, SITE.url).href;
 const regions = t.regions as Record<string, string>;
-
-// Related: the requests named in `related` (one per slug, in this locale
-// when translated), like production's Jetpack list, which most production
-// requests do not show. A translation without its own list uses English's.
-const bySlug = new Map<string, CollectionEntry<'prayer'>>();
+const regionName = (r?: string) => (r ? (regions[r] ?? r) : undefined);
 const own = splitId(entry.id).rest;
+
+// Related: the requests named in `related` (in this locale when translated).
+// A translation without its own list uses English's.
+const bySlug = new Map<string, CollectionEntry<'prayer'>>();
 let englishRelated: string[] | undefined;
 for (const p of await getCollection('prayer')) {
   const { locale: l, rest } = splitId(p.id);
@@ -38,17 +42,21 @@ for (const p of await getCollection('prayer')) {
   if (l === 'en' && !bySlug.has(rest)) bySlug.set(rest, p);
   if (l === route.locale) bySlug.set(rest, p);
 }
-const relatedSlugs = d.related ?? englishRelated ?? [];
-const related = relatedSlugs
+const related = (d.related ?? englishRelated ?? [])
   .filter((slug) => slug !== own && bySlug.has(slug))
-  .map((slug) => [slug, bySlug.get(slug)!] as const)
-  .map(([slug, p]) => ({
-    title: p.data.title,
-    href: localizePath(basePathFor('prayer', slug), route.locale),
-    date: formatDate(p.data.date, route.locale),
-    datetime: p.data.date.toISOString(),
-    category: p.data.region ? (regions[p.data.region] ?? p.data.region) : undefined,
-  }));
+  .map((slug) => {
+    const p = bySlug.get(slug)!;
+    return {
+      title: p.data.title,
+      description: p.data.description,
+      href: localizePath(basePathFor('prayer', slug), route.locale),
+      date: formatDate(p.data.date, route.locale),
+      datetime: p.data.date.toISOString(),
+      region: regionName(p.data.region),
+    };
+  });
+const iPrayed = (s.iPrayed as string) ?? 'I prayed for this';
+const prayed = (s.prayed as string) ?? 'Prayed';
 
 const jsonLd = [
   webPageNode({ url, title: d.title, description: d.description, lang: route.locale, breadcrumbId: `${url}#breadcrumb` }),
@@ -59,60 +67,98 @@ const jsonLd = [
 
 <Base locale={route.locale} basePath={route.basePath} title={d.title} description={d.description} ogType="article" jsonLd={jsonLd} translations={route.translations} fallback={route.fallback} noindex={route.noindex} pageType="prayer">
   <article>
-    <header class:list={['uw-banner on-dark post-banner', !d.image && 'post-banner-plain']}>
-      {
-        d.image && (
-          <div class="absolute inset-0 -z-20">
-            <Picture path={d.image} alt={d.imageAlt ?? ''} eager sizes="100vw" fill class="post-banner-img" />
-          </div>
-        )
-      }
-      <div class="absolute inset-0 -z-10 bg-ocean/50" aria-hidden="true"></div>
-      <div class="post-crumbs">
-        <div class="container-page text-start"><Breadcrumbs items={crumbs} locale={route.locale} onDark /></div>
+    <header class="mx-auto flex max-w-[calc(880px+2*var(--spacing-gutter))] flex-col gap-[18px] px-[var(--spacing-gutter)] pt-12 pb-10 md:pt-16">
+      <Breadcrumbs items={crumbs} locale={route.locale} />
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-2.5">
+        <span class="chip text-sm"><time datetime={d.date.toISOString()}>{formatDate(d.date, route.locale)}</time></span>
+        {d.region && <span class="text-[0.9375rem] text-ink-muted">{regionName(d.region)}</span>}
       </div>
-      <h1 class="post-title">{d.title}</h1>
+      <h1 class="text-[clamp(2.25rem,1.2rem+3.2vw,3.75rem)] leading-[1.06]" set:html={mdInline(d.title)} />
     </header>
-    <Breadcrumbs items={crumbs} locale={route.locale} phone />
-    <div class="container-page py-[var(--spacing-section)]">
-      <div class="prose post-body"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
-      <p class="prayer-month"><time datetime={d.date.toISOString()}>{formatMonth(d.date, route.locale)}</time></p>
-      <PostFooter locale={route.locale} related={related} />
+
+    {
+      d.image && (
+        <div class="container-page mb-12">
+          <div class="relative h-[260px] overflow-hidden rounded-media bg-mist sm:h-[420px] lg:h-[520px]">
+            <Picture path={d.image} alt={d.imageAlt ?? ''} eager sizes="(min-width: 82rem) 1280px, 100vw" fill />
+          </div>
+        </div>
+      )
+    }
+
+    <div class="container-story pb-16 md:pb-20">
+      <div class="prose prose-serif"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
+      <div class="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
+        <button type="button" class="uw-pill" data-pray-toggle={own} aria-pressed="false" hidden>
+          <span data-off>{iPrayed}</span>
+          <span data-on hidden class="inline-flex items-center gap-1.5"><Icon name="check" class="size-4" />{prayed}</span>
+        </button>
+        <a href={localizePath('/pray/', route.locale)} class="uw-more">
+          <Icon name="arrow-right" class="size-4 -scale-x-100 rtl:scale-x-100" />
+          {t.allPrayerRequests}
+        </a>
+      </div>
     </div>
   </article>
+
+  {
+    related.length > 0 && (
+      <section class="bg-mist py-[var(--spacing-section)]" aria-labelledby="related-requests">
+        <div class="container-page flex flex-col gap-9">
+          <h2 id="related-requests">{t.related}</h2>
+          <ul class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {related.map((r) => (
+              <li class="flex">
+                <article class="uw-card flex flex-1 flex-col gap-3 p-7">
+                  <p class="flex flex-wrap items-center gap-x-3 gap-y-2">
+                    {r.region && <span class="chip">{r.region}</span>}
+                    <time datetime={r.datetime} class="text-sm text-ink-muted">{r.date}</time>
+                  </p>
+                  <h3 class="text-h4 font-black">
+                    <a href={r.href} class="text-ocean hover:text-inspire-ink" set:html={mdInline(r.title)} />
+                  </h3>
+                  <p class="text-ink-muted">{r.description}</p>
+                </article>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
 </Base>
 
-<style>
-  /* Production's page-title banner (see StoryTemplate). Prayer requests have
-     no photo: the overlay sits over white. */
-  .post-banner {
-    position: relative;
-    isolation: isolate;
-    display: flex;
-    min-height: 200px;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    padding: 40px;
-    text-align: center;
-  }
-  .post-banner-plain { background-color: #fff; }
-  .post-banner :global(.post-banner-img) { object-position: top; }
-  .post-title {
-    max-width: 1000px;
-    margin: 0;
-    font-size: var(--text-h2);
-    line-height: 1;
-    font-weight: 700;
-    color: #fff;
-    text-transform: uppercase;
-  }
-  /* On phones the banner trail hides; a compact row follows the banner. */
-  .post-crumbs { position: absolute; inset-inline: 0; top: 10px; }
-  @media (max-width: 767px) { .post-crumbs { display: none; } }
-  .post-body { max-width: none; }
-  /* Production wraps text plainly (no balance or pretty). */
-  .post-title, .post-body :global(:is(p, h2, h3, li)) { text-wrap: wrap; }
-  /* The month: production's block-editor "medium" paragraph, centered. */
-  .prayer-month { margin: 0 0 14.4px; text-align: center; font-size: 20px; line-height: 30px; font-weight: 300; color: #000; }
-</style>
+<script>
+  // Same store as the /pray/ list (PrayerList.astro): local to this browser.
+  const KEY = 'uw-prayed';
+  const load = (): Set<string> => {
+    try {
+      return new Set(JSON.parse(localStorage.getItem(KEY) ?? '[]'));
+    } catch {
+      return new Set();
+    }
+  };
+  document.querySelectorAll<HTMLButtonElement>('article [data-pray-toggle]').forEach((b) => {
+    const id = b.dataset.prayToggle!;
+    let on = load().has(id);
+    const paint = () => {
+      b.setAttribute('aria-pressed', String(on));
+      b.querySelector<HTMLElement>('[data-off]')!.hidden = on;
+      b.querySelector<HTMLElement>('[data-on]')!.hidden = !on;
+    };
+    b.hidden = false;
+    b.addEventListener('click', () => {
+      on = !on;
+      const ids = load();
+      if (on) ids.add(id);
+      else ids.delete(id);
+      try {
+        localStorage.setItem(KEY, JSON.stringify([...ids]));
+      } catch {
+        /* not saved; the toggle still works for this visit */
+      }
+      paint();
+    });
+    paint();
+  });
+</script>

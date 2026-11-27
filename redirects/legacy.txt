@@ -41,7 +41,7 @@
 /ccbt/[[glossary                    /ccbt/glossary/
 
 # --- Old site structure (www.unfoldingword.org before WordPress) ---
-/projects/eurasia/russian           /wbwn/
+/projects/eurasia/russian           /transformation/
 /publications/audio-engineering     /publications/
 /publications/ccbt-getting-started  /wp-content/uploads/2024/10/ccbt-getting-started-rev1.pdf
 /publications/free-translate        /publications/
@@ -69,16 +69,16 @@
 /stories/jeremiah-and-the-occult-king       /stories/when-jeremiah-first-heard-that-his-chadian-church-planting/
 /privacy-policy                             /privacy/
 /audio-engineering                          /publications/
-/projects                                   /wbwn/
+/projects                                   /transformation/
 /christmas-2024                             /give/
 /endure2024                                 /give/
 /uncategorized/in-the-republic-of-iran-for-the-church-to-be-planted /stories/in-the-republic-of-iran-for-the-church-to-be-planted/
-/projects/worldwide                         /wbwn/
-/projects-overview                          /wbwn/
-/russiangateway                             /wbwn/
-/license/projects/eurasia/russian           /wbwn/
-/door43/projects/eurasia/russian            /wbwn/
-/s/1-Russia-Speaking-World_11052020.pdf     /wbwn/
+/projects/worldwide                         /transformation/
+/projects-overview                          /transformation/
+/russiangateway                             /transformation/
+/license/projects/eurasia/russian           /transformation/
+/door43/projects/eurasia/russian            /transformation/
+/s/1-Russia-Speaking-World_11052020.pdf     /transformation/
 /what-we-do                                 /about/
 /details                                    /about/
 /about-unfoldingword                        /about/
@@ -196,7 +196,7 @@
 /the-gateway-languages-strategy             /publications/#TGLS
 /publications/unrestricted-original-language-resources /publications/
 /publications/from-unreached-to-established /publications/#U2E
-/whole-bible-page                           /wbwn/
+/whole-bible-page                           /transformation/
 /uncategorized/gods-initiative-in-sudan     /stories/gods-initiative-in-sudan/
 /for-translators/tools/content              /for-translators/content/
 /GN-OCT25                                   /give/?utm_campaign=GoodNews2025&utm_medium=QR&utm_source=OCT25-01-QR
@@ -210,7 +210,7 @@
 /kbuganda                                   /give/kingdom-business/
 /sudanese/asim-serves-on-the-bible-translation-audio-video-team /stories/asim-serves-on-the-bible-translation-audio-video-team/
 /2026Q4NL                                   /give/?segmentCode=26NL11AFPTQ4
-/whole-bible-whole-nation                   /wbwn/
+/whole-bible-whole-nation                   /transformation/
 /wbwn/benin-v2                              /wbwn/benin/
 /wbwn/chad-v2                               /wbwn/chad/
 /wbwn/iran-v2                               /wbwn/iran/
@@ -329,16 +329,16 @@
 /door43/projects/asia/southeastasia1        /wbwn/se-asia/
 /translationstudio/projects/asia/southeastasia1 /wbwn/se-asia/
 /s/Chad_UnfoldingWord_85x11_12112020.pdf    /wbwn/chad/
-/africa                                     /wbwn/
-/projects/middle-east-north-africa-pakistan /wbwn/
-/arabic-speaking-world                      /wbwn/
-/projects/menapak/arabic-speaking-world     /wbwn/
-/arabic                                     /wbwn/
-/gl-spanish                                 /wbwn/
-/spanishgateway                             /wbwn/
-/latin-american-spanish-story-revamp        /wbwn/
-/s/LatinAmericanSpanish_UnfoldingWord_85x11_06262020-1.pdf /wbwn/
-/blog/tag/southasia                         /wbwn/
+/africa                                     /transformation/
+/projects/middle-east-north-africa-pakistan /transformation/
+/arabic-speaking-world                      /transformation/
+/projects/menapak/arabic-speaking-world     /transformation/
+/arabic                                     /transformation/
+/gl-spanish                                 /transformation/
+/spanishgateway                             /transformation/
+/latin-american-spanish-story-revamp        /transformation/
+/s/LatinAmericanSpanish_UnfoldingWord_85x11_06262020-1.pdf /transformation/
+/blog/tag/southasia                         /transformation/
 
 # About and resources
 /s/uWLegalandDoctrinalStatementForm.pdf     /statement-of-faith/
@@ -356,7 +356,7 @@
 /license                                    /ccbt/open-licensed-biblical-content/
 /disclosures-credits                        /charitable-solicitation-disclosures/
 /gateway/how-to-open                        /ccbt/gateway-languages/
-/portfolio                                  /wbwn/
+/portfolio                                  /transformation/
 /videos                                     /stories/
 
 # Finished campaigns: to the main giving page, keeping their tracking codes
@@ -418,4 +418,4 @@
 /join-us/open-gateway                       /ccbt/gateway-languages/
 /his-light                                  /global-regional-forums/
 /global-forum-25-thank-you                  /global-regional-forums/
-/our-work                                   /wbwn/
+/our-work                                   /transformation/

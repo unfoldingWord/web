@@ -1,63 +1,39 @@
 ---
-// Numbers.
-//   grid — a centered row of figures with their labels
-//   bars — production's "At a Glance" (wbwn): a 28px h3 label, then a full-width
-//          Ocean or Kindle bar with the number in 30px white (an item with no
-//          `color` is a 24px Ocean h4 instead). Production stacks these
-//          widgets 20px apart in one white container with the overview text
-//          above and the Prayers box below, so this section has no padding
-//          of its own and overlaps the previous section's bottom padding by
-//          20px (wbwn pages use bars only between those two blocks).
+// A number band: each figure large, with a plain label under it, in a
+// wrapping row. On a portfolio page the band takes the portfolio color;
+// otherwise it is Ocean with Inspire numbers (or Mist with Ocean numbers
+// when `background` is white or mist). `variant: bars` and each item's
+// `color` are older layouts and render the same way; a long text value is
+// set smaller so it still fits.
 import type { Block } from '../../content.config';
-import Section from '../ui/Section.astro';
-import SectionHeader from '../ui/SectionHeader.astro';
+import type { PortfolioKey } from '../../lib/portfolios';
 import { mdInline } from '../../lib/md';
+import SectionHeader from '../ui/SectionHeader.astro';
 
 type Stats = Extract<Block, { type: 'stats' }>;
 interface Props {
   block: Stats;
   locale: string;
+  portfolio?: PortfolioKey;
 }
-const { block, locale } = Astro.props;
-const lgCols = ({ 1: 'lg:grid-cols-1', 2: 'lg:grid-cols-2', 3: 'lg:grid-cols-3' } as Record<number, string>)[block.items.length] ?? 'lg:grid-cols-4';
-const onOcean = block.background === 'ocean';
+const { block, locale, portfolio } = Astro.props;
+const ground = portfolio ? `pf-${portfolio} pf-bg` : block.background === 'ocean' ? 'uw-grain on-dark' : 'bg-mist';
+const numberColor = portfolio ? '' : block.background === 'ocean' ? 'text-inspire' : 'text-ocean';
+const plainText = (s: string) => s.replace(/[*_`]/g, '');
 ---
 
-{
-  block.variant === 'bars' ? (
-    <Section background={block.background} class="-mt-5 !py-0">
-      <div class="mx-auto flex max-w-[800px] flex-col gap-5">
-        {block.title && <h2 set:html={mdInline(block.title, locale)} />}
-        {block.items.map((s) => (
-          <>
-            <h3 class="uw-bar-label">{s.label}</h3>
-            {s.color ? (
-              <p class:list={['uw-bar', s.color === 'kindle' ? 'bg-kindle' : 'bg-ocean']}>{s.value}</p>
-            ) : (
-              <h4 class="uw-bar-text" set:html={mdInline(s.value, locale)} />
-            )}
-          </>
-        ))}
-      </div>
-    </Section>
-  ) : (
-    <Section background={block.background}>
-      <SectionHeader title={block.title} align="center" locale={locale} />
-      <dl class:list={['grid grid-cols-2 gap-x-5 gap-y-8 text-center', lgCols, block.items.length <= 3 && 'mx-auto max-w-[800px]']}>
-        {block.items.map((s) => (
-          <div class="flex flex-col-reverse justify-end gap-2.5">
-            <dt class:list={['text-body', onOcean ? 'text-white' : 'text-tech']}>{s.label}</dt>
-            <dd class:list={['font-heading text-[30px] leading-none font-bold', onOcean ? 'text-white' : 'text-ocean']}>{s.value}</dd>
+<section class:list={[ground, 'py-14']}>
+  <div class="container-page">
+    <SectionHeader title={block.title} locale={locale} class="!mb-8" />
+    <dl class="flex flex-wrap gap-x-12 gap-y-7">
+      {
+        block.items.map((s) => (
+          <div class="flex min-w-0 flex-[1_1_260px] flex-col-reverse justify-end gap-1">
+            <dt>{s.label}</dt>
+            <dd class:list={[plainText(s.value).length > 14 ? 'font-heading text-h3 font-black' : 'uw-figure', numberColor]} set:html={mdInline(s.value, locale)} />
           </div>
-        ))}
-      </dl>
-    </Section>
-  )
-}
-
-<style>
-  .uw-bar-label { margin: 0; font-family: var(--font-heading); font-size: var(--text-h3); line-height: 1; font-weight: 400; color: var(--color-tech); }
-  /* Production: h4 24px/700 Ocean ("63 unreached people groups"). */
-  .uw-bar-text { margin: 0; font-family: var(--font-heading); font-size: var(--text-h4); line-height: 1; font-weight: 700; color: var(--color-ocean); }
-  .uw-bar { margin: 0; padding: 20px; text-align: center; font-family: var(--font-heading); font-size: 30px; line-height: 1; font-weight: 700; color: #fff; }
-</style>
+        ))
+      }
+    </dl>
+  </div>
+</section>

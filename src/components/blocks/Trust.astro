@@ -1,12 +1,12 @@
 ---
-// Accountability marks (ECFA, Candid, MinistryWatch). Text links rather than
-// hot-linked badge images: the third-party badge scripts on the old site
-// slowed every page and two of them 404ed. Production has no such list (the
-// badges live in the footer); it is kept and styled quietly to match: no
-// boxes, an Inspire check, Kindle 900 names like production's links.
+// Accountability marks (ECFA, Candid, MinistryWatch) as bordered cards with
+// a check, the name (linked to the rating) and what it means. Text links
+// rather than hot-linked third-party badge scripts. A tight band (py-12):
+// it sits between other white sections on giving pages.
 import type { Block } from '../../content.config';
 import { SITE } from '../../lib/site';
 import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
 import Icon from '../ui/Icon.astro';
 
 type Trust = Extract<Block, { type: 'trust' }>;
@@ -14,27 +14,22 @@ interface Props {
   block: Trust;
   locale: string;
 }
-const { block } = Astro.props;
+const { block, locale } = Astro.props;
 ---
 
-<Section>
-  {block.title && <h2 class="mb-5 text-center">{block.title}</h2>}
-  <ul class="grid gap-5 md:grid-cols-3">
+<Section class="py-12">
+  <SectionHeader title={block.title} locale={locale} />
+  <ul class="flex flex-wrap gap-5">
     {
       SITE.trust.map((b) => (
-        <li class="flex items-start gap-2.5">
-          <Icon name="check" class="mt-0.5 size-6 shrink-0 text-inspire" />
+        <li class="flex min-w-0 flex-[1_1_300px] items-start gap-3.5 rounded-small border border-line px-6 py-[22px]">
+          <Icon name="check-circle" class="mt-0.5 size-[26px] text-inspire-ink" />
           <span>
-            <a href={b.href} rel="noopener" class="uw-trust-link">{b.name}</a>
-            <span class="block text-body">{b.label}</span>
+            <a href={b.href} rel="noopener" class="block text-[19px] font-extrabold text-ocean hover:text-inspire-ink">{b.name}</a>
+            <span class="block text-[15px] text-ink-muted">{b.label}</span>
           </span>
         </li>
       ))
     }
   </ul>
 </Section>
-
-<style>
-  .uw-trust-link { color: var(--color-kindle); font-weight: 900; }
-  .uw-trust-link:hover { color: var(--color-inspire); }
-</style>

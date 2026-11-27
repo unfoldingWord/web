@@ -1,0 +1,59 @@
+---
+// Partner logos (docs/design-system/designs/Home.dc.html "alliance"): the
+// alliance logo beside the heading, partner logos in bordered squares.
+import type { Block } from '../../content.config';
+import { md, mdInline, localizeHref } from '../../lib/md';
+import Picture from '../ui/Picture.astro';
+
+type LogoGrid = Extract<Block, { type: 'logoGrid' }>;
+interface Props {
+  block: LogoGrid;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+// Wide screens: as many columns as keep the rows even (11 logos: 6 + 5, not
+// 5 + 5 + 1), at most six; a short last row is centred.
+const n = block.logos.length;
+const cols = Math.max(1, Math.ceil(n / Math.ceil(n / 6)));
+---
+
+<section class="section-y bg-white">
+  <div class="container-page flex flex-col gap-9">
+    <div class="flex flex-wrap items-center justify-between gap-x-16 gap-y-6">
+      <div class="flex min-w-0 flex-[1_1_30rem] flex-col gap-3">
+        <h2 class="text-[clamp(1.625rem,1.2rem+1.2vw,2.25rem)]" set:html={mdInline(block.title, locale)} />
+        {block.body && <div class="prose lead max-w-[40rem]" set:html={md(block.body, locale)} />}
+      </div>
+      {
+        block.titleImage && (
+          <div class="shrink-0 rounded-small border border-line bg-white px-7 py-4">
+            <Picture path={block.titleImage} alt={block.titleImageAlt ?? ''} sizes="240px" widths={[240, 480]} class="!h-24 !w-auto" />
+          </div>
+        )
+      }
+    </div>
+    <ul class="logo-grid flex flex-wrap justify-center gap-4" style={`--cols:${cols}`}>
+      {
+        block.logos.map((l) => (
+          <li class="overflow-hidden rounded-small border border-line bg-white p-1">
+            {l.href ? (
+              <a href={localizeHref(l.href, locale)} rel="noopener" class="block">
+                <Picture path={l.image} alt={l.alt} sizes="232px" widths={[232, 464]} aspect="1 / 1" class="!object-contain" />
+              </a>
+            ) : (
+              <Picture path={l.image} alt={l.alt} sizes="232px" widths={[232, 464]} aspect="1 / 1" class="!object-contain" />
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* Two across on phones, three on tablets, --cols (balanced, max 6) on wide
+     screens; each tile at most 232px. */
+  .logo-grid > li { --c: 2; flex: 0 0 auto; width: min(14.5rem, calc((100% - (var(--c) - 1) * 1rem) / var(--c))); }
+  @media (min-width: 40rem) { .logo-grid > li { --c: 3; } }
+  @media (min-width: 64rem) { .logo-grid > li { --c: var(--cols); } }
+</style>

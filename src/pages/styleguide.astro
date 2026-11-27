@@ -7,14 +7,22 @@ import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import type { Block } from '../content.config';
 
 const colors = [
-  ['inspire', '#31ADE3', 'Primary brand blue — shapes, large text on dark'],
-  ['inspire-ink', '#0B6E9E', 'Brand blue for text and links on light backgrounds'],
-  ['ocean', '#014263', 'Deep blue — headings, dark sections, primary button'],
+  ['inspire', '#31ADE3', 'Primary brand blue: shapes, rules, large text on Ocean'],
+  ['inspire-ink', '#0B6E9E', 'Links and small blue text on white'],
+  ['ocean', '#014263', 'Headlines, number bands, give band, primary button'],
+  ['ocean-900', '#012C42', 'Deep Ocean: heroes, footer'],
   ['tech', '#231F20', 'Body text'],
-  ['cultivate', '#70C9CC', 'Teal accent; eyebrow text on dark'],
-  ['kindle', '#E59D33', 'Warm accent — the Give button only'],
-  ['mist', '#F4F9FB', 'Light section background'],
+  ['ink-muted', '#5B5557', 'Muted text: leads, dates, captions'],
+  ['cultivate', '#70C9CC', 'Teal: links and labels on dark grounds'],
+  ['kindle', '#E59D33', 'The Give button; emphasis on Ocean only'],
+  ['mist', '#F4F9FB', 'Ground for grids of cards'],
   ['line', '#DCE6EB', 'Borders and dividers'],
+];
+const portfolios = [
+  ['transformation', 'Transformation', '#70C9CC', '#E2F4F5'],
+  ['innovation', 'Innovation', '#31ADE3', '#D6EFFA'],
+  ['catalyzation', 'Catalyzation', '#014263', '#CCD9E0'],
+  ['equipping', 'Equipping Partners', '#E59D33', '#FAEBD6'],
 ];
 const img = 'styleguide/sample.jpg';
 const alt = 'unfoldingWord logo on a deep blue background';
@@ -42,44 +50,108 @@ const blocks: Block[] = [
 ---
 
 <Base switcherPath="/" locale="en" basePath="/styleguide/" title="Style guide" description="Every design token and content block of the unfoldingword.org design system, for reviewing design changes." noindex pageType="styleguide">
-  <section class="container-page py-12">
-    <p class="eyebrow">Design system</p>
-    <h1>Style guide</h1>
-    <p class="mt-4 max-w-2xl text-lead text-ink-muted">Tokens live in <code>src/styles/global.css</code>; blocks in <code>src/components/blocks/</code>; how to use them in <code>docs/content-guide.md</code>.</p>
+  <section class="bg-mist">
+    <div class="container-page flex flex-col gap-4 pt-12 pb-14 md:pt-16">
+      <h1>Style guide</h1>
+      <p class="lead max-w-[760px]">Tokens and shared classes live in <code>src/styles/global.css</code>; blocks in <code>src/components/blocks/</code>; how to use them in <code>docs/content-guide.md</code>; the specification in <code>docs/design-system/</code>.</p>
+    </div>
+  </section>
 
-    <h2 class="mt-12">Colors</h2>
-    <ul class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {colors.map(([name, hex, use]) => (
-        <li class="uw-card">
-          <div class="h-20" style={`background:${hex}`} />
-          <div class="p-4 text-sm"><strong class="block font-heading text-ocean">{name}</strong><code>{hex}</code><p class="mt-1 text-ink-muted">{use}</p></div>
-        </li>
-      ))}
-    </ul>
+  <div class="container-page flex flex-col gap-16 py-[var(--spacing-section)]">
+    <section class="flex flex-col gap-6">
+      <h2>Color</h2>
+      <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        {colors.map(([name, hex, use]) => (
+          <li class="uw-card-flat">
+            <div class="h-20 border-b border-line" style={`background:var(--color-${name})`} />
+            <div class="p-4 text-sm"><strong class="block font-heading text-ocean">{name}</strong><code>{hex}</code><p class="mt-1 text-ink-muted">{use}</p></div>
+          </li>
+        ))}
+      </ul>
+      <h3>Portfolios</h3>
+      <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {portfolios.map(([key, name, hex, tint]) => (
+          <li class:list={['uw-card-flat', `pf-${key}`]}>
+            <div class="pf-bg flex h-24 items-end p-4 font-heading text-h5 font-black">{name}</div>
+            <div class="flex flex-col items-start gap-2 p-4 text-sm">
+              <span class="pf-chip">{name}</span>
+              <code>{hex} · tint {tint}</code>
+              <code>.pf-{key}</code>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
 
-    <h2 class="mt-12">Type</h2>
-    <div class="mt-6 space-y-4">
-      <p class="font-heading text-display font-extrabold text-ocean">Display</p>
+    <section class="flex flex-col gap-5">
+      <h2>Type</h2>
+      <p class="font-heading text-display font-black text-ocean">Display</p>
       <h1>Heading 1</h1>
       <h2>Heading 2</h2>
       <h3>Heading 3</h3>
-      <p class="text-lead">Lead paragraph text.</p>
-      <p>Body text — the quick brown fox jumps over the lazy dog.</p>
-      <p class="eyebrow">Eyebrow label</p>
-      <p class="prose-serif">Serif long-form text used in stories.</p>
-    </div>
+      <h4>Heading 4 · card title</h4>
+      <p class="lead max-w-[760px]">Lead paragraph (<code>.lead</code>): one or two sentences under a heading.</p>
+      <p class="max-w-[760px]">Body text, 17px. The church is the hero: local believers translate Scripture into their own language. <a href="#">A link</a>.</p>
+      <p class="label">Label inside a card</p>
+      <blockquote class="uw-quote uw-quote-rule max-w-[760px]">“A person’s own words are always PT Serif.”</blockquote>
+      <div class="flex flex-wrap items-end gap-12">
+        <div><p class="uw-impact text-ocean">130</p><p class="text-ink-muted">.uw-impact: one per moment</p></div>
+        <div><p class="uw-figure text-ocean">1.45B</p><p class="text-ink-muted">.uw-figure: number bands</p></div>
+      </div>
+      <div class="prose prose-serif"><p>Stories and prayer requests read in PT Serif at 20px on the 720px column (<code>.prose-serif</code>).</p></div>
+    </section>
 
-    <h2 class="mt-12">Buttons</h2>
-    <div class="mt-6 flex flex-wrap gap-3">
-      <a class="uw-btn uw-btn-give" href="#">Give</a>
-      <a class="uw-btn uw-btn-primary" href="#">Primary</a>
-      <a class="uw-btn uw-btn-secondary" href="#">Secondary</a>
-    </div>
-    <div class="on-dark mt-4 flex flex-wrap gap-3 rounded-card bg-ocean p-6">
-      <a class="uw-btn uw-btn-give" href="#">Give</a>
-      <a class="uw-btn uw-btn-primary" href="#">Primary on dark</a>
-      <a class="uw-btn uw-btn-secondary" href="#">Secondary on dark</a>
-    </div>
-  </section>
+    <section class="flex flex-col gap-5">
+      <h2>Buttons, links and pills</h2>
+      <div class="flex flex-wrap items-center gap-3">
+        <a class="uw-btn uw-btn-give" href="#">Give</a>
+        <a class="uw-btn uw-btn-primary" href="#">Primary</a>
+        <a class="uw-btn uw-btn-secondary" href="#">Secondary</a>
+        <a class="uw-btn uw-btn-give uw-btn-lg" href="#">Give · large</a>
+        <a class="uw-more" href="#">Text link with arrow →</a>
+      </div>
+      <div class="uw-grain on-dark flex flex-wrap gap-3 rounded-card p-6">
+        <a class="uw-btn uw-btn-give" href="#">Give</a>
+        <a class="uw-btn uw-btn-primary" href="#">Primary on dark</a>
+        <a class="uw-btn uw-btn-secondary" href="#">Secondary on dark</a>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {portfolios.map(([key, name]) => (
+          <div class:list={['pf-bg flex flex-col items-start gap-3 rounded-card p-6', `pf-${key}`]}>
+            <strong>{name} panel</strong>
+            <a class="uw-btn uw-btn-give" href="#">Give</a>
+            <a class="uw-btn uw-btn-secondary" href="#">Secondary</a>
+          </div>
+        ))}
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button type="button" class="uw-pill" aria-pressed="true">All regions</button>
+        <button type="button" class="uw-pill" aria-pressed="false">Africa</button>
+        <button type="button" class="uw-pill" aria-pressed="false">Pacific</button>
+        <span class="chip">Chip</span>
+        <span class="chip chip-outline">Chip outline</span>
+        {portfolios.map(([key, name]) => <span class:list={['pf-chip', `pf-${key}`]}>{name}</span>)}
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-5">
+      <h2>Cards and grounds</h2>
+      <div class="grid gap-6 rounded-media bg-mist p-6 sm:grid-cols-3 sm:p-10">
+        <div class="uw-card p-7"><h3 class="text-h4">.uw-card</h3><p class="text-ink-muted">White, 20px corners, soft shadow. For cards on Mist.</p></div>
+        <div class="uw-card-flat p-7"><h3 class="text-h4">.uw-card-flat</h3><p class="text-ink-muted">White with a 1px line. For cards on white.</p></div>
+        <div class="rounded-small border border-line bg-white p-5"><h3 class="text-h5">rounded-small</h3><p class="text-ink-muted">Small cards and fields.</p><input class="uw-input mt-3" placeholder=".uw-input" aria-label="Sample field" /></div>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <div class="uw-grain on-dark rounded-media p-8"><h3>.uw-grain</h3><p class="lead">Ocean: number bands, give band.</p></div>
+        <div class="uw-grain-deep on-dark rounded-media p-8"><h3>.uw-grain-deep</h3><p class="lead">Deep Ocean: heroes.</p></div>
+        <div class="rounded-media bg-mist p-8"><h3>bg-mist</h3><p class="lead">Grids of cards.</p></div>
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-3">
+      <h2>Content blocks</h2>
+      <p class="lead max-w-[760px]">Every block below is rendered by BlockRenderer from sample data.</p>
+    </section>
+  </div>
   <BlockRenderer blocks={blocks} locale="en" />
 </Base>

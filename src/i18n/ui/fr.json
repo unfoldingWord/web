@@ -65,7 +65,21 @@
     "privacy": "Confidentialité",
     "terms": "Conditions d’utilisation",
     "disclosures": "Informations relatives aux sollicitations caritatives",
-    "backToTop": "Retour en haut"
+    "backToTop": "Retour en haut",
+    "whatWeDo": "Ce que nous faisons",
+    "getInvolved": "S’engager",
+    "about": "Qui nous sommes",
+    "waysToGive": "Façons de donner",
+    "giveMonthly": "Don mensuel",
+    "plannedGiving": "Dons planifiés",
+    "supportStaff": "Soutenir un membre de l’équipe",
+    "pray": "Prière",
+    "stories": "Récits du terrain",
+    "leadership": "Direction",
+    "ccbt": "Traduction de la Bible centrée sur l’Église",
+    "financial": "Informations financières",
+    "careers": "Carrières",
+    "contact": "Nous contacter"
   },
   "nav": {
     "whoWeAre": "Qui nous sommes",
@@ -112,7 +126,11 @@
     "initiative": "Soutenir une initiative",
     "staff": "Soutenir un membre de l’équipe",
     "disclosures": "Informations relatives aux sollicitations caritatives",
-    "contact": "Nous contacter"
+    "contact": "Nous contacter",
+    "pray": "Prière",
+    "aboutMenu": "Qui nous sommes",
+    "ccbtMenu": "Vue d’ensemble stratégique",
+    "toolsMenu": "Outils"
   },
   "regions": {
     "africa": "Afrique",

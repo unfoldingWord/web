@@ -1,30 +1,30 @@
 ---
-// A full-width band with production's rhythm: 40px padding top and bottom,
-// content in the 1000px column with 40px gutters. `background` picks one of
-// the surfaces production uses: white, an Inspire tint (`mist` = 12%,
-// `tint-light` = 7%), solid Ocean or Cultivate, or a Kindle tint.
+// A full-width section: a design-system ground and the standard section
+// padding, content in the page column (1280px) or the reading column (768px).
+// Grounds: white for reading and forms, Mist for grids of cards, Ocean (with
+// the grainy gradient) for number bands and closing asks.
 interface Props {
   background?: 'white' | 'mist' | 'tint' | 'tint-light' | 'ocean' | 'cultivate' | 'kindle';
   width?: 'page' | 'prose';
   id?: string;
   class?: string;
-  /** Kept for existing content: production uses one section padding everywhere. */
+  /** Accepted for existing content; every section uses the same padding. */
   tight?: boolean;
   labelledby?: string;
 }
 const { background = 'white', width = 'page', id, class: cls, labelledby } = Astro.props;
 const bg = {
   white: 'bg-white',
-  mist: 'bg-tint',
-  tint: 'bg-tint',
-  'tint-light': 'bg-tint-light',
-  ocean: 'bg-ocean on-dark',
+  mist: 'bg-mist',
+  tint: 'bg-mist',
+  'tint-light': 'bg-mist',
+  ocean: 'uw-grain on-dark',
   cultivate: 'bg-cultivate',
   kindle: 'bg-kindle-tint',
 }[background];
 ---
 
-<section id={id} aria-labelledby={labelledby} class:list={[bg, 'py-[var(--spacing-section)]', cls]}>
+<section id={id} aria-labelledby={labelledby} class:list={[bg, 'section-y', cls]}>
   <div class={width === 'prose' ? 'container-prose' : 'container-page'}>
     <slot />
   </div>

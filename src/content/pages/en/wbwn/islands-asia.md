@@ -2,12 +2,12 @@
 title: Islands Asia
 description: Help a seminary and a Disciple Making Movement in Islands-Asia bring Church-Centric Bible Translation tools to all 234 unreached people groups.
 ogImage: wbwn/islands-asia.jpg
+portfolio: transformation
 sections:
 - type: hero
   variant: project
-  eyebrow: Islands-Asia
-  title: Impact 234 unreached people groups in Islands-Asia
-  lead: '**Support our church network partner’s goal of providing Church-Centric Bible Translation tools to local church teams across the whole nation.**'
+  title: Islands-Asia
+  lead: Impact 234 unreached people groups in Islands-Asia
   image: wbwn/islands-asia.jpg
   imageAlt: A smiling woman carrying a bundle on her head leads white cattle along a dusty road
   contentPosition: start
@@ -19,7 +19,10 @@ sections:
 - type: prose
   title: Project Overview
   width: narrow
-  body: The demand for God’s Word in people’s heart languages far exceeds the capacity of traditional translation methods. unfoldingWord serves a well-respected seminary and an underground Disciple Making Movement (DMM) in Islands-Asia. Both are dedicated to reaching all 234 unreached people groups and over 195 million people in their country who have not heard the gospel in their heart language.
+  body: |-
+    Support our church network partner’s goal of providing Church-Centric Bible Translation tools to local church teams across the whole nation.
+
+    The demand for God’s Word in people’s heart languages far exceeds the capacity of traditional translation methods. unfoldingWord serves a well-respected seminary and an underground Disciple Making Movement (DMM) in Islands-Asia. Both are dedicated to reaching all 234 unreached people groups and over 195 million people in their country who have not heard the gospel in their heart language.
 - type: stats
   title: At a Glance
   variant: bars
@@ -31,8 +34,8 @@ sections:
   - value: 9,900,000
     label: People Impacted
     color: kindle
-  - value: '*786* unreached people groups'
-    label: People Groups affected
+  - value: '786'
+    label: Unreached people groups affected
 - type: prose
   title: Prayers
   icon: pray
@@ -47,9 +50,10 @@ sections:
   - the-lost-sheep-of-islands-asia
   - the-crisis-in-islands-asia-bible-translation
 - type: cards
+  title: More Whole Bible | Whole Nation projects
   columns: 5
   variant: outlined
-  background: kindle
+  background: white
   items:
   - title: Benin
     image: wbwn/benin.jpg

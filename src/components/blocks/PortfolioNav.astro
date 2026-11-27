@@ -1,0 +1,36 @@
+---
+// The row of the four portfolios under a portfolio page's hero, with the
+// current one outlined in its color.
+import { ui, localizePath } from '../../i18n';
+import { PORTFOLIOS, type PortfolioKey } from '../../lib/portfolios';
+
+interface Props {
+  locale: string;
+  portfolio?: PortfolioKey;
+}
+const { locale, portfolio } = Astro.props;
+const t = ui(locale);
+const nav = t.nav as Record<string, string>;
+const heading = ((t as Record<string, unknown>).portfolios as string | undefined) ?? 'Portfolios';
+---
+
+<nav class="border-b border-line bg-white" aria-label={heading}>
+  <div class="container-page flex flex-wrap items-center gap-2 py-5">
+    <span class="me-3 text-sm font-extrabold text-ink-muted">{heading}</span>
+    {
+      PORTFOLIOS.map((p) => {
+        const current = p.key === portfolio;
+        return (
+          <a
+            href={localizePath(p.href, locale)}
+            aria-current={current ? 'page' : undefined}
+            class:list={[`pf-${p.key}`, 'flex min-h-11 items-center gap-2 rounded-full border-2 bg-white py-2 ps-3.5 pe-4.5 text-[0.9375rem] text-ocean no-underline hover:border-ocean', current ? 'border-[var(--pf)] font-extrabold' : 'border-line font-semibold']}
+          >
+            <span class="pf-dot !size-3" aria-hidden="true" />
+            {nav[p.navKey] ?? p.key}
+          </a>
+        );
+      })
+    }
+  </div>
+</nav>

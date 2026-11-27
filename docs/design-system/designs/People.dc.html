@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>People page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800;6..12,900&family=PT+Serif:ital@0;1&display=swap">
+<style>
+body{margin:0}
+a{color:#0b6e9e}a:hover{color:#014263}
+</style>
+</helmet>
+<div style="font-family: 'Avenir', 'Avenir Next', 'Nunito Sans', system-ui, sans-serif; color: #231f20; background: #ffffff; font-size: 17px; line-height: 1.6">
+
+  <dc-import name="Header" hint-size="100%,68px"></dc-import>
+
+  <section style="background: #f4f9fb">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 72px 32px; display: flex; flex-wrap: wrap; align-items: center; gap: 48px 72px">
+      <div style="flex: 1 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+        <nav aria-label="Breadcrumb" style="font-size: 15px; color: #5b5557"><a href="People.dc.html">About</a> <span aria-hidden="true">/</span> Leadership</nav>
+        <h1 style="margin: 0; font-size: clamp(36px, 4.4vw, 62px); line-height: 1.04; font-weight: 900; color: #014263; text-wrap: balance">The people who come alongside the global church</h1>
+        <p style="margin: 0; font-size: 20px; line-height: 1.55; color: #5b5557; max-width: 540px">We come alongside the leaders Jesus is already calling and sending. Meet the board and team who serve them.</p>
+      </div>
+      <figure style="margin: 0; flex: 1 1 420px; min-width: 0; background: #ffffff; border-radius: 24px; overflow: hidden; display: flex; flex-wrap: wrap; box-shadow: 0 2px 4px rgba(1,66,99,0.08), 0 18px 40px -16px rgba(1,66,99,0.28)">
+        <img src="/src/assets/images/people/david-reeves.jpg" alt="Portrait of David Reeves, smiling, in glasses and a dark blazer" style="flex: 1 1 220px; min-width: 0; width: 100%; height: 340px; object-fit: cover; object-position: 50% 15%; display: block">
+        <figcaption style="flex: 1 1 240px; min-width: 0; padding: 28px; display: flex; flex-direction: column; gap: 10px; justify-content: center">
+          <strong style="font-size: 26px; line-height: 1.15; color: #014263">David Reeves</strong>
+          <span style="font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800; color: #0b6e9e">President/CEO</span>
+          <span style="color: #5b5557">[Two-sentence introduction from the person's profile.]</span>
+          <a href="People.dc.html" style="font-weight: 800">Read more</a>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section style="background: #ffffff">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 88px 32px; display: flex; flex-direction: column; gap: 36px">
+      <h2 style="margin: 0; font-size: clamp(28px, 3vw, 42px); line-height: 1.12; font-weight: 900; color: #014263">Board of directors</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 32px 24px">
+        <sc-for list="{{board}}" as="p" hint-placeholder-count="4">
+          <a href="People.dc.html" style="flex: 1 1 260px; max-width: 330px; min-width: 0; text-decoration: none; color: #231f20; display: flex; flex-direction: column; gap: 14px">
+            <img src="{{p.src}}" alt="{{p.alt}}" style="width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 15%; border-radius: 20px; display: block; background: #f4f9fb">
+            <span style="display: flex; flex-direction: column; gap: 2px">
+              <strong style="font-size: 22px; color: #014263">{{p.name}}</strong>
+              <span style="color: #5b5557">{{p.role}}</span>
+            </span>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: #f4f9fb">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 88px 32px; display: flex; flex-direction: column; gap: 36px">
+      <div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 32px">
+        <h2 style="margin: 0; font-size: clamp(28px, 3vw, 42px); line-height: 1.12; font-weight: 900; color: #014263">Our team</h2>
+        <span style="color: #5b5557">Compact layout for larger groups</span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 16px">
+        <sc-for list="{{team}}" as="t" hint-placeholder-count="8">
+          <div style="flex: 1 1 280px; min-width: 0; background: #ffffff; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 16px">
+            <sc-if value="{{ t.hasPhoto }}" hint-placeholder-val="{{ true }}">
+              <img src="{{t.src}}" alt="{{t.alt}}" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; object-position: 50% 15%; flex: 0 0 auto">
+            </sc-if>
+            <sc-if value="{{ t.noPhoto }}" hint-placeholder-val="{{ false }}">
+              <div aria-hidden="true" style="width: 72px; height: 72px; border-radius: 50%; background: #cdebf8; color: #014263; font-weight: 800; font-size: 22px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto">{{t.initials}}</div>
+            </sc-if>
+            <div style="min-width: 0; display: flex; flex-direction: column">
+              <strong style="font-size: 19px; color: #014263">{{t.name}}</strong>
+              <span style="font-size: 15px; color: #5b5557">{{t.role}}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: #ffffff">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 88px 32px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 48px">
+      <div style="flex: 1 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 10px">
+        <h2 style="margin: 0; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.15; font-weight: 900; color: #014263">Serve with us</h2>
+        <p style="margin: 0; font-size: 19px; color: #5b5557">See open roles and how to support a member of the team.</p>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px">
+        <a href="People.dc.html" style="background: #014263; color: #ffffff; text-decoration: none; font-weight: 800; padding: 14px 28px; border-radius: 999px">Careers</a>
+        <a href="Give.dc.html" style="color: #014263; text-decoration: none; font-weight: 800; padding: 13px 28px; border-radius: 999px; border: 1px solid #014263">Support staff</a>
+      </div>
+    </div>
+  </section>
+
+  <dc-import name="Footer" hint-size="100%,360px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2700}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ph = (name, role) => ({ name, role, hasPhoto: false, noPhoto: true, initials: name.split(' ').map((w) => w[0]).join('').slice(0, 2), src: '', alt: '' });
+    return {
+      board: [
+        { name: 'Michael Vos', role: 'Chairman', src: '/src/assets/images/people/michael-vos.jpg', alt: 'Portrait of Michael Vos, smiling, in a dark checked blazer' },
+        { name: 'Al Anderstrom', role: 'Vice Chairman/Secretary', src: '/src/assets/images/people/al-anderstrom.jpg', alt: 'Portrait of Al Anderstrom, smiling, in a dark suit and tie' },
+        { name: 'David Reeves', role: 'President/CEO', src: '/src/assets/images/people/david-reeves.jpg', alt: 'Portrait of David Reeves, smiling, in glasses and a dark blazer' },
+        { name: 'Michael Jones', role: 'Board member', src: '/src/assets/images/people/michael-jones.jpg', alt: 'Portrait of Michael Jones, smiling, with a beard and a navy blazer' }
+      ],
+      team: [
+        { name: 'Beth Oakes', role: '[Role]', hasPhoto: true, noPhoto: false, src: '/src/assets/images/people/beth-oakes.jpg', alt: 'Portrait of Beth Oakes, smiling, with short brown hair and an embroidered black top', initials: '' },
+        ph('[Team member]', '[Role]'), ph('[Team member]', '[Role]'), ph('[Team member]', '[Role]'),
+        ph('[Team member]', '[Role]'), ph('[Team member]', '[Role]'), ph('[Team member]', '[Role]'), ph('[Team member]', '[Role]')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

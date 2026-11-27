@@ -3,13 +3,16 @@ title: BT Servant
 description: >-
   BT Servant is unfoldingWord's AI translation coach that helps church teams understand, translate and
   check Scripture in real time on WhatsApp and the web.
+portfolio: innovation
 sections:
   - type: hero
-    variant: banner
+    variant: split
     title: BT Servant
-    subtitle: Bible Translation Servant
-    image: what-we-do/bt-servant-banner.jpg
-    imageAlt: Close-up of a laptop keyboard lit in soft blue light
+    lead: Bible Translation Servant. Leveraging AI to take the Gospel to the last lost peoples.
+    chips: [WhatsApp and the web, People in the loop]
+    actions:
+      - { label: Try it Now, href: 'https://www.btservant.ai/', style: primary }
+      - { label: Give to BT Servant, href: /give/bt/, style: give, formId: 64b2fc9b-3a55-4c47-bea0-d600bf8b5ffb }
   - type: split
     title: Leveraging AI to take the Gospel to the last lost peoples
     body: |-
@@ -35,4 +38,26 @@ sections:
       A translation movement that is local, durable, and trustworthy: churches producing and sharing the Bible in their own languages, with tools they can keep using long after a project visit ends.
     actions:
       - { label: Donate Now, href: /give/bt/, style: give, formId: 64b2fc9b-3a55-4c47-bea0-d600bf8b5ffb }
+  - type: cards
+    title: More tools in the hands of the church
+    columns: 3
+    items:
+      - title: translationCore®
+        image: stories/translationcore-a-massive-hit-in-myanmar.jpg
+        imageAlt: Translators lean in together around a laptop at a training workshop
+        body: An open-source desktop workspace for managing and checking Bible translation projects.
+        href: /translationcore/
+        linkLabel: Learn more
+      - title: Book Packages
+        image: what-we-do/men-studying-together.jpg
+        imageAlt: Men sitting side by side on a bench, reading open Bibles together
+        body: A Book Package includes everything needed to translate one book of the Bible with excellence.
+        href: /innovation/
+        linkLabel: Learn more
+      - title: Open Bible Stories
+        image: obs/children-kenya.jpg
+        imageAlt: A row of laughing children in bright wraps and beaded collars sit along a log in a dry Kenyan landscape
+        body: Fifty carefully crafted, illustrated stories covering Genesis to Revelation.
+        href: /obs/
+        linkLabel: Learn more
 ---

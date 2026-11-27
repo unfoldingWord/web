@@ -2,12 +2,12 @@
 title: Chad
 description: Partner with the Church Growth Project of Chad (PCET) to translate Open Bible Stories into ten minority languages and reach 80 unreached language groups.
 ogImage: wbwn/chad.jpg
+portfolio: transformation
 sections:
 - type: hero
   variant: project
-  eyebrow: Chad
-  title: Impact 2 million people with the Gospel
-  lead: '**Sixteen Million people live in Chad. More than two million speak something other than Chadian Arabic. They need the Bible in their language. The Chadian Gateway Language project will reach 80 unreached language groups with the Gospel.**'
+  title: Chad
+  lead: Impact 2 million people with the Gospel
   image: wbwn/chad.jpg
   imageAlt: A woman in a light gray headscarf and robe stands before a desert sand dune
   contentPosition: end
@@ -20,6 +20,8 @@ sections:
   title: Project Overview
   width: narrow
   body: |-
+    Sixteen Million people live in Chad. More than two million speak something other than Chadian Arabic. They need the Bible in their language. The Chadian Gateway Language project will reach 80 unreached language groups with the Gospel.
+
     Partner with unfoldingWord and the Church Growth Project of Chad (Projet Croissance des Eglises au Tchad) or PCET, a network of 22 Chadian organizations that has united to send church planters into the remaining unreached people groups in their country.
 
     This group will translate unfoldingWord® Open Bible Stories from Chadian Arabic into ten minority languages that will impact around two million people.
@@ -34,8 +36,8 @@ sections:
   - value: 2,039,000
     label: People Impacted
     color: kindle
-  - value: '*80* unreached people groups'
-    label: People Groups affected
+  - value: '80'
+    label: Unreached people groups affected
 - type: prose
   title: Prayers
   icon: pray
@@ -54,9 +56,10 @@ sections:
   - when-jeremiah-first-heard-that-his-chadian-church-planting
   - the-market-evangelist
 - type: cards
+  title: More Whole Bible | Whole Nation projects
   columns: 5
   variant: outlined
-  background: kindle
+  background: white
   items:
   - title: Benin
     image: wbwn/benin.jpg

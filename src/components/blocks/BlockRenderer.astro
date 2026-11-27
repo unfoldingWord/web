@@ -27,24 +27,37 @@ import HeroSlideshow from './HeroSlideshow.astro';
 import Statement from './Statement.astro';
 import Testimonials from './Testimonials.astro';
 import LogoMarquee from './LogoMarquee.astro';
+import ScrollStory from './ScrollStory.astro';
+import PortfolioGrid from './PortfolioGrid.astro';
+import PortfolioNav from './PortfolioNav.astro';
+import Takeaway from './Takeaway.astro';
+import Pillars from './Pillars.astro';
+import BeforeAfter from './BeforeAfter.astro';
+import GiveBand from './GiveBand.astro';
+import LogoGrid from './LogoGrid.astro';
+import type { PortfolioKey } from '../../lib/portfolios';
 
 interface Props {
   blocks: Block[];
   locale: string;
   crumbs?: { name: string; href?: string }[];
+  /** The page's portfolio, passed to every block (colors, labels). */
+  portfolio?: PortfolioKey;
 }
-const { blocks, locale, crumbs } = Astro.props;
+const { blocks, locale, crumbs, portfolio } = Astro.props;
 const C = {
   hero: Hero, prose: Prose, cards: Cards, split: Split, stats: Stats, quote: Quote, cta: Cta, video: Video,
   giving: Giving, faq: Faq, people: People, storyList: StoryList, prayerList: PrayerList, resources: Resources,
   steps: Steps, gallery: Gallery, trust: Trust, contactForm: ContactForm, embed: Embed, sweetBooks: SweetBooks, signup: Signup,
   heroSlideshow: HeroSlideshow, statement: Statement, testimonials: Testimonials, logoMarquee: LogoMarquee,
+  scrollStory: ScrollStory, portfolioGrid: PortfolioGrid, portfolioNav: PortfolioNav, takeaway: Takeaway, pillars: Pillars,
+  beforeAfter: BeforeAfter, giveBand: GiveBand, logoGrid: LogoGrid,
 } as const;
 ---
 
 {
   blocks.map((block, i) => {
     const Component = C[block.type] as any;
-    return <Component block={block} locale={locale} crumbs={i === 0 && block.type === 'hero' ? crumbs : undefined} />;
+    return <Component block={block} locale={locale} portfolio={portfolio} crumbs={i === 0 && block.type === 'hero' ? crumbs : undefined} />;
   })
 }

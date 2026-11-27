@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Project page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800;6..12,900&family=PT+Serif:ital@0;1&display=swap">
+<style>
+body{margin:0}
+.uw-grain{background-image:url(/docs/design-system/assets/grain.png),linear-gradient(100deg,#012c42,#014263)}
+a{color:#0b6e9e}a:hover{color:#014263}
+</style>
+</helmet>
+<div style="font-family: 'Avenir', 'Avenir Next', 'Nunito Sans', system-ui, sans-serif; color: #231f20; background: #ffffff; font-size: 17px; line-height: 1.6">
+
+  <dc-import name="Header" hint-size="100%,68px"></dc-import>
+
+  <section class="uw-grain" style="display: flex; flex-wrap: wrap; background-color: #012c42">
+    
+    <div style="flex: 1 1 520px; min-width: 0; box-sizing: border-box; padding: 72px clamp(32px, 5vw, 88px); display: flex; flex-direction: column; justify-content: center; gap: 22px; color: #ffffff">
+      <nav aria-label="Breadcrumb" style="font-size: 15px; color: #cdebf8"><a href="Portfolio.dc.html" style="color: #cdebf8">What we do</a> <span aria-hidden="true">/</span> <a href="Portfolio.dc.html" style="color: #cdebf8">Transformation</a> <span aria-hidden="true">/</span> <a href="Portfolio.dc.html" style="color: #cdebf8">Whole Bible | Whole Nation</a> <span aria-hidden="true">/</span> Benin</nav>
+      <div><span style="display: inline-flex; align-items: center; gap: 8px; background: #70c9cc; color: #014263; font-size: 14px; font-weight: 800; padding: 6px 14px; border-radius: 999px">Transformation</span></div>
+      <h1 style="margin: 0; font-size: clamp(56px, 8vw, 120px); line-height: 0.95; font-weight: 900; color: #ffffff; letter-spacing: -0.02em">Benin</h1>
+      <p style="margin: 0; font-family: 'PT Serif', Georgia, serif; font-size: clamp(22px, 2.2vw, 30px); line-height: 1.3; color: #ffffff; max-width: 520px">Reach 2.6 million people who need the gospel in Benin</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px">
+        <a href="Give.dc.html" style="background: #e59d33; color: #231f20; text-decoration: none; font-weight: 800; padding: 14px 28px; border-radius: 999px">Give to this project</a>
+        <a href="Pray.dc.html" style="color: #ffffff; text-decoration: none; font-weight: 800; padding: 13px 28px; border-radius: 999px; border: 1px solid #70c9cc">Pray for Benin</a>
+      </div>
+    </div>
+    <div style="flex: 1 1 520px; min-width: 0; position: relative; height: 600px; overflow: hidden"><img src="/src/assets/images/wbwn/benin.jpg" alt="A village courtyard in Benin with a house, trees and people at work" style="width: 100%; height: 100%; object-fit: cover; display: block"><div aria-hidden="true" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #70c9cc; opacity: 0.7; clip-path: polygon(0 0, 64px 0, 574px 100%, 0 100%)"></div><div aria-hidden="true" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #70c9cc; opacity: 0.7; clip-path: polygon(0 0, 24px 0, 396px 100%, 0 100%)"></div></div>
+  </section>
+
+  <section style="background: #70c9cc; color: #014263">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 48px 32px; display: flex; flex-wrap: wrap; gap: 28px 48px">
+      <sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
+        <div style="flex: 1 1 220px; display: flex; flex-direction: column; gap: 4px">
+          <div style="font-size: clamp(34px, 3.4vw, 50px); line-height: 1; font-weight: 800; color: #014263">{{s.value}}</div>
+          <div style="color: #014263; font-size: 16px">{{s.label}}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background: #ffffff">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 88px 32px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 48px 72px">
+      <div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 22px">
+        <h2 style="margin: 0; font-size: clamp(28px, 3vw, 42px); line-height: 1.12; font-weight: 900; color: #014263">Project overview</h2>
+        <p style="margin: 0; font-size: 20px; line-height: 1.55; color: #231f20">Benin has 63 people groups representing more than 14 million people. Twenty percent of those people groups still need to be reached.</p>
+        <p style="margin: 0; color: #5b5557">unfoldingWord's Church-Centric Bible Translation partners in Benin are working on five new Open Bible Stories translations. The stories are immediately used in evangelism, and churches working with materials in local languages have seen significant spiritual and numerical growth.</p>
+
+        <h3 style="margin: 24px 0 0; font-size: 24px; font-weight: 900; color: #014263">Where the project stands</h3>
+        <div style="display: flex; flex-direction: column">
+          <sc-for list="{{steps}}" as="st" hint-placeholder-count="4">
+            <div style="display: flex; gap: 20px; padding: 20px 0; border-top: 1px solid #dce6eb; align-items: flex-start">
+              <div style="flex: 0 0 44px; height: 44px; border-radius: 50%; background: {{st.dot}}; color: {{st.dotFg}}; border: 2px solid #014263; box-sizing: border-box; font-weight: 800; display: flex; align-items: center; justify-content: center">{{st.n}}</div>
+              <div style="flex: 1 1 auto; min-width: 0">
+                <div style="font-size: 20px; font-weight: 800; color: #014263">{{st.title}}</div>
+                <div style="color: #5b5557">{{st.body}}</div>
+              </div>
+              <div style="flex: 0 0 auto; font-size: 14px; font-weight: 800; padding: 6px 14px; border-radius: 999px; background: {{st.chipBg}}; color: {{st.chipFg}}">{{st.status}}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <aside style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+        <div style="background: #f4f9fb; border-radius: 24px; padding: 32px; display: flex; flex-direction: column; gap: 16px">
+          <div style="display: flex; align-items: center; gap: 16px">
+            <img src="/src/assets/images/home/field-charles.jpg" alt="A man in glasses and a patterned shirt speaking and gesturing on a lawn" style="width: 84px; height: 84px; border-radius: 50%; object-fit: cover; object-position: 62% 15%">
+            <div><strong style="display: block; color: #014263; font-size: 19px">Charles</strong><span style="color: #5b5557">Church network partner, Benin</span></div>
+          </div>
+          <blockquote style="margin: 0; font-family: 'PT Serif', Georgia, serif; font-size: 20px; line-height: 1.4; color: #231f20">"Our people are story-crazy people. Open Bible Stories overcomes their hostility to the message of Christ."</blockquote>
+          <a href="Give.dc.html" style="display: block; text-align: center; background: #e59d33; color: #231f20; text-decoration: none; font-weight: 800; padding: 14px 28px; border-radius: 999px">Give to the Benin project</a>
+        </div>
+        <div style="border: 1px solid #dce6eb; border-radius: 24px; padding: 28px 32px; display: flex; flex-direction: column; gap: 10px">
+          <strong style="font-size: 20px; color: #014263">Pray for Benin</strong>
+          <p style="margin: 0; color: #231f20">Many of our ministry partners must work multiple jobs just to make ends meet. Pray for higher-paying employment and full funding for the program.</p>
+          <a href="Pray.dc.html" style="font-weight: 800">All prayer requests</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section style="background: #f4f9fb">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 88px 32px; display: flex; flex-direction: column; gap: 36px">
+      <h2 style="margin: 0; font-size: clamp(28px, 3vw, 42px); line-height: 1.12; font-weight: 900; color: #014263">Stories from this project</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 24px">
+        <sc-for list="{{stories}}" as="s" hint-placeholder-count="2">
+          <a href="Story.dc.html" style="flex: 1 1 460px; min-width: 0; text-decoration: none; color: #231f20; background: #ffffff; border-radius: 20px; overflow: hidden; display: flex; flex-wrap: wrap; box-shadow: 0 1px 2px rgba(1,66,99,0.06), 0 8px 24px -12px rgba(1,66,99,0.18)">
+            <img src="{{s.src}}" alt="{{s.alt}}" style="flex: 1 1 200px; min-width: 0; width: 100%; height: 240px; object-fit: cover; object-position: {{s.pos}}; display: block">
+            <span style="flex: 1 1 260px; min-width: 0; padding: 26px 28px; display: flex; flex-direction: column; gap: 8px; justify-content: center">
+              <span style="font-size: 23px; line-height: 1.2; font-weight: 800; color: #014263">{{s.title}}</span>
+              <span style="color: #5b5557">{{s.line}}</span>
+              <span style="font-weight: 800; color: #0b6e9e">Read the story</span>
+            </span>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: #ffffff">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 72px 32px; display: flex; flex-direction: column; gap: 24px">
+      <h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #014263">More projects</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 16px">
+        <sc-for list="{{others}}" as="o" hint-placeholder-count="5">
+          <a href="Project.dc.html" style="flex: 1 1 200px; min-width: 0; text-decoration: none; color: #014263; display: flex; flex-direction: column; gap: 10px; font-weight: 800; font-size: 19px">
+            <img src="{{o.src}}" alt="" style="width: 100%; height: 150px; object-fit: cover; border-radius: 16px; display: block">
+            <span>{{o.name}}</span>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <dc-import name="GiveBand" hint-size="100%,560px"></dc-import>
+  <dc-import name="Footer" hint-size="100%,360px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3600}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const done = { dot: '#014263', dotFg: '#ffffff', chipBg: '#eef8f8', chipFg: '#014263', status: 'Complete' };
+    const doing = { dot: '#ffffff', dotFg: '#014263', chipBg: '#fdf4e7', chipFg: '#231f20', status: 'In progress' };
+    const next = { dot: '#ffffff', dotFg: '#014263', chipBg: '#f4f9fb', chipFg: '#5b5557', status: 'Ahead' };
+    return {
+      stats: [
+        { value: '13,999,000', label: 'Population' },
+        { value: '2,499,000', label: 'People impacted' },
+        { value: '63', label: 'People groups' },
+        { value: '5', label: 'New Open Bible Stories translations' }
+      ],
+      steps: [
+        { n: '1', title: 'Church network partnership', body: 'Local church teams across the nation, equipped with Church-Centric Bible Translation tools.', ...done },
+        { n: '2', title: 'Open Bible Stories', body: 'Five new translations in strategic languages.', ...doing },
+        { n: '3', title: 'Stories used in evangelism', body: 'Each story is put to work right away, as it is translated.', ...doing },
+        { n: '4', title: 'Scripture for the whole nation', body: 'Church teams go on to translate Scripture into their own languages.', ...next }
+      ],
+      stories: [
+        { title: 'The Gospel in Five More Languages', line: 'Pastor Charles was born into a world of voodoo.', src: '/src/assets/images/home/field-charles.jpg', pos: '60% 20%', alt: 'A man in glasses and a patterned shirt speaking and gesturing on a lawn' },
+        { title: 'Overcoming Obstacles to the Gospel in Benin', line: 'Sharing the gospel of Christ with Muslim neighbors since 1999.', src: '/src/assets/images/wbwn/benin.jpg', pos: '50% 50%', alt: 'A village courtyard in Benin with a house, trees and people at work' }
+      ],
+      others: [
+        { name: 'Chad', src: '/src/assets/images/wbwn/chad.jpg' },
+        { name: 'Islands-Asia', src: '/src/assets/images/wbwn/islands-asia.jpg' },
+        { name: 'Southeast Asia', src: '/src/assets/images/wbwn/se-asia.jpg' },
+        { name: 'Sudan', src: '/src/assets/images/wbwn/sudan.jpg' },
+        { name: 'Iran', src: '/src/assets/images/wbwn/iran.jpg' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

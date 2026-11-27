@@ -1,14 +1,14 @@
 ---
-// Site footer, matching production's Elementor footer: Tech background, a
-// 1000px box with three equal, vertically centered columns (logo, mission and
-// social icons; Quick Links and thank-you; accountability seals and the
-// 501(c)3 text), then one centered copyright line. Our legal links (Privacy,
-// Terms, Disclosures) sit in that line and are styled like it.
+// Site footer on a grainy Deep Ocean ground: the reversed logo, the
+// tagline, a Give button and the social links; three link columns (the
+// portfolios, ways to get involved, about); then the accountability seals,
+// address and phone, the copyright and legal links, and the security phrase.
 import { Image } from 'astro:assets';
-import logo from '../../assets/brand/logo-horizontal-reversed.png';
+import logo from '../../assets/brand/uw-logo-reversed.png';
 import ecfa from '../../assets/images/brand/ecfa-seal.png';
 import ministrywatch from '../../assets/images/brand/ministrywatch-2026.jpg';
-import { SITE, FOOTER_LINKS } from '../../lib/site';
+import { SITE, FOOTER_LINKS, fallbackAttrs, ownsUiString } from '../../lib/site';
+import { PORTFOLIOS } from '../../lib/portfolios';
 import { ui, localizePath, fmt } from '../../i18n';
 
 interface Props {
@@ -19,6 +19,27 @@ const t = ui(locale);
 const nav = t.nav as Record<string, string>;
 const footer = t.footer as Record<string, string>;
 const year = new Date().getUTCFullYear();
+// A string the locale lacks falls back to English; mark it so a right-to-left
+// footer keeps its punctuation on the correct side.
+const fa = (path: string) => fallbackAttrs(locale, path);
+
+// The tagline marks the words that stand out: **white**, *Kindle*.
+const tagline = (footer.tagline ?? '').split(/(\*\*[^*]+\*\*|\*[^*]+\*)/).filter(Boolean).map((part) =>
+  part.startsWith('**') ? { text: part.slice(2, -2), cls: 'ft-tag-strong' } : part.startsWith('*') ? { text: part.slice(1, -1), cls: 'ft-tag-em' } : { text: part },
+);
+
+const columns = [
+  { key: 'whatWeDo', links: PORTFOLIOS.map((p) => ({ label: nav[p.navKey] ?? p.key, href: p.href, attrs: fa(`nav.${p.navKey}`) })) },
+  ...FOOTER_LINKS.map((c) => ({
+    key: c.key,
+    links: c.links.map((l) => {
+      // The footer's own label, else the menu's, whichever this locale has.
+      const path = ownsUiString(locale, `footer.${l.key}`) || !ownsUiString(locale, `nav.${l.key}`) ? `footer.${l.key}` : `nav.${l.key}`;
+      const label = path.startsWith('nav.') ? nav[l.key] : (footer[l.key] ?? nav[l.key] ?? l.key);
+      return { label, href: l.href!, attrs: fa(path) };
+    }),
+  })),
+];
 
 // Brand glyphs in production's order (X, Instagram, Facebook, YouTube,
 // LinkedIn), drawn on a 24×24 grid and filled with currentColor.
@@ -51,24 +72,25 @@ const socials = [
 ];
 
 const badgeImages = { ecfa, ministrywatch } as const;
-
-// Production sets "Give With Confidence" in italics.
-const trustParts = footer.trust.split(/(Give[\s ]With[\s ]Confidence)/);
 const legal = [
-  { href: '/privacy/', label: footer.privacy },
-  { href: '/terms-of-use/', label: footer.terms },
-  { href: '/charitable-solicitation-disclosures/', label: footer.disclosures },
+  { href: '/privacy/', label: footer.privacy, attrs: fa('footer.privacy') },
+  { href: '/terms-of-use/', label: footer.terms, attrs: fa('footer.terms') },
+  { href: '/charitable-solicitation-disclosures/', label: footer.disclosures, attrs: fa('footer.disclosures') },
 ];
 ---
 
-<footer class="ft mt-auto">
-  <div class="ft-main">
-    <div class="ft-grid">
-      <div class="ft-col ft-col-1">
-        <Image src={logo} alt="unfoldingWord" widths={[250, 500]} sizes="250px" class="ft-logo" />
-        <p class="ft-heading ft-lead">{footer.missionHeading}</p>
-        <p class="ft-p">{footer.mission}</p>
-        <ul class="ft-social">
+<footer class="ft uw-grain-deep on-dark mt-auto">
+  <div class="container-page ft-inner">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <Image src={logo} alt="unfoldingWord" height={40} width={Math.round((40 * logo.width) / logo.height)} densities={[1, 2]} class="ft-logo" />
+        <p class="ft-tagline">
+          <span {...fa('footer.tagline')}>{tagline.map((p) => (p.cls ? <span class={p.cls}>{p.text}</span> : p.text))}</span>
+        </p>
+        <div>
+          <a href={localizePath('/give/', locale)} class="uw-btn uw-btn-give"><span {...fa('giveNow')}>{t.giveNow ?? 'Give now'}</span></a>
+        </div>
+        <ul class="ft-social" aria-label={footer.social}>
           {
             socials.map((s) => (
               <li>
@@ -83,242 +105,89 @@ const legal = [
         </ul>
       </div>
 
-      <nav class="ft-col ft-col-2" aria-labelledby="footer-quick-links">
-        <h2 id="footer-quick-links" class="ft-heading">{footer.quickLinks}</h2>
-        <ul class="ft-links">
-          {
-            FOOTER_LINKS.map((l) => (
-              <li>
-                <a href={localizePath(l.href!, locale)}>{nav[l.key] ?? footer[l.key] ?? l.key}</a>
-              </li>
-            ))
-          }
-        </ul>
-        <p class="ft-p ft-thanks"><em>{footer.thanks}</em></p>
-      </nav>
+      {
+        columns.map((c) => (
+          <nav class="ft-col" aria-labelledby={`ft-h-${c.key}`}>
+            <h2 id={`ft-h-${c.key}`} class="ft-heading"><span {...fa(`footer.${c.key}`)}>{footer[c.key]}</span></h2>
+            <ul>
+              {c.links.map((l) => (
+                <li>
+                  <a class="ft-link" href={localizePath(l.href, locale)}><span {...l.attrs}>{l.label}</span></a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+    </div>
 
-      <div class="ft-col ft-col-3">
-        <ul class="ft-badges">
+    <div class="ft-bottom">
+      <div class="ft-row">
+        <ul class="ft-badges" aria-label={footer.trustSeals}>
           {
             SITE.trust.map((b) => (
-              <li class={`ft-badge ft-badge-${b.name.toLowerCase()}`}>
+              <li>
                 <a href={b.href} target={b.newTab ? '_blank' : undefined} rel={b.newTab ? 'noopener' : undefined} title={b.label}>
                   {b.badge in badgeImages ? (
-                    <Image src={badgeImages[b.badge as keyof typeof badgeImages]} alt={b.alt} widths={[108, 216]} sizes="108px" loading="lazy" />
+                    <Image src={badgeImages[b.badge as keyof typeof badgeImages]} alt={b.alt} widths={[56, 112]} sizes="56px" loading="lazy" />
                   ) : (
-                    <img src={b.badge} alt={b.alt} width="108" height="108" loading="lazy" decoding="async" />
+                    <img src={b.badge} alt={b.alt} width="56" height="56" loading="lazy" decoding="async" />
                   )}
                 </a>
               </li>
             ))
           }
         </ul>
-        <p class="ft-p ft-trust">
-          {trustParts.map((part, i) => (i % 2 ? <i>{part}</i> : part))}
+        <p class="ft-contact">
+          <bdi dir="ltr">{SITE.addressDisplay}</bdi>
+          <span aria-hidden="true"> · </span>
+          <a class="ft-link" href={`tel:${SITE.telephone}`}><bdi dir="ltr">{SITE.telephoneDisplay}</bdi></a>
         </p>
       </div>
+      <div class="ft-row">
+        <p><span {...fa('footer.copyright')}>{fmt(footer.copyright, { year })}</span></p>
+        <ul class="ft-legal">
+          {legal.map((l) => (
+            <li>
+              <a class="ft-link" href={localizePath(l.href, locale)}><span {...l.attrs}>{l.label}</span></a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <p class="ft-security"><span {...fa('footer.security')}>{footer.security}</span></p>
     </div>
-  </div>
-
-  <div class="ft-bottom">
-    <p class="ft-copy">
-      {fmt(footer.copyright, { year })} | <bdi dir="ltr">{SITE.addressDisplay}</bdi> | <bdi dir="ltr">{SITE.telephoneDisplay}</bdi>
-      <span class="ft-legal">
-        {legal.map((l, i) => (
-          <>
-            {i > 0 && <span aria-hidden="true"> | </span>}
-            <a href={localizePath(l.href, locale)}>{l.label}</a>
-          </>
-        ))}
-      </span>
-    </p>
   </div>
 </footer>
 
 <style>
-  /* Production footer values (spec/footer.md). Sizes are fixed px, as on
-     production; colors come from the brand tokens in global.css. */
-  .ft {
-    background: var(--color-tech);
-    color: #fff;
-    font-size: 16px;
-    line-height: 24px;
-    font-weight: 400;
-  }
-  /* Every footer element below sets its own margins (global.css gives p,
-     headings and lists theirs in @layer base, which these rules override). */
-  .ft-heading,
-  .ft-social,
-  .ft-links,
-  .ft-badges,
-  .ft-copy {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .ft a {
-    color: #fff;
-    font-weight: 400;
-    text-decoration: none;
-  }
+  .ft { color: var(--color-inspire-100); font-size: 1rem; line-height: 1.6; }
+  .ft-inner { display: flex; flex-direction: column; gap: 40px; padding-block: 64px 32px; }
+  .ft-top { display: flex; flex-wrap: wrap; gap: 40px 64px; }
+  .ft-brand { flex: 2 1 380px; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+  .ft-logo { display: block; height: 40px; width: auto; }
+  .ft-tagline { margin: 0; max-width: 420px; font-family: var(--font-heading); font-size: 1.625rem; line-height: 1.2; font-weight: 900; color: var(--color-inspire); }
+  .ft-tag-strong { color: #fff; }
+  .ft-tag-em { color: var(--color-kindle); }
+  .ft-col { flex: 1 1 160px; min-width: 0; }
+  .ft-heading { margin: 0 0 6px; font-family: var(--font-heading); font-size: 1rem; line-height: 1.6; font-weight: 900; color: var(--color-cultivate); }
+  .ft ul { list-style: none; margin: 0; padding: 0; }
+  .ft-link { color: #fff; font-weight: 400; text-decoration: none; }
+  .ft-link:hover { color: var(--color-cultivate); text-decoration: underline; text-underline-offset: 3px; }
+  .ft-col .ft-link { display: inline-block; padding-block: 6px; }
+  .ft :focus-visible { outline-color: #fff; }
 
-  .ft-main {
-    padding: 40px;
-  }
-  .ft-grid {
-    max-width: 1000px;
-    margin-inline: auto;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
-    align-items: center;
-  }
-  .ft-col {
-    min-width: 0;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+  .ft-social { display: flex; flex-wrap: wrap; gap: 4px; margin-inline-start: -10px !important; }
+  .ft-social a { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 999px; color: #fff; }
+  .ft-social a:hover { color: var(--color-cultivate); background: rgb(255 255 255 / 0.08); }
+  .ft-social svg { width: 20px; height: 20px; fill: currentColor; }
 
-  .ft-heading {
-    font-size: 24px;
-    line-height: 24px;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: normal;
-    text-transform: none;
-  }
-  .ft-p {
-    margin: 0 0 14.4px;
-  }
-
-  /* Column 1 */
-  .ft-logo {
-    display: block;
-    width: 250px;
-    max-width: 100%;
-    height: auto;
-  }
-  .ft-lead {
-    margin-block-start: 20px; /* 10 gap + 10 spacer + 10 gap */
-  }
-  .ft-social {
-    margin-block-start: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 5px;
-  }
-  .ft-social a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #fff;
-    color: var(--color-tech);
-    transition: opacity 0.3s;
-  }
-  .ft-social a:hover {
-    opacity: 0.9;
-  }
-  .ft-social svg {
-    width: 20px;
-    height: 20px;
-    fill: currentColor;
-  }
-
-  /* Column 2 */
-  .ft-col-2 {
-    margin-block-start: 10px;
-    text-align: center;
-  }
-  .ft-links a:hover {
-    text-decoration: underline;
-  }
-  .ft-thanks {
-    margin-block-start: 30px; /* 10 gap + 20 spacer + 10 gap */
-    margin-block-end: 44.4px; /* 14.4 + 10 gap + 20 spacer */
-  }
-
-  /* Column 3 */
-  .ft-col-3 {
-    gap: 20px;
-  }
-  .ft-badges {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: flex-start;
-    gap: 20px;
-  }
-  .ft-badge {
-    flex: 0 1 108px;
-    min-width: 0;
-  }
-  .ft-badge a {
-    display: block;
-    transition: opacity 0.3s;
-  }
-  .ft-badge a:hover {
-    opacity: 0.9;
-  }
-  .ft-badge img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-  /* Candid's seal is an inline image on production; its baseline gap makes
-     the badge row 7px taller. */
-  .ft-badge-candid img {
-    display: inline;
-    vertical-align: baseline;
-  }
-  .ft-trust {
-    text-align: center;
-  }
-
-  /* Copyright line */
-  .ft-bottom {
-    padding: 0 20px 40px;
-  }
-  .ft-copy {
-    max-width: 1000px;
-    margin-inline: auto;
-    font-size: 14px;
-    line-height: 14px;
-    text-align: center;
-  }
-  .ft-copy a:hover {
-    text-decoration: underline;
-  }
-  /* Our legal links (production has none): a second, equally quiet line. */
-  .ft-legal {
-    display: block;
-    margin-block-start: 8px;
-  }
-
-  /* Phones: one column; Quick Links and the thank-you go to the start edge. */
-  @media (max-width: 767px) {
-    .ft-grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
-    .ft-col-2 {
-      text-align: start;
-    }
-  }
-
-  /* Scripts whose glyphs need taller lines than production's Latin values. */
-  :global(html[data-script='nastaliq']) .ft,
-  :global(html[data-script='myanmar']) .ft {
-    line-height: 1.9;
-  }
-  :global(html[data-script='nastaliq']) .ft-heading,
-  :global(html[data-script='myanmar']) .ft-heading {
-    line-height: 1.6;
-  }
-  :global(html[data-script='nastaliq']) .ft-copy,
-  :global(html[data-script='myanmar']) .ft-copy {
-    line-height: 1.9;
-  }
+  .ft-bottom { display: flex; flex-direction: column; gap: 12px; padding-top: 20px; border-top: 1px solid var(--color-ocean-700); font-size: 0.875rem; }
+  .ft-bottom p { margin: 0; }
+  .ft-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 32px; }
+  .ft-badges { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .ft-badges a { display: block; border-radius: 999px; }
+  .ft-badges img { display: block; width: 56px; height: 56px; object-fit: contain; border-radius: 999px; background: #fff; }
+  .ft-legal { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+  .ft-legal .ft-link, .ft-contact .ft-link { display: inline-flex; align-items: center; min-height: 32px; }
+  .ft-security { font-style: italic; }
 </style>

@@ -2,9 +2,8 @@
 // /search/ — full-text search of the site, powered by Pagefind: a static
 // index built from dist/ after `astro build` (scripts/postbuild.mjs), served
 // as plain files. No server, no third party. ?q=… runs a search on load
-// (the WebSite SearchAction in the JSON-LD points here). Production has no
-// styled search page: this one uses the site's banner title, the 1000px
-// column, the theme's input style and Kindle links and buttons.
+// (the WebSite SearchAction in the JSON-LD points here). A Mist header, then
+// Pagefind's interface dressed in the design system (field, pills, links).
 import Base from '../layouts/Base.astro';
 import { ui } from '../i18n';
 const t = ui('en');
@@ -12,12 +11,13 @@ const t = ui('en');
 
 <Base switcherPath="/" locale="en" basePath="/search/" title="Search" description="Search unfoldingword.org: stories, Bible translation strategy, resources for translators and ways to give." noindex pageType="search">
   <link slot="head" rel="stylesheet" href="/pagefind/pagefind-ui.css" />
-  <section class="uw-banner on-dark">
-    <div class="container-page flex min-h-[200px] items-center justify-center py-10 text-center">
-      <h1 class="text-h2 text-white uppercase">Search</h1>
+  <section class="bg-mist">
+    <div class="container-page flex flex-col gap-4 pt-12 pb-14 md:pt-16 md:pb-[72px]">
+      <h1>{t.search}</h1>
+      <p class="lead max-w-[640px]">Stories, Bible translation strategy, resources for translators and ways to give.</p>
     </div>
   </section>
-  <div class="container-page py-10">
+  <div class="container-page max-w-[calc(var(--container-prose)+2*var(--spacing-gutter))] py-12 md:py-16">
     <div id="site-search"></div>
     <noscript><p>Search needs JavaScript. <a href="/">Go to the home page</a> or browse the <a href="/stories/">{t.allStories}</a>.</p></noscript>
   </div>
@@ -32,20 +32,23 @@ const t = ui('en');
   <style is:global>
     #site-search {
       --pagefind-ui-scale: 0.8;
-      --pagefind-ui-primary: var(--color-kindle);
+      --pagefind-ui-primary: var(--color-ocean);
       --pagefind-ui-text: var(--color-tech);
       --pagefind-ui-background: #fff;
       --pagefind-ui-border: var(--color-input-border);
-      --pagefind-ui-tag: var(--color-tint);
+      --pagefind-ui-tag: var(--color-inspire-50);
       --pagefind-ui-border-width: 1px;
       --pagefind-ui-border-radius: var(--radius-input);
       --pagefind-ui-font: var(--font-sans);
     }
-    #site-search .pagefind-ui__search-input { font-weight: 400; }
-    #site-search .pagefind-ui__result-link { color: var(--color-link); font-weight: 900; text-decoration: none; }
-    #site-search .pagefind-ui__result-link:hover { color: var(--color-link-hover); }
-    #site-search .pagefind-ui__result-excerpt { font-weight: 300; }
-    #site-search .pagefind-ui__button { font-family: var(--font-heading); font-weight: 900; border-radius: var(--radius-button); background: var(--color-kindle); color: #fff; border: 0; }
-    #site-search .pagefind-ui__button:hover { background: var(--color-inspire); }
+    /* The field matches .uw-input. */
+    #site-search .pagefind-ui__search-input { min-height: 52px; font-size: 1.0625rem; font-weight: 400; color: var(--color-tech); }
+    #site-search .pagefind-ui__search-input:focus { border-color: var(--color-ocean); }
+    #site-search .pagefind-ui__result-link { color: var(--color-ocean); font-family: var(--font-heading); font-weight: 900; text-decoration: none; }
+    #site-search .pagefind-ui__result-link:hover { color: var(--color-inspire-ink); }
+    #site-search .pagefind-ui__result-excerpt { color: var(--color-ink-muted); }
+    #site-search .pagefind-ui__result-excerpt mark { background: var(--color-inspire-100); color: var(--color-tech); }
+    #site-search .pagefind-ui__button { font-family: var(--font-heading); font-weight: 800; border-radius: var(--radius-button); background: #fff; color: var(--color-ocean); border: 1px solid var(--color-ocean); }
+    #site-search .pagefind-ui__button:hover { background: var(--color-ocean); color: #fff; }
   </style>
 </Base>

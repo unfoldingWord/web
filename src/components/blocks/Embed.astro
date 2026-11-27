@@ -1,28 +1,30 @@
 ---
-// A third-party embed in an iframe (flip-book, map, form). Use sparingly:
-// every embed is a request to another site on page load. Square corners and
-// no frame, like production's embeds. A `src` ending in .mp4 or .webm is a
-// video file: it plays in the browser's own player (production's Elementor
-// video widget, for-translators/training), and it joins an accordion that
-// follows it into one section, 20px apart, as on production.
+// A third-party embed in an iframe (flip-book, map, form) in a rounded
+// frame. Use sparingly: every embed is a request to another site on page
+// load. A `src` ending in .mp4 or .webm is a video file and plays in the
+// browser's own player; an accordion that follows it joins its section.
 import type { Block } from '../../content.config';
+import type { PortfolioKey } from '../../lib/portfolios';
 import Section from '../ui/Section.astro';
 
 type Embed = Extract<Block, { type: 'embed' }>;
 interface Props {
   block: Embed;
   locale: string;
+  portfolio?: PortfolioKey;
 }
 const { block } = Astro.props;
 const isVideo = /\.(mp4|webm)(\?|#|$)/i.test(block.src);
 ---
 
 <Section class={isVideo ? 'uw-flow' : undefined}>
-  {
-    isVideo ? (
-      <video src={block.src} controls preload="metadata" playsinline aria-label={block.title} class="block w-full bg-black" style={`aspect-ratio:${block.aspect}`} />
-    ) : (
-      <iframe src={block.src} title={block.title} loading="lazy" class="block w-full border-0" style={`aspect-ratio:${block.aspect}`} allowfullscreen />
-    )
-  }
+  <div class="overflow-hidden rounded-media bg-mist shadow-card">
+    {
+      isVideo ? (
+        <video src={block.src} controls preload="metadata" playsinline aria-label={block.title} class="block w-full bg-black" style={`aspect-ratio:${block.aspect}`} />
+      ) : (
+        <iframe src={block.src} title={block.title} loading="lazy" class="block w-full border-0" style={`aspect-ratio:${block.aspect}`} allowfullscreen />
+      )
+    }
+  </div>
 </Section>

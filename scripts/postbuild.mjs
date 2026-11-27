@@ -89,9 +89,9 @@ const dynamic = [
   // old tool pages (/tools/tr has its own static rule, which wins)
   ['/tools/*', '/for-translators/tools/', 301],
   // old region/project section addresses (404 log); specific ones are in legacy.txt
-  ['/our-work/*', '/wbwn/', 301],
-  ['/portfolio/*', '/wbwn/', 301],
-  ['/projects/*', '/wbwn/', 301],
+  ['/our-work/*', '/transformation/', 301],
+  ['/portfolio/*', '/transformation/', 301],
+  ['/projects/*', '/transformation/', 301],
   // the old story index's pagination
   ['/stories-from-the-field/page/*', '/stories/', 301],
   ['/tag/*', '/stories/', 301],

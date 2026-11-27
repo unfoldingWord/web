@@ -1,14 +1,13 @@
 ---
-// A story teaser, in production's two looks:
-//   card — white card with a photo, centered Ocean title, a rule, the
-//          excerpt and a "Read More" button (home carousel, grids)
-//   row  — a tall photo with a diagonal edge beside a centered title,
-//          excerpt and button (the stories index)
-// The excerpt is the story's `excerpt` when set; otherwise the opening words
-// of the story, as WordPress did (20 words with " ..." on cards, 30 on rows).
+// A story teaser (Stories.dc.html grid item): a rounded photo, a meta line
+// (region, and the portfolio with its color dot when the story has one), the
+// title and a one-line excerpt. No card box. The title link stretches over
+// the whole teaser, so it is one link and one tab stop.
+// `variant` is accepted for older callers; every teaser now looks the same.
 import type { CollectionEntry } from 'astro:content';
 import { ui, localizePath } from '../../i18n';
 import { basePathFor, splitId } from '../../lib/routes';
+import { portfolio } from '../../lib/portfolios';
 import Picture from './Picture.astro';
 
 interface Props {
@@ -17,154 +16,33 @@ interface Props {
   headingLevel?: 'h2' | 'h3';
   variant?: 'card' | 'row';
 }
-const { story, locale, headingLevel = 'h3', variant = 'card' } = Astro.props;
+const { story, locale, headingLevel = 'h3' } = Astro.props;
 const t = ui(locale);
+const d = story.data;
 const href = localizePath(basePathFor('stories', splitId(story.id).rest), locale);
 const H = headingLevel;
-const titleId = `story-${splitId(story.id).rest}-${variant}`;
-
-/** The story's opening words, without Markdown, MDX imports or components. */
-function openingWords(body: string | undefined, n: number, more: string): string | undefined {
-  if (!body) return undefined;
-  const text = body
-    .replace(/^\s*(import|export)\s.*$/gm, '')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-    .replace(/^\s{0,3}(#{1,6}|>|[-*+]\s|\d+\.\s)\s*/gm, '')
-    .replace(/\\\*/g, '\u0001')
-    .replace(/\\_/g, '\u0002')
-    .replace(/\\([\\[\]()#>`-])/g, '$1')
-    .replace(/[*_`]+/g, '')
-    .replace(/\u0001/g, '*')
-    .replace(/\u0002/g, '_')
-    .replace(/\s+/g, ' ')
-    .trim();
-  const words = text.split(' ');
-  return words.length > n ? words.slice(0, n).join(' ') + more : text;
-}
-const excerpt = story.data.excerpt ?? (variant === 'row' ? openingWords(story.body, 30, '') : openingWords(story.body, 20, ' ...')) ?? story.data.description;
+const region = (t.regions as Record<string, string>)[d.region] ?? d.region;
+const PF_NAMES: Record<string, string> = { transformation: 'Transformation', innovation: 'Innovation', catalyzation: 'Catalyzation', equippingPartners: 'Equipping Partners' };
+const pf = d.portfolio ? portfolio(d.portfolio) : undefined;
+const pfName = pf ? ((t.nav as Record<string, string>)[pf.navKey] ?? PF_NAMES[pf.navKey]) : undefined;
+const excerpt = d.excerpt ?? d.description;
 ---
 
-{
-  variant === 'row' ? (
-    <article class="story-row" data-region={story.data.region}>
-      <div class="story-row-photo">
-        <Picture path={story.data.image} alt={story.data.imageAlt} sizes="(min-width: 48rem) 390px, 100vw" widths={[390, 640, 780]} fill />
-      </div>
-      <div class="story-row-text">
-        <H id={titleId} class="story-row-title">
-          <a href={href}>{story.data.title}</a>
-        </H>
-        {excerpt && <p class="story-row-excerpt">{excerpt}</p>}
-        <a href={href} class="uw-btn uw-btn-primary" aria-describedby={titleId}>{t.readMore}</a>
-      </div>
-    </article>
-  ) : (
-    <article class="story-card" data-region={story.data.region}>
-      <div class="story-card-photo">
-        <Picture path={story.data.image} alt={story.data.imageAlt} sizes="(min-width: 66rem) 317px, (min-width: 48rem) 50vw, 100vw" widths={[320, 480, 640]} fill />
-      </div>
-      <div class="story-card-body">
-        <H id={titleId} class="story-card-title">
-          <a href={href}>{story.data.title}</a>
-        </H>
-        {excerpt && <p class="story-card-excerpt">{excerpt}</p>}
-        <div class="mt-auto">
-          <a href={href} class="uw-btn uw-btn-primary" aria-describedby={titleId}>{t.readMore}</a>
-        </div>
-      </div>
-    </article>
-  )
-}
-
-<style>
-  /* Production wraps text plainly (no balance or pretty). */
-  .story-card-title, .story-row-title { text-wrap: wrap; }
-
-  /* card */
-  .story-card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
-    border-radius: var(--radius-card);
-    background: #fff;
-    text-align: center;
-  }
-  .story-card-photo {
-    position: relative;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-  }
-  @media (min-width: 768px) {
-    .story-card-photo { aspect-ratio: 10 / 7; }
-  }
-  .story-card-photo :global(img) { position: absolute; inset: 0; }
-  .story-card-body {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    padding: 20px;
-  }
-  .story-card-title {
-    margin: 8px 0 0;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--color-rule);
-    font-size: 22px;
-    line-height: 1.2;
-    font-weight: 700;
-    color: var(--color-ocean);
-  }
-  .story-card-title a { color: inherit; font-weight: inherit; }
-  .story-card-title a:hover { color: var(--color-kindle); }
-  .story-card-excerpt {
-    margin: 15px 0 20px;
-    font-size: var(--text-body);
-    line-height: var(--text-body--line-height);
-    font-weight: 300;
-    color: var(--color-ocean);
-  }
-
-  /* row */
-  .story-row {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  .story-row-photo {
-    position: relative;
-    height: 520px;
-    overflow: hidden;
-    clip-path: polygon(0 0, 85% 0, 100% 100%, 0 100%);
-  }
-  .story-row-photo :global(img) { position: absolute; inset: 0; }
-  .story-row-photo:dir(rtl) { clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%); }
-  .story-row-text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    text-align: center;
-  }
-  @media (min-width: 768px) {
-    .story-row { flex-direction: row; align-items: center; }
-    .story-row-photo, .story-row-text { flex: 1 1 0; min-width: 0; }
-  }
-  .story-row-title {
-    margin: 0;
-    font-size: var(--text-h3);
-    line-height: 1;
-    font-weight: 400;
-    color: var(--color-tech);
-  }
-  .story-row-title a { color: inherit; font-weight: inherit; }
-  .story-row-title a:hover { color: var(--color-kindle); }
-  .story-row-excerpt {
-    margin: 0 0 0.9rem;
-    font-size: var(--text-body);
-    line-height: var(--text-body--line-height);
-    font-weight: 300;
-    color: var(--color-tech);
-  }
-</style>
+<article class="group relative flex h-full flex-col gap-3">
+  <div class="relative h-[220px] overflow-hidden rounded-card bg-mist sm:h-[280px]">
+    <Picture path={d.image} alt={d.imageAlt} sizes="(min-width: 66rem) 410px, (min-width: 40rem) 50vw, 100vw" widths={[400, 640, 820]} fill class="transition-transform duration-300 group-hover:scale-[1.03]" />
+  </div>
+  <p class="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm font-extrabold text-inspire-ink">
+    <span>{region}</span>
+    {pf && (
+      <span class:list={['inline-flex items-center gap-1.5 text-ocean', `pf-${pf.key}`]}>
+        <span class="pf-dot" aria-hidden="true" />
+        {pfName}
+      </span>
+    )}
+  </p>
+  <H class="text-h4 font-extrabold text-ocean">
+    <a href={href} class="text-ocean after:absolute after:inset-0 after:content-[''] group-hover:text-inspire-ink">{d.title}</a>
+  </H>
+  {excerpt && <p class="line-clamp-2 text-ink-muted">{excerpt}</p>}
+</article>

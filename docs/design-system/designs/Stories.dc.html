@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stories and testimonial gallery</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800;6..12,900&family=PT+Serif:ital@0;1&display=swap">
+<style>
+body{margin:0}
+a{color:#0b6e9e}a:hover{color:#014263}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="font-family: 'Avenir', 'Avenir Next', 'Nunito Sans', system-ui, sans-serif; color: #231f20; background: #ffffff; font-size: 17px; line-height: 1.6">
+
+  <dc-import name="Header" hint-size="100%,68px"></dc-import>
+
+  <section style="background: #ffffff">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 64px 32px 40px; display: flex; flex-direction: column; gap: 14px">
+      <h1 style="margin: 0; font-size: clamp(38px, 4.6vw, 66px); line-height: 1.04; font-weight: 900; color: #014263">See what God is doing!</h1>
+      <p style="margin: 0; font-size: 20px; line-height: 1.55; color: #5b5557; max-width: 640px">Church leaders around the world, in their own words, on what changed when they could translate Scripture for their own people.</p>
+    </div>
+  </section>
+
+  <section style="background: #ffffff">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 0 32px 72px">
+      <a href="Story.dc.html" style="display: flex; flex-wrap: wrap; border-radius: 24px; overflow: hidden; background: #012c42; text-decoration: none; color: #ffffff">
+        <img src="/src/assets/images/stories/the-crisis-in-islands-asia-bible-translation.jpg" alt="A woman in a woven striped net top and head covering stands in front of bundled cane poles in a green village garden" style="flex: 1 1 480px; min-width: 0; width: 100%; height: 500px; object-fit: cover; object-position: 25% 30%; display: block">
+        <span style="flex: 1 1 440px; min-width: 0; box-sizing: border-box; padding: 56px clamp(28px, 4vw, 64px); display: flex; flex-direction: column; justify-content: center; gap: 18px">
+          <span style="font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800; color: #70c9cc">Featured · Islands-Asia</span>
+          <span style="font-family: 'PT Serif', Georgia, serif; font-size: clamp(28px, 3vw, 44px); line-height: 1.15; color: #ffffff">"We could all be gone by the time you get to us!"</span>
+          <span style="color: #cdebf8; font-size: 19px">Over 700 language groups but only 34 complete Bibles. One partner's ministry now works with 130 language groups.</span>
+          <span style="font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 8px">Read the story <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#70c9cc" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15"></path><path d="M13 6l6 6-6 6"></path></svg></span>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <section style="background: #ffffff">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 0 32px 96px; display: flex; flex-direction: column; gap: 32px">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+        <span style="font-size: 15px; font-weight: 800; color: #5b5557; margin-right: 8px">Region</span>
+        <sc-for list="{{filters}}" as="f" hint-placeholder-count="5">
+          <button type="button" onClick="{{ f.pick }}" aria-pressed="{{ f.pressed }}" style="min-height: 44px; padding: 8px 20px; border-radius: 999px; font-weight: 800; font-size: 15px; border: 1px solid #014263; background: {{f.bg}}; color: {{f.fg}}">{{f.label}}</button>
+        </sc-for>
+        <span style="margin-left: auto; font-size: 15px; color: #5b5557">{{countLabel}}</span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 32px 24px">
+        <sc-for list="{{stories}}" as="s" hint-placeholder-count="6">
+          <a href="Story.dc.html" style="flex: 1 1 340px; max-width: 420px; min-width: 0; text-decoration: none; color: #231f20; display: flex; flex-direction: column; gap: 12px">
+            <img src="{{s.src}}" alt="{{s.alt}}" style="width: 100%; height: 280px; object-fit: cover; object-position: {{s.pos}}; border-radius: 20px; display: block">
+            <span style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: 14px; font-weight: 800; color: #0b6e9e"><span>{{s.place}}</span><span style="display: inline-flex; align-items: center; gap: 6px; color: #014263"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: {{s.pfc}}; display: block"></span>{{s.pf}}</span></span>
+            <span style="font-size: 23px; line-height: 1.2; font-weight: 800; color: #014263">{{s.title}}</span>
+            <span style="color: #5b5557">{{s.line}}</span>
+          </a>
+        </sc-for>
+      </div>
+      <div><a href="Stories.dc.html" style="display: inline-block; color: #014263; text-decoration: none; font-weight: 800; padding: 13px 28px; border-radius: 999px; border: 1px solid #014263">Load more stories</a></div>
+    </div>
+  </section>
+
+  <section style="background: #f4f9fb">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 96px 32px; display: flex; flex-direction: column; gap: 40px">
+      <div style="display: flex; flex-direction: column; gap: 12px; max-width: 720px">
+        <h2 style="margin: 0; font-size: clamp(28px, 3vw, 42px); line-height: 1.12; font-weight: 900; color: #014263">Voices from the field</h2>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 24px">
+        <div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+          <sc-for list="{{voicesA}}" as="v" hint-placeholder-count="2">
+          <figure style="margin: 0; background: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 1px 2px rgba(1,66,99,0.06), 0 8px 24px -12px rgba(1,66,99,0.18)">
+            <img src="{{v.src}}" alt="{{v.alt}}" style="width: 100%; height: {{v.h}}; object-fit: cover; object-position: {{v.pos}}; display: block">
+            <div style="padding: 24px 26px 28px; display: flex; flex-direction: column; gap: 12px">
+              <blockquote style="margin: 0; font-family: 'PT Serif', Georgia, serif; font-size: 20px; line-height: 1.4; color: #014263">{{v.quote}}</blockquote>
+              <figcaption style="font-size: 15px; color: #5b5557"><strong style="color: #231f20">{{v.name}}</strong> · {{v.place}}</figcaption>
+            </div>
+          </figure>
+          </sc-for>
+        </div>
+        <div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+          <sc-for list="{{voicesB}}" as="v" hint-placeholder-count="2">
+          <figure style="margin: 0; background: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 1px 2px rgba(1,66,99,0.06), 0 8px 24px -12px rgba(1,66,99,0.18)">
+            <img src="{{v.src}}" alt="{{v.alt}}" style="width: 100%; height: {{v.h}}; object-fit: cover; object-position: {{v.pos}}; display: block">
+            <div style="padding: 24px 26px 28px; display: flex; flex-direction: column; gap: 12px">
+              <blockquote style="margin: 0; font-family: 'PT Serif', Georgia, serif; font-size: 20px; line-height: 1.4; color: #014263">{{v.quote}}</blockquote>
+              <figcaption style="font-size: 15px; color: #5b5557"><strong style="color: #231f20">{{v.name}}</strong> · {{v.place}}</figcaption>
+            </div>
+          </figure>
+          </sc-for>
+        </div>
+        <div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+          <sc-for list="{{voicesC}}" as="v" hint-placeholder-count="2">
+          <figure style="margin: 0; background: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 1px 2px rgba(1,66,99,0.06), 0 8px 24px -12px rgba(1,66,99,0.18)">
+            <img src="{{v.src}}" alt="{{v.alt}}" style="width: 100%; height: {{v.h}}; object-fit: cover; object-position: {{v.pos}}; display: block">
+            <div style="padding: 24px 26px 28px; display: flex; flex-direction: column; gap: 12px">
+              <blockquote style="margin: 0; font-family: 'PT Serif', Georgia, serif; font-size: 20px; line-height: 1.4; color: #014263">{{v.quote}}</blockquote>
+              <figcaption style="font-size: 15px; color: #5b5557"><strong style="color: #231f20">{{v.name}}</strong> · {{v.place}}</figcaption>
+            </div>
+          </figure>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: #012c42; color: #ffffff">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 88px 32px; display: flex; flex-direction: column; gap: 36px">
+      <h2 style="margin: 0; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.15; font-weight: 900; color: #ffffff">What leaders in Bible translation are saying</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 32px 48px">
+        <sc-for list="{{leaders}}" as="l" hint-placeholder-count="3">
+          <figure style="margin: 0; flex: 1 1 320px; min-width: 0; display: flex; gap: 18px; align-items: flex-start">
+            <img src="{{l.src}}" alt="{{l.alt}}" style="width: 84px; height: 84px; border-radius: 50%; object-fit: cover; flex: 0 0 auto">
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <blockquote style="margin: 0; color: #ffffff; font-size: 18px">{{l.quote}}</blockquote>
+              <figcaption style="font-size: 15px; color: #cdebf8"><strong style="color: #70c9cc">{{l.name}}</strong>, {{l.org}}</figcaption>
+            </div>
+          </figure>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <dc-import name="GiveBand" hint-size="100%,560px"></dc-import>
+  <dc-import name="Footer" hint-size="100%,360px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3700}}'>
+class Component extends DCLogic {
+  state = { region: 'All' };
+  renderVals() {
+    const region = (this.state && this.state.region) || 'All';
+    const all = [
+      { region: 'Asia', place: 'Myanmar', title: 'translationCore: A Massive Hit in Myanmar', line: 'When we demonstrated how they could align their translations with Burmese, we got gasps!', src: '/src/assets/images/stories/translationcore-a-massive-hit-in-myanmar.jpg', pos: '50% 50%', alt: 'Five Burmese translators lean in together around a laptop at a training workshop' },
+      { region: 'Africa', place: 'Sudan', title: 'God’s Initiative in Sudan', line: 'Ibrahim said, "I want to translate the Bible for my people!"', src: '/src/assets/images/home/field-ibrahim.jpg', pos: '50% 20%', alt: 'A smiling young man in a colorful patterned shirt in front of green foliage' },
+      { region: 'Africa', place: 'Benin', title: 'Overcoming Obstacles to the Gospel in Benin', line: 'Open Bible Stories overcomes hostility to the message of Christ.', src: '/src/assets/images/home/field-charles.jpg', pos: '60% 20%', alt: 'A man in glasses and a patterned shirt speaking and gesturing on a lawn' },
+      { region: 'Middle East', place: 'Iran', title: 'Hundreds of Iranians Introduced to Christ', line: 'Scripture in the heart language is reaching new believers.', src: '/src/assets/images/wbwn/iran.jpg', pos: '40% 30%', alt: 'A man in a plaid shirt looks upward in the shaded courtyard of a tiled mosque' },
+      { region: 'Africa', place: 'Chad', title: 'The Market Evangelist', line: 'Audio Open Bible Stories in local heart languages, carried to the market.', src: '/src/assets/images/wbwn/chad.jpg', pos: '50% 30%', alt: 'A woman in a grey headscarf looks up beside a sand dune' },
+      { region: 'Pacific', place: 'Islands-Asia', title: 'The Lost Sheep of Islands-Asia', line: 'A people group of 500,000 on the way to translating God’s Word for themselves.', src: '/src/assets/images/wbwn/islands-asia.jpg', pos: '50% 40%', alt: 'A woman carries a bundle on her head as she leads cattle along a dusty road' }
+    ];
+    const shown = all.filter((s) => region === 'All' || s.region === region);
+    return {
+      filters: ['All', 'Africa', 'Asia', 'Middle East', 'Pacific'].map((label) => ({
+        label,
+        pick: () => this.setState({ region: label }),
+        pressed: region === label ? 'true' : 'false',
+        bg: region === label ? '#014263' : '#ffffff',
+        fg: region === label ? '#ffffff' : '#014263'
+      })),
+      stories: shown.map((st) => ({ ...st, pf: st.place === 'Myanmar' ? 'Innovation' : 'Transformation', pfc: st.place === 'Myanmar' ? '#31ade3' : '#70c9cc' })),
+      countLabel: shown.length + (shown.length === 1 ? ' story' : ' stories'),
+      ...(() => { const v = [
+        { name: 'Birhan', place: 'Islands-Asia', h: '300px', pos: '50% 22%', src: '/src/assets/images/home/field-birhan.jpg', alt: 'An older man in a blue bucket hat, with a smiling woman in a headscarf behind him', quote: '"I really love partnering with unfoldingWord, because it puts the church at the forefront."' },
+        { name: 'Boaz', place: 'South Asia', h: '220px', pos: '50% 40%', src: '/src/assets/images/home/field-boaz.jpg', alt: 'A smiling young man in an orange shirt and white scarf standing with folded arms in a green rice field', quote: '"It makes repetitive tasks faster and lets me focus more on the content. I really praise God for whoever is behind translationCore!"' },
+        { name: 'Siroos Torabi', place: 'Transform Iran', h: '260px', pos: '50% 25%', src: '/src/assets/images/home/field-siroos-torabi.jpg', alt: 'A smiling older man in a blue checked shirt, outdoors under trees', quote: '"You do it once and use it 30 times! Using the Book Packages is almost six times faster than the old translation method."' },
+        { name: 'Charles', place: 'Benin', h: '240px', pos: '60% 18%', src: '/src/assets/images/home/field-charles.jpg', alt: 'A man in glasses and a patterned shirt speaking and gesturing on a lawn', quote: '"Our people are story-crazy people. Open Bible Stories overcomes their hostility to the message of Christ."' },
+        { name: 'Ibrahim', place: 'South Sudan', h: '300px', pos: '50% 20%', src: '/src/assets/images/home/field-ibrahim.jpg', alt: 'A smiling young man in a colorful patterned shirt in front of green foliage', quote: '"With this tool, we can check three chapters in a day."' },
+        { name: 'Amos', place: 'South Asia', h: '240px', pos: '30% 20%', src: '/src/assets/images/home/field-amos.jpg', alt: 'A man in a red plaid shirt with a shoulder bag standing in a sunlit city square', quote: '"Checking manually, it takes a whole day to review a few verses. With translationCore, we can check 100 verses per day."' }
+      ]; return { voicesA: [v[0], v[3]], voicesB: [v[1], v[4]], voicesC: [v[2], v[5]] }; })(),
+      leaders: [
+        { name: 'Bobby Gruenewald', org: 'YouVersion', src: '/src/assets/images/home/bobby-gruenewald.jpg', alt: 'Bobby Gruenewald, smiling, in a dark polo shirt', quote: '"unfoldingWord is accelerating Bible translation and empowering local believers."' },
+        { name: 'Mart Green', org: 'Every Tribe Every Nation', src: '/src/assets/images/home/mart-green.jpg', alt: 'Mart Green, wearing round glasses and a dark blazer', quote: '"We won’t do it without the help of unfoldingWord."' },
+        { name: 'Roy Peterson', org: 'former President, American Bible Society', src: '/src/assets/images/home/roy-peterson.jpg', alt: 'Roy Peterson, smiling, in a purple sweater', quote: '"unfoldingWord’s Church-centric model is leading the way!"' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

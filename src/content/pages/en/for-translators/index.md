@@ -8,12 +8,8 @@ sections:
     title: For Translators
     image: for-translators/content.jpg
     imageAlt: Rows of old leather-bound books on dark library shelves beside a wooden ladder
-  - type: cta
-    variant: legacy
-    title: FOR TRANSLATORS
+  - type: prose
     body: unfoldingWord collaborates with church networks to create biblical **[content](/for-translators/content/)**, technology **[tools](/for-translators/tools/)**, and translation **[training](/for-translators/training/)**.
-    image: for-translators/content.jpg
-    imageAlt: Rows of old leather-bound books on dark library shelves beside a wooden ladder
   - type: cards
     columns: 3
     variant: legacy
