@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Portfolio page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800;6..12,900&family=PT+Serif:ital@0;1&display=swap">
+<style>
+body{margin:0}
+.uw-grain{background-image:url(/docs/design-system/assets/grain.png),linear-gradient(100deg,#012c42,#014263)}
+a{color:#0b6e9e}a:hover{color:#014263}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="font-family: 'Avenir', 'Avenir Next', 'Nunito Sans', system-ui, sans-serif; color: #231f20; background: #ffffff; font-size: 17px; line-height: 1.6">
+
+  <dc-import name="Header" hint-size="100%,68px"></dc-import>
+
+  <section style="display: flex; flex-wrap: wrap; background: #70c9cc">
+    <div style="flex: 1 1 520px; min-width: 0; box-sizing: border-box; padding: 72px clamp(32px, 5vw, 88px); display: flex; flex-direction: column; justify-content: center; gap: 24px; color: #014263">
+      <nav aria-label="Breadcrumb" style="font-size: 15px; color: #014263"><a href="Portfolio.dc.html" style="color: #014263">What we do</a> <span aria-hidden="true">/</span> Transformation</nav>
+      <h1 style="margin: 0; font-size: clamp(42px, 5.4vw, 78px); line-height: 1.02; font-weight: 900; color: #014263">Transformation</h1>
+      <p style="margin: 0; font-size: 21px; line-height: 1.5; color: #014263; max-width: 540px">Church networks equipped to reach the least reached, through church planting, discipleship and Bible translation led by the church.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px">
+        <a href="Give.dc.html" style="background: #014263; color: #ffffff; text-decoration: none; font-weight: 800; padding: 14px 28px; border-radius: 999px">Give to Transformation</a>
+        <a href="#projects" style="color: #014263; text-decoration: none; font-weight: 800; padding: 13px 28px; border-radius: 999px; border: 1px solid #014263">See the projects</a>
+      </div>
+    </div>
+    <img src="/src/assets/images/what-we-do/adults-study-at-table.jpg" alt="Three adults study together at a table with open books" style="flex: 1 1 520px; min-width: 0; width: 100%; height: 600px; object-fit: cover; display: block">
+  </section>
+
+  <section style="background: #ffffff; border-bottom: 1px solid #dce6eb">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 20px 32px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+      <span style="font-size: 14px; font-weight: 800; color: #5b5557; margin-right: 12px">Portfolios</span>
+      <sc-for list="{{programs}}" as="p" hint-placeholder-count="4">
+        <a href="Portfolio.dc.html" style="text-decoration: none; font-weight: {{p.weight}}; font-size: 15px; padding: 9px 18px 9px 14px; border-radius: 999px; background: #ffffff; color: #014263; border: 2px solid {{p.border}}; display: flex; align-items: center; gap: 8px"><span aria-hidden="true" style="width: 12px; height: 12px; border-radius: 50%; background: {{p.dot}}; display: block"></span><span>{{p.label}}</span></a>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background: #ffffff">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 88px 32px; display: flex; flex-wrap: wrap; align-items: center; gap: 48px 72px">
+      <div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+        <h2 style="margin: 0; font-size: clamp(28px, 3vw, 42px); line-height: 1.12; font-weight: 900; color: #014263">Whole Bible | Whole Nation</h2>
+        <p style="margin: 0; font-size: 19px; color: #5b5557">The program at the heart of this portfolio. Language is the key to the heart: unreached people hear the gospel best in their own language, and the local church is best positioned to bring it. This program equips whole church networks to translate the whole Bible for their whole nation.</p>
+        <div style="background: #f4f9fb; border-radius: 16px; padding: 20px 24px; display: flex; gap: 16px; align-items: flex-start">
+          <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="#e59d33" stroke="#e59d33" stroke-width="1.4" style="flex: 0 0 auto; margin-top: 2px"><path d="M12 5v14M5 12h14" fill="none"></path><circle cx="12" cy="4" r="2.6"></circle><circle cx="12" cy="20" r="2.6"></circle><circle cx="4" cy="12" r="2.6"></circle><circle cx="20" cy="12" r="2.6"></circle></svg>
+          <div><strong style="color: #014263">Impact.</strong> Church networks are equipped and effective in reaching the least reached.</div>
+        </div>
+      </div>
+      <a href="#projects" aria-label="Play the program video" style="flex: 1 1 520px; min-width: 0; position: relative; display: block; border-radius: 24px; overflow: hidden">
+        <img src="/src/assets/images/what-we-do/catalyzation-hero.jpg" alt="Men work together over laptops and printed pages at a training event" style="width: 100%; height: 400px; object-fit: cover; display: block">
+        <span style="position: absolute; left: 24px; bottom: 24px; display: flex; align-items: center; gap: 12px; background: #ffffff; color: #014263; font-weight: 800; padding: 10px 20px 10px 10px; border-radius: 999px">
+          <span style="width: 44px; height: 44px; border-radius: 50%; background: #014263; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="#ffffff"><path d="M8 5v14l11-7z"></path></svg></span>
+          <span>Watch the video</span>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <section style="background: #ffffff; border-top: 1px solid #dce6eb">
+    <div style="max-width: 1180px; margin: 0 auto; padding: 88px 32px 0; display: flex; flex-direction: column; gap: 12px">
+      <h2 style="margin: 0; font-size: clamp(28px, 3vw, 42px); line-height: 1.12; font-weight: 900; color: #014263; max-width: 760px">From Scripture in the heart language to new churches</h2>
+    </div>
+  </section>
+  <dc-import name="ScrollStory" parts="{{ parts }}" track-id="program-story" hint-size="100%,760px"></dc-import>
+
+  <section style="background: #70c9cc; color: #014263">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 56px 32px; display: flex; flex-wrap: wrap; gap: 28px 48px">
+      <sc-for list="{{stats}}" as="st" hint-placeholder-count="3">
+        <div style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 4px">
+          <div style="font-size: clamp(40px, 4.2vw, 62px); line-height: 1; font-weight: 800; color: #014263">{{st.value}}</div>
+          <div style="color: #014263">{{st.label}}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="projects" style="background: #f4f9fb">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 88px 32px; display: flex; flex-direction: column; gap: 32px">
+      <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px 40px">
+        <div style="display: flex; flex-direction: column; gap: 10px; max-width: 640px">
+          <h2 style="margin: 0; font-size: clamp(28px, 3vw, 42px); line-height: 1.12; font-weight: 900; color: #014263">Where the work is happening</h2>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <sc-for list="{{filters}}" as="f" hint-placeholder-count="4">
+            <button type="button" onClick="{{ f.pick }}" aria-pressed="{{ f.pressed }}" style="min-height: 44px; padding: 8px 20px; border-radius: 999px; font-weight: 800; font-size: 15px; border: 1px solid #014263; background: {{f.bg}}; color: {{f.fg}}">{{f.label}}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 24px">
+        <sc-for list="{{projects}}" as="c" hint-placeholder-count="6">
+          <a href="Project.dc.html" style="flex: 1 1 340px; max-width: 420px; min-width: 0; text-decoration: none; color: #ffffff; border-radius: 20px; overflow: hidden; background: #014263; display: flex; flex-direction: column">
+            <img src="{{c.src}}" alt="{{c.alt}}" style="width: 100%; height: 300px; object-fit: cover; display: block">
+            <span style="padding: 22px 26px 26px; display: flex; flex-direction: column; gap: 6px">
+              <span style="font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800; color: #70c9cc">{{c.region}}</span>
+              <span style="font-size: 28px; line-height: 1.1; font-weight: 800; color: #ffffff">{{c.name}}</span>
+              <span style="color: #cdebf8">{{c.line}}</span>
+            </span>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: #ffffff">
+    <div style="max-width: 1000px; margin: 0 auto; padding: 96px 32px; display: flex; flex-wrap: wrap; align-items: center; gap: 32px 56px">
+      <img src="/src/assets/images/home/rev-tut-kony.jpg" alt="Rev. Tut Kony, wearing glasses and a dark sweater, speaks into a microphone" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; object-position: 50% 20%; flex: 0 0 auto">
+      <figure style="margin: 0; flex: 1 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+        <blockquote style="margin: 0; font-family: 'PT Serif', Georgia, serif; font-size: clamp(22px, 2.3vw, 31px); line-height: 1.35; color: #014263">"We see people coming to the Lord because they learn that God can hear their language. We've seen the impact and want to do every language in our nation."</blockquote>
+        <figcaption style="color: #5b5557"><strong style="color: #231f20">Rev. Tut Kony</strong> · Greater Reach Alliance, South Sudan</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <dc-import name="GiveBand" hint-size="100%,560px"></dc-import>
+  <dc-import name="Footer" hint-size="100%,360px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":5560}}'>
+class Component extends DCLogic {
+  state = { region: 'All' };
+  renderVals() {
+    const region = (this.state && this.state.region) || 'All';
+    const all = [
+      { name: 'Benin', region: 'Africa', line: 'Five strategic languages', src: '/src/assets/images/wbwn/benin.jpg', alt: 'A village courtyard in Benin with a house, trees and people at work' },
+      { name: 'Chad', region: 'Africa', line: '80 distinct people groups', src: '/src/assets/images/wbwn/chad.jpg', alt: 'A woman in a grey headscarf looks up beside a sand dune' },
+      { name: 'Iran', region: 'Middle East', line: '20 strategic languages', src: '/src/assets/images/wbwn/iran.jpg', alt: 'A man in a plaid shirt looks upward in the shaded courtyard of a tiled mosque' },
+      { name: 'Islands-Asia', region: 'Asia', line: 'Over 700 language groups', src: '/src/assets/images/wbwn/islands-asia.jpg', alt: 'A woman carries a bundle on her head as she leads cattle along a dusty road' },
+      { name: 'Southeast Asia', region: 'Asia', line: 'Regional church networks', src: '/src/assets/images/wbwn/se-asia.jpg', alt: 'Two boys laugh and play in the rain under a large leaf' },
+      { name: 'Sudan', region: 'Africa', line: 'First-ever gospel translations', src: '/src/assets/images/wbwn/sudan.jpg', alt: 'A person carries a load across a sandy plain with goats nearby' }
+    ];
+    const ports = [['Transformation', '#70c9cc'], ['Innovation', '#31ade3'], ['Catalyzation', '#014263'], ['Equipping Partners', '#e59d33']];
+    return {
+      parts: [
+        { kicker: 'Step 1', label: 'Scripture', figure: '5', figColor: '#5b5557', title: 'new Open Bible Stories translations under way in Benin', body: 'Church networks begin with fifty key stories of the Bible in the languages people speak at home. The stories are used in evangelism right away.', src: '/src/assets/images/wbwn/benin.jpg', alt: 'A village courtyard in Benin with a house, trees and people at work', pos: '50% 50%' },
+        { kicker: 'Step 2', label: 'Disciples', figure: '', title: 'Immediate engagement in evangelism and discipleship', body: 'Believers translate into their own language as part of their own formation, and share what they translate as they go.', src: '/src/assets/images/what-we-do/adults-study-at-table.jpg', alt: 'Three adults study together at a table with open books', pos: '50% 40%' },
+        { kicker: 'Step 3', label: 'Churches', figure: '', title: 'New church plants among the least reached', body: 'Church networks are equipped and effective in reaching the least reached, with the whole Bible for their whole nation in view.', src: '/src/assets/images/wbwn/islands-asia.jpg', alt: 'A woman carries a bundle on her head as she leads cattle along a dusty road', pos: '50% 40%' }
+      ],
+      programs: ports.map(([label, dot], i) => ({ label, dot, border: i === 0 ? dot : '#dce6eb', weight: i === 0 ? '800' : '600' })),
+      stats: [
+        { value: '6', label: 'countries and regions with church network projects' },
+        { value: '2,499,000', label: 'people impacted in Benin alone' },
+        { value: '5', label: 'new Open Bible Stories translations under way in Benin' }
+      ],
+      filters: ['All', 'Africa', 'Asia', 'Middle East'].map((label) => ({
+        label,
+        pick: () => this.setState({ region: label }),
+        pressed: region === label ? 'true' : 'false',
+        bg: region === label ? '#014263' : '#ffffff',
+        fg: region === label ? '#ffffff' : '#014263'
+      })),
+      projects: all.filter((c) => region === 'All' || c.region === region)
+    };
+  }
+}
+</script>
+</body>
+</html>

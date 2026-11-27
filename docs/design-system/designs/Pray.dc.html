@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Prayer requests</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800;6..12,900&family=PT+Serif:ital@0;1&display=swap">
+<style>
+body{margin:0}
+.uw-grain{background-image:url(/docs/design-system/assets/grain.png),linear-gradient(100deg,#012c42,#014263)}
+a{color:#0b6e9e}a:hover{color:#014263}
+button,input{font-family:inherit}
+button{cursor:pointer}
+</style>
+</helmet>
+<div style="font-family: 'Avenir', 'Avenir Next', 'Nunito Sans', system-ui, sans-serif; color: #231f20; background: #ffffff; font-size: 17px; line-height: 1.6">
+
+  <dc-import name="Header" hint-size="100%,68px"></dc-import>
+
+  <section class="uw-grain" style="display: flex; flex-wrap: wrap; background-color: #012c42">
+    <div style="flex: 1 1 520px; min-width: 0; box-sizing: border-box; padding: 72px clamp(32px, 5vw, 88px); display: flex; flex-direction: column; justify-content: center; gap: 22px; color: #ffffff">
+      <h1 style="margin: 0; font-size: clamp(36px, 4.2vw, 58px); line-height: 1.06; font-weight: 900; color: #ffffff; text-wrap: balance">Join us in prayer for the advancement of Bible translation</h1>
+      <p style="margin: 0; font-size: 20px; line-height: 1.55; color: #cdebf8; max-width: 540px">People working in the Church-Centric Bible Translation movement face enormous challenges, some of them life-and-death struggles. Your prayers are vitally important.</p>
+      <div><a href="#prayer-signup" style="display: inline-block; background: #ffffff; color: #014263; text-decoration: none; font-weight: 800; padding: 14px 28px; border-radius: 999px">Get the prayer calendar</a></div>
+    </div>
+    <div style="flex: 1 1 520px; min-width: 0; position: relative; height: 520px; overflow: hidden"><img src="/src/assets/images/pray/banner.jpg" alt="An outstretched hand brushing ripe golden wheat in a field at sunset" style="width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; display: block"><div aria-hidden="true" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #70c9cc; opacity: 0.7; clip-path: polygon(0 0, 64px 0, 506px 100%, 0 100%)"></div><div aria-hidden="true" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #70c9cc; opacity: 0.7; clip-path: polygon(0 0, 24px 0, 346px 100%, 0 100%)"></div></div>
+  </section>
+
+  <section style="background: #f4f9fb">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 88px 32px; display: flex; flex-direction: column; gap: 32px">
+      <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 40px">
+        <h2 style="margin: 0; font-size: clamp(28px, 3vw, 42px); line-height: 1.12; font-weight: 900; color: #014263">Current prayer requests</h2>
+        <div style="font-size: 17px; font-weight: 600; color: #014263">{{prayedLabel}}</div>
+      </div>
+
+      <div style="background: #014263; color: #ffffff; border-radius: 24px; padding: clamp(28px, 4vw, 48px); display: flex; flex-wrap: wrap; align-items: center; gap: 24px 56px">
+        <div style="flex: 999 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+          <div style="font-size: 15px; color: #cdebf8">This week · Africa · October 1, 2026</div>
+          <h3 style="margin: 0; font-family: 'PT Serif', Georgia, serif; font-weight: 400; font-size: clamp(28px, 3vw, 42px); line-height: 1.15; color: #ffffff">Travel in South Sudan</h3>
+          <p style="margin: 0; font-size: 19px; color: #cdebf8; max-width: 640px">Teams are traveling long distances on difficult roads to train church leaders. Pray for safe travel, open doors and strength for the journey.</p>
+        </div>
+        <button type="button" onClick="{{ toggleFeatured }}" aria-pressed="{{ featuredPressed }}" style="flex: 0 0 auto; min-height: 56px; padding: 14px 30px; border-radius: 999px; border: 2px solid #ffffff; background: {{featuredBg}}; color: {{featuredFg}}; font-weight: 800; font-size: 18px">{{featuredLabel}}</button>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 24px">
+        <sc-for list="{{requests}}" as="r" hint-placeholder-count="6">
+          <article style="flex: 1 1 360px; min-width: 0; background: #ffffff; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 1px 2px rgba(1,66,99,0.06), 0 8px 24px -12px rgba(1,66,99,0.18)">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px">
+              <span style="background: #eaf7fc; color: #014263; font-size: 13px; font-weight: 800; padding: 5px 12px; border-radius: 999px">{{r.region}}</span>
+              <span style="font-size: 14px; color: #5b5557">{{r.date}}</span>
+            </div>
+            <h3 style="margin: 0; font-size: 23px; line-height: 1.2; font-weight: 900; color: #014263">{{r.title}}</h3>
+            <p style="margin: 0; color: #5b5557">{{r.body}}</p>
+            <button type="button" onClick="{{ r.toggle }}" aria-pressed="{{ r.pressed }}" style="align-self: flex-start; margin-top: auto; min-height: 44px; padding: 8px 20px; border-radius: 999px; border: 1px solid #014263; background: {{r.bg}}; color: {{r.fg}}; font-weight: 800; font-size: 15px">{{r.label}}</button>
+          </article>
+        </sc-for>
+      </div>
+      <div><a href="Pray.dc.html" style="display: inline-block; color: #014263; text-decoration: none; font-weight: 800; padding: 13px 28px; border-radius: 999px; border: 1px solid #014263; background: #ffffff">Earlier requests</a></div>
+    </div>
+  </section>
+
+  <section id="prayer-signup" style="background: #ffffff">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 96px 32px; display: flex; flex-wrap: wrap; align-items: center; gap: 32px 64px">
+      <div style="flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+        <h2 style="margin: 0; font-size: clamp(28px, 3vw, 42px); line-height: 1.12; font-weight: 900; color: #014263">Receive the monthly prayer calendar</h2>
+        <p style="margin: 0; font-size: 19px; color: #5b5557">Current prayer requests from Bible translation teams around the world, once a month.</p>
+      </div>
+      <form style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 14px; background: #f4f9fb; border-radius: 24px; padding: 32px">
+        <div style="display: flex; flex-wrap: wrap; gap: 14px">
+          <div style="flex: 1 1 160px; display: flex; flex-direction: column; gap: 6px">
+            <label for="pray-first" style="font-size: 15px; font-weight: 600">First name</label>
+            <input id="pray-first" type="text" style="min-height: 52px; box-sizing: border-box; width: 100%; border-radius: 12px; border: 1px solid #5b5557; padding: 0 14px; font-size: 17px">
+          </div>
+          <div style="flex: 1 1 160px; display: flex; flex-direction: column; gap: 6px">
+            <label for="pray-last" style="font-size: 15px; font-weight: 600">Last name</label>
+            <input id="pray-last" type="text" style="min-height: 52px; box-sizing: border-box; width: 100%; border-radius: 12px; border: 1px solid #5b5557; padding: 0 14px; font-size: 17px">
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="pray-email" style="font-size: 15px; font-weight: 600">Email</label>
+          <input id="pray-email" type="email" placeholder="you@example.com" style="min-height: 52px; box-sizing: border-box; border-radius: 12px; border: 1px solid #5b5557; padding: 0 14px; font-size: 17px">
+        </div>
+        <button type="button" style="min-height: 54px; border: 0; border-radius: 999px; background: #014263; color: #ffffff; font-weight: 800; font-size: 17px">Send me the calendar</button>
+      </form>
+    </div>
+  </section>
+
+  <dc-import name="Footer" hint-size="100%,360px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2900}}'>
+class Component extends DCLogic {
+  state = { prayed: {} };
+  renderVals() {
+    const prayed = (this.state && this.state.prayed) || {};
+    const toggle = (id) => () => this.setState({ prayed: { ...prayed, [id]: !prayed[id] } });
+    const list = [
+      { id: 'a', region: 'Africa', date: 'September 2026', title: 'Full funding for partners in Benin', body: 'Many ministry partners work multiple jobs to make ends meet. Pray for provision and full funding.' },
+      { id: 'b', region: 'Middle East', date: 'September 2026', title: 'Pray for new believers', body: 'Pray that new believers would be discipled and rooted in God’s Word.' },
+      { id: 'c', region: 'Worldwide', date: 'August 2026', title: 'Finishing the open-license Old Testament resources', body: 'Pray for the teams completing resources the whole church can use freely.' },
+      { id: 'd', region: 'Asia', date: 'August 2026', title: 'Taking great risks to spread the gospel', body: 'Pray for courage and protection for translators working where faith is costly.' },
+      { id: 'e', region: 'Africa', date: 'July 2026', title: 'Hearing, believing and belonging', body: 'Pray for communities hearing Scripture in their heart language for the first time.' },
+      { id: 'f', region: 'Worldwide', date: 'July 2026', title: 'Week of prayer for Bible translation', body: 'Join believers around the world interceding for every people group.' }
+    ];
+    const n = Object.keys(prayed).filter((k) => prayed[k]).length;
+    return {
+      prayedLabel: n === 0 ? 'Tap a request when you have prayed for it' : 'You have prayed for ' + n + (n === 1 ? ' request' : ' requests') + ' today',
+      toggleFeatured: toggle('featured'),
+      featuredPressed: prayed.featured ? 'true' : 'false',
+      featuredBg: prayed.featured ? '#ffffff' : 'transparent',
+      featuredFg: prayed.featured ? '#014263' : '#ffffff',
+      featuredLabel: prayed.featured ? 'Prayed. Thank you' : 'I prayed for this',
+      requests: list.map((r) => ({
+        ...r,
+        toggle: toggle(r.id),
+        pressed: prayed[r.id] ? 'true' : 'false',
+        bg: prayed[r.id] ? '#014263' : '#ffffff',
+        fg: prayed[r.id] ? '#ffffff' : '#014263',
+        label: prayed[r.id] ? 'Prayed. Thank you' : 'I prayed for this'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800;6..12,900&family=PT+Serif:ital@0;1&display=swap">
+<style>
+body{margin:0}
+.uw-grain{background-image:url(/docs/design-system/assets/grain.png),linear-gradient(100deg,#014263,#012c42)}
+.uw-light{background-image:url(/docs/design-system/assets/grain.png),linear-gradient(180deg,#6cc6ea,#8ed7e6)}
+a{color:#0b6e9e}a:hover{color:#014263}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="font-family: 'Avenir', 'Avenir Next', 'Nunito Sans', system-ui, sans-serif; color: #231f20; background: #ffffff; font-size: 17px; line-height: 1.6">
+
+  <dc-import name="Header" hint-size="100%,68px"></dc-import>
+
+  <section id="top" class="uw-grain" style="display: flex; flex-wrap: wrap; background-color: #014263; overflow: hidden">
+    <div style="flex: 1 1 520px; min-width: 0; position: relative; height: 680px">
+      <div aria-hidden="true" class="uw-light" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #7fcdea; clip-path: polygon(0 0, 24% 0, 100% 100%, 0 100%)"></div>
+      <img src="/public/brand/mark-512.png" alt="" aria-hidden="true" style="position: absolute; left: -40px; bottom: -110px; height: 700px; width: auto; display: block">
+      <img src="/docs/design-system/assets/cut-hero-woman-desert.png" alt="A smiling young woman in a yellow head wrap and a black, yellow and orange patterned dress" style="position: absolute; left: 150px; bottom: 0; height: 470px; width: auto; display: block">
+    </div>
+    <div style="flex: 1 1 520px; min-width: 0; box-sizing: border-box; padding: 72px clamp(32px, 5vw, 88px) 72px clamp(32px, 3vw, 48px); display: flex; flex-direction: column; justify-content: center; gap: 26px; color: #ffffff">
+      <h1 style="margin: 0; font-size: clamp(38px, 4.3vw, 62px); line-height: 1.08; font-weight: 900; color: #31ade3">The <span style="color: #ffffff">church</span> in every <span style="color: #e59d33">people group.</span><br>The <span style="color: #ffffff">Bible</span> in every <span style="color: #e59d33">language.</span></h1>
+      <p style="margin: 0; font-size: 20px; line-height: 1.55; color: #cdebf8; max-width: 560px">Jesus has invited us into an epic, global story. We come alongside leaders in the global church with tools, training and technologies to help them reach the least reached and multiply the family of God.</p>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px">
+        <a href="Give.dc.html" style="background: {{accent}}; color: #231f20; text-decoration: none; font-weight: 800; padding: 14px 28px; border-radius: 999px">Give now</a>
+        <a href="#story" style="color: #ffffff; text-decoration: none; font-weight: 800; padding: 13px 28px; border-radius: 999px; border: 1px solid #70c9cc">See one story</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="story" style="background: #ffffff">
+    <div style="max-width: 1180px; margin: 0 auto; padding: 96px 32px 0; display: flex; flex-direction: column; gap: 12px">
+      <h2 style="margin: 0; font-size: clamp(28px, 3vw, 42px); line-height: 1.12; font-weight: 900; color: #014263; max-width: 760px">One story from Islands-Asia</h2>
+      <p style="margin: 0; font-size: 19px; color: #5b5557; max-width: 640px">What it looks like when a church has what it needs to translate Scripture for its own people.</p>
+    </div>
+  </section>
+
+  <section id="story-track" aria-label="One story, in three parts" style="height: {{trackH}}; background: #ffffff">
+    <div style="position: {{stickyPos}}; top: 0; height: {{stickyH}}; overflow: hidden; box-sizing: border-box">
+      <div style="max-width: 1180px; height: 100%; box-sizing: border-box; margin: 0 auto; padding: 56px 32px 48px; display: flex; flex-direction: column; gap: 36px">
+
+        <div aria-hidden="true" style="display: {{tabsDisplay}}; gap: 8px">
+          <sc-for list="{{chapters}}" as="c" hint-placeholder-count="3">
+            <div style="flex: 1 1 0; min-width: 0; border-top: 5px solid {{c.bar}}; padding: 14px 4px 0; display: flex; flex-direction: column; gap: 2px; transition: border-color 0.4s ease">
+              <span style="font-size: 15px; font-weight: 800; color: {{c.kicker}}">{{c.n}}</span>
+              <span style="font-size: 22px; font-weight: 900; color: {{c.fg}}">{{c.label}}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="position: relative; flex: 1 1 auto; min-height: 0">
+
+          <div style="position: {{panePos}}; top: 0; left: 0; width: 100%; height: {{paneH}}; margin-bottom: {{paneGap}}; opacity: {{o1}}; pointer-events: {{pe1}}; transform: translateY({{y1}}); transition: opacity 0.6s ease, transform 0.6s ease; display: flex; flex-wrap: wrap; align-items: center; gap: 40px 72px">
+            <div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+              <div style="display: {{kickerDisplay}}; font-size: 15px; font-weight: 800; color: #0b6e9e">Part 1 · The need</div>
+              <div style="font-size: clamp(72px, 9vw, 136px); line-height: 0.95; font-weight: 800; color: #5b5557; letter-spacing: -0.02em">34 <span style="font-size: 0.4em; letter-spacing: 0">of 700+</span></div>
+              <h2 style="margin: 0; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.15; font-weight: 900; color: #014263">language groups with a complete Bible, after 70 years of work</h2>
+              <blockquote style="margin: 0; padding-left: 20px; border-left: 3px solid #31ade3; font-family: 'PT Serif', Georgia, serif; font-size: 22px; line-height: 1.4; color: #231f20; max-width: 520px">"We could all be gone by the time you get to us!"</blockquote>
+              <p style="margin: 0; color: #5b5557; max-width: 520px">A tribal woman said this to Birhan, with tears in her eyes. He never forgot it.</p>
+            </div>
+            <img src="/src/assets/images/stories/the-crisis-in-islands-asia-bible-translation.jpg" alt="A woman in a woven striped net top and head covering stands in a green village garden" style="flex: 1 1 380px; min-width: 0; width: 100%; max-width: 480px; height: 440px; object-fit: cover; object-position: 25% 25%; border-radius: 24px">
+          </div>
+
+          <div style="position: {{panePos}}; top: 0; left: 0; width: 100%; height: {{paneH}}; margin-bottom: {{paneGap}}; opacity: {{o2}}; pointer-events: {{pe2}}; transform: translateY({{y2}}); transition: opacity 0.6s ease, transform 0.6s ease; display: flex; flex-wrap: wrap; align-items: center; gap: 40px 72px">
+            <div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+              <div style="display: {{kickerDisplay}}; font-size: 15px; font-weight: 800; color: #0b6e9e">Part 2 · The shift</div>
+              <div style="font-size: clamp(72px, 9vw, 136px); line-height: 0.95; font-weight: 800; color: #014263; letter-spacing: -0.02em">170 <span style="font-size: 0.4em; letter-spacing: 0">years</span></div>
+              <h2 style="margin: 0; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.15; font-weight: 900; color: #014263">Birhan's own people had waited that long. Then the church took the lead.</h2>
+              <p style="margin: 0; font-size: 19px; color: #5b5557; max-width: 520px">His people group of 500,000 partnered with unfoldingWord. With open tools and training, they are now on the way to translating God's Word for themselves.</p>
+              <blockquote style="margin: 0; padding-left: 20px; border-left: 3px solid #31ade3; font-family: 'PT Serif', Georgia, serif; font-size: 21px; line-height: 1.4; color: #231f20">"I really love partnering with unfoldingWord, because it puts the church at the forefront."</blockquote>
+            </div>
+            <img src="/src/assets/images/home/field-birhan.jpg" alt="An older man in a blue bucket hat, with a smiling woman in a headscarf behind him" style="flex: 1 1 380px; min-width: 0; width: 100%; max-width: 480px; height: 440px; object-fit: cover; object-position: 50% 22%; border-radius: 24px">
+          </div>
+
+          <div style="position: {{panePos}}; top: 0; left: 0; width: 100%; height: {{paneH}}; opacity: {{o3}}; pointer-events: {{pe3}}; transform: translateY({{y3}}); transition: opacity 0.6s ease, transform 0.6s ease; display: flex; flex-wrap: wrap; align-items: center; gap: 40px 72px">
+            <div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+              <div style="display: {{kickerDisplay}}; font-size: 15px; font-weight: 800; color: #0b6e9e">Part 3 · Today</div>
+              <div style="font-size: clamp(72px, 9vw, 136px); line-height: 0.95; font-weight: 800; color: #31ade3; letter-spacing: -0.02em">130</div>
+              <h2 style="margin: 0; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.15; font-weight: 900; color: #014263">language groups now served by one partner's ministry</h2>
+              <p style="margin: 0; font-size: 19px; color: #5b5557; max-width: 520px">They use open-licensed resources that churches translate once and then use across many languages. Your generosity equips local believers to carry this forward.</p>
+              <div><a href="Give.dc.html" style="display: inline-block; background: {{accent}}; color: #231f20; text-decoration: none; font-weight: 800; padding: 14px 28px; border-radius: 999px">Partner with leaders like Birhan</a></div>
+            </div>
+            <img src="/src/assets/images/stories/translationcore-a-massive-hit-in-myanmar.jpg" alt="Translators lean in together around a laptop at a training workshop" style="flex: 1 1 380px; min-width: 0; width: 100%; max-width: 480px; height: 440px; object-fit: cover; border-radius: 24px">
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="places" style="background: #f4f9fb">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 96px 32px; display: flex; flex-direction: column; gap: 40px">
+      <h2 style="margin: 0; font-size: clamp(28px, 3vw, 42px); line-height: 1.12; font-weight: 900; color: #014263; max-width: 760px">When our leaders were equipped, the church grew</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 24px">
+        <sc-for list="{{people}}" as="p" hint-placeholder-count="3">
+          <article style="flex: 1 1 320px; min-width: 0; background: #ffffff; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 1px 2px rgba(1,66,99,0.06), 0 8px 24px -12px rgba(1,66,99,0.18)">
+            <img src="{{p.src}}" alt="{{p.alt}}" style="width: 100%; height: 340px; object-fit: cover; object-position: {{p.pos}}; display: block">
+            <div style="padding: 26px 28px 30px; display: flex; flex-direction: column; gap: 10px">
+              <div style="font-size: 15px; color: #5b5557"><strong style="color: #231f20">{{p.name}}</strong> · {{p.place}}</div>
+              <div style="font-size: 34px; line-height: 1.08; font-weight: 800; color: #014263">{{p.figure}}</div>
+              <p style="margin: 0; color: #5b5557">{{p.quote}}</p>
+            </div>
+          </article>
+        </sc-for>
+      </div>
+      <div><a href="Stories.dc.html" style="font-weight: 800">Read more stories from the field</a></div>
+    </div>
+  </section>
+
+  <dc-import name="PortfolioGrid" hint-size="100%,760px"></dc-import>
+
+  <section id="different" style="background: #f4f9fb">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 96px 32px; display: flex; flex-direction: column; gap: 44px">
+      <div style="display: flex; flex-direction: column; gap: 12px; max-width: 760px">
+        <h2 style="margin: 0; font-size: clamp(28px, 3vw, 42px); line-height: 1.12; font-weight: 900; color: #014263">Why this endures after we step back</h2>
+        <p style="margin: 0; font-size: 19px; color: #5b5557">The church does the work, and keeps what it builds.</p>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 28px 16px">
+        <sc-for list="{{pillars}}" as="d" hint-placeholder-count="5">
+          <div style="flex: 1 1 200px; min-width: 0; position: relative; background: #ffffff; border-radius: 24px; padding: 40px 24px 28px; display: flex; flex-direction: column; gap: 28px; min-height: 250px; box-sizing: border-box">
+            <div aria-hidden="true" style="position: absolute; top: -10px; left: 50%; margin-left: -13px; width: 0; height: 0; border-left: 13px solid transparent; border-right: 13px solid transparent; border-top: 20px solid #31ade3"></div>
+            <h3 style="margin: 0; font-size: 24px; line-height: 1.15; font-weight: 900; color: #014263">{{d.title}}</h3>
+            <p style="margin: auto 0 0; color: #014263">{{d.body}}</p>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px; font-size: 21px; font-weight: 900; color: #014263">
+        <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="#e59d33" stroke="#e59d33" stroke-width="1.4" style="flex: 0 0 auto"><path d="M12 5v14M5 12h14" fill="none"></path><circle cx="12" cy="4" r="2.6"></circle><circle cx="12" cy="20" r="2.6"></circle><circle cx="4" cy="12" r="2.6"></circle><circle cx="20" cy="12" r="2.6"></circle></svg>
+        <span>We do not replace the church. We strengthen it from within.</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="alliance" style="background: #ffffff">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 88px 32px; display: flex; flex-direction: column; gap: 36px">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 64px">
+        <div style="flex: 1 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+          <h2 style="margin: 0; font-size: clamp(26px, 2.6vw, 36px); line-height: 1.15; font-weight: 900; color: #014263">Partnering with other leaders in Bible translation</h2>
+          <p style="margin: 0; font-size: 19px; color: #5b5557; max-width: 640px">Through illumiNations, we work alongside partners who want to see all people gain access to God's Word in a language they can clearly understand by 2033.</p>
+        </div>
+        <div style="flex: 0 0 auto; background: #ffffff; border: 1px solid #dce6eb; border-radius: 16px; padding: 16px 28px"><img src="/docs/design-system/assets/illumiNations.jpg" alt="illumiNations, an alliance of Bible translation partners" style="height: 96px; width: auto; display: block"></div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 16px">
+        <sc-for list="{{partners}}" as="l" hint-placeholder-count="10">
+          <div style="flex: 1 1 180px; max-width: 232px; min-width: 0; background: #ffffff; border: 1px solid #dce6eb; border-radius: 16px; padding: 4px; box-sizing: border-box"><img src="{{l.src}}" alt="{{l.name}}" style="width: 100%; aspect-ratio: 1; object-fit: contain; display: block"></div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="leader" style="background: #f4f9fb">
+    <div style="max-width: 1000px; margin: 0 auto; padding: 96px 32px; display: flex; flex-wrap: wrap; align-items: center; gap: 32px 56px">
+      <img src="/src/assets/images/home/mart-green.jpg" alt="Mart Green, wearing round glasses and a dark blazer, smiles against a warm beige backdrop" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; flex: 0 0 auto">
+      <figure style="margin: 0; flex: 1 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+        <blockquote style="margin: 0; font-family: 'PT Serif', Georgia, serif; font-size: clamp(22px, 2.3vw, 31px); line-height: 1.35; color: #014263">"Now, we have everybody working together to eradicate Bible poverty by 2033. We won't do it without the help of unfoldingWord."</blockquote>
+        <figcaption style="color: #5b5557"><strong style="color: #231f20">Mart Green</strong> · Founder and CEO, Every Tribe Every Nation</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <dc-import name="GiveBand" hint-size="100%,560px"></dc-import>
+  <dc-import name="Footer" hint-size="100%,420px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#E59D33","options":["#E59D33","#70C9CC","#31ADE3"]},"$preview":{"width":1440,"height":6960}}'>
+class Component extends DCLogic {
+  // "static": the whole page is visible at once (the canvas), so the three parts stack.
+  // "scroll": the page scrolls (Play / full window), so the section pins and the parts swap.
+  state = { mode: 'static', part: 1, paneH: 760 };
+
+  componentDidMount() {
+    this.onScroll = () => { this.sawScroll = true; this.queue(); };
+    this.queue = () => {
+      if (this.raf) return;
+      this.raf = requestAnimationFrame(() => { this.raf = null; this.measure(); });
+    };
+    window.addEventListener('scroll', this.onScroll, { capture: true, passive: true });
+    window.addEventListener('resize', this.queue);
+    this.measure();
+    this.settle = setTimeout(() => this.measure(), 400);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll, { capture: true });
+    window.removeEventListener('resize', this.queue);
+    if (this.raf) cancelAnimationFrame(this.raf);
+    clearTimeout(this.settle);
+  }
+
+  measure() {
+    const track = document.getElementById('story-track');
+    if (!track) return;
+    const s = this.state || {};
+    const vh = window.innerHeight;
+    const canScroll = this.sawScroll || document.documentElement.scrollHeight > vh + 4;
+    if (!canScroll) {
+      if (s.mode !== 'static') this.setState({ mode: 'static', part: 1 });
+      return;
+    }
+    const paneH = Math.max(640, Math.min(vh, 900));
+    const rect = track.getBoundingClientRect();
+    const dist = rect.height - paneH;
+    let p = dist > 0 ? -rect.top / dist : 0;
+    p = Math.max(0, Math.min(1, p));
+    const part = p < 0.3 ? 1 : p < 0.68 ? 2 : 3;
+    if (s.mode !== 'scroll' || s.part !== part || s.paneH !== paneH) {
+      this.setState({ mode: 'scroll', part, paneH });
+    }
+  }
+
+  renderVals() {
+    const s = this.state || {};
+    const scroll = s.mode === 'scroll';
+    const part = s.part || 1;
+    const paneH = s.paneH || 760;
+    const o = (n) => (!scroll || part === n ? '1' : '0');
+    const pe = (n) => (!scroll || part === n ? 'auto' : 'none');
+    const y = (n) => (!scroll || part === n ? '0px' : part > n ? '-40px' : '40px');
+    const defs = [
+      { id: 1, n: 'Part 1', label: 'The need' },
+      { id: 2, n: 'Part 2', label: 'The shift' },
+      { id: 3, n: 'Part 3', label: 'Today' }
+    ];
+    const logo = (name, file) => ({ name, src: '/docs/design-system/assets/partners/' + file + '.jpg' });
+    return {
+      accent: this.props.accent ?? '#E59D33',
+      trackH: scroll ? (paneH * 3.2) + 'px' : 'auto',
+      stickyPos: scroll ? 'sticky' : 'static',
+      stickyH: scroll ? paneH + 'px' : 'auto',
+      panePos: scroll ? 'absolute' : 'relative',
+      paneH: scroll ? '100%' : 'auto',
+      paneGap: scroll ? '0px' : '88px',
+      tabsDisplay: scroll ? 'flex' : 'none',
+      kickerDisplay: scroll ? 'none' : 'block',
+      o1: o(1), o2: o(2), o3: o(3),
+      pe1: pe(1), pe2: pe(2), pe3: pe(3),
+      y1: y(1), y2: y(2), y3: y(3),
+      chapters: defs.map((d) => ({
+        ...d,
+        bar: d.id <= part ? '#31ade3' : '#dce6eb',
+        kicker: d.id === part ? '#0b6e9e' : '#5b5557',
+        fg: d.id === part ? '#014263' : '#5b5557'
+      })),
+      pillars: [
+        { title: 'Local church networks do the work', body: 'Locals own the process.' },
+        { title: 'Faster and more sustainable', body: 'Leveraging technology and local knowledge.' },
+        { title: 'Open-licensed', body: 'Anyone can use, adapt and distribute freely.' },
+        { title: 'Scalable focus', body: 'Trainers train trainers.' },
+        { title: 'Immediate use', body: 'Churches use translations as part of the process.' }
+      ],
+      partners: [
+        logo('American Bible Society', 'American-Bible-Society'),
+        logo('Biblica', 'Biblica'),
+        logo('Deaf Bible Society', 'Deaf-Bible-Society'),
+        logo('Lutheran Bible Translators', 'Lutheran-Bible-Translators'),
+        logo('Pioneer Bible Translators', 'Pioneer-Bible-Translators'),
+        logo('Seed Company', 'Seed-Co'),
+        logo('SIL', 'SIL'),
+        logo('The Word for the World', 'Word-for-the-World'),
+        logo('United Bible Societies', 'UBS'),
+        logo('Wycliffe Bible Translators', 'Wycliffe')
+      ],
+      people: [
+        { name: 'Ibrahim', place: 'South Sudan', figure: 'The first gospel translation in his language', src: '/src/assets/images/home/field-ibrahim.jpg', pos: '50% 20%', alt: 'A smiling young man in a colorful patterned shirt in front of green foliage', quote: 'He has shared the message of salvation with many of his people. Six of them now help with the translation.' },
+        { name: 'Charles', place: 'Benin', figure: 'Growing churches', src: '/src/assets/images/home/field-charles.jpg', pos: '60% 18%', alt: 'A man in glasses and a patterned shirt speaking and gesturing on a lawn', quote: '"Churches working with unfoldingWord materials in local languages have experienced significant spiritual and numerical growth."' },
+        { name: 'Rev. Tut Kony', place: 'South Sudan', figure: 'Every language in a nation', src: '/src/assets/images/home/rev-tut-kony.jpg', pos: '50% 20%', alt: 'Rev. Tut Kony, wearing glasses and a dark sweater, speaks into a microphone', quote: '"We see people coming to the Lord because they learn that God can hear their language."' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

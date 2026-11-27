@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Portfolio grid</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800;6..12,900&family=PT+Serif:ital@0;1&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<section style="font-family: 'Avenir', 'Avenir Next', 'Nunito Sans', system-ui, sans-serif; color: #231f20; font-size: 17px; line-height: 1.6; background: #ffffff">
+  <div style="max-width: 1280px; margin: 0 auto; padding: 96px 32px; display: flex; flex-direction: column; gap: 36px">
+    <div style="display: flex; flex-direction: column; gap: 12px; max-width: 760px">
+      <h2 style="margin: 0; font-size: clamp(28px, 3vw, 42px); line-height: 1.12; font-weight: 900; color: #014263">What your partnership equips</h2>
+      <p style="margin: 0; font-size: 19px; color: #5b5557">The work is organized in three portfolios. Equipping Partners strengthen all three.</p>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 24px">
+      <a href="Portfolio.dc.html" style="flex: 1 1 320px; min-width: 0; text-decoration: none; color: #231f20; border-radius: 24px; overflow: hidden; border: 1px solid #dce6eb; display: flex; flex-direction: column">
+        <span style="background: #70c9cc; min-height: 132px; box-sizing: border-box; padding: 22px 26px; display: flex; align-items: flex-end; font-size: 30px; line-height: 1.1; font-weight: 900; color: #014263">Transformation</span>
+        <span style="padding: 22px 26px 26px; display: flex; flex-direction: column; gap: 12px; flex: 1 1 auto">
+          <span>Church networks equipped to reach the least reached, through church planting, discipleship and Bible translation led by the church.</span>
+          <span style="font-weight: 800; color: #0b6e9e; margin-top: auto">Explore Transformation</span>
+        </span>
+      </a>
+      <a href="Product.dc.html" style="flex: 1 1 320px; min-width: 0; text-decoration: none; color: #231f20; border-radius: 24px; overflow: hidden; border: 1px solid #dce6eb; display: flex; flex-direction: column">
+        <span style="background: #31ade3; min-height: 132px; box-sizing: border-box; padding: 22px 26px; display: flex; align-items: flex-end; font-size: 30px; line-height: 1.1; font-weight: 900; color: #ffffff">Innovation</span>
+        <span style="padding: 22px 26px 26px; display: flex; flex-direction: column; gap: 12px; flex: 1 1 auto">
+          <span>Open resources and software the church uses to meet its own needs for Bible translation and theological formation.</span>
+          <span style="font-weight: 800; color: #0b6e9e; margin-top: auto">Explore Innovation</span>
+        </span>
+      </a>
+      <a href="Portfolio.dc.html" style="flex: 1 1 320px; min-width: 0; text-decoration: none; color: #231f20; border-radius: 24px; overflow: hidden; border: 1px solid #dce6eb; display: flex; flex-direction: column">
+        <span style="background: #014263; min-height: 132px; box-sizing: border-box; padding: 22px 26px; display: flex; align-items: flex-end; font-size: 30px; line-height: 1.1; font-weight: 900; color: #ffffff">Catalyzation</span>
+        <span style="padding: 22px 26px 26px; display: flex; flex-direction: column; gap: 12px; flex: 1 1 auto">
+          <span>A worldwide movement of church leaders taking ownership of Bible translation, connected through forums and coaching.</span>
+          <span style="font-weight: 800; color: #0b6e9e; margin-top: auto">Explore Catalyzation</span>
+        </span>
+      </a>
+    </div>
+
+    <div style="background: #e59d33; border-radius: 24px; padding: 32px clamp(26px, 3vw, 44px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 48px; color: #231f20">
+      <div style="flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+        <div style="font-size: 34px; line-height: 1.1; font-weight: 900; color: #231f20">Equipping Partners</div>
+        <div style="font-size: 19px; color: #231f20; max-width: 720px">Families, churches and foundations whose partnership strengthens all of the work. This is giving where it is most needed.</div>
+      </div>
+      <a href="Give.dc.html" style="flex: 0 0 auto; background: #014263; color: #ffffff; text-decoration: none; font-weight: 800; font-size: 19px; padding: 16px 36px; border-radius: 999px">Become an Equipping Partner</a>
+    </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":760}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

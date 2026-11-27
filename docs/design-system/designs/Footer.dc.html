@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Site footer</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800;6..12,900&family=PT+Serif:ital@0;1&display=swap">
+<style>
+body{margin:0}
+.uw-grain-deep{background-image:url(/docs/design-system/assets/grain.png),linear-gradient(100deg,#012c42,#011f30)}
+</style>
+</helmet>
+<footer class="uw-grain-deep" style="font-family: 'Avenir', 'Avenir Next', 'Nunito Sans', system-ui, sans-serif; background-color: #012c42; color: #cdebf8; font-size: 16px; line-height: 1.6">
+  <div style="max-width: 1280px; margin: 0 auto; padding: 64px 32px 32px; display: flex; flex-direction: column; gap: 40px">
+    <div style="display: flex; flex-wrap: wrap; gap: 40px 64px">
+      <div style="flex: 2 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+        <img src="/docs/design-system/assets/uw-logo-reversed.png" alt="unfoldingWord" style="height: 40px; width: auto; display: block; align-self: flex-start">
+        <p style="margin: 0; font-size: 26px; line-height: 1.2; font-weight: 900; color: #31ade3; max-width: 420px">The <span style="color: #ffffff">church</span> in every <span style="color: #e59d33">people group.</span> The <span style="color: #ffffff">Bible</span> in every <span style="color: #e59d33">language.</span></p>
+        <div><a href="Give.dc.html" style="display: inline-block; background: #e59d33; color: #231f20; text-decoration: none; font-weight: 800; padding: 12px 26px; border-radius: 999px">Give now</a></div>
+      </div>
+      <nav aria-label="What we do" style="flex: 1 1 160px; display: flex; flex-direction: column; gap: 4px">
+        <div style="font-weight: 900; color: #70c9cc; margin-bottom: 6px">What we do</div>
+        <a href="Portfolio.dc.html" style="color: #ffffff; text-decoration: none; padding: 6px 0">Transformation</a>
+        <a href="Product.dc.html" style="color: #ffffff; text-decoration: none; padding: 6px 0">Innovation</a>
+        <a href="Portfolio.dc.html" style="color: #ffffff; text-decoration: none; padding: 6px 0">Catalyzation</a>
+        <a href="Give.dc.html" style="color: #ffffff; text-decoration: none; padding: 6px 0">Equipping Partners</a>
+      </nav>
+      <nav aria-label="Get involved" style="flex: 1 1 160px; display: flex; flex-direction: column; gap: 4px">
+        <div style="font-weight: 900; color: #70c9cc; margin-bottom: 6px">Get involved</div>
+        <a href="Give.dc.html" style="color: #ffffff; text-decoration: none; padding: 6px 0">Ways to give</a>
+        <a href="Pray.dc.html" style="color: #ffffff; text-decoration: none; padding: 6px 0">Pray</a>
+        <a href="Stories.dc.html" style="color: #ffffff; text-decoration: none; padding: 6px 0">Stories</a>
+      </nav>
+      <nav aria-label="About" style="flex: 1 1 160px; display: flex; flex-direction: column; gap: 4px">
+        <div style="font-weight: 900; color: #70c9cc; margin-bottom: 6px">About</div>
+        <a href="People.dc.html" style="color: #ffffff; text-decoration: none; padding: 6px 0">Leadership</a>
+        <a href="Article.dc.html" style="color: #ffffff; text-decoration: none; padding: 6px 0">Church-Centric Bible Translation</a>
+        <a href="Article.dc.html" style="color: #ffffff; text-decoration: none; padding: 6px 0">Financial information</a>
+      </nav>
+    </div>
+    <div style="border-top: 1px solid #0a5a82; padding-top: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 32px">
+        <span>ECFA accredited · Candid Platinum Seal · MinistryWatch 100% rating</span>
+        <span>© unfoldingWord · 13485 Veterans Way, Suite 460, Orlando, FL 32827 · Privacy · Terms of use</span>
+      </div>
+      <span style="font-style: italic">Names, locations, and images may have been altered or obscured for security purposes.</span>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":420}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
