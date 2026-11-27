@@ -1,10 +1,11 @@
 ---
-// Privacy-friendly video: a poster and play button, and the YouTube/Vimeo
-// player only loads when the visitor presses play (no third-party requests,
-// cookies or ~1 MB of player script on page load — this matters on phones
-// and slow connections). Without JavaScript the link opens the video.
+// Privacy-friendly video: a poster with a white "Watch the video" pill, and
+// the YouTube/Vimeo player only loads when the visitor presses play (no
+// third-party requests, cookies or ~1 MB of player script on page load —
+// this matters on phones and slow connections). Without JavaScript the link
+// opens the video.
 import { byCode, fmt, splitLocale, ui } from '../../i18n';
-import Icon from './Icon.astro';
+import Picture from './Picture.astro';
 
 interface Props {
   provider: 'youtube' | 'vimeo';
@@ -12,23 +13,34 @@ interface Props {
   /** Privacy hash of an unlisted Vimeo video. */
   hash?: string;
   title: string;
+  /** A still from src/assets/images/ to show before play (Vimeo has no public one). */
+  poster?: string;
+  class?: string;
 }
-const { provider, id, hash, title } = Astro.props;
+const { provider, id, hash, title, poster: posterPath, class: cls } = Astro.props;
 const { locale } = splitLocale(Astro.url.pathname);
+const t = ui(locale) as ReturnType<typeof ui> & { watchVideo?: string };
 const watch = provider === 'youtube' ? `https://www.youtube.com/watch?v=${id}` : `https://vimeo.com/${id}${hash ? `/${hash}` : ''}`;
 const embed = provider === 'youtube' ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0` : `https://player.vimeo.com/video/${id}?${hash ? `h=${hash}&` : ''}autoplay=1&dnt=1`;
-// YouTube serves stills from its image host; Vimeo has no stable public one,
-// so Vimeo videos show a plain black poster, like the Vimeo player itself.
-const poster = provider === 'youtube' ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : undefined;
+// A `poster` from the content wins. Otherwise YouTube serves stills from its
+// image host; Vimeo has no stable public one, so a Vimeo video without a
+// poster shows a designed placeholder: Deep Ocean grain with the brand mark.
+const ytPoster = !posterPath && provider === 'youtube' ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : undefined;
+const placeholder = !posterPath && !ytPoster;
 ---
 
-<div class="video-frame relative aspect-video overflow-hidden bg-black" data-embed={embed} data-title={title}>
-  <a href={watch} class="group absolute inset-0 flex items-center justify-center" rel="noopener">
-    {poster && <img src={poster} alt="" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-cover opacity-80 transition group-hover:opacity-95" />}
-    <span class="relative inline-flex size-18 items-center justify-center rounded-full bg-kindle text-white transition group-hover:bg-inspire">
-      <Icon name="play" class="size-10" />
+<div class:list={['video-frame relative aspect-video overflow-hidden rounded-media bg-ocean-900', placeholder && 'uw-grain-deep', cls]} data-embed={embed} data-title={title}>
+  <a href={watch} class="group absolute inset-0 block" rel="noopener">
+    {posterPath && <Picture path={posterPath} alt="" fill sizes="(min-width: 65rem) 960px, 100vw" widths={[480, 640, 960, 1280]} class="absolute inset-0 transition group-hover:scale-[1.02]" />}
+    {ytPoster && <img src={ytPoster} alt="" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-cover transition group-hover:scale-[1.02]" />}
+    {placeholder && <img src="/brand/mark-512.png" alt="" loading="lazy" decoding="async" class="pointer-events-none absolute top-1/2 -end-[8%] h-[115%] w-auto max-w-none -translate-y-1/2 opacity-[0.08]" />}
+    <span class:list={['absolute flex items-center gap-3 rounded-full bg-white py-2.5 ps-2.5 pe-5 font-heading text-base leading-normal font-extrabold not-italic text-ocean shadow-card', placeholder ? 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap' : 'start-4 bottom-4 md:start-6 md:bottom-6']} aria-hidden="true">
+      <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-ocean transition group-hover:bg-ocean-700">
+        <svg viewBox="0 0 24 24" class="size-[18px] text-white rtl:-scale-x-100" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+      </span>
+      <span>{t.watchVideo ?? 'Watch the video'}</span>
     </span>
-    <span class="sr-only" lang={byCode(locale).tag}>{fmt(ui(locale).playVideo, { title })}</span>
+    <span class="sr-only" lang={byCode(locale).tag}>{fmt(t.playVideo, { title })}</span>
   </a>
 </div>
 

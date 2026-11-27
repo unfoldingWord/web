@@ -1,9 +1,9 @@
 ---
-// A single testimonial, as on production's home page: a round portrait
-// beside a quote with a 7px Kindle rule, on a light Inspire band, 800px wide.
+// A leader's words (home "leader" design): a round portrait beside the
+// quote in PT Serif, then "Name · role", on white (as Portfolio.dc.html;
+// white keeps it from running into the Mist card grids it often follows).
 import type { Block } from '../../content.config';
 import { mdInline } from '../../lib/md';
-import Section from '../ui/Section.astro';
 import Picture from '../ui/Picture.astro';
 
 type Quote = Extract<Block, { type: 'quote' }>;
@@ -14,40 +14,27 @@ interface Props {
 const { block, locale } = Astro.props;
 ---
 
-<Section background="tint-light">
-  <figure class="mx-auto flex max-w-[800px] flex-col gap-10 pt-10 pb-[60px] md:flex-row md:items-center md:pb-10">
-    {
-      block.image && (
-        <div class="quote-photo w-full shrink-0 overflow-hidden rounded-full md:w-[183px]">
-          <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="(min-width: 48rem) 183px, 100vw" widths={[183, 366, 640]} aspect="1 / 1" />
-        </div>
-      )
-    }
-    <div class="quote-body min-w-0 flex-1">
-      <blockquote>
-        <p set:html={mdInline(block.quote, locale)} />
-      </blockquote>
+<section class="section-y bg-white">
+  <div class="container-page">
+    <div class="mx-auto flex max-w-[1000px] flex-wrap items-center gap-x-14 gap-y-8">
       {
-        block.attribution && (
-          <figcaption class="quote-cite">
-            {block.attribution}{block.role && <>, {block.role}</>}
-          </figcaption>
+        block.image && (
+          <div class="size-[200px] shrink-0 overflow-hidden rounded-full">
+            <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="200px" widths={[200, 400]} aspect="1 / 1" />
+          </div>
         )
       }
+      <figure class="flex min-w-0 flex-[1_1_440px] flex-col gap-[18px]">
+        <blockquote class="uw-quote" set:html={mdInline(block.quote, locale)} />
+        {
+          block.attribution && (
+            <figcaption class="text-ink-muted">
+              <strong class="font-extrabold text-ink">{block.attribution}</strong>
+              {block.role && <> · {block.role}</>}
+            </figcaption>
+          )
+        }
+      </figure>
     </div>
-  </figure>
-</Section>
-
-<style>
-  .quote-photo { box-shadow: 0 0 20px rgb(0 0 0 / 0.27); }
-  .quote-body {
-    border-inline-start: 7px solid var(--color-kindle);
-    padding-inline-start: 20px;
-    font-size: var(--text-body);
-    line-height: var(--text-body--line-height);
-    font-weight: 300;
-    color: var(--color-tech);
-  }
-  .quote-body blockquote, .quote-body p { margin: 0; }
-  .quote-cite { margin-top: 12px; color: var(--color-ocean); }
-</style>
+  </div>
+</section>

@@ -10,12 +10,6 @@ sections:
     title: Open Bible Stories
     image: obs/children-kenya.jpg
     imageAlt: A group of smiling Samburu children in colorful wraps and beaded necklaces sit together on a log in rural Kenya
-  - type: cta
-    variant: legacy
-    background: black
-    title: Open Bible Stories
-    image: obs/children-kenya.jpg
-    imageAlt: A group of smiling Samburu children in colorful wraps and beaded necklaces sit together on a log in rural Kenya
   - type: prose
     align: center
     textSize: large

@@ -65,7 +65,21 @@
     "privacy": "隐私",
     "terms": "使用条款",
     "disclosures": "慈善募款信息披露",
-    "backToTop": "返回顶部"
+    "backToTop": "返回顶部",
+    "whatWeDo": "我们的事工",
+    "getInvolved": "参与其中",
+    "about": "我们是谁",
+    "waysToGive": "奉献方式",
+    "giveMonthly": "每月奉献",
+    "plannedGiving": "计划性奉献",
+    "supportStaff": "支持同工",
+    "pray": "代祷",
+    "stories": "禾场故事",
+    "leadership": "领导团队",
+    "ccbt": "以教会为中心的圣经翻译",
+    "financial": "财务信息",
+    "careers": "招聘",
+    "contact": "联系我们"
   },
   "nav": {
     "whoWeAre": "我们是谁",
@@ -112,7 +126,11 @@
     "initiative": "支持一个项目",
     "staff": "支持同工",
     "disclosures": "慈善募款信息披露",
-    "contact": "联系我们"
+    "contact": "联系我们",
+    "pray": "代祷",
+    "aboutMenu": "我们是谁",
+    "ccbtMenu": "战略概览",
+    "toolsMenu": "工具"
   },
   "regions": {
     "africa": "非洲",

@@ -6,21 +6,19 @@ template: landing
 breadcrumbs: false
 ogImage: home/hero-woman-desert.jpg
 sections:
-  - type: heroSlideshow
+  - type: hero
+    variant: home
     title: Reach the unreached by *equipping the local church*
-    subtitle: Did you know?
-    body: >-
-      *7,145 people groups remain unreached by the gospel.* ***You can help equip global church leaders***
-      *with scalable strategies to reach the least reached.*
-    slides:
-      - image: home/hero-woman-desert.jpg
-        imageAlt: A smiling young woman in a yellow head wrap and a black, yellow and orange patterned dress stands in front of a sandy desert hill
-      - image: home/hero-ccbt-kenya-reading.jpg
-        imageAlt: A man in a navy blazer and a red and white patterned shirt reads a book outdoors, with a garden, trees and a red-roofed building behind him
-      - image: home/hero-friends-sunglasses.jpg
-        imageAlt: A row of smiling young people, two women in headscarves and two men in glasses, look down together at their phones
+    lead: >-
+      **Did you know?** 7,145 people groups remain unreached by the gospel. You can help equip global
+      church leaders with scalable strategies to reach the least reached.
+    image: home/hero-woman-desert.jpg
+    imageAlt: A smiling young woman in a yellow head wrap and a black, yellow and orange patterned dress stands in front of a sandy desert hill
+    cutout: home/cutouts/cut-hero-woman-desert.png
+    cutoutAlt: A smiling young woman in a yellow head wrap and a black, yellow and orange patterned dress
     actions:
       - { label: Donate Now, href: '#give-form', style: give }
+      - { label: See one story, href: '#one-story', style: secondary }
 
   - type: statement
     columns:
@@ -35,6 +33,40 @@ sections:
           - lead: We come alongside leaders
             text: in the global church with tools, training, and technologies to help them overcome barriers, reach the least reached, and multiply the family of God.
 
+  - type: scrollStory
+    id: one-story
+    title: One story from Islands-Asia
+    intro: What it looks like when a church has what it needs to translate Scripture for its own people.
+    parts:
+      - label: The need
+        figure: '34'
+        unit: of 700+
+        figureTone: muted
+        title: language groups with a complete Bible, after 70 years of work
+        quote: '“We could all be gone by the time you get to us!”'
+        body: With tears in her eyes, a tribal woman said this to Birhan. That moment marked a change in him.
+        image: stories/the-crisis-in-islands-asia-bible-translation.jpg
+        imageAlt: A woman in a woven striped net top and head covering stands in front of bundled cane poles in a green village garden
+        imagePosition: 25% 25%
+      - label: The shift
+        figure: '170'
+        unit: years
+        title: Birhan’s 500,000-member people group waited that long for a Bible in their heart language.
+        body: Then they partnered with unfoldingWord. Now, they are on the way to translating God’s Word for themselves!
+        quote: '“I really love partnering with unfoldingWord, because it puts the church at the forefront.”'
+        image: home/field-birhan.jpg
+        imageAlt: An older man in a blue bucket hat, with a smiling woman in a headscarf behind him
+        imagePosition: 50% 22%
+      - label: Today
+        figure: '130'
+        figureTone: inspire
+        title: language groups now served by Birhan’s ministry, representing over 60 million people
+        body: One partner’s ministry now works with 130 language groups using Strategic Language Resources.
+        image: stories/translationcore-a-massive-hit-in-myanmar.jpg
+        imageAlt: Translators lean in together around a laptop at a training workshop
+        actions:
+          - { label: Read the story, href: /stories/the-crisis-in-islands-asia-bible-translation/, style: secondary }
+
   - type: video
     background: ocean
     heading: We see a future where thriving, Great Commission churches flourish among the least reached.
@@ -42,6 +74,14 @@ sections:
     provider: vimeo
     id: '1233404640'
     hash: 92b6193486
+    poster: home/hero-ccbt-kenya-reading.jpg
+
+  - type: portfolioGrid
+    title: What your partnership equips
+    transformation: Churches and networks experience immediate engagement in evangelism and discipleship, resulting in new church plants, particularly among the least reached communities.
+    innovation: Tools and open-licensed resources the church uses to meet its own needs for Bible translation and theological formation.
+    catalyzation: Global and Regional Forums, plus specialized coaching, connect leaders, share practices, and multiply networks committed to Church-Centric Bible Translation.
+    equipping: Gifts “Where Most Needed” sustain the whole system. Families, churches, businesses, and foundations provide the flexible support that keeps networks engaged, tools current, and resources moving to the field.
 
   - type: giving
     title: Give the Gospel *Change lives forever*
@@ -60,14 +100,13 @@ sections:
 
   - type: storyList
     title: See what God is doing!
-    layout: carousel
-    background: ocean
+    background: mist
     slugs:
-      - hundreds-of-iranians-introduced-to-christ
       - translationcore-a-massive-hit-in-myanmar
-      - from-street-beggar-to-bold-evangelist
       - gods-initiative-in-sudan
+      - from-street-beggar-to-bold-evangelist
       - the-crisis-in-islands-asia-bible-translation
+      - hundreds-of-iranians-introduced-to-christ
 
   - type: signup
     variant: band
@@ -141,8 +180,9 @@ sections:
         body: |-
           “The movement of God’s global Church engaging in Bible Translation is not just a once-in-a-lifetime opportunity. It’s really a once-in-eternity opportunity that unfoldingWord is part of. It is a joy for Wycliffe to learn and journey with you all in this process.”
 
-  - type: logoMarquee
+  - type: logoGrid
     title: Partnering with Other Leaders in Bible Translation
+    body: Through illumiNations, unfoldingWord works alongside other leaders in Bible translation.
     titleImage: home/partners/illuminations.jpg
     titleImageAlt: illumiNations, an alliance of Bible translation partners
     logos:

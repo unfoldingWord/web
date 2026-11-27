@@ -65,7 +65,21 @@
     "privacy": "Quyền riêng tư",
     "terms": "Điều khoản sử dụng",
     "disclosures": "Công bố thông tin gây quỹ từ thiện",
-    "backToTop": "Lên đầu trang"
+    "backToTop": "Lên đầu trang",
+    "whatWeDo": "Công việc của chúng tôi",
+    "getInvolved": "Tham gia",
+    "about": "Chúng tôi là ai",
+    "waysToGive": "Cách dâng hiến",
+    "giveMonthly": "Dâng hiến hằng tháng",
+    "plannedGiving": "Dâng hiến theo kế hoạch",
+    "supportStaff": "Hỗ trợ nhân sự",
+    "pray": "Cầu nguyện",
+    "stories": "Câu chuyện từ cánh đồng truyền giáo",
+    "leadership": "Ban lãnh đạo",
+    "ccbt": "Dịch Kinh Thánh lấy Hội Thánh làm trung tâm",
+    "financial": "Thông tin tài chính",
+    "careers": "Tuyển dụng",
+    "contact": "Liên hệ"
   },
   "nav": {
     "whoWeAre": "Chúng tôi là ai",
@@ -112,7 +126,11 @@
     "initiative": "Hỗ trợ một dự án",
     "staff": "Hỗ trợ nhân sự",
     "disclosures": "Công bố thông tin gây quỹ từ thiện",
-    "contact": "Liên hệ"
+    "contact": "Liên hệ",
+    "pray": "Cầu nguyện",
+    "aboutMenu": "Chúng tôi là ai",
+    "ccbtMenu": "Tổng quan chiến lược",
+    "toolsMenu": "Công cụ"
   },
   "regions": {
     "africa": "Châu Phi",

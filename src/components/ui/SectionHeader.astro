@@ -1,9 +1,9 @@
 ---
 import { mdInline } from '../../lib/md';
 
-// A section's heading and optional intro line, spaced like production's
-// stacked Elementor widgets (20px gap). Production has no eyebrow/kicker:
-// `eyebrow` is accepted for existing content and not shown.
+// A section's heading and optional lead line: h2 then `lead`, 12px apart,
+// at most ~760px wide, 36–44px above the content. No eyebrows: `eyebrow` is
+// accepted for existing content and not shown.
 interface Props {
   eyebrow?: string;
   title?: string;
@@ -12,16 +12,17 @@ interface Props {
   id?: string;
   level?: 2 | 3;
   locale?: string;
+  class?: string;
 }
-const { title, intro, align = 'start', id, level = 2, locale } = Astro.props;
+const { title, intro, align = 'start', id, level = 2, locale, class: cls } = Astro.props;
 const Tag = `h${level}` as 'h2' | 'h3';
 ---
 
 {
   (title || intro) && (
-    <div class:list={['mb-5 flex flex-col gap-5', align === 'center' && 'text-center']}>
+    <div class:list={['mb-9 flex max-w-[760px] flex-col gap-3 md:mb-11', align === 'center' && 'mx-auto items-center text-center', cls]}>
       {title && <Tag id={id} set:html={mdInline(title, locale)} />}
-      {intro && <p class="text-body text-ink [.on-dark_&]:text-white" set:html={mdInline(intro, locale)} />}
+      {intro && <p class="lead" set:html={mdInline(intro, locale)} />}
     </div>
   )
 }

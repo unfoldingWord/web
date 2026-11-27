@@ -1,21 +1,27 @@
 ---
-// Current prayer requests, as production's /pray/ shows them: an Ocean band
-// with a white heading and intro, then a carousel of white cards (three per
-// view on desktop, two on tablets, one on phones) with Kindle arrows and
-// dots. Each card holds the request's title, its text and its month.
-import { getCollection, render } from 'astro:content';
+// Current prayer requests (Pray.dc.html), on Mist: the heading and intro, a
+// "You prayed for N requests" counter, the newest request as a featured
+// Ocean panel, then the rest as white cards. Each request has an "I prayed
+// for this" toggle. The toggle is local only: it is remembered in this
+// browser (localStorage) and sent nowhere. Without JavaScript the toggles
+// stay hidden and the requests read as plain cards.
+import { getCollection } from 'astro:content';
 import type { Block } from '../../content.config';
-import { ui, formatMonth, localizePath } from '../../i18n';
+import type { PortfolioKey } from '../../lib/portfolios';
+import { ui, formatDate, localizePath } from '../../i18n';
 import { basePathFor, splitId } from '../../lib/routes';
 import { md, mdInline } from '../../lib/md';
+import Icon from '../ui/Icon.astro';
 
 type PrayerList = Extract<Block, { type: 'prayerList' }>;
 interface Props {
   block: PrayerList;
   locale: string;
+  portfolio?: PortfolioKey;
 }
 const { block, locale } = Astro.props;
 const t = ui(locale);
+const s = t as Record<string, unknown>;
 const all = await getCollection('prayer');
 const bySlug = new Map<string, (typeof all)[number]>();
 for (const p of all) {
@@ -24,182 +30,206 @@ for (const p of all) {
   if (l === locale) bySlug.set(rest, p);
 }
 let entries = [...bySlug.entries()].sort(([, a], [, b]) => b.data.date.getTime() - a.data.date.getTime());
-if (block.limit) entries = entries.slice(0, block.limit);
-const items = await Promise.all(entries.map(async ([slug, p]) => ({ slug, p, Content: (await render(p)).Content })));
-const headingId = `prayer-list-${Math.random().toString(36).slice(2, 8)}`;
+// "All prayer requests" leads to /pray/ from anywhere but /pray/ itself.
+const prayHref = localizePath('/pray/', locale);
+const onPrayPage = Astro.url.pathname === prayHref;
+// On /pray/ itself a `limit` keeps every request in the page: the ones past
+// the limit are "earlier requests", hidden behind a button that reveals
+// them in place (without JavaScript they all show). Elsewhere the list is cut.
+const limit = block.limit ?? 0;
+const keepEarlier = limit > 0 && onPrayPage && entries.length > limit;
+if (limit && !keepEarlier) entries = entries.slice(0, limit);
+const regions = t.regions as Record<string, string>;
+const items = entries.map(([slug, p]) => ({
+  slug,
+  title: p.data.title,
+  description: p.data.description,
+  href: localizePath(basePathFor('prayer', slug), locale),
+  date: formatDate(p.data.date, locale),
+  datetime: p.data.date.toISOString(),
+  region: p.data.region ? (regions[p.data.region] ?? p.data.region) : undefined,
+}));
+// `i` indexes `rest`; the featured request is position 0 of the full list.
+const isEarlier = (i: number) => keepEarlier && i + 1 >= limit;
+const earlierLabel = (s.earlierRequests as string) ?? 'Earlier requests';
+const listId = `prayer-items-${stableId(JSON.stringify(block))}`;
+const [featured, ...rest] = items;
+const headingId = `prayer-list-${stableId(JSON.stringify(block))}`;
+const iPrayed = (s.iPrayed as string) ?? 'I prayed for this';
+const prayed = (s.prayed as string) ?? 'Prayed';
+const countOne = (s.prayedCountOne as string) ?? 'You prayed for 1 request';
+const countMany = (s.prayedCount as string) ?? 'You prayed for {count} requests';
+const showAll = limit > 0 && !onPrayPage;
+// A short id that is the same on every build (derived from the block).
+function stableId(text: string) {
+  let h = 0;
+  for (let i = 0; i < text.length; i++) h = (h * 31 + text.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36);
+}
 ---
 
-<section class="bg-ocean on-dark py-[var(--spacing-section)]" aria-labelledby={block.title ? headingId : undefined}>
-  <div class="container-page flex flex-col gap-5">
-    {block.title && <h2 id={headingId} class="pl-heading" set:html={mdInline(block.title, locale)} />}
-    {block.intro && <div class="pl-intro" set:html={md(block.intro, locale)} />}
-    <div class="pl-carousel" data-prayer-carousel role="region" aria-roledescription="carousel" aria-label={block.title ? undefined : (t.nav as Record<string, string>).prayer} aria-labelledby={block.title ? headingId : undefined}>
-      <div class="pl-viewport" data-viewport tabindex="0">
-        <ul class="pl-track">
-          {
-            items.map(({ slug, p, Content }) => (
-              <li class="pl-slide">
-                <article class="pl-card">
-                  <h3 class="pl-title">
-                    <a href={localizePath(basePathFor('prayer', slug), locale)} set:html={mdInline(p.data.title)} />
-                  </h3>
-                  <div class="pl-text">
-                    <Content />
-                    <p class="pl-month"><time datetime={p.data.date.toISOString()}>{formatMonth(p.data.date, locale)}</time></p>
-                  </div>
-                </article>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-      <button type="button" class="pl-arrow pl-prev" data-prev aria-label={t.previous} hidden>
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14.5 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg>
-      </button>
-      <button type="button" class="pl-arrow pl-next" data-next aria-label={t.next} hidden>
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9.5 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg>
-      </button>
-      <div class="pl-dots" data-dots hidden></div>
+<section class="bg-mist py-[var(--spacing-section)]" aria-labelledby={block.title ? headingId : undefined} data-prayer-list data-count-one={countOne} data-count-many={countMany}>
+  <div class="container-page flex flex-col gap-8">
+    <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
+      {
+        (block.title || block.intro) && (
+          <div class="flex max-w-[760px] flex-col gap-3">
+            {block.title && <h2 id={headingId} set:html={mdInline(block.title, locale)} />}
+            {block.intro && <div class="lead flex flex-col gap-3 [&_a]:font-extrabold" set:html={md(block.intro, locale)} />}
+          </div>
+        )
+      }
+      <p class="text-[1.0625rem] font-semibold text-ocean" data-prayed-count aria-live="polite" hidden></p>
     </div>
+
+    {
+      featured && (
+        <article class="uw-grain on-dark flex flex-wrap items-center gap-x-14 gap-y-6 rounded-media p-[clamp(28px,4vw,48px)]">
+          <div class="flex min-w-0 flex-[999_1_480px] flex-col gap-3">
+            <p class="text-[0.9375rem] text-inspire-100">
+              <time datetime={featured.datetime}>{featured.date}</time>
+              {featured.region && <> · {featured.region}</>}
+            </p>
+            <h3 class="font-serif text-[clamp(1.75rem,1.3rem+1.4vw,2.625rem)] leading-[1.15] font-normal">
+              <a href={featured.href} class="text-white hover:text-inspire-100" set:html={mdInline(featured.title)} />
+            </h3>
+            <p class="max-w-[640px] text-[1.1875rem] text-inspire-100">{featured.description}</p>
+          </div>
+          <button type="button" class="pray-toggle pray-toggle-lg" data-pray-toggle={featured.slug} aria-pressed="false" hidden>
+            <span data-off>{iPrayed}</span>
+            <span data-on hidden class="inline-flex items-center gap-2"><Icon name="check" class="size-5" />{prayed}</span>
+          </button>
+        </article>
+      )
+    }
+
+    {
+      rest.length > 0 && (
+        <ul id={listId} class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {rest.map((r, i) => (
+            <li class="flex" data-earlier={isEarlier(i) ? '' : undefined}>
+              <article class="uw-card flex flex-1 flex-col gap-3 p-7">
+                <p class="flex flex-wrap items-center gap-x-3 gap-y-2">
+                  {r.region && <span class="chip">{r.region}</span>}
+                  <time datetime={r.datetime} class="text-sm text-ink-muted">{r.date}</time>
+                </p>
+                <h3 class="text-h4 font-black">
+                  <a href={r.href} class="text-ocean hover:text-inspire-ink" set:html={mdInline(r.title)} />
+                </h3>
+                <p class="text-ink-muted">{r.description}</p>
+                <button type="button" class="pray-toggle uw-pill mt-auto self-start" data-pray-toggle={r.slug} aria-pressed="false" hidden>
+                  <span data-off>{iPrayed}</span>
+                  <span data-on hidden class="inline-flex items-center gap-1.5"><Icon name="check" class="size-4" />{prayed}</span>
+                </button>
+              </article>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    {
+      keepEarlier && (
+        <div data-earlier-wrap hidden>
+          <button type="button" class="uw-btn uw-btn-secondary bg-white" data-earlier-toggle aria-expanded="false" aria-controls={listId}>{earlierLabel}</button>
+        </div>
+      )
+    }
+
+    {
+      showAll && (
+        <div>
+          <a href={prayHref} class="uw-btn uw-btn-secondary bg-white">{t.allPrayerRequests}</a>
+        </div>
+      )
+    }
   </div>
 </section>
 
-<script>
-  // A small carousel on native scroll-snap: arrows and dots move one page
-  // (as many cards as fit) and wrap around at the ends, like production's
-  // looping slider. Without JavaScript the track still scrolls by touch.
-  function setup(root: HTMLElement) {
-    const viewport = root.querySelector<HTMLElement>('[data-viewport]')!;
-    const prev = root.querySelector<HTMLButtonElement>('[data-prev]')!;
-    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
-    const dots = root.querySelector<HTMLElement>('[data-dots]')!;
-    const slides = [...viewport.querySelectorAll<HTMLElement>('.pl-slide')];
-    const rtl = getComputedStyle(viewport).direction === 'rtl';
-    let pages = 1;
-    const perView = () => Math.max(1, Math.round(viewport.clientWidth / (slides[0]?.getBoundingClientRect().width || viewport.clientWidth)));
-    // Where each page starts: the offset of its first card (gaps included),
-    // capped at the furthest the viewport can scroll (a short last page).
-    const pageOffset = (p: number) => {
-      const max = viewport.scrollWidth - viewport.clientWidth;
-      const s = slides[Math.min(p * perView(), slides.length - 1)];
-      return Math.min(max, Math.abs(s.offsetLeft - slides[0].offsetLeft));
-    };
-    // The page whose start is nearest the scroll position, always 0..pages-1.
-    const current = () => {
-      const x = Math.abs(viewport.scrollLeft);
-      let best = 0;
-      for (let p = 1; p < pages; p++) if (Math.abs(pageOffset(p) - x) < Math.abs(pageOffset(best) - x)) best = p;
-      return best;
-    };
-    const go = (i: number) => {
-      const x = pageOffset((i + pages) % pages);
-      viewport.scrollTo({ left: rtl ? -x : x, behavior: 'smooth' });
-    };
-    const paint = () => {
-      const c = current();
-      [...dots.children].forEach((d, i) => d.setAttribute('aria-current', String(i === c)));
-    };
-    const build = () => {
-      pages = Math.ceil(slides.length / perView());
-      const show = pages > 1;
-      prev.hidden = next.hidden = dots.hidden = !show;
-      dots.replaceChildren(
-        ...Array.from({ length: show ? pages : 0 }, (_, i) => {
-          const b = document.createElement('button');
-          b.type = 'button';
-          b.className = 'pl-dot';
-          b.setAttribute('aria-label', `${i + 1} / ${pages}`);
-          b.addEventListener('click', () => go(i));
-          return b;
-        }),
-      );
-      paint();
-    };
-    prev.addEventListener('click', () => go(current() - 1));
-    next.addEventListener('click', () => go(current() + 1));
-    viewport.addEventListener('scroll', () => requestAnimationFrame(paint), { passive: true });
-    viewport.addEventListener('keydown', (e) => {
-      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-      e.preventDefault();
-      const forward = (e.key === 'ArrowRight') !== rtl;
-      go(current() + (forward ? 1 : -1));
-    });
-    new ResizeObserver(build).observe(viewport);
-    build();
-  }
-  document.querySelectorAll<HTMLElement>('[data-prayer-carousel]').forEach(setup);
-</script>
-
 <style>
-  /* Production wraps text plainly (no balance or pretty). */
-  .pl-heading, .pl-title, .pl-intro :global(p), .pl-text :global(p) { text-wrap: wrap; }
-  .pl-heading { margin: 0; font-size: var(--text-h2); line-height: 1; font-weight: 700; color: #fff; }
-  .pl-intro { color: #fff; }
-  .pl-intro :global(p) { margin: 0 0 14.4px; }
-  .pl-intro :global(a) { color: var(--color-kindle); font-weight: 900; }
-
-  /* Track: production's Swiper, 25px between cards, all cards as tall as
-     the tallest. */
-  .pl-carousel { position: relative; }
-  .pl-viewport {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    overscroll-behavior-x: contain;
-  }
-  .pl-viewport::-webkit-scrollbar { display: none; }
-  .pl-viewport:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
-  .pl-track { display: flex; gap: 25px; margin: 0; padding: 0; list-style: none; }
-  .pl-slide { flex: 0 0 100%; display: flex; scroll-snap-align: start; }
-  @media (min-width: 768px) { .pl-slide { flex-basis: calc((100% - 25px) / 2); } }
-  @media (min-width: 1057px) { .pl-slide { flex-basis: calc((100% - 50px) / 3); } }
-
-  /* Card: production's PowerPack post card without an image. */
-  .pl-card { flex: 1; padding: 20px; border-radius: 4px; background: #fff; text-align: center; }
-  .pl-title { margin: 8px 0 20px; font-size: 22px; line-height: 26.4px; font-weight: 700; color: var(--color-ocean); }
-  .pl-title a { color: inherit; font-weight: inherit; text-decoration: none; }
-  .pl-title a:hover, .pl-title a:focus-visible { color: var(--color-kindle); }
-  .pl-text { margin-bottom: 20px; font-size: var(--text-body); line-height: var(--text-body--line-height); font-weight: 300; color: var(--color-ocean); }
-  .pl-text :global(p) { margin: 0; }
-  .pl-text :global(a) { color: var(--color-kindle); font-weight: 900; }
-  /* The month: production's bold "medium" paragraph (Avenir 300 made bolder). */
-  .pl-text .pl-month { font-size: 20px; line-height: 30px; font-weight: 400; color: #000; }
-
-  /* Kindle arrows, 40px circles, half outside the cards, centered on the
-     carousel (cards and dots together, as production does). */
-  .pl-arrow {
-    position: absolute;
-    top: 50%;
-    z-index: 1;
-    display: inline-flex;
-    width: 40px;
-    height: 40px;
-    margin-top: -20px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: var(--color-kindle);
+  .pray-toggle-lg {
+    flex: none;
+    min-height: 56px;
+    padding: 14px 30px;
+    border: 2px solid #fff;
+    border-radius: var(--radius-button);
+    background: transparent;
     color: #fff;
+    font-family: var(--font-heading);
+    font-size: 1.125rem;
+    font-weight: 800;
     cursor: pointer;
   }
-  .pl-arrow[hidden] { display: none; }
-  .pl-arrow svg { width: 22px; height: 22px; }
-  .pl-arrow:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
-  .pl-prev { inset-inline-start: -24px; }
-  .pl-next { inset-inline-end: -24px; }
-  .pl-arrow svg:dir(rtl) { transform: scaleX(-1); }
-  @media (max-width: 1056px) { .pl-prev { inset-inline-start: -22px; } .pl-next { inset-inline-end: -22px; } }
-
-  .pl-dots { display: flex; min-height: 24px; align-items: center; justify-content: center; margin-top: 20px; line-height: 0; }
-  .pl-dots[hidden] { display: none; }
-  .pl-dots :global(.pl-dot) {
-    width: 8px;
-    height: 8px;
-    margin: 0 6px;
-    padding: 0;
-    border-radius: 50%;
-    background: #ccc;
-    cursor: pointer;
-  }
-  .pl-dots :global(.pl-dot:hover), .pl-dots :global(.pl-dot[aria-current='true']) { background: var(--color-kindle); }
+  .pray-toggle-lg[aria-pressed='true'] { background: #fff; color: var(--color-ocean); }
+  .pray-toggle-lg:focus-visible { outline-color: #fff; }
 </style>
+
+<script>
+  // "I prayed for this": remembered in this browser only. Storage can be
+  // unavailable (private windows, blocked site data); the toggle still works
+  // for the visit.
+  const KEY = 'uw-prayed';
+  const load = (): Set<string> => {
+    try {
+      return new Set(JSON.parse(localStorage.getItem(KEY) ?? '[]'));
+    } catch {
+      return new Set();
+    }
+  };
+  const save = (ids: Set<string>) => {
+    try {
+      localStorage.setItem(KEY, JSON.stringify([...ids]));
+    } catch {
+      /* not saved; fine */
+    }
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-prayer-list]').forEach((root) => {
+    let prayed = load();
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-pray-toggle]')];
+    const counter = root.querySelector<HTMLElement>('[data-prayed-count]');
+    const paint = () => {
+      let n = 0;
+      buttons.forEach((b) => {
+        const on = prayed.has(b.dataset.prayToggle!);
+        if (on) n++;
+        b.setAttribute('aria-pressed', String(on));
+        b.querySelector<HTMLElement>('[data-off]')!.hidden = on;
+        b.querySelector<HTMLElement>('[data-on]')!.hidden = !on;
+      });
+      if (counter) {
+        counter.hidden = n === 0;
+        counter.textContent = n === 1 ? (root.dataset.countOne ?? '') : (root.dataset.countMany ?? '').replace('{count}', String(n));
+      }
+    };
+    buttons.forEach((b) => {
+      b.hidden = false;
+      b.addEventListener('click', () => {
+        const id = b.dataset.prayToggle!;
+        // Start from storage so a toggle on another page or tab is kept.
+        const on = !prayed.has(id);
+        prayed = new Set([...load(), ...prayed]);
+        if (on) prayed.add(id);
+        else prayed.delete(id);
+        save(prayed);
+        paint();
+      });
+    });
+    paint();
+
+    // Earlier requests: hidden until asked for, then shown in place.
+    const earlier = [...root.querySelectorAll<HTMLElement>('[data-earlier]')];
+    const wrap = root.querySelector<HTMLElement>('[data-earlier-wrap]');
+    const toggle = root.querySelector<HTMLButtonElement>('[data-earlier-toggle]');
+    if (earlier.length && wrap && toggle) {
+      earlier.forEach((li) => (li.hidden = true));
+      wrap.hidden = false;
+      toggle.addEventListener('click', () => {
+        earlier.forEach((li) => (li.hidden = false));
+        toggle.setAttribute('aria-expanded', 'true');
+        wrap.hidden = true;
+        earlier[0].querySelector<HTMLElement>('a')?.focus();
+      });
+    }
+  });
+</script>

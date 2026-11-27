@@ -19,7 +19,7 @@ interface Props {
 const { locale, basePath } = Astro.props;
 const t = ui(locale);
 const current = byCode(locale);
-const ANGLE = 'M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z';
+const CHEVRON = 'm6 9 6 6 6-6';
 ---
 
 <li class="nav-item nav-lang">
@@ -27,7 +27,7 @@ const ANGLE = 'M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.
     <svg class="lang-globe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg>
     <span class="lang-short"><span class="sr-only">{t.language}: </span><span lang="en">{current.code.toUpperCase()}</span><span class="sr-only"> (<span lang={current.tag}>{current.name}</span>)</span></span>
     <span class="lang-long">{t.language}: <span lang={current.tag}>{current.name}</span></span>
-    <span class="sub-arrow" aria-hidden="true"><svg viewBox="0 0 320 512"><path d={ANGLE} /></svg></span>
+    <span class="sub-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d={CHEVRON} /></svg></span>
   </button>
   <ul id="lang-menu" class="nav-sub" hidden>
     {

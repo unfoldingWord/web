@@ -65,7 +65,21 @@
     "privacy": "Privacidade",
     "terms": "Termos de uso",
     "disclosures": "Divulgações sobre solicitação de doações beneficentes",
-    "backToTop": "Voltar ao topo"
+    "backToTop": "Voltar ao topo",
+    "whatWeDo": "O que fazemos",
+    "getInvolved": "Participe",
+    "about": "Quem somos",
+    "waysToGive": "Formas de doar",
+    "giveMonthly": "Doação mensal",
+    "plannedGiving": "Doações planejadas",
+    "supportStaff": "Apoie um membro da equipe",
+    "pray": "Oração",
+    "stories": "Histórias do campo",
+    "leadership": "Liderança",
+    "ccbt": "Tradução da Bíblia centrada na igreja",
+    "financial": "Informações financeiras",
+    "careers": "Carreiras",
+    "contact": "Fale conosco"
   },
   "nav": {
     "whoWeAre": "Quem somos",
@@ -112,7 +126,11 @@
     "initiative": "Apoie uma iniciativa",
     "staff": "Apoie um membro da equipe",
     "disclosures": "Divulgações sobre solicitação de doações beneficentes",
-    "contact": "Fale conosco"
+    "contact": "Fale conosco",
+    "pray": "Oração",
+    "aboutMenu": "Quem somos",
+    "ccbtMenu": "Visão geral estratégica",
+    "toolsMenu": "Ferramentas"
   },
   "regions": {
     "africa": "África",

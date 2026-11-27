@@ -1,8 +1,11 @@
 # Site design system
 
 The approved redesign of unfoldingword.org, as reference designs plus the rules behind them.
-Nothing in this folder is built into the site. It is the specification for changing
-`src/styles/global.css`, `src/components/` and the content files so the live site matches.
+The site implements it: tokens and shared classes in `src/styles/global.css`, portfolios in
+`src/lib/portfolios.ts`, components in `src/components/`, and the design-system blocks
+(`scrollStory`, `portfolioGrid`, `portfolioNav`, `takeaway`, `pillars`, `beforeAfter`,
+`giveBand`, `logoGrid`) documented in `docs/content-guide.md`. Copy on the site comes from the
+existing content files, not from these designs; the designs are canon for look only.
 
 - **Live canvas (review and Play the scroll sections):** https://claude.ai/artifact/5VhV4aypm4vSa3Q78Zo5Rb (private; ask Jesse for access)
 - **`designs/`**: one file per page design or shared part, exported from the canvas.

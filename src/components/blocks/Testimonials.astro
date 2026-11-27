@@ -1,81 +1,105 @@
 ---
-// Testimonial slider, as on production's home page: one testimonial at a
-// time (photo beside a title and quote) on a light Inspire gradient band,
-// with dots underneath. Built on ui/Carousel (no autoplay; swipe, buttons
-// or Tab to move).
+// Voices from the field: a wall of white cards on Mist (photo, the person's
+// words in PT Serif, their name or a short title under them), laid out as a
+// CSS-columns masonry: one column on phones, two from md, three from lg.
+// Cards read top to bottom, column by column, in content order.
+//
+// On phones only the first four cards show, with a "Show more voices" button
+// that reveals the rest. The button and the hiding are switched on by the
+// script, so without JavaScript every voice shows.
 import type { Block } from '../../content.config';
+import type { PortfolioKey } from '../../lib/portfolios';
 import { md, mdInline } from '../../lib/md';
+import { ui } from '../../i18n';
 import Picture from '../ui/Picture.astro';
-import Carousel from '../ui/Carousel.astro';
 
 type Testimonials = Extract<Block, { type: 'testimonials' }>;
 interface Props {
   block: Testimonials;
   locale: string;
+  portfolio?: PortfolioKey;
 }
 const { block, locale } = Astro.props;
+const t = ui(locale) as ReturnType<typeof ui> & { showMoreVoices?: string };
+const moreLabel = t.showMoreVoices ?? 'Show more voices';
+const PHONE_COUNT = 4;
+const collapsible = block.items.length > PHONE_COUNT;
+const listId = `voices-${stableId(JSON.stringify(block))}`;
+// A short id that is the same on every build (derived from the block).
+function stableId(text: string) {
+  let h = 0;
+  for (let i = 0; i < text.length; i++) h = (h * 31 + text.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36);
+}
 ---
 
-<section class="testimonials py-[var(--spacing-section)]">
-  <div class="container-page">
-    {block.title && <h2 class="mb-5 text-center text-wrap" set:html={mdInline(block.title, locale)} />}
-    <Carousel label={block.title ?? 'Testimonials'} locale={locale} perView={1} arrows={false} dots="dark">
+<section class="section-y bg-mist">
+  <div class="container-page flex flex-col gap-9">
+    {block.title && <h2 class="max-w-[760px]" set:html={mdInline(block.title, locale)} />}
+    <ul id={listId} class="voices columns-1 gap-6 md:columns-2 lg:columns-3" data-voices>
       {
-        block.items.map((item) => (
-          <li>
-            <figure class="testimonial">
+        block.items.map((item, i) => (
+          <li class:list={['mb-6 break-inside-avoid', i >= PHONE_COUNT && 'voice-extra']}>
+            <figure class="uw-card voice" tabindex={i === PHONE_COUNT ? -1 : undefined}>
               {item.image && (
-                <div class="testimonial-photo">
-                  <Picture path={item.image} alt={item.imageAlt ?? ''} sizes="(min-width: 48rem) 400px, 260px" widths={[260, 400, 800]} />
-                </div>
+                <Picture
+                  path={item.image}
+                  alt={item.imageAlt ?? ''}
+                  sizes="(min-width: 84rem) 411px, (min-width: 64rem) 31vw, (min-width: 48rem) 48vw, 100vw"
+                  widths={[400, 640, 820]}
+                  aspect="4 / 3"
+                  class="block max-h-64"
+                />
               )}
-              <div class="testimonial-text">
-                <h3 class="testimonial-title" set:html={mdInline(item.title, locale)} />
-                <blockquote class="testimonial-body" set:html={md(item.body, locale)} />
+              <div class="flex flex-col gap-3 px-[26px] pt-6 pb-7">
+                <div class="voice-words" set:html={md(item.body, locale)} />
+                <figcaption class="text-[15px] font-extrabold text-ink" set:html={mdInline(item.title, locale)} />
               </div>
             </figure>
           </li>
         ))
       }
-    </Carousel>
+    </ul>
+    {
+      collapsible && (
+        <div class="voices-more -mt-3 flex justify-center md:hidden" hidden>
+          <button type="button" class="uw-btn uw-btn-secondary uw-btn-md" aria-expanded="false" aria-controls={listId}>
+            {moreLabel}
+          </button>
+        </div>
+      )
+    }
   </div>
 </section>
 
 <style>
-  .testimonials { background-image: linear-gradient(rgb(49 173 227 / 0.13) 0%, rgb(49 173 227 / 0.23) 100%); }
-  .testimonial {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
-    margin: 0;
-    text-align: center;
+  .voice { margin: 0; }
+  .voice:focus { outline: none; }
+  .voice:focus-visible { outline: 3px solid var(--color-inspire); outline-offset: 3px; }
+  .voices { list-style: none; padding: 0; margin: 0; }
+  /* Phones, once the script has run: only the first four voices. */
+  @media (max-width: 47.999rem) {
+    .voices.is-collapsed .voice-extra { display: none; }
   }
-  .testimonial-photo { width: 100%; max-width: 260px; }
-  .testimonial-photo :global(img) { display: block; border-radius: 12px; }
-  @media (min-width: 768px) {
-    .testimonial { flex-direction: row; gap: 40px; text-align: start; }
-    .testimonial-photo { flex: 0 0 40%; max-width: none; }
-    .testimonial-text { flex: 1; min-width: 0; }
-  }
-  .testimonial-title {
-    margin: 0 0 12px;
-    font-family: var(--font-system);
-    font-size: 28px;
-    line-height: 1.2;
-    font-weight: 500;
-    color: var(--color-tech);
-  }
-  /* Non-Latin scripts need their Noto face. */
-  :global(html:not([data-script='latin'], [data-script='cyrillic'])) :is(.testimonial-title, .testimonial-body) { font-family: var(--font-sans); }
-  .testimonial-body {
-    margin: 0;
-    font-family: var(--font-system);
-    font-size: 16px;
-    line-height: 1.5;
-    font-weight: 700;
-    color: var(--color-tech);
-  }
-  .testimonial-body :global(p) { margin: 0 0 0.9rem; }
-  .testimonial-body :global(p:last-child) { margin-bottom: 0; }
+  .voice-words { font-family: var(--font-serif); font-size: 1.1875rem; line-height: 1.45; color: var(--color-ocean); }
+  .voice-words :global(p + p) { margin-top: 0.6em; }
+  /* Non-Latin scripts need their Noto face, not PT Serif. */
+  :global(html:not([data-script='latin'], [data-script='cyrillic'])) .voice-words { font-family: var(--font-sans); }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-voices]').forEach((list) => {
+    const more = list.parentElement?.querySelector<HTMLElement>('.voices-more');
+    const button = more?.querySelector('button');
+    if (!more || !button) return;
+    list.classList.add('is-collapsed');
+    more.hidden = false;
+    button.addEventListener('click', () => {
+      list.classList.remove('is-collapsed');
+      button.setAttribute('aria-expanded', 'true');
+      more.hidden = true;
+      // Take keyboard and screen-reader users to the first revealed voice.
+      list.querySelector<HTMLElement>('.voice-extra .voice')?.focus();
+    });
+  });
+</script>

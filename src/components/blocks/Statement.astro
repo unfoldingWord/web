@@ -1,7 +1,7 @@
 ---
-// Two columns of short, bold, centered statements (production home, under
-// the hero). Each item opens with a larger `lead` phrase. Ocean items are
-// 16px with a 24px lead; Inspire items are 20px with a 30px lead.
+// Short centered statements in one or two columns. Each item opens with a
+// large `lead` phrase in Avenir Black; the Inspire tone uses Inspire ink
+// (Inspire itself fails contrast on white).
 import type { Block } from '../../content.config';
 import { mdInline } from '../../lib/md';
 import Section from '../ui/Section.astro';
@@ -15,13 +15,14 @@ const { block, locale } = Astro.props;
 ---
 
 <Section>
-  <div class="flex flex-col items-center gap-5 md:flex-row">
+  <div class:list={['grid gap-x-16 gap-y-10', block.columns.length > 1 && 'md:grid-cols-2']}>
     {
       block.columns.map((col) => (
-        <div class:list={['statement-col flex w-full flex-col gap-5 p-[10px] md:w-[48%]', `tone-${col.tone}`]}>
+        <div class="flex flex-col gap-8 text-center">
           {col.items.map((item) => (
-            <p class="statement">
-              <span class="statement-lead" set:html={mdInline(item.lead, locale)} /> <span set:html={mdInline(item.text, locale)} />
+            <p class:list={['text-lead', col.tone === 'inspire' ? 'text-inspire-ink' : 'text-ocean']}>
+              <span class="mb-1 block font-heading text-h3 font-black" set:html={mdInline(item.lead, locale)} />
+              <span set:html={mdInline(item.text, locale)} />
             </p>
           ))}
         </div>
@@ -29,24 +30,3 @@ const { block, locale } = Astro.props;
     }
   </div>
 </Section>
-
-<style>
-  .statement {
-    margin: 0;
-    font-family: var(--font-heading);
-    font-size: 16px;
-    line-height: 34px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-align: center;
-    color: var(--color-ocean);
-  }
-  .statement-lead { font-size: 24px; }
-  .tone-inspire .statement { font-size: 20px; color: var(--color-inspire); }
-  .tone-inspire .statement-lead { font-size: 30px; }
-  /* Production's Inspire column carries 20px of empty space at its foot
-     (40px on phones). */
-  .tone-inspire { padding-bottom: 50px; }
-  @media (min-width: 768px) { .tone-inspire { padding-bottom: 30px; } }
-  .statement :global(strong) { font-weight: 700; }
-</style>

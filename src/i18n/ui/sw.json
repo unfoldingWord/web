@@ -65,7 +65,21 @@
     "privacy": "Faragha",
     "terms": "Masharti ya matumizi",
     "disclosures": "Taarifa za uchangishaji wa misaada",
-    "backToTop": "Rudi juu"
+    "backToTop": "Rudi juu",
+    "whatWeDo": "Tunachofanya",
+    "getInvolved": "Shiriki nasi",
+    "about": "Sisi ni nani",
+    "waysToGive": "Njia za kutoa",
+    "giveMonthly": "Toleo la kila mwezi",
+    "plannedGiving": "Utoaji uliopangwa",
+    "supportStaff": "Saidia mtumishi",
+    "pray": "Maombi",
+    "stories": "Habari kutoka maeneo ya huduma",
+    "leadership": "Uongozi",
+    "ccbt": "Tafsiri ya Biblia Inayoongozwa na Kanisa",
+    "financial": "Taarifa za kifedha",
+    "careers": "Nafasi za kazi",
+    "contact": "Wasiliana nasi"
   },
   "nav": {
     "whoWeAre": "Sisi ni nani",
@@ -112,7 +126,11 @@
     "initiative": "Saidia mpango maalum",
     "staff": "Saidia mtumishi",
     "disclosures": "Taarifa za uchangishaji wa misaada",
-    "contact": "Wasiliana nasi"
+    "contact": "Wasiliana nasi",
+    "pray": "Maombi",
+    "aboutMenu": "Sisi ni nani",
+    "ccbtMenu": "Muhtasari wa kimkakati",
+    "toolsMenu": "Zana"
   },
   "regions": {
     "africa": "Afrika",

@@ -2,12 +2,12 @@
 title: Benin
 description: Reach 2.6 million people who need the gospel in Benin by helping church network partners translate Open Bible Stories used right away in evangelism.
 ogImage: wbwn/benin.jpg
+portfolio: transformation
 sections:
 - type: hero
   variant: project
-  eyebrow: Benin
-  title: Reach 2.6 million people who need the gospel in Benin
-  lead: '**Support our church network partner’s goal of providing Church-Centric Bible Translation tools to local church teams across the whole nation.**'
+  title: Benin
+  lead: Reach 2.6 million people who need the gospel in Benin
   image: banners/benin.jpg
   imageAlt: A woman walks across a dirt courtyard between brick houses and banana trees, with chickens in the foreground
   contentPosition: start
@@ -19,7 +19,10 @@ sections:
 - type: prose
   title: Project Overview
   width: narrow
-  body: '**Benin** has 63 people groups representing more than 14 million people. Twenty percent of those people groups still need to be reached. unfoldingWord’s CCBT partners in Benin are working on five new unfoldingWord® Open Bible Stories translations (OBS). The stories are immediately used in evangelism.'
+  body: |-
+    Support our church network partner’s goal of providing Church-Centric Bible Translation tools to local church teams across the whole nation.
+
+    **Benin** has 63 people groups representing more than 14 million people. Twenty percent of those people groups still need to be reached. unfoldingWord’s CCBT partners in Benin are working on five new unfoldingWord® Open Bible Stories translations (OBS). The stories are immediately used in evangelism.
 - type: stats
   title: At a Glance
   variant: bars
@@ -31,8 +34,8 @@ sections:
   - value: 2,500,000
     label: People Impacted
     color: kindle
-  - value: '*63* unreached people groups'
-    label: People Groups affected
+  - value: '63'
+    label: Unreached people groups affected
 - type: prose
   title: Prayers
   icon: pray
@@ -48,9 +51,10 @@ sections:
   - the-power-of-strategic-language-resources
   - overcoming-obstacles-to-the-gospel-in-benin
 - type: cards
+  title: More Whole Bible | Whole Nation projects
   columns: 5
   variant: outlined
-  background: kindle
+  background: white
   items:
   - title: Chad
     image: wbwn/chad.jpg

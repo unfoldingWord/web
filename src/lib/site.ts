@@ -81,8 +81,28 @@ export const SITE = {
   annualReportUrl: 'https://heyzine.com/flip-book/5ebaad78c0.html',
 } as const;
 
+// Interface strings as each locale's own file has them, before English fills
+// the gaps. The header and footer use this to mark a string that falls back
+// to English with lang="en" dir="ltr", so a right-to-left page keeps its
+// punctuation on the correct side.
+const OWN_UI = import.meta.glob<Record<string, unknown>>('../i18n/ui/*.json', { eager: true, import: 'default' });
+
+/** True when `locale`'s own file has the string at `path` (e.g. 'nav.pray'). */
+export function ownsUiString(locale: string, path: string): boolean {
+  if (locale === 'en') return true;
+  let v: unknown = OWN_UI[`../i18n/ui/${locale}.json`];
+  for (const k of path.split('.')) v = v && typeof v === 'object' ? (v as Record<string, unknown>)[k] : undefined;
+  return typeof v === 'string' && v !== '';
+}
+
+/** Attributes for an element holding a UI string that may be an English fallback. */
+export function fallbackAttrs(locale: string, path: string): { lang?: string; dir?: 'ltr' } {
+  return ownsUiString(locale, path) ? {} : { lang: 'en', dir: 'ltr' };
+}
+
 // Main navigation. Labels are keys into src/i18n/ui/{locale}.json → nav.
-// Paths are English paths; the header localizes them.
+// Paths are English paths; the header localizes them. An item with children
+// is a dropdown; a child with children opens a flyout.
 export interface NavItem {
   key: string;
   href?: string;
@@ -92,7 +112,39 @@ export interface NavItem {
 
 export const NAV: NavItem[] = [
   {
-    key: 'whoWeAre',
+    key: 'whatWeDo',
+    children: [
+      { key: 'overview', href: '/overview/' },
+      { key: 'transformation', href: '/transformation/' },
+      { key: 'innovation', href: '/innovation/' },
+      { key: 'catalyzation', href: '/catalyzation/' },
+      { key: 'equippingPartners', href: '/give/' },
+      { key: 'forums', href: '/global-regional-forums/' },
+    ],
+  },
+  {
+    key: 'toolsMenu',
+    children: [
+      { key: 'translationCore', href: '/translationcore/' },
+      { key: 'btServant', href: '/bt-servant/' },
+      { key: 'obs', href: '/obs/' },
+      {
+        key: 'forTranslators',
+        href: '/for-translators/',
+        children: [
+          { key: 'content', href: '/for-translators/content/' },
+          { key: 'translatorTools', href: '/for-translators/tools/' },
+          { key: 'training', href: '/for-translators/training/' },
+        ],
+      },
+      { key: 'publications', href: '/publications/' },
+      { key: 'sweetPublishing', href: '/sweet-publishing/' },
+    ],
+  },
+  { key: 'stories', href: '/stories/' },
+  { key: 'pray', href: '/pray/' },
+  {
+    key: 'aboutMenu',
     children: [
       { key: 'about', href: '/about/' },
       { key: 'visionMission', href: '/vision-mission/' },
@@ -103,38 +155,11 @@ export const NAV: NavItem[] = [
       { key: 'financial', href: '/financial-information/' },
       { key: 'annualReport', href: SITE.annualReportUrl, external: true },
       { key: 'careers', href: '/careers/' },
+      { key: 'contact', href: '/contact/' },
     ],
   },
   {
-    key: 'whatWeDo',
-    children: [
-      { key: 'overview', href: '/overview/' },
-      { key: 'wbwn', href: '/wbwn/' },
-      { key: 'tools', href: '/tools-technology/' },
-      { key: 'slr', href: '/strategic-language-resources/' },
-      { key: 'obs', href: '/obs/' },
-      { key: 'catalyzation', href: '/catalyzation/' },
-      { key: 'stories', href: '/stories/' },
-      {
-        key: 'forTranslators',
-        href: '/for-translators/',
-        children: [
-          { key: 'content', href: '/for-translators/content/' },
-          { key: 'translatorTools', href: '/for-translators/tools/' },
-          { key: 'training', href: '/for-translators/training/' },
-        ],
-      },
-    ],
-  },
-  {
-    key: 'getInvolved',
-    children: [
-      { key: 'forums', href: '/global-regional-forums/' },
-      { key: 'prayer', href: '/pray/' },
-    ],
-  },
-  {
-    key: 'strategicOverview',
+    key: 'ccbtMenu',
     children: [
       { key: 'ccbt', href: '/ccbt/' },
       { key: 'ccbtVs', href: '/ccbt/church-centric-vs-bible-centric/' },
@@ -149,26 +174,36 @@ export const NAV: NavItem[] = [
       { key: 'faq', href: '/ccbt/faq/' },
     ],
   },
-  {
-    key: 'waysToGive',
-    children: [
-      { key: 'giveWhereNeeded', href: '/give/' },
-      { key: 'monthly', href: '/give/monthly/' },
-      { key: 'planned', href: '/give/planned-giving/' },
-      { key: 'initiative', href: '/give/initiative/' },
-      { key: 'staff', href: '/give/staff/' },
-      { key: 'disclosures', href: '/charitable-solicitation-disclosures/' },
-    ],
-  },
-  { key: 'contact', href: '/contact/' },
 ];
 
-// Footer Quick Links, as production lists them. Labels are keys into nav, or
-// into footer when nav has no such key (donate).
-export const FOOTER_LINKS: NavItem[] = [
-  { key: 'whoWeAre', href: '/about/' },
-  { key: 'whatWeDo', href: '/overview/' },
-  { key: 'donate', href: '/give/' },
-  { key: 'strategicOverview', href: '/ccbt/' },
-  { key: 'contact', href: '/contact/' },
+// Footer link columns. Headings and labels are keys into
+// src/i18n/ui/{locale}.json → footer. The "What we do" column is built from
+// the portfolios (src/lib/portfolios.ts) in Footer.astro.
+export interface FooterColumn {
+  key: string;
+  links: NavItem[];
+}
+
+export const FOOTER_LINKS: FooterColumn[] = [
+  {
+    key: 'getInvolved',
+    links: [
+      { key: 'waysToGive', href: '/give/' },
+      { key: 'giveMonthly', href: '/give/monthly/' },
+      { key: 'plannedGiving', href: '/give/planned-giving/' },
+      { key: 'supportStaff', href: '/give/staff/' },
+      { key: 'pray', href: '/pray/' },
+      { key: 'stories', href: '/stories/' },
+    ],
+  },
+  {
+    key: 'about',
+    links: [
+      { key: 'leadership', href: '/leadership/' },
+      { key: 'ccbt', href: '/ccbt/' },
+      { key: 'financial', href: '/financial-information/' },
+      { key: 'careers', href: '/careers/' },
+      { key: 'contact', href: '/contact/' },
+    ],
+  },
 ];

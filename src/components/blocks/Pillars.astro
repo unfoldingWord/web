@@ -1,0 +1,44 @@
+---
+// Pillar cards with the Inspire notch ("Why this endures"), on Mist.
+import type { Block } from '../../content.config';
+import { md, mdInline } from '../../lib/md';
+import FourDots from '../ui/FourDots.astro';
+
+type Pillars = Extract<Block, { type: 'pillars' }>;
+interface Props {
+  block: Pillars;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+---
+
+<section class="section-y bg-mist">
+  <div class="container-page flex flex-col gap-11">
+    {
+      (block.title || block.intro) && (
+        <div class="flex max-w-3xl flex-col gap-3">
+          {block.title && <h2 set:html={mdInline(block.title, locale)} />}
+          {block.intro && <p class="lead" set:html={mdInline(block.intro, locale)} />}
+        </div>
+      )
+    }
+    <ul class="flex flex-wrap gap-x-4 gap-y-7">
+      {
+        block.items.map((it) => (
+          <li class="uw-notch flex min-h-62 min-w-0 flex-[1_1_12.5rem] flex-col gap-7 rounded-media bg-white px-6 pt-10 pb-7">
+            <h3 class="text-2xl leading-tight" set:html={mdInline(it.title, locale)} />
+            <div class="prose mt-auto text-ocean" set:html={md(it.body, locale)} />
+          </li>
+        ))
+      }
+    </ul>
+    {
+      block.takeaway && (
+        <p class="flex items-center gap-3.5 font-heading text-[1.3125rem] leading-snug font-black text-ocean">
+          <FourDots class="size-6 shrink-0" />
+          <span set:html={mdInline(block.takeaway, locale)} />
+        </p>
+      )
+    }
+  </div>
+</section>

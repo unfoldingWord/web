@@ -1,0 +1,22 @@
+---
+// One takeaway line per section, introduced by the four-dot marker.
+import type { Block } from '../../content.config';
+import { mdInline } from '../../lib/md';
+import FourDots from '../ui/FourDots.astro';
+
+type Takeaway = Extract<Block, { type: 'takeaway' }>;
+interface Props {
+  block: Takeaway;
+  locale: string;
+}
+const { block, locale } = Astro.props;
+---
+
+<section class:list={[block.background === 'mist' ? 'bg-mist' : 'bg-white', 'py-12 lg:py-16']}>
+  <div class="container-page">
+    <p class="flex items-center gap-3.5 font-heading text-[clamp(1.25rem,1.1rem+0.5vw,1.5rem)] leading-snug font-black text-ocean">
+      <FourDots class="size-6 shrink-0" />
+      <span set:html={mdInline(block.text, locale)} />
+    </p>
+  </div>
+</section>

@@ -37,6 +37,22 @@ hero), `noindex: true`, `updated: 2026-11-24`, `ogImage` (social image path), `s
 Markdown after the frontmatter is rendered as a prose section after the blocks
 (`bodyPosition: before` puts it first).
 
+Design system fields: `portfolio` (`transformation` · `innovation` · `catalyzation` ·
+`equipping`) colors the hero, number bands and labels of a page that belongs to one of the four
+portfolios (see `src/lib/portfolios.ts`). Every standard page ends with the give band; set
+`giveBand: false` to leave it out (giving pages and pages with a giving form or give band
+never get a second one).
+
+## Look and feel
+
+The site follows the design system in `docs/design-system/` (`README.md` is the spec). In short:
+headlines are Avenir Black in Ocean; no small uppercase "eyebrow" above a headline (the
+`eyebrow` field is accepted but not shown); a person's own words are PT Serif; the Give button is
+always Kindle; photos have rounded corners; dark heroes have a fine grain. The work is presented
+as **four portfolios**: Transformation (Cultivate), Innovation (Inspire), Catalyzation (Ocean)
+and Equipping Partners (Kindle, where-most-needed giving; never say "unrestricted" about
+giving). Strategic Language Resources and Tools & Technology are part of Innovation.
+
 ## Writing rules
 
 - **unfoldingWord** is always camelCase. Bible capitalized; biblical, church, gospel lowercase
@@ -67,9 +83,12 @@ Markdown after the frontmatter is rendered as a prose section after the blocks
 ### hero — the top of a page
 ```yaml
 - type: hero
-  variant: banner       # banner (the old site's page-title band: photo under a blue overlay, centered title; the usual opener)
-                        # | feature (the old post layout: black band with a 42px title and the photo, then `lead` as text; forms)
-                        # | project (wbwn country pages) | heading (no band) | ocean | photo | split | light
+  variant: banner       # banner (title band on Mist, photo beside it when there is one; the usual opener)
+                        # | home (the brand mark behind a person cut out from a photo: `cutout`, `cutoutAlt`)
+                        # | portfolio (the page's portfolio color, photo beside; set `portfolio` on the page)
+                        # | photo | project | ocean (Deep Ocean panel with the photo beside)
+                        # | split | light (Mist panel, rounded photo; `chips`, `quote` over the photo)
+                        # | feature | heading
   eyebrow: Ways to Give # small label above the title (optional; not used by banner)
   title: Give the Gospel. Change Lives Forever.
   lead: One or two sentences under the title. # feature: the page text, in Markdown
@@ -78,10 +97,10 @@ Markdown after the frontmatter is rendered as a prose section after the blocks
   actions:
     - { label: Give Now, href: '#give-form', style: give }   # style: primary | secondary | give
 ```
-banner only: `uppercase: false` (keep the title's case; the old site uppercases most banners),
-`lines: [...]` (more title lines), `divider: true` (a short orange rule between the lines),
-`subtitle`. The banner photo shows at its own size from the top-left corner, as on the old
-site, so use the same image file (and size) the old page used.
+In a dark hero's title, `*text*` shows in Kindle and `**text**` in white (key phrases, Ocean
+grounds only). `angles: true` lays the brand's angled color layers over the photo: use it only on
+photos where no face sits under the lower-left of the image. `lines` and `subtitle` show as
+lead text; `uppercase` and `divider` are no longer used.
 
 A page with no hero gets a banner with its `title`; `bannerImage`/`bannerImageAlt` set its photo.
 
@@ -114,7 +133,7 @@ text-heading look (28px, dark, not blue), as on the statement of faith.
   items:
     - title: Whole Bible, Whole Nation
       body: Short description.
-      href: /wbwn/
+      href: /transformation/
       linkLabel: Learn more  # optional; default "Read more"
       image: programs/wbwn.jpg
       imageAlt: …
@@ -304,6 +323,53 @@ without a cover share one row.
 ```
 
 ### sweetBooks — the Sweet Publishing book index
+
+## Design-system blocks
+
+### scrollStory — one story in parts, pinned while scrolling
+```yaml
+- type: scrollStory
+  id: one-story          # optional anchor
+  title: One story from Islands-Asia
+  intro: One sentence under the title.
+  parts:                 # 2 to 4
+    - label: The need    # shown in the progress bar
+      figure: '34'       # optional very large number…
+      unit: of 700+      # …and a smaller unit after it
+      figureTone: muted  # muted | ocean | inspire
+      title: language groups with a complete Bible
+      quote: '“A person’s words, in PT Serif.”'
+      body: Markdown.
+      image: stories/photo.jpg
+      imageAlt: What the photo shows
+      imagePosition: 50% 20%   # optional focal point
+```
+Visitors who prefer reduced motion, and narrow screens, see the parts stacked.
+
+### portfolioGrid — the four portfolios
+Text per portfolio (`transformation`, `innovation`, `catalyzation`, `equipping`), optional
+`title`, `intro`, `background: mist`, `equippingAction` (button label) and `equippingHref`.
+Names, colors and links come from `src/lib/portfolios.ts`.
+
+### portfolioNav — the row of the four portfolios under a portfolio page's hero (no fields)
+
+### takeaway — one line introduced by the four-dot marker (`text`, `background`)
+
+### pillars — cards with the Inspire notch (`title`, `intro`, `items: [{title, body}]`, `takeaway`)
+
+### beforeAfter — "By hand" / "With the tool" toggle
+`before` and `after` each have `label`, `figure`, `text`; optional `person: {name, role, image, imageAlt}`.
+
+### giveBand — the closing give section
+`title`, `body`, `action`, `image`, `imageAlt`. Pages get one automatically (see above).
+
+### logoGrid — partner logos (`title`, `body`, `titleImage`, `titleImageAlt`, `logos: [{image, alt, href}]`)
+
+Cards also take `variant: tiles` (dark project tiles; add `filter: true` and an item `label`
+such as a region for filter buttons), `voices` (testimonial wall) and `leaders` (quotes with
+round photos). `cards`, `cta`, `split` and `scrollStory` accept an `id` for in-page links.
+Videos (the `video` block, and `video` inside `split` or `cards`) take an optional `poster`
+photo shown behind the play button; Vimeo has no public still, so set one.
 
 ## Stories
 

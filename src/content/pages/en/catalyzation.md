@@ -3,17 +3,23 @@ title: Catalyzation
 description: >-
   unfoldingWord comes alongside global church leaders as a catalytic partner through Regional and Global
   CCBT Forums and the Open Greek New Testament.
+portfolio: catalyzation
 sections:
   - type: hero
-    variant: banner
+    variant: portfolio
     title: Catalyzation
+    lead: >-
+      Beyond traditional approaches, unfoldingWord comes alongside global church leaders as a catalytic
+      partner. We offer scalable strategies that equip local believers to establish churches that grow,
+      multiply, and endure.
     image: what-we-do/catalyzation-hero.jpg
     imageAlt: Men working together around a table with laptops and printed pages, one reading aloud from a sheet of paper
-  - type: prose
-    body: |-
-      Beyond traditional approaches, unfoldingWord comes alongside global church leaders as a catalytic partner. We offer scalable strategies that equip local believers to establish churches that grow, multiply, and endure.
-
-      *We do not replace the church. We strengthen it from within by building lasting capacity.*
+    actions:
+      - { label: Give now, href: /give/, style: give }
+      - { label: About the forums, href: /global-regional-forums/, style: secondary }
+  - type: portfolioNav
+  - type: takeaway
+    text: We do not replace the church. We strengthen it from within by building lasting capacity.
   - type: cards
     columns: 2
     padding: wide
@@ -25,11 +31,13 @@ sections:
       - title: Global Forums
         body: |-
           **unfoldingWord’s annual Global Church-Centric Bible Translation (CCBT) Forum** is a one-week event designed to empower global CCBT leaders by providing opportunities for connection, fellowship, relationship building, spiritual encouragement, strategic collaboration, program innovation, and building technical expertise in CCBT as we bring the Bible to every nation.
-    video: { provider: vimeo, id: '1232153016', hash: da588139f7, title: 'Catalyzation: Global Forums' }
+    video: { provider: vimeo, id: '1232153016', hash: da588139f7, title: 'Catalyzation: Global Forums', poster: what-we-do/adults-study-at-table.jpg }
   - type: split
     title: Open Greek New Testament
     body: |-
-      **THE GREEK NEW TESTAMENT** – In a seminary in the U.S., a professor teaches from a $60 Greek New Testament. In rural Asia, a translator has no access to it at all. Existing critical editions are expensive and not open-licensed, choking development of new translations. THE GREEK NEW TESTAMENT: A peer-reviewed, open-license edition of the New Testament in Greek is designed to serve the global Church and accelerate Bible translation.
+      In a seminary in the U.S., a professor teaches from a $60 Greek New Testament. In rural Asia, a translator has no access to it at all. Existing critical editions are expensive and not open-licensed, choking development of new translations.
+
+      **The Greek New Testament:** A peer-reviewed, open-license edition of the New Testament in Greek is designed to serve the global Church and accelerate Bible translation.
     image: what-we-do/man-reading-book.jpg
     imageAlt: A man's hands resting on an open book on a wooden table in dim light
     imagePosition: start

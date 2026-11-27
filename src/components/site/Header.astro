@@ -1,17 +1,15 @@
 ---
-// Site header, matching the production WordPress/Elementor header:
-// one 96px row, full width with 20px padding. Logo on the start side; on the
-// end side the main navigation, search, language, then Donate Now.
+// Site header: a white sticky bar with a line under it. Logo at the start;
+// then the main navigation (dropdowns for the sections), search, language
+// and the Give button.
 //
-// Below 1057px (production's tablet breakpoint), or whenever the navigation
-// does not fit on one row (long translated menus), the navigation becomes a
-// panel opened by the menu toggle: centered rows, accordions for the
-// sections. The header stays sticky (an editor decision; production is not).
-// One markup, one small script (no framework).
+// When the navigation does not fit on one row (phones, tablets, long
+// translated menus) it becomes a full-height panel opened by the menu
+// toggle, with the sections as accordions. One markup, one small script.
 import { Image } from 'astro:assets';
-import logo from '../../assets/brand/logo-horizontal.png';
-import { NAV, type NavItem } from '../../lib/site';
-import { ui, localizePath } from '../../i18n';
+import logo from '../../assets/brand/uw-logo-color.svg';
+import { NAV, type NavItem, fallbackAttrs, ownsUiString } from '../../lib/site';
+import { ui, localizePath, fmt } from '../../i18n';
 import LanguageSwitcher from './LanguageSwitcher.astro';
 
 interface Props {
@@ -24,18 +22,27 @@ interface Props {
 const { locale, basePath, switcherPath = basePath, translations } = Astro.props;
 const t = ui(locale);
 const label = (key: string) => (t.nav as Record<string, string>)[key] ?? key;
+// A label that falls back to English is marked so it reads left to right.
+const la = (key: string) => fallbackAttrs(locale, `nav.${key}`);
+// The flyout toggle sits beside the link with the same words; name it apart.
+// Until a locale translates the phrase, the whole name stays in English
+// rather than mixing two languages in one label.
+const showPages = (key: string) =>
+  ownsUiString(locale, 'nav.showPages')
+    ? fmt((t.nav as Record<string, string>).showPages, { name: label(key) })
+    : fmt(ui('en').nav.showPages ?? 'Show {name} pages', { name: (ui('en').nav as Record<string, string>)[key] ?? key });
 const href = (item: NavItem) => (item.external ? item.href! : localizePath(item.href!, locale));
 const current = (item: NavItem) => (!!item.href && !item.external && item.href === basePath ? 'page' : undefined);
 const ext = (item: NavItem) => (item.external ? { target: '_blank', rel: 'noopener' } : {});
-
-// FontAwesome "angle-down", as production's Elementor menu uses.
-const ANGLE = 'M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z';
+// A section is "current" when the page is one of its links.
+const inSection = (item: NavItem): boolean => !!item.children?.some((c) => current(c) || inSection(c));
+const CHEVRON = 'm6 9 6 6 6-6';
 ---
 
 <header class="site-header">
   <div class="hdr-row">
     <a href={localizePath('/', locale)} class="hdr-logo" aria-label={`${t.siteName} — ${t.home}`}>
-      <Image src={logo} alt="unfoldingWord" width={250} height={44} densities={[1, 2]} loading="eager" fetchpriority="high" />
+      <Image src={logo} alt="unfoldingWord" height={36} width={Math.round((36 * logo.width) / logo.height)} loading="eager" fetchpriority="high" />
     </a>
 
     <div class="hdr-end">
@@ -46,10 +53,10 @@ const ANGLE = 'M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.
               <li class="nav-item">
                 {item.children ? (
                   <>
-                    <button type="button" class="nav-top" aria-expanded="false" aria-controls={`nav-sub-${i}`}>
-                      {label(item.key)}
+                    <button type="button" class="nav-top" aria-expanded="false" aria-controls={`nav-sub-${i}`} data-section-current={inSection(item) ? '' : undefined}>
+                      <span {...la(item.key)}>{label(item.key)}</span>
                       <span class="sub-arrow" aria-hidden="true">
-                        <svg viewBox="0 0 320 512"><path d={ANGLE} /></svg>
+                        <svg viewBox="0 0 24 24"><path d={CHEVRON} /></svg>
                       </span>
                     </button>
                     <ul id={`nav-sub-${i}`} class="nav-sub" hidden>
@@ -57,16 +64,16 @@ const ANGLE = 'M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.
                         child.children ? (
                           <li class="has-flyout">
                             <a class="nav-sub-link" href={href(child)} aria-current={current(child)}>
-                              {label(child.key)}
+                              <span {...la(child.key)}>{label(child.key)}</span>
                             </a>
-                            <button type="button" class="flyout-toggle" aria-expanded="false" aria-controls={`nav-sub-${i}-${j}`} aria-label={label(child.key)}>
-                              <svg viewBox="0 0 320 512" aria-hidden="true"><path d={ANGLE} /></svg>
+                            <button type="button" class="flyout-toggle" aria-expanded="false" aria-controls={`nav-sub-${i}-${j}`} aria-label={showPages(child.key)}>
+                              <svg viewBox="0 0 24 24" aria-hidden="true"><path d={CHEVRON} /></svg>
                             </button>
                             <ul id={`nav-sub-${i}-${j}`} class="nav-sub nav-flyout" hidden>
                               {child.children.map((g) => (
                                 <li>
                                   <a class="nav-sub-link" href={href(g)} aria-current={current(g)}>
-                                    {label(g.key)}
+                                    <span {...la(g.key)}>{label(g.key)}</span>
                                   </a>
                                 </li>
                               ))}
@@ -75,7 +82,7 @@ const ANGLE = 'M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.
                         ) : (
                           <li>
                             <a class="nav-sub-link" href={href(child)} aria-current={current(child)} {...ext(child)}>
-                              {label(child.key)}
+                              <span {...la(child.key)}>{label(child.key)}</span>
                             </a>
                           </li>
                         ),
@@ -84,7 +91,7 @@ const ANGLE = 'M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.
                   </>
                 ) : (
                   <a class="nav-top" href={href(item)} aria-current={current(item)}>
-                    {label(item.key)}
+                    <span {...la(item.key)}>{label(item.key)}</span>
                   </a>
                 )}
               </li>
@@ -100,27 +107,27 @@ const ANGLE = 'M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.
         </ul>
       </nav>
 
-      <a href={localizePath('/give/', locale)} class="hdr-donate">{t.donateNow}</a>
+      <a href={localizePath('/give/', locale)} class="uw-btn uw-btn-give hdr-give">{t.donate}</a>
 
       <button type="button" class="menu-toggle" aria-controls="site-nav" aria-expanded="false">
         <span class="sr-only" data-label-open>{t.menu}</span>
         <span class="sr-only hidden" data-label-close>{t.closeMenu}</span>
-        <svg class="icon-open" viewBox="0 0 29 29" aria-hidden="true"><path d="M3 7.5h23M3 14.5h23M3 21.5h23" /></svg>
-        <svg class="icon-close hidden" viewBox="0 0 29 29" aria-hidden="true"><path d="M1.5 1.5l26 26M27.5 1.5l-26 26" /></svg>
+        <svg class="icon-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+        <svg class="icon-close hidden" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
       </button>
     </div>
   </div>
 </header>
 
-{/* Decide desktop row vs. menu toggle before the first paint: production's
-    breakpoint is 1057px, but a translated menu (or ours with search and
-    language added) may not fit beside the logo. Then data-collapsed switches
-    the header to the toggle layout. Runs again on resize and font load. */}
+{/* Decide bar vs. menu toggle before the first paint: the bar is used from
+    1024px up when the whole row fits beside the logo (translated menus may
+    not). data-collapsed switches the header to the toggle layout. Runs again
+    on resize and font load. */}
 <script is:inline>
   (function () {
     var h = document.querySelector('.site-header');
     if (!h) return;
-    var wide = window.matchMedia('(min-width: 1057px)');
+    var wide = window.matchMedia('(min-width: 1024px)');
     var last = null;
     function fit() {
       var collapsed = false;
@@ -131,7 +138,7 @@ const ANGLE = 'M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.
         var end = h.querySelector('.hdr-end');
         var cs = getComputedStyle(row);
         var avail = row.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-        var need = logo.getBoundingClientRect().width + 20 + end.scrollWidth;
+        var need = logo.getBoundingClientRect().width + 24 + end.scrollWidth;
         collapsed = need > avail + 0.5;
       }
       if (collapsed) h.setAttribute('data-collapsed', '');
@@ -155,152 +162,143 @@ const ANGLE = 'M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.
 <style is:global>
   /* Scoped by hand to .site-header so LanguageSwitcher's item shares it. */
   .site-header {
-    --hdr-menu-ink: #33373d; /* production dropdown text */
     position: sticky;
     top: 0;
     z-index: 40;
     background: #fff;
+    border-bottom: 1px solid var(--color-line);
   }
   .site-header .hdr-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: nowrap;
-    min-height: 96px;
-    padding: 10px 20px;
-    gap: 20px;
+    gap: 24px;
+    width: 100%;
+    max-width: calc(var(--container-page) + 2 * var(--spacing-gutter));
+    min-height: 68px;
+    margin-inline: auto;
+    padding: 10px var(--spacing-gutter);
   }
-  .site-header .hdr-logo { display: flex; align-items: center; flex: 0 1 146px; min-width: 0; }
-  .site-header .hdr-logo img { display: block; width: 100%; height: auto; }
-  @media (min-width: 768px) { .site-header .hdr-logo { flex-basis: 199px; } }
-  @media (min-width: 1057px) { .site-header .hdr-logo { flex: none; width: 175px; } }
+  .site-header .hdr-logo { display: flex; align-items: center; flex: 0 0 auto; border-radius: 6px; }
+  .site-header .hdr-logo img { display: block; height: 36px; width: auto; max-width: 100%; object-fit: contain; object-position: left center; }
+  [dir='rtl'] .site-header .hdr-logo img { object-position: right center; }
+  @media (max-width: 400px) { .site-header .hdr-logo img { height: 30px; } }
 
   .site-header .hdr-end { display: flex; align-items: center; justify-content: flex-end; gap: 12px; flex: none; }
   @media (min-width: 768px) { .site-header .hdr-end { gap: 20px; } }
+  .site-header .hdr-give { min-height: 44px; padding: 0.6rem 1.4rem; white-space: nowrap; }
 
-  /* Donate Now: production's Virtuous button. */
-  .site-header .hdr-donate {
-    display: inline-flex; align-items: center; justify-content: center;
-    height: 56px; padding: 12px 16px; border-radius: 4px;
-    font-family: Arial, 'Helvetica Neue', Helvetica, var(--font-sans); font-size: 14px; font-weight: 600; line-height: 16.8px;
-    color: #fff; background: var(--color-kindle); text-decoration: none; white-space: nowrap;
-    transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .site-header .hdr-donate:hover, .site-header .hdr-donate:focus-visible { background: var(--color-inspire); color: #fff; }
-  .site-header .hdr-donate:focus-visible { outline: 3px solid var(--color-tech); outline-offset: 2px; }
-
-  /* Menu toggle: three thin lines, a thin X when open. */
   .site-header .menu-toggle {
     display: inline-flex; align-items: center; justify-content: center; flex: none;
-    width: 44px; height: 44px; padding: 7.25px; border-radius: 3px;
-    color: var(--color-tech); background: transparent;
+    width: 44px; height: 44px; border-radius: 999px;
+    color: var(--color-ocean); background: transparent;
   }
-  .site-header .menu-toggle svg { width: 29px; height: 29px; fill: none; stroke: currentColor; stroke-width: 1.25; }
-  .site-header .menu-toggle:hover, .site-header .menu-toggle:focus-visible { color: var(--color-kindle); }
+  .site-header .menu-toggle svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+  .site-header .menu-toggle:hover { background: var(--color-mist); }
 
-  .site-header .sub-arrow { display: inline-flex; padding: 4px; margin-block: -10px; }
-  .site-header .sub-arrow svg, .site-header .flyout-toggle svg { width: 14px; height: 14px; fill: currentColor; }
+  .site-header .sub-arrow { display: inline-flex; margin-inline-start: 4px; transition: transform 0.2s; }
+  .site-header .sub-arrow svg, .site-header .flyout-toggle svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.25; stroke-linecap: round; stroke-linejoin: round; }
+  .site-header [aria-expanded='true'] > .sub-arrow, .site-header .flyout-toggle[aria-expanded='true'] svg { transform: rotate(180deg); }
+  .site-header .search-icon { width: 20px; height: 20px; margin-inline-end: 8px; fill: none; stroke: currentColor; stroke-width: 2.25; stroke-linecap: round; }
+  .site-header .lang-short { display: none; }
+  .site-header .lang-globe { width: 20px; height: 20px; margin-inline-end: 8px; fill: none; stroke: currentColor; stroke-width: 2; }
 
-  /* ---- Panel (below 1057px, or when the row does not fit) ---- */
+  /* ---- Panel: full height under the bar, sections as accordions ---- */
   .site-header .site-nav {
-    position: absolute; top: 80px; inset-inline: 0; z-index: 50;
-    max-height: calc(100vh - 80px); overflow-y: auto; overscroll-behavior: contain;
+    position: absolute; top: 100%; inset-inline: 0; z-index: 50;
+    height: calc(100vh - var(--header-h, 69px)); overflow-y: auto; overscroll-behavior: contain;
+    padding: 8px var(--spacing-gutter) 40px;
     background: #fff;
-    transform: scaleY(0); transform-origin: top; visibility: hidden;
-    transition: transform 0.3s, visibility 0s linear 0.3s;
+    visibility: hidden; opacity: 0;
+    transition: opacity 0.2s, visibility 0s linear 0.2s;
   }
-  @supports (height: 100dvh) { .site-header .site-nav { max-height: calc(100dvh - 80px); } }
-  .site-header .site-nav[data-open='true'] { transform: scaleY(1); visibility: visible; transition: transform 0.3s, visibility 0s; }
+  @supports (height: 100dvh) { .site-header .site-nav { height: calc(100dvh - var(--header-h, 69px)); } }
+  .site-header .site-nav[data-open='true'] { visibility: visible; opacity: 1; transition: opacity 0.2s, visibility 0s; }
   .site-header .nav-list, .site-header .nav-sub { list-style: none; margin: 0; padding: 0; }
-  .site-header .nav-top, .site-header .nav-sub-link {
-    display: flex; width: 100%; align-items: center; justify-content: center;
-    padding: 10px 20px; margin: 0;
-    font-family: var(--font-heading); font-size: 14px; font-weight: 900; line-height: 20px;
-    color: var(--hdr-menu-ink); background: transparent; text-decoration: none; text-align: center;
+  .site-header .nav-list { max-width: 640px; margin-inline: auto; }
+  .site-header .nav-list > .nav-item { border-bottom: 1px solid var(--color-line); }
+  .site-header .nav-top {
+    display: flex; width: 100%; min-height: 56px; align-items: center; justify-content: space-between;
+    padding: 12px 4px; margin: 0;
+    font-family: var(--font-heading); font-size: 1.125rem; font-weight: 700; line-height: 1.3;
+    color: var(--color-ocean); background: transparent; text-decoration: none; text-align: start;
   }
-  .site-header .nav-sub-link, .site-header .has-flyout { font-size: 11.05px; border-inline-start: 8px solid transparent; }
-  .site-header .nav-lang .nav-sub-link { font-size: 13px; }
-  .site-header .nav-top:hover, .site-header .nav-top:focus-visible, .site-header .nav-top[aria-expanded='true'], .site-header .nav-top[aria-current],
-  .site-header .nav-sub-link:hover, .site-header .nav-sub-link:focus-visible, .site-header .nav-sub-link[aria-current],
-  .site-header .has-flyout:hover, .site-header .has-flyout:has(> .flyout-toggle[aria-expanded='true']) {
-    color: #fff; background: var(--color-kindle);
+  .site-header .nav-search .nav-top, .site-header .nav-lang .nav-top { justify-content: flex-start; }
+  .site-header .nav-lang .sub-arrow { margin-inline-start: auto; }
+  .site-header .nav-item > .nav-sub { padding: 0 0 12px; }
+  .site-header .nav-sub-link {
+    display: flex; align-items: center; min-height: 44px; padding: 8px 16px;
+    font-size: 1rem; font-weight: 600; line-height: 1.35;
+    color: var(--color-ocean); text-decoration: none; border-radius: var(--radius-input);
   }
-  .site-header .has-flyout { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; }
-  .site-header .has-flyout > .nav-sub-link { width: auto; padding-inline-end: 0; border-inline-start: 0; background: transparent; color: inherit; font-size: 11.05px; }
-  .site-header .has-flyout > .nav-sub-link:hover, .site-header .has-flyout > .nav-sub-link:focus-visible { background: transparent; color: inherit; }
-  .site-header .has-flyout:hover > .nav-sub-link, .site-header .has-flyout:hover > .flyout-toggle { color: #fff; }
-  .site-header .has-flyout { color: var(--hdr-menu-ink); }
-  .site-header .flyout-toggle { display: inline-flex; align-items: center; padding: 10px 20px 10px 4px; color: inherit; background: transparent; }
-  .site-header .flyout-toggle svg { width: 13px; height: 13px; }
-  .site-header .has-flyout > .nav-flyout { flex: 0 0 100%; background: #fff; }
-  .site-header .search-icon { width: 14px; height: 14px; margin-inline-end: 6px; fill: none; stroke: currentColor; stroke-width: 2.5; }
-  .site-header .lang-short, .site-header .lang-globe { display: none; }
-  .site-header .nav-top:focus-visible, .site-header .nav-sub-link:focus-visible, .site-header .flyout-toggle:focus-visible {
-    outline: 2px solid var(--color-tech); outline-offset: -2px;
+  .site-header .nav-top:hover, .site-header .nav-sub-link:hover { color: var(--color-inspire-ink); }
+  .site-header .nav-sub-link:hover, .site-header .nav-sub-link[aria-current] { background: var(--color-mist); }
+  .site-header .nav-sub-link[aria-current] { color: var(--color-ocean); font-weight: 800; }
+  .site-header .nav-top[aria-current] { color: var(--color-inspire-ink); }
+  .site-header .has-flyout { display: flex; flex-wrap: wrap; align-items: center; }
+  .site-header .has-flyout > .nav-sub-link { flex: 1; }
+  .site-header .flyout-toggle {
+    display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px;
+    color: var(--color-ocean); background: transparent; border-radius: 999px;
   }
+  .site-header .flyout-toggle:hover { background: var(--color-mist); }
+  .site-header .has-flyout > .nav-flyout { flex: 0 0 100%; padding-inline-start: 16px; }
   html.nav-open { overflow: hidden; }
 
-  /* ---- Bar (1057px and up, when it fits) ---- */
-  @media (min-width: 1057px) {
+  /* ---- Bar (1024px and up, when it fits) ---- */
+  @media (min-width: 1024px) {
     .site-header:not([data-collapsed]) .menu-toggle { display: none; }
     .site-header:not([data-collapsed]) .site-nav {
-      position: static; max-height: none; overflow: visible; transform: none; visibility: visible; transition: none; background: none;
+      position: static; height: auto; overflow: visible; padding: 0; visibility: visible; opacity: 1; transition: none; background: none;
     }
-    .site-header:not([data-collapsed]) .nav-list { display: flex; align-items: center; flex-wrap: nowrap; }
-    .site-header:not([data-collapsed]) .nav-item { position: relative; margin-inline: 5px; }
-    .site-header:not([data-collapsed]) .nav-item:first-child { margin-inline-start: 0; }
-    .site-header:not([data-collapsed]) .nav-item:last-child { margin-inline-end: 0; }
+    .site-header:not([data-collapsed]) .nav-list { display: flex; align-items: center; flex-wrap: nowrap; gap: 26px; max-width: none; }
+    .site-header:not([data-collapsed]) .nav-list > .nav-item { position: relative; border: 0; }
     .site-header:not([data-collapsed]) .nav-top {
-      position: relative; width: auto; padding: 4px 0; white-space: nowrap;
-      color: var(--color-tech); background: transparent; transition: color 0.4s;
+      position: relative; width: auto; min-height: 44px; padding: 8px 0; white-space: nowrap;
+      font-size: 1rem; font-weight: 600; justify-content: center;
     }
     .site-header:not([data-collapsed]) .nav-top::after {
-      content: ''; position: absolute; inset-inline-start: 0; bottom: 0; width: 100%; height: 3px;
-      background: var(--color-kindle); opacity: 0; transition: opacity 0.4s;
+      content: ''; position: absolute; inset-inline: 0; bottom: 4px; height: 2px; border-radius: 2px;
+      background: var(--color-inspire); opacity: 0; transition: opacity 0.2s;
     }
-    .site-header:not([data-collapsed]) .nav-top:hover, .site-header:not([data-collapsed]) .nav-top:focus-visible,
-    .site-header:not([data-collapsed]) .nav-top[aria-expanded='true'], .site-header:not([data-collapsed]) .nav-top[aria-current] {
-      color: var(--color-kindle); background: transparent;
-    }
-    .site-header:not([data-collapsed]) .nav-top:hover::after, .site-header:not([data-collapsed]) .nav-top:focus-visible::after,
-    .site-header:not([data-collapsed]) .nav-top[aria-expanded='true']::after, .site-header:not([data-collapsed]) .nav-top[aria-current]::after { opacity: 1; }
-    .site-header:not([data-collapsed]) .nav-top:focus-visible { outline-offset: 2px; }
-    .site-header:not([data-collapsed]) .nav-search .nav-top { padding-inline: 4px; }
-    .site-header:not([data-collapsed]) .search-icon { width: 16px; height: 16px; margin: 2px 0; stroke-width: 2.25; }
+    .site-header:not([data-collapsed]) .nav-top:hover::after,
+    .site-header:not([data-collapsed]) .nav-top[aria-expanded='true']::after,
+    .site-header:not([data-collapsed]) .nav-top[aria-current]::after,
+    .site-header:not([data-collapsed]) .nav-top[data-section-current]::after { opacity: 1; }
+    .site-header:not([data-collapsed]) .nav-top:hover, .site-header:not([data-collapsed]) .nav-top[aria-current] { color: var(--color-ocean); }
+    .site-header:not([data-collapsed]) .sub-arrow svg { width: 14px; height: 14px; }
+    .site-header:not([data-collapsed]) .nav-search .nav-top, .site-header:not([data-collapsed]) .nav-lang .nav-top { min-width: 44px; }
+    .site-header:not([data-collapsed]) .search-icon { margin: 0; }
+    .site-header:not([data-collapsed]) .nav-lang .sub-arrow { margin-inline-start: 2px; }
     .site-header:not([data-collapsed]) .nav-search-label, .site-header:not([data-collapsed]) .lang-long {
       position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
     }
-    .site-header:not([data-collapsed]) .lang-short { display: inline; }
-    .site-header:not([data-collapsed]) .lang-globe { display: inline-block; width: 14px; height: 14px; margin-inline-end: 4px; fill: none; stroke: currentColor; stroke-width: 2.25; }
+    .site-header:not([data-collapsed]) .lang-short { display: inline; font-size: 0.9375rem; }
+    .site-header:not([data-collapsed]) .lang-globe { width: 18px; height: 18px; margin-inline-end: 5px; }
 
-    /* Dropdown panels: square, unshadowed, shrink to content. */
+    /* Dropdown panels: a raised white card. */
     .site-header:not([data-collapsed]) .nav-sub {
-      position: absolute; top: calc(100% + 10px); inset-inline-start: 0; z-index: 3;
-      width: max-content; min-width: 130px; max-width: 1000px; background: #fff;
+      position: absolute; top: calc(100% + 12px); inset-inline-start: -16px; z-index: 3;
+      width: max-content; min-width: 220px; max-width: 360px; padding: 8px;
+      background: #fff; border: 1px solid var(--color-line); border-radius: var(--radius-card); box-shadow: var(--shadow-raised);
     }
     .site-header:not([data-collapsed]) .nav-item > .nav-sub::before {
-      /* Bridge the 10px gap so the pointer can travel to the panel. */
-      content: ''; position: absolute; inset-inline: 0; bottom: 100%; height: 10px;
+      /* Bridge the gap so the pointer can travel to the panel. */
+      content: ''; position: absolute; inset-inline: 0; bottom: 100%; height: 14px;
     }
-    .site-header:not([data-collapsed]) .nav-sub.align-end, .site-header:not([data-collapsed]) .nav-lang > .nav-sub { inset-inline-start: auto; inset-inline-end: 0; }
-    .site-header:not([data-collapsed]) .nav-lang > .nav-sub { max-height: calc(100vh - 80px); overflow-y: auto; }
-    .site-header:not([data-collapsed]) .nav-sub-link {
-      justify-content: flex-start; text-align: start; padding: 13px 20px; font-size: 13px; white-space: nowrap;
-    }
-    .site-header:not([data-collapsed]) .has-flyout { position: relative; justify-content: flex-start; flex-wrap: nowrap; }
-    .site-header:not([data-collapsed]) .has-flyout { border-inline-start: 8px solid transparent; }
-    .site-header:not([data-collapsed]) .has-flyout > .nav-sub-link { padding: 13px 0 13px 20px; padding-inline: 20px 0; font-size: 13px; }
-    .site-header:not([data-collapsed]) .flyout-toggle { padding-block: 13px; padding-inline: 4px 20px; align-self: stretch; }
+    .site-header:not([data-collapsed]) .nav-sub.align-end, .site-header:not([data-collapsed]) .nav-lang > .nav-sub { inset-inline-start: auto; inset-inline-end: -16px; }
+    .site-header:not([data-collapsed]) .nav-lang > .nav-sub { max-height: calc(100vh - 100px); overflow-y: auto; }
+    .site-header:not([data-collapsed]) .nav-sub-link { min-height: 40px; padding: 8px 14px; font-size: 0.9375rem; white-space: nowrap; }
+    .site-header:not([data-collapsed]) .has-flyout { position: relative; flex-wrap: nowrap; }
+    .site-header:not([data-collapsed]) .has-flyout > .nav-sub-link { padding-inline-end: 4px; }
+    .site-header:not([data-collapsed]) .flyout-toggle { width: 36px; height: 36px; }
     .site-header:not([data-collapsed]) .flyout-toggle svg { transform: rotate(-90deg); }
     [dir='rtl'] .site-header:not([data-collapsed]) .flyout-toggle svg { transform: rotate(90deg); }
-    .site-header:not([data-collapsed]) .nav-flyout { top: 0; inset-inline-start: 100%; }
+    .site-header:not([data-collapsed]) .nav-flyout { top: -9px; inset-inline-start: calc(100% + 8px); padding: 8px; }
   }
 
-  /* Myanmar glyphs need more line height than 20px. */
-  html[data-script='myanmar'] .site-header .nav-top, html[data-script='myanmar'] .site-header .nav-sub-link { line-height: 28px; }
-  @media (min-width: 1057px) {
-    html[data-script='myanmar'] .site-header:not([data-collapsed]) .nav-top { padding-block: 0; }
-  }
+  /* Myanmar glyphs need more line height. */
+  html[data-script='myanmar'] .site-header .nav-top, html[data-script='myanmar'] .site-header .nav-sub-link { line-height: 1.8; }
 </style>
 
 <script>
@@ -326,7 +324,39 @@ const ANGLE = 'M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.
     toggle.querySelector('[data-label-open]')?.classList.toggle('hidden', open);
     toggle.querySelector('[data-label-close]')?.classList.toggle('hidden', !open);
     document.documentElement.classList.toggle('nav-open', open && !isBar());
+    setPageInert(open && !isBar());
   }
+
+  // While the full-height panel is open it covers the page: the rest of the
+  // page is made inert, and Tab wraps between the header's first and last
+  // controls (logo ... menu toggle), so focus never lands on hidden content.
+  const madeInert: Element[] = [];
+  function setPageInert(on: boolean) {
+    for (const el of madeInert.splice(0)) el.removeAttribute('inert');
+    if (!on || !header) return;
+    for (let node: Element | null = header; node && node !== document.body; node = node.parentElement) {
+      for (const sib of node.parentElement?.children ?? []) {
+        if (sib === node || sib.hasAttribute('inert') || sib.tagName === 'SCRIPT' || sib.tagName === 'STYLE') continue;
+        sib.setAttribute('inert', '');
+        madeInert.push(sib);
+      }
+    }
+  }
+  const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  header?.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab' || nav?.dataset.open !== 'true' || isBar()) return;
+    const items = [...header!.querySelectorAll<HTMLElement>(FOCUSABLE)].filter((el) => el.getClientRects().length > 0);
+    if (!items.length) return;
+    const first = items[0];
+    const last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
   toggle?.addEventListener('click', () => {
     const open = nav?.dataset.open !== 'true';
     setMenu(open);

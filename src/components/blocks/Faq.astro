@@ -1,11 +1,8 @@
 ---
 // Questions and answers as native <details> (keyboard and screen-reader
 // friendly with no script). The page adds FAQPage JSON-LD from this block.
-//
-// Production's Elementor nested accordion: full column width, each question
-// a 1px #D5D8DC box with 10px padding, a plus (minus when open) before the
-// text, 16px system-font title, the answer in its own bordered box. The
-// first question is open on load (`openFirst: false` to close it).
+// Accordion rows between 1px lines; "+" turns to "−" when open. The first
+// question is open on load (`openFirst: false` to close it).
 import type { Block } from '../../content.config';
 import { md, mdInline } from '../../lib/md';
 import Section from '../ui/Section.astro';
@@ -20,28 +17,24 @@ const { block, locale } = Astro.props;
 ---
 
 <Section>
-  <SectionHeader title={block.title} intro={block.intro} locale={locale} />
-  <div class:list={['uw-faq flex flex-col', block.intro && 'pt-[0.9rem]']}>
-    {
-      block.items.map((it, i) => (
-        <details class="group" open={block.openFirst !== false && i === 0}>
-          <summary class="uw-faq-q flex cursor-pointer list-none items-center gap-2.5 p-2.5 [&::-webkit-details-marker]:hidden">
-            <svg class="uw-faq-icon shrink-0 group-open:hidden" viewBox="0 0 448 512" aria-hidden="true"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" /></svg>
-            <svg class="uw-faq-icon hidden shrink-0 group-open:block" viewBox="0 0 448 512" aria-hidden="true"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" /></svg>
-            <span set:html={mdInline(it.q)} />
-          </summary>
-          <div class="uw-faq-a prose p-2.5" set:html={md(it.a, locale)} />
-        </details>
-      ))
-    }
+  <div class="mx-auto max-w-[880px]">
+    <SectionHeader title={block.title} intro={block.intro} locale={locale} class="!mb-7" />
+    <div class="border-b border-line">
+      {
+        block.items.map((it, i) => (
+          <details class="group border-t border-line" open={block.openFirst !== false && i === 0}>
+            <summary class="flex min-h-16 cursor-pointer list-none items-center justify-between gap-5 py-[18px] font-heading text-[20px] leading-snug font-extrabold text-ocean [&::-webkit-details-marker]:hidden">
+              <span set:html={mdInline(it.q, locale)} />
+              <span class="shrink-0 text-[26px] leading-none font-normal text-inspire-ink" aria-hidden="true">
+                <span class="group-open:hidden">+</span>
+                <span class="hidden group-open:inline">−</span>
+              </span>
+            </summary>
+            <div class="prose max-w-[720px] pb-[22px] text-ink-muted" set:html={md(it.a, locale)} />
+          </details>
+        ))
+      }
+    </div>
+    {block.body && <div class="prose mt-8" set:html={md(block.body, locale)} />}
   </div>
-  {block.body && <div class="prose mt-5" set:html={md(block.body, locale)} />}
 </Section>
-
-<style>
-  /* Values from production's nested-accordion widget (title #1F2124, borders #D5D8DC). */
-  .uw-faq { --faq-line: #d5d8dc; --faq-ink: #1f2124; }
-  .uw-faq-q { border: 1px solid var(--faq-line); font-family: var(--font-system); font-size: 1rem; line-height: 1.5; font-weight: 400; color: var(--faq-ink); }
-  .uw-faq-icon { width: 13px; height: 15px; fill: currentColor; }
-  .uw-faq-a { border: 1px solid var(--faq-line); }
-</style>

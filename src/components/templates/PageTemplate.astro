@@ -8,6 +8,11 @@ import LocalizedBody from '../ui/LocalizedBody.astro';
 import Base from '../../layouts/Base.astro';
 import BlockRenderer from '../blocks/BlockRenderer.astro';
 import Hero from '../blocks/Hero.astro';
+import Icon from '../ui/Icon.astro';
+import GiveBand from '../blocks/GiveBand.astro';
+import { ui, fmt, localizePath } from '../../i18n';
+import { NAV } from '../../lib/site';
+import { portfolio as portfolioOf } from '../../lib/portfolios';
 import { getImage } from 'astro:assets';
 import { img } from '../../lib/images';
 
@@ -46,7 +51,35 @@ const jsonLd = [
   ...videos,
 ];
 const pageType = d.template === 'giving' ? 'giving' : isHome ? 'home' : 'page';
-const legal = d.bodyStyle === 'legal';
+const t = ui(route.locale) as Record<string, unknown> & { nav: Record<string, string> };
+const pf = d.portfolio;
+
+// The closing give band (design system): on every page except giving pages,
+// pages that already carry a giving form or band, and pages that opt out.
+const ownsGiving = d.sections.some((s) => s.type === 'giving' || s.type === 'giveBand' || (s.type === 'cta' && (s.variant === 'ocean' || s.variant === 'split')));
+const showGiveBand = d.giveBand && d.template !== 'giving' && !ownsGiving && !d.noindex;
+const pfName = pf ? t.nav[portfolioOf(pf).navKey] : undefined;
+const giveBand = {
+  type: 'giveBand' as const,
+  title: (t.giveBandTitle as string) ?? 'Give the gospel. *Change lives forever.*',
+  body: t.giveBandBody as string | undefined,
+  action: pf && pf !== 'equipping'
+    ? { label: fmt((t.giveToPortfolio as string) ?? 'Give to {name}', { name: pfName ?? pf }), href: portfolioOf(pf).giveHref, style: 'give' as const }
+    : { label: (t.giveNow as string) ?? 'Give now', href: '/give/', style: 'give' as const },
+  image: 'home/give-boy-classroom.jpg',
+  imageAlt: 'A young boy in a checked school uniform looks back over his shoulder while seated among other children',
+};
+
+// "In this section" beside the text of pages that belong to a menu group
+// with a section index (CCBT).
+const group = NAV.find((n) => (n.key === 'ccbtMenu' || n.key === 'ccbt') && n.children?.some((c) => c.href === route.basePath));
+const sectionNav = group?.children?.filter((c) => c.href && !c.external);
+const inThisSection = (t.inThisSection as string) ?? 'In this section';
+// Beside the text when the page has a Markdown body after its sections;
+// otherwise (content only in sections, e.g. /ccbt/faq/) a row of pills under
+// the hero.
+const sideNav = Boolean(sectionNav?.length && hasBody && d.bodyPosition === 'after');
+const pillNav = Boolean(sectionNav?.length && !sideNav);
 ---
 
 <Base
@@ -65,48 +98,91 @@ const legal = d.bodyStyle === 'legal';
   {
     !firstIsHero && (
       <Hero
-        block={{ type: 'hero', variant: 'banner', title: d.title, image: d.bannerImage, imageAlt: d.bannerImageAlt, uppercase: d.bannerUppercase, actions: [] }}
+        block={{ type: 'hero', variant: 'banner', title: d.heading ?? d.title, image: d.bannerImage, imageAlt: d.bannerImageAlt, actions: [] }}
         locale={route.locale}
+        portfolio={pf}
         crumbs={!isHome && d.breadcrumbs ? crumbs : undefined}
       />
     )
   }
-  {firstIsHero && <BlockRenderer blocks={d.sections.slice(0, 1)} locale={route.locale} crumbs={!isHome && d.breadcrumbs ? crumbs : undefined} />}
+  {firstIsHero && <BlockRenderer blocks={d.sections.slice(0, 1)} locale={route.locale} portfolio={pf} crumbs={!isHome && d.breadcrumbs ? crumbs : undefined} />}
+  {
+    pillNav && (
+      <div class="container-page pt-8">
+        {/* A disclosure on phones (closed), an open row of pills from 64rem. */}
+        <details open class="section-nav rounded-small border border-line lg:rounded-none lg:border-0">
+          <summary class="label flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-3.5 !text-ink-muted lg:hidden">
+            {inThisSection}
+            <Icon name="chevron-down" class="section-nav-chevron size-5 transition" />
+          </summary>
+          <nav aria-label={inThisSection} class="flex flex-wrap items-center gap-2 px-3 pb-3 lg:p-0">
+            <p class="label !text-ink-muted me-2 hidden lg:block">{inThisSection}</p>
+            {sectionNav!.map((c) => (
+              <a href={localizePath(c.href!, route.locale)} aria-current={c.href === route.basePath ? 'page' : undefined} class:list={['rounded-full border px-4 py-2 text-[0.9375rem] text-ocean no-underline hover:bg-mist', c.href === route.basePath ? 'border-inspire bg-inspire-50 font-extrabold' : 'border-line font-semibold']}>
+                {t.nav[c.key] ?? c.key}
+              </a>
+            ))}
+          </nav>
+        </details>
+        <script is:inline>
+          (function (d) {
+            var wide = window.matchMedia('(min-width: 64rem)');
+            var set = function () { d.open = wide.matches; };
+            set();
+            wide.addEventListener('change', set);
+          })(document.currentScript.previousElementSibling);
+        </script>
+      </div>
+    )
+  }
   {
     hasBody && d.bodyPosition === 'before' && (
       <div class="container-prose py-[var(--spacing-section)]">
-        {legal && <p class="uw-legal-heading" role="heading" aria-level="2">{d.heading ?? d.title}</p>}
-        <div class:list={['prose', legal && 'prose-legal', d.bodyStyle === 'post' && 'prose-post']}><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
+        <div class="prose"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
       </div>
     )
   }
-  <BlockRenderer blocks={firstIsHero ? d.sections.slice(1) : d.sections} locale={route.locale} />
+  <BlockRenderer blocks={firstIsHero ? d.sections.slice(1) : d.sections} locale={route.locale} portfolio={pf} />
   {
     hasBody && d.bodyPosition === 'after' && (
-      <div class="container-prose py-[var(--spacing-section)]">
-        {legal && <p class="uw-legal-heading" role="heading" aria-level="2">{d.heading ?? d.title}</p>}
-        <div class:list={['prose', legal && 'prose-legal', d.bodyStyle === 'post' && 'prose-post']}><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
-      </div>
+      sideNav ? (
+        <div class="container-page flex flex-wrap items-start gap-x-18 gap-y-10 py-[var(--spacing-section)]">
+          {/* A disclosure on phones (closed), the open side list from 64rem. */}
+          <details open class="section-nav w-full min-w-0 flex-[1_1_15rem] rounded-small border border-line lg:sticky lg:top-[calc(var(--header-h,5rem)+1.5rem)] lg:rounded-none lg:border-0">
+            <summary class="label flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-3.5 !text-ink-muted lg:min-h-0 lg:cursor-default lg:px-0 lg:pb-2.5">
+              {inThisSection}
+              <Icon name="chevron-down" class="section-nav-chevron size-5 transition lg:hidden" />
+            </summary>
+            <nav aria-label={inThisSection} class="flex flex-col gap-0.5 px-2 pb-2 lg:p-0">
+              {sectionNav!.map((c) => (
+                <a href={localizePath(c.href!, route.locale)} aria-current={c.href === route.basePath ? 'page' : undefined} class:list={['rounded-[10px] px-3.5 py-2.5 text-ocean no-underline hover:bg-mist', c.href === route.basePath ? 'bg-inspire-50 font-extrabold' : 'font-semibold']}>
+                  {t.nav[c.key] ?? c.key}
+                </a>
+              ))}
+            </nav>
+          </details>
+          <script is:inline>
+            (function (d) {
+              var wide = window.matchMedia('(min-width: 64rem)');
+              var set = function () { d.open = wide.matches; };
+              set();
+              wide.addEventListener('change', set);
+              d.querySelector('summary').addEventListener('click', function (e) { if (wide.matches) e.preventDefault(); });
+            })(document.currentScript.previousElementSibling);
+          </script>
+          <div class="prose min-w-0 flex-[999_1_37.5rem] max-w-[50rem] text-[1.1875rem] leading-[1.7]"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
+        </div>
+      ) : (
+        <div class="container-prose py-[var(--spacing-section)]">
+          <div class="prose"><LocalizedBody locale={route.locale}><Content /></LocalizedBody></div>
+        </div>
+      )
     )
   }
+  {showGiveBand && <GiveBand block={giveBand} locale={route.locale} />}
 </Base>
 
 <style>
-  /* Production's policy pages: a 40px/500 heading between 100px spacers, and
-     the section headings at 16px bold (Gutenberg h6 with <strong>). */
-  .uw-legal-heading { font-family: var(--font-heading); font-size: var(--text-h1); line-height: 1.2; font-weight: 500; color: var(--color-tech); margin: 108px 0 116px; }
-  /* The text is its own block (flow-root) so a first heading's 8px adds to the
-     116px above it, and it ends on production's 100px spacer. */
-  .prose-legal { display: flow-root; padding-bottom: 100px; }
-  .prose-legal :global(:where(h2, h3, h4)) { font-size: 1rem; line-height: 1.2; font-weight: 700; color: var(--color-tech); margin: 8px 0 16px; }
-  /* Gutenberg lists on these pages have no bottom margin. */
-  .prose-legal :global(:where(ul, ol)) { margin-bottom: 0; }
-  .prose-post :global(:where(h3, h4, h5, h6)) { color: var(--color-tech); font-weight: 500; line-height: 1.2; margin: 8px 0 16px; }
-  /* A heading widget's h2 then a text widget opening with an h3: 20px gap plus the h3's 8px. */
-  .prose-post :global(:where(h2 + h3)) { margin-top: 28px; }
-  /* Production's long-text quotes sit 20px from the text above and below. */
-  .prose :global(:where(blockquote)) { margin-block: 20px; }
-  /* After a paragraph the quote is its own widget: the paragraph's 14.4px
-     margin plus the 20px gap (ccbt). */
-  .prose :global(:where(p + blockquote)) { margin-top: calc(20px + 0.9rem); }
+  .section-nav summary::-webkit-details-marker { display: none; }
+  .section-nav[open] :global(.section-nav-chevron) { transform: rotate(180deg); }
 </style>

@@ -1,8 +1,6 @@
 ---
-// Back-to-top button, like production's (WPFront Scroll Top): a 60px
-// half-transparent dark disc with a see-through chevron, fixed near the
-// bottom corner, shown after 100px of scrolling, hidden on phones (≤640px).
-// Unlike production it has an accessible name and respects reduced motion.
+// Back-to-top button: a round Ocean button fixed near the bottom corner,
+// shown after 100px of scrolling, hidden on phones (640px and below).
 import { ui } from '../../i18n';
 
 interface Props {
@@ -13,42 +11,40 @@ const t = ui(locale);
 ---
 
 <button type="button" class="scroll-top" aria-label={t.footer.backToTop} title={t.footer.backToTop} data-scroll-top>
-  <svg viewBox="0 0 64 64" width="60" height="60" aria-hidden="true" focusable="false">
-    <mask id="scroll-top-chevron">
-      <rect width="64" height="64" fill="#fff"></rect>
-      <path d="M21 37 32 26l11 11" fill="none" stroke="#000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path>
-    </mask>
-    <circle cx="32" cy="32" r="32" fill="rgba(0,0,0,.5)" mask="url(#scroll-top-chevron)"></circle>
+  <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+    <path d="m6 15 6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
   </svg>
 </button>
 
 <style>
   .scroll-top {
     position: fixed;
-    inset-inline-end: 20px;
-    bottom: 100px;
+    inset-inline-end: 24px;
+    bottom: 32px;
     z-index: 60;
-    width: 60px;
-    height: 60px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
     padding: 0;
     border: 0;
-    border-radius: 50%;
-    background: transparent;
-    box-shadow: none;
+    border-radius: 999px;
+    color: #fff;
+    background: var(--color-ocean);
+    box-shadow: var(--shadow-raised);
     cursor: pointer;
     opacity: 0;
     visibility: hidden;
-  }
-  .scroll-top svg {
-    display: block;
+    transition: opacity 0.2s, background-color 0.2s, visibility 0s linear 0.2s;
   }
   .scroll-top.is-visible {
-    opacity: 0.8;
-    visibility: visible;
-  }
-  .scroll-top.is-visible:hover,
-  .scroll-top.is-visible:focus-visible {
     opacity: 1;
+    visibility: visible;
+    transition: opacity 0.2s, background-color 0.2s;
+  }
+  .scroll-top:hover {
+    background: var(--color-ocean-700);
   }
   @media (max-width: 640px) {
     .scroll-top,

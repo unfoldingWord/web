@@ -10,6 +10,15 @@ import SweetTemplate from '../components/templates/SweetTemplate.astro';
 import experiments from '../data/experiments.json';
 
 export async function getStaticPaths() {
+  const LOGICAL_PARENTS: Record<string, string[]> = {
+    '/transformation/': ['/overview/'],
+    '/innovation/': ['/overview/'],
+    '/catalyzation/': ['/overview/'],
+    '/wbwn/*': ['/overview/', '/transformation/'],
+    '/translationcore/': ['/overview/', '/innovation/'],
+    '/bt-servant/': ['/overview/', '/innovation/'],
+  };
+
   const routes = await allRoutes();
   const byKey = new Map(routes.map((r) => [`${r.locale}:${r.basePath}`, r]));
   return routes.map((route) => {
@@ -27,11 +36,17 @@ export async function getStaticPaths() {
       experiment = { id: test.id, variant: variant.id };
     }
     const crumbs: { name: string; href?: string }[] = [{ name: ui(page.locale).home, href: localizePath('/', page.locale) }];
+    // Parents that are not in the URL: portfolios sit under What we do,
+    // projects under Transformation, tools under Innovation.
     const parts = page.basePath.split('/').filter(Boolean);
-    for (let i = 1; i < parts.length; i++) {
-      const p = `/${parts.slice(0, i).join('/')}/`;
+    const parentPaths = [...(LOGICAL_PARENTS[page.basePath] ?? LOGICAL_PARENTS[`/${parts[0]}/*`] ?? [])];
+    for (let i = 1; i < parts.length; i++) parentPaths.push(`/${parts.slice(0, i).join('/')}/`);
+    for (const p of parentPaths) {
       const parent = byKey.get(`${page.locale}:${p}`);
-      if (parent) crumbs.push({ name: parent.entry.data.title, href: parent.path });
+      if (!parent || crumbs.some((c) => c.href === parent.path)) continue;
+      // /overview/ is labelled as the menu calls it ("What we do").
+      const navName = p === '/overview/' ? (ui(page.locale).nav as Record<string, string> | undefined)?.whatWeDo : undefined;
+      crumbs.push({ name: navName || parent.entry.data.title, href: parent.path });
     }
     crumbs.push({ name: route.entry.data.title });
     const path = route.path === '/' ? undefined : route.path.replace(/^\/|\/$/g, '');

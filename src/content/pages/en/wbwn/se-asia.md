@@ -2,12 +2,12 @@
 title: Southeast Asia
 description: Nine million people remain unreached in this Southeast Asian country. Help church planters get the Bible in every heart language to plant healthy churches.
 ogImage: wbwn/se-asia.jpg
+portfolio: transformation
 sections:
 - type: hero
   variant: project
-  eyebrow: Southeast Asia
-  title: Impact 9 million people with the Gospel
-  lead: '**Nine million people remain unreached in this country. Church planters need the Bible in all their heart languages to plant healthy churches and disciple believers.**'
+  title: Southeast Asia
+  lead: Impact 9 million people with the Gospel
   image: wbwn/se-asia.jpg
   imageAlt: Two laughing boys splash in a forest stream, one holding a large leaf overhead
   contentPosition: end
@@ -19,7 +19,10 @@ sections:
 - type: prose
   title: Project Overview
   width: narrow
-  body: unfoldingWord’s ministry partners are engaged in 19 full Bible translations, including audio and sign-language editions, in this country.
+  body: |-
+    Nine million people remain unreached in this country. Church planters need the Bible in all their heart languages to plant healthy churches and disciple believers.
+
+    unfoldingWord’s ministry partners are engaged in 19 full Bible translations, including audio and sign-language editions, in this country.
 - type: stats
   title: At a Glance
   variant: bars
@@ -31,8 +34,8 @@ sections:
   - value: 9,000,000
     label: People Impacted
     color: kindle
-  - value: '*69* unreached people groups'
-    label: People Groups affected
+  - value: '69'
+    label: Unreached people groups affected
 - type: prose
   title: Prayers
   icon: pray
@@ -47,9 +50,10 @@ sections:
   slugs:
   - life-change-in-southeast-asia
 - type: cards
+  title: More Whole Bible | Whole Nation projects
   columns: 5
   variant: outlined
-  background: kindle
+  background: white
   items:
   - title: Benin
     image: wbwn/benin.jpg

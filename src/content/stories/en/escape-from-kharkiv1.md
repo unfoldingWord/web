@@ -53,4 +53,4 @@ Stephen's prayer requests the following day were:
 
 All of us at unfoldingWord were praying for Stephen K. and his family. On April 21, the word flashed across our network: "Stephen has reunited with his wife!" Praise God!!
 
-Even with war raging, our Eurasian friends continue the good work. You can be part of this story by partnering with Bible translators like Stephen. Visit our [Eurasia Project Page](/wbwn/) to see why Bible translation is still desperately needed, and become part of what God is doing with the Eurasian church today.
+Even with war raging, our Eurasian friends continue the good work. You can be part of this story by partnering with Bible translators like Stephen. Visit our [Eurasia Project Page](/transformation/) to see why Bible translation is still desperately needed, and become part of what God is doing with the Eurasian church today.

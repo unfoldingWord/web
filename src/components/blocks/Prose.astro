@@ -1,12 +1,13 @@
 ---
-// Long text: production's heading + text-editor widgets in one 1000px
-// section. `align: center` centers it (about "Our Strategy", core values);
-// `divider` adds the 50×3 Kindle rule under a Tech title, as production does
-// on centered section headings. `inset` adds production's 10px column
-// padding; `textSize: large` is the 19.36px text some pages use.
+// Long text: a section header (title, optional lead) over Markdown in the
+// reading column. `align: center` / `title` center the header only. A narrow
+// Ocean block is a rounded Ocean panel inside a white section (wbwn
+// "Prayers"). `inset`, `textSize`, `divider`, `accent` and `compactLists`
+// are older cosmetic flags and are ignored.
 import type { Block } from '../../content.config';
-import { md, mdInline } from '../../lib/md';
+import { md } from '../../lib/md';
 import Section from '../ui/Section.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
 import Actions from '../ui/Actions.astro';
 import Icon from '../ui/Icon.astro';
 
@@ -16,58 +17,18 @@ interface Props {
   locale: string;
 }
 const { block, locale } = Astro.props;
-const center = block.align === 'center';
-const titleCenter = center || block.align === 'title';
-// A title with no text is a heading strip (overview "Our Programs"): 20px padding.
-const strip = !block.body.trim() && !block.lead;
-// A narrow Ocean block is production's Ocean box inside a white section (wbwn "Prayers").
+const centerHeader = block.align === 'center' || block.align === 'title';
+const hasBody = Boolean(block.body.trim());
+// A title with no text is a heading over the next block.
+const strip = !hasBody && !block.lead;
 const box = block.width === 'narrow' && block.background === 'ocean';
 ---
 
-{/* The box sits 20px under the block above and 60px over the next
-    section (production's wbwn container), hence its 20px padding. */}
-<Section background={box ? 'white' : block.background} class={strip || box ? '!py-5' : block.lead ? '!pb-5' : undefined}>
-  <div class:list={['flex flex-col gap-5', center && 'items-center text-center', block.width === 'narrow' && 'mx-auto max-w-[800px]', box && 'on-dark bg-ocean p-5', block.inset && 'p-2.5']}>
-    {block.icon && <Icon name={block.icon} class="size-[42px] text-white" />}
-    {
-      block.title && (
-        <>
-          <h2 class:list={['w-full', block.divider && '!text-tech', titleCenter && 'text-center']} set:html={mdInline(block.title, locale)} />
-          {block.divider && <span class:list={['block py-[2px]', titleCenter && 'self-center']} aria-hidden="true"><span class="block h-[3px] w-[50px] bg-kindle" /></span>}
-        </>
-      )
-    }
-    {block.lead && <p class="uw-prose-lead w-full text-center" set:html={mdInline(block.lead, locale)} />}
-    {/* In the box the text follows the title with no gap (production). */}
-    {!strip && block.body.trim() && <div class:list={['prose uw-prose-body w-full', center && 'uw-prose-center', block.serif && 'prose-serif', box && block.title && '-mt-5', block.textSize === 'large' && 'uw-prose-large', block.accent && 'uw-prose-accent', block.compactLists && 'uw-prose-compact']} set:html={md(block.body, locale)} />}
-    <Actions actions={block.actions ?? []} locale={locale} class="uw-donate w-full justify-center" />
+<Section background={box ? 'white' : block.background} width={block.width === 'wide' ? 'page' : 'prose'} class={strip ? '!pb-0' : undefined}>
+  <div class:list={[box && 'uw-grain on-dark rounded-media px-6 py-10 md:px-12 md:py-12']}>
+    {block.icon && <Icon name={block.icon} class:list={['mb-4 size-10', box || block.background === 'ocean' ? 'text-cultivate' : 'text-inspire-ink', centerHeader && 'mx-auto']} />}
+    <SectionHeader title={block.title} intro={block.lead} align={centerHeader ? 'center' : 'start'} locale={locale} class={strip || box || !hasBody ? '!mb-0' : undefined} />
+    {hasBody && <div class:list={['prose', block.serif && 'prose-serif', box && block.title && 'mt-5', block.width === 'wide' && '!max-w-none']} set:html={md(block.body, locale)} />}
+    <Actions actions={block.actions ?? []} locale={locale} class:list={['mt-8 gap-3', centerHeader && 'justify-center']} />
   </div>
 </Section>
-
-<style>
-  /* A Donate button here is production's Virtuous "Donate Now" button. */
-  :global(.uw-donate .uw-btn-give) { height: 56px; padding: 12px 16px; font-family: Arial, 'Helvetica Neue', Helvetica, var(--font-sans); font-size: 14px; line-height: 16.8px; font-weight: 600; }
-  /* Production's long-text quotes sit 20px from the text above and below. */
-  .prose :global(:where(blockquote)) { margin-block: 20px; }
-  /* Centered sections: production stacks heading and text widgets 20px apart. */
-  .uw-prose-center :global(:where(h3:not(:first-child))) { margin-block: 20px; }
-  .uw-prose-center :global(:where(h3:first-child)) { margin-bottom: 20px; }
-  .uw-prose-center :global(:where(p + h3)) { margin-top: calc(20px + 0.9rem); }
-  .uw-prose-center :global(:where(ul, ol)) { text-align: start; display: inline-block; }
-  .uw-prose-large { font-size: var(--text-story); line-height: 1.5; }
-  /* accent: production's Inspire lead-ins, and its 20px/27px bold Inspire
-     statement (an Elementor heading widget, 20px from what is around it). */
-  .prose.uw-prose-accent :global(:where(strong, b)) { color: var(--color-inspire); }
-  .prose.uw-prose-accent :global(:where(h4)) { font-size: 1.25rem; line-height: 1.35; font-weight: 700; color: var(--color-inspire); margin-block: 20px; }
-  .prose.uw-prose-accent :global(:where(h4 + h2, h4 + h3)) { margin-top: 20px; }
-  /* A ### heading written all in italics is production's text-editor h3
-     (statement of faith): 28px/33.6px, weight 500, Tech, 8px above even at
-     the top, 16px below. */
-  .prose.uw-prose-body :global(h3:has(> em:only-child)) { font-size: var(--text-h3); line-height: 1.2; font-weight: 500; color: var(--color-tech); margin: 8px 0 16px; }
-  /* compactLists: 20px indent, no margin under the list; a heading after
-     it sits 20px below (Elementor's widget gap). */
-  .prose.uw-prose-compact :global(:where(ul, ol)) { padding-inline-start: 20px; margin-bottom: 0; }
-  .prose.uw-prose-compact :global(:where(ul, ol) + :where(h2, h3)) { margin-top: 20px; }
-  /* Production's centered tagline: an h3 at 19.2px/28.8px, weight 300, Tech. */
-  .uw-prose-lead { font-family: var(--font-heading); font-size: 1.2rem; line-height: 1.5; font-weight: 300; color: var(--color-tech); margin: 0; text-wrap: wrap; }
-</style>

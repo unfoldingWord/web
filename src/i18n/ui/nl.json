@@ -65,7 +65,21 @@
     "privacy": "Privacy",
     "terms": "Gebruiksvoorwaarden",
     "disclosures": "Informatie over fondsenwerving",
-    "backToTop": "Terug naar boven"
+    "backToTop": "Terug naar boven",
+    "whatWeDo": "Wat we doen",
+    "getInvolved": "Doe mee",
+    "about": "Wie we zijn",
+    "waysToGive": "Manieren om te geven",
+    "giveMonthly": "Maandelijkse gift",
+    "plannedGiving": "Nalaten en geplande giften",
+    "supportStaff": "Steun een medewerker",
+    "pray": "Gebed",
+    "stories": "Verhalen uit het veld",
+    "leadership": "Leiding",
+    "ccbt": "Kerkgerichte bijbelvertaling",
+    "financial": "Financiële informatie",
+    "careers": "Vacatures",
+    "contact": "Neem contact op"
   },
   "nav": {
     "whoWeAre": "Wie we zijn",
@@ -112,7 +126,11 @@
     "initiative": "Steun een initiatief",
     "staff": "Steun een medewerker",
     "disclosures": "Informatie over fondsenwerving",
-    "contact": "Neem contact op"
+    "contact": "Neem contact op",
+    "pray": "Gebed",
+    "aboutMenu": "Wie we zijn",
+    "ccbtMenu": "Strategisch overzicht",
+    "toolsMenu": "Hulpmiddelen"
   },
   "regions": {
     "africa": "Afrika",

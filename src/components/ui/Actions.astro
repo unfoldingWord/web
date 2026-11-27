@@ -3,14 +3,13 @@ import { localizeHref } from '../../lib/md';
 import { SITE } from '../../lib/site';
 import VirtuousListener from './VirtuousListener.astro';
 
-// A row of buttons. Production buttons have no icons and keep their own
-// width on phones; they wrap with Elementor's 20px widget gap.
+// A row of design-system buttons (give, primary, secondary) that wraps on
+// phones.
 //
-// An action with a `formId` is a campaign's Donate button: production puts
-// Virtuous's embed snippet there, which draws Virtuous's own "Donate Now"
-// button and opens that form in a modal. We do the same, and keep our
-// look-alike link (to `href`) until Virtuous's button is there, and wherever
-// the form cannot load (unregistered preview domains, no script).
+// An action with a `formId` is a campaign's Donate button: Virtuous's embed
+// snippet draws its own button and opens that form in a modal. Our link (to
+// `href`) shows until Virtuous's button is there, and wherever the form
+// cannot load (unregistered preview domains, no script).
 interface Props {
   actions: { label: string; href: string; style?: 'primary' | 'secondary' | 'give'; formId?: string }[];
   locale: string;
@@ -23,7 +22,7 @@ const hasForm = actions.some((a) => a.formId);
 
 {
   actions.length > 0 && (
-    <div class:list={['flex flex-wrap items-center gap-5', cls]}>
+    <div class:list={['flex flex-wrap items-center gap-3', cls]}>
       {actions.map((a) => {
         const link = (
           <a href={localizeHref(a.href, locale)} class:list={['uw-btn', `uw-btn-${a.style ?? 'primary'}`, a.formId && 'uw-vdonate-fallback']} {...(isExternal(a.href) ? { rel: 'noopener' } : {})}>

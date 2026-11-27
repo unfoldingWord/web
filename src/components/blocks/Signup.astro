@@ -9,20 +9,13 @@
 // margins). From another origin it can only style itself. The frame reports
 // its height so it never scrolls.
 //
-// variant `card` (default) is production's /pray/ sign-up: the title (Inspire)
-// and text in a 485px start column, the form in an Inspire box (20px padding,
-// 4px corners) filling the rest. Side by side only from 1057px (the tablet
-// breakpoint), where the form still gets 432px (455px at 1440px, as on
-// production) — enough for its 161px button and the two-up name row, which
-// needs 400px. Below that the two stack and the form takes the full width,
-// since the embed hides horizontal overflow and would clip a narrower form.
-//
-// variant `band` is production's home sign-up: a Cultivate band with the
-// title, text and form in the start half and a photo in the end half
-// (hidden on phones). The form is asked for its dark theme (white labels).
+// Layout: the title and text in one half, the form in a Mist panel in the
+// other (side by side from the tablet breakpoint, where the panel is wide
+// enough for the form's two-up name row; the embed clips a narrower form).
+// `band` puts a photo beside the text and form instead.
 import type { Block } from '../../content.config';
+import type { PortfolioKey } from '../../lib/portfolios';
 import { md, mdInline } from '../../lib/md';
-import Section from '../ui/Section.astro';
 import Picture from '../ui/Picture.astro';
 import { SITE } from '../../lib/site';
 
@@ -32,41 +25,45 @@ type Signup = Extract<Block, { type: 'signup' }>;
 interface Props {
   block: Signup;
   locale: string;
+  portfolio?: PortfolioKey;
 }
 const { block, locale } = Astro.props;
 const src = `${SITE.mediaBase}/embeds/virtuous-signup.html?form=${encodeURIComponent(block.formId)}&org=${encodeURIComponent(block.orgId)}`;
+const dark = block.background === 'ocean';
 ---
 
-{
-  block.variant === 'band' ? (
-    <section id={block.id} class="signup-band bg-cultivate on-dark">
-      <div class="mx-auto flex max-w-[1000px] md:min-h-[378px]">
-        <div class="signup-band-text w-full p-10 md:w-1/2">
-          {block.title && <h2 class="text-wrap" set:html={mdInline(block.title, locale)} />}
-          {block.body && <div class="prose signup-band-body" set:html={md(block.body, locale)} />}
-          <iframe
-            class="signup-frame block min-h-[199px] w-full border-0"
-            src={`${src}&theme=dark`}
-            title={block.title ?? 'Sign up'}
-            loading="lazy"
-            data-form={block.formId}
-            data-origin={frameOrigin}></iframe>
+<section id={block.id} class:list={['section-y', dark ? 'uw-grain on-dark' : 'bg-white']}>
+  {
+    block.variant === 'band' ? (
+      <div class="container-page grid items-center gap-x-16 gap-y-10 tablet:grid-cols-2">
+        <div class="flex flex-col gap-6">
+          <div class="flex flex-col gap-3">
+            {block.title && <h2 set:html={mdInline(block.title, locale)} />}
+            {block.body && <div class="lead" set:html={md(block.body, locale)} />}
+          </div>
+          <div class="rounded-media bg-mist p-5 sm:p-8">
+            <iframe
+              class="signup-frame block min-h-[199px] w-full border-0"
+              src={src}
+              title={block.title ?? 'Sign up'}
+              loading="lazy"
+              data-form={block.formId}
+              data-origin={frameOrigin}></iframe>
+          </div>
         </div>
         {block.image && (
-          <div class="relative hidden w-1/2 md:block">
-            <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="500px" widths={[500, 1000]} fill class="absolute inset-0 h-full w-full object-cover" />
+          <div class="hidden overflow-hidden rounded-media tablet:block">
+            <Picture path={block.image} alt={block.imageAlt ?? ''} sizes="(min-width: 84rem) 608px, 50vw" widths={[608, 1000, 1216]} aspect="4 / 5" class="block" />
           </div>
         )}
       </div>
-    </section>
-  ) : (
-    <Section background={block.background} id={block.id}>
-      <div class="flex flex-col gap-5 tablet:flex-row tablet:items-start">
-        <div class="p-[10px] tablet:w-[485px] tablet:shrink-0">
-          {block.title && <h2 class="text-wrap" set:html={mdInline(block.title, locale)} />}
-          {block.body && <div class="prose mt-5" set:html={md(block.body, locale)} />}
+    ) : (
+      <div class="mx-auto grid w-full max-w-[calc(1100px+2*var(--spacing-gutter))] items-center gap-x-16 gap-y-8 px-[var(--spacing-gutter)] tablet:grid-cols-2">
+        <div class="flex flex-col gap-3">
+          {block.title && <h2 set:html={mdInline(block.title, locale)} />}
+          {block.body && <div class="lead" set:html={md(block.body, locale)} />}
         </div>
-        <div class="min-w-0 flex-1 rounded-[4px] bg-inspire p-5">
+        <div class:list={['min-w-0 rounded-media p-5 sm:p-8', dark ? 'bg-white' : 'bg-mist']}>
           <iframe
             class="signup-frame block min-h-[199px] w-full border-0"
             src={src}
@@ -76,14 +73,12 @@ const src = `${SITE.mediaBase}/embeds/virtuous-signup.html?form=${encodeURICompo
             data-origin={frameOrigin}></iframe>
         </div>
       </div>
-    </Section>
-  )
-}
+    )
+  }
+</section>
 
 <style>
-  .signup-band-body { color: #fff; }
-  .signup-band-body :global(p:last-child) { margin-bottom: 0.9rem; }
-  .signup-band-body :global(a) { color: #fff; }
+  .lead :global(p + p) { margin-top: 0.6em; }
 </style>
 
 <script>
